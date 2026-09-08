@@ -5,10 +5,10 @@ test('serves meaningful HTML before JavaScript runs', async ({ request }) => {
   expect(response.status()).toBe(200)
   const html = await response.text()
   expect(html).toMatch(/<html[^>]*lang="en"/)
-  expect(html).toContain('<title>Nurevolution</title>')
+  expect(html).toContain('<title>Nurevolution — Podcast archive</title>')
   expect(html).toMatch(/<meta[^>]*name="color-scheme"[^>]*content="dark"/)
   expect(html).toMatch(
-    /<main[^>]*>[\s\S]*<h1[^>]*>Nurevolution<\/h1>[\s\S]*<\/main>/,
+    /<main[^>]*>[\s\S]*<h1[^>]*>Ruminate<\/h1>[\s\S]*<\/main>/,
   )
 })
 
@@ -38,9 +38,7 @@ test('hydrates a dark shell with no application errors', async ({ page }) => {
       | null
     return root?.__vue_app__?.$nuxt?.isHydrating === false
   })
-  await expect(page.getByRole('heading', { level: 1 })).toHaveText(
-    'Nurevolution',
-  )
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Ruminate')
   await expect(page.getByRole('main')).toHaveCount(1)
   await expect(page.locator('html')).toHaveAttribute('lang', 'en')
   await expect(page.locator('html')).toHaveCSS('color-scheme', 'dark')
@@ -49,7 +47,7 @@ test('hydrates a dark shell with no application errors', async ({ page }) => {
     'rgb(16, 18, 22)',
   )
   await expect(page.locator('audio')).toHaveCount(0)
-  await expect(page).toHaveTitle('Nurevolution')
+  await expect(page).toHaveTitle('Nurevolution — Podcast archive')
   expect(errors).toEqual([])
 })
 
