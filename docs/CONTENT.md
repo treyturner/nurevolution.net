@@ -1,6 +1,6 @@
 # Editing the podcast archive
 
-The canonical archive is in `content/`. It contains 55 historical episodes, 832 tracks, and 338 precise track starts across 22 episodes. All audio and artwork remain URL references; no historical media binaries are stored in this repository. The current page remains the M1 shell. M3 will generate RSS, and M4 will build episode pages and the player from this archive.
+The canonical archive is in `content/`. It contains 55 historical episodes, 832 tracks, and 338 precise track starts across 22 episodes. All audio and artwork remain URL references; no historical media binaries are stored in this repository. M3 serves the complete replacement RSS at `/feed/podcast`. The current page remains the M1 shell; M4 will build episode pages and the player from this archive.
 
 ## Files you edit
 
@@ -27,10 +27,11 @@ Edit titles, artists, descriptions, and track information directly, then run:
 ```sh
 pnpm exec prettier --write content
 pnpm check:content
+pnpm check:feed
 pnpm verify
 ```
 
-Checks are read-only and name the affected file and field. `pnpm build` runs the same content check before building, so it also rejects invalid authoring. No private WordPress files, SQL dump, media directory, environment file, credentials, or live feed is needed. Dependencies are installed separately using the setup in [README.md](../README.md).
+Checks are read-only and name the affected file and field. `pnpm build` runs both content and independently parsed feed checks before building, so it also rejects invalid authoring. RSS publication dates must use whole seconds (`.000Z`); a fractional instant fails the feed check rather than being silently truncated. No private WordPress files, SQL dump, media directory, environment file, credentials, or live feed is needed. Dependencies are installed separately using the setup in [README.md](../README.md). See the [feed validation guide](FEED-VALIDATION.md) for HTTP behavior and the pending public checks.
 
 ## Episode fields and new episodes
 
@@ -95,4 +96,6 @@ The archive is packaged as Nitro server assets and loaded through one validated 
 | `GET /api/episodes`        | `{ "episodes": [...] }` with summaries in publication order; no tracklists or audio preload.                                               |
 | `GET /api/episodes/<slug>` | Full published detail, safe description, GUID, resolved audio metadata, and ordered tracks. Unknown and unpublished slugs return HTTP 404. |
 
-Server-side feed work should call `contentRepository.publicArchive(asOf)` from `server/utils/content.ts`; it returns full public records and the show using the same predicate as the list and detail APIs. Page code should use the public DTO types from `shared/content/public.ts`. Do not create a second archive, sort order, or publication rule. RSS serialization, redirects, episode pages, playback controls, media delivery, and deployment remain their later milestones.
+The feed calls `contentRepository.publicArchive(asOf)` from `server/utils/content.ts`; it returns full public records and the show using the same predicate as the list and detail APIs, plus `show.rss` settings and each episode's `rss.link` and `rss.explicit`. These RSS-only fields do not change the three JSON API response shapes. Page code should use the public DTO types from `shared/content/public.ts`. Do not create a second archive, sort order, or publication rule.
+
+GET and HEAD `/feed/podcast` serve RSS with a stable weak ETag and a 60-second cache lifetime. `/feed/podcast/` and the exact root query `/?feed=podcast` redirect to it. Historical item links retain the exact legacy page URL; new episodes use `/episodes/<saved-slug>`. The serializer emits full safe descriptions and rounded positive integer duration seconds, preserving fractional canonical durations for playback. M4 owns episode pages, historical page redirects, and player controls; M5/M6 own media delivery and deployment.

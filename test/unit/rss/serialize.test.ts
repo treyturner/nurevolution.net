@@ -161,7 +161,7 @@ describe('complete podcast RSS serialization', () => {
     expect(xml).not.toContain('A&amp;amp;B')
   })
 
-  it.each([null, 'invalid'])(
+  it.each([null, 'invalid', '2026-09-08T00:00:00.123Z'])(
     'rejects an invalid publication date at the serialization boundary: %s',
     (date) => {
       const value = archive()

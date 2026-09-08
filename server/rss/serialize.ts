@@ -42,6 +42,10 @@ export function serializePodcastRss(archive: PodcastArchive): string {
     const date = new Date(episode.publishedAt ?? '')
     if (!Number.isFinite(date.getTime()))
       throw new Error(`${field('publishedAt')}: invalid publication instant`)
+    if (date.getUTCMilliseconds() !== 0)
+      throw new Error(
+        `${field('publishedAt')}: RSS publication instants require whole seconds`,
+      )
     const body = [
       itemText('title', `${episode.artist} – ${episode.title}`),
       itemText('link', episode.rss.link),

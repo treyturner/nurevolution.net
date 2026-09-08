@@ -239,7 +239,8 @@ export function assertPodcastFeed(xml: string, archive: PodcastArchive) {
         )
         const seconds = Number(duration.textContent)
         assert.ok(
-          Math.abs(seconds - expected.durationSeconds) <= 0.5 ||
+          (seconds - expected.durationSeconds > -0.5 &&
+            seconds - expected.durationSeconds <= 0.5) ||
             (expected.durationSeconds < 0.5 && seconds === 1),
           'duration: nearest positive second',
         )
