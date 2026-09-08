@@ -1,0 +1,59 @@
+{
+  "schemaVersion": 1,
+  "id": "wp-315",
+  "slug": "trey-turner-bijoubreaks-com-breakthru-2",
+  "status": "published",
+  "publishedAt": "2006-08-31T18:00:36.000Z",
+  "title": "BijouBreaks.com Breakthru 2",
+  "artist": "Trey Turner",
+  "descriptionHtml": "<p>Uptempo world and nuskool breaks</p>",
+  "guid": "https://nurevolution.net/?p=315",
+  "guidIsPermalink": false,
+  "audioAssetId": "asset-e48b7cae2a462fe7",
+  "artworkAssetId": "asset-6da3935c1b78f01d",
+  "durationSeconds": 1682,
+  "tracks": [
+    {
+      "position": 1,
+      "artist": "Alien Soap Opera",
+      "title": "Voladores (BLIM)",
+      "startTime": 0
+    },
+    {
+      "position": 2,
+      "artist": "Kelis",
+      "title": "Trick Me (Adam Freeland)",
+      "startTime": 228.971927
+    },
+    {
+      "position": 3,
+      "artist": "Dub Pistols",
+      "title": "Cyclone (Bushwacka)",
+      "startTime": 529.369251
+    },
+    {
+      "position": 4,
+      "artist": "Kiril",
+      "title": "Primitive Science (Bushwacka)",
+      "startTime": 757.07619
+    },
+    {
+      "position": 5,
+      "artist": "Son of the Electric Ghost",
+      "title": "Learn My Lesson",
+      "startTime": 875.689886
+    },
+    {
+      "position": 6,
+      "artist": "Fine Cut Bodies",
+      "title": "Trekk Far (Elite Force)",
+      "startTime": 1136.029387
+    },
+    {
+      "position": 7,
+      "artist": "Bassnectar",
+      "title": "Creation Lullaby",
+      "startTime": 1399.149977
+    }
+  ]
+}

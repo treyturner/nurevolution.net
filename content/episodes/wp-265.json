@@ -1,0 +1,83 @@
+{
+  "schemaVersion": 1,
+  "id": "wp-265",
+  "slug": "joseph-noctum-in-the-pink",
+  "status": "published",
+  "publishedAt": "2011-05-04T18:00:16.000Z",
+  "title": "In The Pink",
+  "artist": "Joseph Noctum",
+  "descriptionHtml": "<p>One night a group of cyborgs took over the Pink Palace and turned it into a cabaret.  Their demands were to dance and be entertained, otherwise they would enslave the human race.  Joseph Noctum arrived armed with two hours of calculated crunk and made them dance as if he was their positronic programmer.  In the end, they danced until he trounced their blinking monocles right onto the dancefloor.  This mix is offered in testament to his heroic actions that night, for he may have saved humanity that day… for the time being.</p>",
+  "guid": "https://nurevolution.net/?p=265",
+  "guidIsPermalink": false,
+  "audioAssetId": "asset-4528e80f69f5822a",
+  "artworkAssetId": "asset-7fb535a7f31c7171",
+  "durationSeconds": 2426,
+  "tracks": [
+    {
+      "position": 1,
+      "artist": "K-Lab",
+      "title": "Out The Door",
+      "startTime": null
+    },
+    {
+      "position": 2,
+      "artist": "William Breakspear",
+      "title": "Skydive",
+      "startTime": null
+    },
+    {
+      "position": 3,
+      "artist": "Opiuo",
+      "title": "Robo Booty",
+      "startTime": null
+    },
+    {
+      "position": 4,
+      "artist": "Vent",
+      "title": "Lunatics",
+      "startTime": null
+    },
+    {
+      "position": 5,
+      "artist": "JPOD the Beat Chef",
+      "title": "Crowd Control (ft. Dynamic)",
+      "startTime": null
+    },
+    {
+      "position": 6,
+      "artist": "Mochipet",
+      "title": "Rumbunktion (Mattb)",
+      "startTime": null
+    },
+    {
+      "position": 7,
+      "artist": "Knight Riderz",
+      "title": "Mind Riddim (ft. Juakali)",
+      "startTime": null
+    },
+    {
+      "position": 8,
+      "artist": "Jillian Ann & Love & Light",
+      "title": "Know Us (Knight Riderz)",
+      "startTime": null
+    },
+    {
+      "position": 9,
+      "artist": "Samples vs. Ludacris",
+      "title": "Drop Bombs (Konekta vs. Dan K) / Stand Up",
+      "startTime": null
+    },
+    {
+      "position": 10,
+      "artist": "Freq Nasty",
+      "title": "Drum Play (FreQ's Mash Up The Dancehall Edit)",
+      "startTime": null
+    },
+    {
+      "position": 11,
+      "artist": "Sub Swara",
+      "title": "Bird of Paradise (ft. Stuart Bogie & Eric Biondo)",
+      "startTime": null
+    }
+  ]
+}

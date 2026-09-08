@@ -1,0 +1,113 @@
+{
+  "schemaVersion": 1,
+  "id": "wp-208",
+  "slug": "trey-turner-you-dont-know-me",
+  "status": "published",
+  "publishedAt": "2013-03-20T18:00:27.000Z",
+  "title": "You Don't Know Me",
+  "artist": "Trey Turner",
+  "descriptionHtml": "<p>Drums, bitches, and bass at around 170bpm.</p>",
+  "guid": "https://nurevolution.net/?p=208",
+  "guidIsPermalink": false,
+  "audioAssetId": "asset-e09ee0651ac26b3a",
+  "artworkAssetId": "asset-eaed7daa06c44a2c",
+  "durationSeconds": 3644,
+  "tracks": [
+    {
+      "position": 1,
+      "artist": "Frederic Robinson",
+      "title": "Laughing at Clouds",
+      "startTime": 0
+    },
+    {
+      "position": 2,
+      "artist": "SpectraSoul",
+      "title": "The Curb",
+      "startTime": 269.75288
+    },
+    {
+      "position": 3,
+      "artist": "Makoto",
+      "title": "Woe ft. Deeizm",
+      "startTime": 537.725465
+    },
+    {
+      "position": 4,
+      "artist": "Fanu",
+      "title": "About Life and Death",
+      "startTime": 827.521429
+    },
+    {
+      "position": 5,
+      "artist": "Rido & Hybris",
+      "title": "First Contact",
+      "startTime": 1093.955715
+    },
+    {
+      "position": 6,
+      "artist": "Receptor",
+      "title": "Friendship",
+      "startTime": 1293.210409
+    },
+    {
+      "position": 7,
+      "artist": "Sub Focus",
+      "title": "Join The Dots",
+      "startTime": 1398.195307
+    },
+    {
+      "position": 8,
+      "artist": "Mindscape",
+      "title": "Bounce",
+      "startTime": 1552.668368
+    },
+    {
+      "position": 9,
+      "artist": "Camo & Krooked",
+      "title": "Cross The Line ft. Ayah Marar (Metrik)",
+      "startTime": 1794.842608
+    },
+    {
+      "position": 10,
+      "artist": "Danny Byrd",
+      "title": "Love You Like This",
+      "startTime": 2058.435805
+    },
+    {
+      "position": 11,
+      "artist": "The Prototypes",
+      "title": "Your Future",
+      "startTime": 2256.792653
+    },
+    {
+      "position": 12,
+      "artist": "Noisia & Phace",
+      "title": "Program",
+      "startTime": 2500.360771
+    },
+    {
+      "position": 13,
+      "artist": "Chase & Status",
+      "title": "End Credits (VIP)",
+      "startTime": 2743.767438
+    },
+    {
+      "position": 14,
+      "artist": "Tipper",
+      "title": "Shatter Box",
+      "startTime": 2892.809343
+    },
+    {
+      "position": 15,
+      "artist": "The Prototypes",
+      "title": "Pandora",
+      "startTime": 3164.07576
+    },
+    {
+      "position": 16,
+      "artist": "Major Lazer",
+      "title": "Get Free (Andy C)",
+      "startTime": 3319.77805
+    }
+  ]
+}

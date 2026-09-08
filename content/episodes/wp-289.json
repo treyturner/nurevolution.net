@@ -1,0 +1,107 @@
+{
+  "schemaVersion": 1,
+  "id": "wp-289",
+  "slug": "cody-haynes-live-on-kvrx-91-7fm-feb-3-2006",
+  "status": "published",
+  "publishedAt": "2006-02-03T18:00:52.000Z",
+  "title": "Live on KVRX 91.7FM (Feb. 3, 2006)",
+  "artist": "Cody Haynes",
+  "descriptionHtml": "<p>Glitchy midtempo</p>",
+  "guid": "https://nurevolution.net/?p=289",
+  "guidIsPermalink": false,
+  "audioAssetId": "asset-45d62250e6619caf",
+  "artworkAssetId": "asset-a15970fdb539a7e3",
+  "durationSeconds": 3751,
+  "tracks": [
+    {
+      "position": 1,
+      "artist": "Ricky V. Valentine",
+      "title": "Ghetto Classics",
+      "startTime": null
+    },
+    {
+      "position": 2,
+      "artist": "Prefuse 73",
+      "title": "Mantra ft. Tyondai Braxton",
+      "startTime": null
+    },
+    {
+      "position": 3,
+      "artist": "Machine Drum",
+      "title": "Big Booty House",
+      "startTime": null
+    },
+    {
+      "position": 4,
+      "artist": "Aceyalone",
+      "title": "Mic Check (Nobody)",
+      "startTime": null
+    },
+    {
+      "position": 5,
+      "artist": "Morris Nightingale",
+      "title": "Optimo / Mod Conformance For Men",
+      "startTime": null
+    },
+    {
+      "position": 6,
+      "artist": "Prefuse 73",
+      "title": "Love You Bring",
+      "startTime": null
+    },
+    {
+      "position": 7,
+      "artist": "ScanOne",
+      "title": "TikTok",
+      "startTime": null
+    },
+    {
+      "position": 8,
+      "artist": "Tipper",
+      "title": "Paperthinreality",
+      "startTime": null
+    },
+    {
+      "position": 9,
+      "artist": "Son of the Electric Ghost",
+      "title": "Ebeneezer",
+      "startTime": null
+    },
+    {
+      "position": 10,
+      "artist": "Lady Sovereign",
+      "title": "Random (Rucker & Sinden)",
+      "startTime": null
+    },
+    {
+      "position": 11,
+      "artist": "Tipper",
+      "title": "Glitch",
+      "startTime": null
+    },
+    {
+      "position": 12,
+      "artist": "Son of the Electric Ghost",
+      "title": "Sonrise",
+      "startTime": null
+    },
+    {
+      "position": 13,
+      "artist": "Bassnectar & Kraddy",
+      "title": "Snakecharmer",
+      "startTime": null
+    },
+    {
+      "position": 14,
+      "artist": "Tipper",
+      "title": "Fleas & Itches",
+      "startTime": null
+    },
+    {
+      "position": 15,
+      "artist": "Massive Attack & Mos Def",
+      "title": "I Against I",
+      "startTime": null
+    }
+  ]
+}

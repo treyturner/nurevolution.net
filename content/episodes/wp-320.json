@@ -1,0 +1,101 @@
+{
+  "schemaVersion": 1,
+  "id": "wp-320",
+  "slug": "trey-turner-and-contrast-where-do-we-go-from-here",
+  "status": "published",
+  "publishedAt": "2002-10-28T18:00:29.000Z",
+  "title": "Where Do We Go From Here",
+  "artist": "Trey Turner & Contrast",
+  "descriptionHtml": "<p>Forward thinking nuskool mixed by Trey and Mitch Burton</p>",
+  "guid": "https://nurevolution.net/?p=320",
+  "guidIsPermalink": false,
+  "audioAssetId": "asset-2e7c79fcf44d6c67",
+  "artworkAssetId": "asset-cba5664e28f3f302",
+  "durationSeconds": 4643,
+  "tracks": [
+    {
+      "position": 1,
+      "artist": "John Creamer & Stephane K",
+      "title": "I Wish You Were Here (PMT)",
+      "startTime": 0
+    },
+    {
+      "position": 2,
+      "artist": "Dan F",
+      "title": "Double Take",
+      "startTime": 442.8
+    },
+    {
+      "position": 3,
+      "artist": "Phantom Beats",
+      "title": "The Drop (Future Funk Squad)",
+      "startTime": 754.44
+    },
+    {
+      "position": 4,
+      "artist": "Elite Force",
+      "title": "Crew One",
+      "startTime": 1023.76
+    },
+    {
+      "position": 5,
+      "artist": "Ek",
+      "title": "Raiders",
+      "startTime": 1387.853333
+    },
+    {
+      "position": 6,
+      "artist": "Db+",
+      "title": "That Thing (Koma & Bones)",
+      "startTime": 1586.226666
+    },
+    {
+      "position": 7,
+      "artist": "Infiniti & Keith MacKenzie",
+      "title": "Shadow (Hyper)",
+      "startTime": 1926.293333
+    },
+    {
+      "position": 8,
+      "artist": "BLIM & Carter",
+      "title": "itsaremix",
+      "startTime": 2181.346666
+    },
+    {
+      "position": 9,
+      "artist": "BLIM",
+      "title": "Crazy Things",
+      "startTime": 2571.013333
+    },
+    {
+      "position": 10,
+      "artist": "Big Head",
+      "title": "2604",
+      "startTime": 2946.506666
+    },
+    {
+      "position": 11,
+      "artist": "Orbital",
+      "title": "Funny Break (Plump DJs)",
+      "startTime": 3244.066666
+    },
+    {
+      "position": 12,
+      "artist": "Luke Slater",
+      "title": "Stars & Heroes (Rennie Pilgrem & BLIM)",
+      "startTime": 3612.493333
+    },
+    {
+      "position": 13,
+      "artist": "Hybrid",
+      "title": "Visible Noise",
+      "startTime": 3938.386666
+    },
+    {
+      "position": 14,
+      "artist": "Filter",
+      "title": "Where Do We Go From Here (Hyper)",
+      "startTime": 4292.639999
+    }
+  ]
+}

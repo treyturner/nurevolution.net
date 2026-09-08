@@ -1,0 +1,149 @@
+{
+  "schemaVersion": 1,
+  "id": "wp-444",
+  "slug": "trey-turner-lost-in-translation",
+  "status": "published",
+  "publishedAt": "2017-11-01T22:00:01.000Z",
+  "title": "Lost In Translation",
+  "artist": "Trey Turner",
+  "descriptionHtml": "<p>It’s been too long! Here are some vibes I’ve been feeling this year.</p>",
+  "guid": "https://nurevolution.net/?post_type=one_page_portfolio&p=444",
+  "guidIsPermalink": false,
+  "audioAssetId": "asset-486937c569bbbf76",
+  "artworkAssetId": "asset-267a5855fb201d22",
+  "durationSeconds": 3035,
+  "tracks": [
+    {
+      "position": 1,
+      "artist": "Moniker",
+      "title": "Vessels",
+      "startTime": null
+    },
+    {
+      "position": 2,
+      "artist": "NastyNasty",
+      "title": "sickLitTle VIP",
+      "startTime": null
+    },
+    {
+      "position": 3,
+      "artist": "Sayer",
+      "title": "Kanellos",
+      "startTime": null
+    },
+    {
+      "position": 4,
+      "artist": "Doshy",
+      "title": "Hijacked",
+      "startTime": null
+    },
+    {
+      "position": 5,
+      "artist": "Zeke Beats",
+      "title": "BDSM",
+      "startTime": null
+    },
+    {
+      "position": 6,
+      "artist": "Lazer Sword",
+      "title": "FUBU",
+      "startTime": null
+    },
+    {
+      "position": 7,
+      "artist": "Zeke Beats",
+      "title": "Bounce",
+      "startTime": null
+    },
+    {
+      "position": 8,
+      "artist": "Sayer",
+      "title": "Rainsong",
+      "startTime": null
+    },
+    {
+      "position": 9,
+      "artist": "Yheti",
+      "title": "Make Some Money",
+      "startTime": null
+    },
+    {
+      "position": 10,
+      "artist": "Subp Yao",
+      "title": "Smoke Up, Drink Up",
+      "startTime": null
+    },
+    {
+      "position": 11,
+      "artist": "The OriGinALz",
+      "title": "Bring It",
+      "startTime": null
+    },
+    {
+      "position": 12,
+      "artist": "Zeke Beats",
+      "title": "Mechanical (Subp Yao)",
+      "startTime": null
+    },
+    {
+      "position": 13,
+      "artist": "Sayer",
+      "title": "Glossolalia (Yheti)",
+      "startTime": null
+    },
+    {
+      "position": 14,
+      "artist": "Zeke Beats",
+      "title": "The Freq",
+      "startTime": null
+    },
+    {
+      "position": 15,
+      "artist": "Crimes!",
+      "title": "Realson (Mark Instinct)",
+      "startTime": null
+    },
+    {
+      "position": 16,
+      "artist": "Subp Yao",
+      "title": "Kahn & Need x Subp Yao",
+      "startTime": null
+    },
+    {
+      "position": 17,
+      "artist": "Moniker",
+      "title": "Iktomi (Wick-It the Instigator)",
+      "startTime": null
+    },
+    {
+      "position": 18,
+      "artist": "G Jones",
+      "title": "Cosmic Swarm",
+      "startTime": null
+    },
+    {
+      "position": 19,
+      "artist": "Crimes!",
+      "title": "Whattt",
+      "startTime": null
+    },
+    {
+      "position": 20,
+      "artist": "Moody Good",
+      "title": "Witness The Fuxness",
+      "startTime": null
+    },
+    {
+      "position": 21,
+      "artist": "Noisia",
+      "title": "Mantra (Mat Zo)",
+      "startTime": null
+    },
+    {
+      "position": 22,
+      "artist": "Monuman",
+      "title": "Rise",
+      "startTime": null
+    }
+  ]
+}

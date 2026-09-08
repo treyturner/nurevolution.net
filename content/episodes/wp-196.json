@@ -1,0 +1,107 @@
+{
+  "schemaVersion": 1,
+  "id": "wp-196",
+  "slug": "eazytom-star-whores",
+  "status": "published",
+  "publishedAt": "2011-09-14T18:00:50.000Z",
+  "title": "Star Whores",
+  "artist": "EazyTom",
+  "descriptionHtml": "<p>Time traveling glitch DJ EazyTom takes a pause to drop a new mixdown dunked in crunk and dusted with a glaze of glitch from another planet.</p>",
+  "guid": "https://nurevolution.net/?p=196",
+  "guidIsPermalink": false,
+  "audioAssetId": "asset-f861b34eac38c3bb",
+  "artworkAssetId": "asset-8852f319e6e2c322",
+  "durationSeconds": 3324,
+  "tracks": [
+    {
+      "position": 1,
+      "artist": "Juno Reactor",
+      "title": "Landing",
+      "startTime": null
+    },
+    {
+      "position": 2,
+      "artist": "Deru",
+      "title": "Confused",
+      "startTime": null
+    },
+    {
+      "position": 3,
+      "artist": "Hypha",
+      "title": "Puddle Melter",
+      "startTime": null
+    },
+    {
+      "position": 4,
+      "artist": "Hypha",
+      "title": "Casaverde",
+      "startTime": null
+    },
+    {
+      "position": 5,
+      "artist": "Hypha",
+      "title": "Phixations",
+      "startTime": null
+    },
+    {
+      "position": 6,
+      "artist": "Electromass",
+      "title": "Dripping",
+      "startTime": null
+    },
+    {
+      "position": 7,
+      "artist": "Thriftworks",
+      "title": "Port Au Mento",
+      "startTime": null
+    },
+    {
+      "position": 8,
+      "artist": "Knight Riderz",
+      "title": "12th Dimension",
+      "startTime": null
+    },
+    {
+      "position": 9,
+      "artist": "Blunt Instrument",
+      "title": "Battle Toad",
+      "startTime": null
+    },
+    {
+      "position": 10,
+      "artist": "Heyoka",
+      "title": "Glibidy Glob",
+      "startTime": null
+    },
+    {
+      "position": 11,
+      "artist": "Heyoka",
+      "title": "Jade",
+      "startTime": null
+    },
+    {
+      "position": 12,
+      "artist": "Opiuo",
+      "title": "King Prawn",
+      "startTime": null
+    },
+    {
+      "position": 13,
+      "artist": "Love & Light",
+      "title": "Structural Liberation",
+      "startTime": null
+    },
+    {
+      "position": 14,
+      "artist": "Opiuo",
+      "title": "Petrichor",
+      "startTime": null
+    },
+    {
+      "position": 15,
+      "artist": "Thriftworks",
+      "title": "Eisenblaster",
+      "startTime": null
+    }
+  ]
+}

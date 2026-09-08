@@ -1,8 +1,8 @@
 # Nurevolution
 
-A podcast website being rebuilt from WordPress. M1 supplies a minimal dark Nuxt shell, a browser-audio boundary, and the verification tooling needed for subsequent milestones. The archive, feed, full player, branding, and deployment follow in later milestones.
+A podcast website being rebuilt from WordPress. M1 supplies the minimal dark Nuxt shell and browser-audio boundary. M2 adds the validated 55-episode archive, a repeatable importer, and read-only content APIs. RSS, the full player, branding, and deployment follow in later milestones.
 
-See the [roadmap](ROADMAP.md), [M0 audit plan and evidence](docs/milestones/M00-migration-audit.md), [M1 completion record](docs/milestones/M01-foundation-and-verification.md), and [M2 canonical content implementation plan](docs/milestones/M02-canonical-content.md).
+See the [roadmap](ROADMAP.md), [M0 audit plan and evidence](docs/milestones/M00-migration-audit.md), [M1 completion record](docs/milestones/M01-foundation-and-verification.md), [M2 implementation and evidence](docs/milestones/M02-canonical-content.md), and [content authoring guide](docs/CONTENT.md).
 
 ## Setup
 
@@ -17,7 +17,7 @@ pnpm verify
 
 Browser installation is a one-time environment setup step; repeat it after changing Playwright versions. Linux system dependency installation may need elevated privileges. If Corepack shims are unavailable on your PATH, invoke pnpm as `corepack pnpm`, or install shims in a writable directory with `corepack enable --install-directory <directory>` and add that directory to PATH.
 
-No environment file, private migration source, external feed, or credentials are needed for M1. Dependencies are pinned exactly and `pnpm-lock.yaml` is the installation source of truth. Do not replace it with a different package manager's lockfile.
+No environment file, private migration source, external feed, or credentials are needed for M1/M2. Dependencies are pinned exactly and `pnpm-lock.yaml` is the installation source of truth. Do not replace it with a different package manager's lockfile.
 
 The version marker in `.nuxtrc` records the completed Nuxt test-utils setup so verification does not create a setup file or launch its installer. Keep it aligned when intentionally upgrading test-utils.
 
@@ -29,22 +29,24 @@ pnpm dev
 
 Open the local URL printed by Nuxt. Vue and CSS edits update through HMR; changes to project configuration may restart the development server. Stop it with Ctrl-C. This shell intentionally contains only the site heading and keyboard skip link until the content and design milestones.
 
-| Command                | Behavior                                                                                                                                      |
-| ---------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
-| `pnpm prepare`         | Generate Nuxt types and ESLint configuration; also runs during installation.                                                                  |
-| `pnpm dev`             | Start the local Nuxt development server.                                                                                                      |
-| `pnpm format`          | Rewrite maintained files with Prettier; review documentation changes.                                                                         |
-| `pnpm format:check`    | Check formatting without edits.                                                                                                               |
-| `pnpm lint`            | Check source, tests, and tooling with Nuxt ESLint.                                                                                            |
-| `pnpm typecheck`       | Strict Nuxt checks plus explicit test, fixture, and tooling checks.                                                                           |
-| `pnpm test`            | Run Node unit tests and Nuxt runtime tests once.                                                                                              |
-| `pnpm test:migration`  | Run the deterministic M0 audit unit tests without private source access.                                                                      |
-| `pnpm check:migration` | Validate the public M0 inventory and legacy URL map; exit 2 means valid artifacts contain documented blockers.                                |
-| `pnpm test:coverage`   | Run those tests and enforce coverage thresholds.                                                                                              |
-| `pnpm build`           | Produce the portable SSR Node application in `.output/`.                                                                                      |
-| `pnpm build:fixture`   | Build the independent test-only media application.                                                                                            |
-| `pnpm test:e2e`        | Build the media fixture and run all browser projects; requires a current normal production build.                                             |
-| `pnpm verify`          | Prepare, formatting check, lint, types, migration unit tests, application coverage, production build, and browser tests, stopping on failure. |
+| Command                 | Behavior                                                                                                                                                                                 |
+| ----------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `pnpm prepare`          | Generate Nuxt types and ESLint configuration; also runs during installation.                                                                                                             |
+| `pnpm dev`              | Start the local Nuxt development server.                                                                                                                                                 |
+| `pnpm format`           | Rewrite maintained files with Prettier; review documentation changes.                                                                                                                    |
+| `pnpm format:check`     | Check formatting without edits.                                                                                                                                                          |
+| `pnpm lint`             | Check source, tests, and tooling with Nuxt ESLint.                                                                                                                                       |
+| `pnpm typecheck`        | Strict Nuxt checks plus explicit test, fixture, and tooling checks.                                                                                                                      |
+| `pnpm test`             | Run Node unit tests and Nuxt runtime tests once.                                                                                                                                         |
+| `pnpm test:migration`   | Run the deterministic M0 audit unit tests without private source access.                                                                                                                 |
+| `pnpm check:migration`  | Validate the public M0 inventory and legacy URL map; exit 2 means valid artifacts contain documented blockers.                                                                           |
+| `pnpm import:wordpress` | Dry-run the frozen WordPress import; `--write` creates missing files; `--check` compares without edits.                                                                                  |
+| `pnpm check:content`    | Validate authoring, references, safe descriptions, publication rules, and protected historical fields.                                                                                   |
+| `pnpm test:coverage`    | Run those tests and enforce coverage thresholds.                                                                                                                                         |
+| `pnpm build`            | Validate content, then produce the portable SSR Node application in `.output/`.                                                                                                          |
+| `pnpm build:fixture`    | Build the independent test-only media application.                                                                                                                                       |
+| `pnpm test:e2e`         | Build the media fixture and run all browser projects; requires a current normal production build.                                                                                        |
+| `pnpm verify`           | Prepare, formatting check, lint, types, migration unit tests/artifact check, application/content coverage, content validation, production build, and browser tests, stopping on failure. |
 
 The canonical local and CI gate is **`pnpm verify`**. It prepares its generated prerequisites and builds both applications without a hand-started server. It does not install dependencies, rewrite maintained files, accept snapshots, or contact the legacy site.
 
@@ -58,11 +60,14 @@ pnpm build:fixture
 pnpm exec playwright test --project chromium
 ```
 
-Run the normal production build locally with `node .output/server/index.mjs`. This validates the portable Node target; infrastructure and public deployment remain outside M1.
+Run the normal production build locally with `node .output/server/index.mjs`. This validates the portable Node target; infrastructure and public deployment remain later milestone work.
 
 ## Application and test boundaries
 
 - `app/` contains the SSR shell, semantic home page, CSS, and production audio adapter.
+- `content/` holds 55 episode records, 156 assets, show metadata, legacy URL mappings, and deterministic import provenance. See [editing and reconciliation](docs/CONTENT.md).
+- `shared/content/` defines strict schemas and pure public selection/projections. `server/content/` validates and loads the catalog; `server/api/` exposes show, episode summaries, and detail. Nitro packages the archive as server assets, independent of the production working directory.
+- `tools/content/` imports only frozen public M0 inputs plus the Praxis evidence. The default import is a dry run; explicit writes create missing files without overwriting existing ones. Ordinary validation permits later editorial changes and protects historical subscriber identity.
 - `tools/migration/` contains the standard-library audit command and tests. The shared gate runs both its unit tests and the public artifact check; feed capture, database export, and source reconciliation remain explicit private-workspace operations.
 - `test/unit/` tests adapter behavior in Node with controlled media events and promises.
 - `test/nuxt/` mounts the real application and shell through Nuxt test utilities and happy-dom.
@@ -75,7 +80,7 @@ The committed audio fixture is an original, deterministic two-second, mono, 22,0
 
 ## Coverage and browser execution
 
-Vitest includes every executable `app/**/*.{ts,vue}`, `shared/**/*.ts`, and `server/**/*.ts` file, including unimported files. Only declaration files are excluded within those source patterns. Tests, generated output, dependencies, and declarative project configuration are outside the production-source patterns. No application subsystem is excluded. Python migration tooling is tested by `test:migration` separately from V8 application coverage. Generated migration reports/manifests retain the audit tool’s canonical formatting and are excluded from Prettier; maintained documentation remains checked.
+Vitest includes every executable `app/**/*.{ts,vue}`, `shared/**/*.ts`, `server/**/*.ts`, and `tools/content/**/*.ts` file, including unimported files. Only declaration files are excluded within those source patterns. Tests, generated output, dependencies, and declarative project configuration are outside the production-source patterns. No application subsystem is excluded. Python migration tooling is tested by `test:migration` separately from V8 application coverage. Generated migration reports/manifests retain the audit tool’s canonical formatting and are excluded from Prettier; maintained documentation remains checked.
 
 Coverage thresholds are **95% statements, lines, and functions; 90% branches**, with automatic threshold updates disabled. Reports appear in `coverage/index.html` and `coverage/lcov.info` as well as the terminal. Add meaningful behavioral tests as code grows; do not lower thresholds to make a gate pass.
 

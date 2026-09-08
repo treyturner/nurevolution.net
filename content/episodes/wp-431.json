@@ -1,0 +1,131 @@
+{
+  "schemaVersion": 1,
+  "id": "wp-431",
+  "slug": "trey-turner-is-this-thing-on",
+  "status": "published",
+  "publishedAt": "2016-10-11T18:00:41.000Z",
+  "title": "Is This Thing On?",
+  "artist": "Trey Turner",
+  "descriptionHtml": "<p>A smattering of breaks ranging from 172 to 100 bpm. Neurofunk, midtempo breaks, future bass, and hip-hop mixed out of Austin, TX.</p>",
+  "guid": "https://nurevolution.net/?post_type=one_page_portfolio&p=431",
+  "guidIsPermalink": false,
+  "audioAssetId": "asset-c828f22321a3b059",
+  "artworkAssetId": "asset-161f24d30919d412",
+  "durationSeconds": 2964,
+  "tracks": [
+    {
+      "position": 1,
+      "artist": "Jade Cicada",
+      "title": "Grunty's Bundt Cake",
+      "startTime": null
+    },
+    {
+      "position": 2,
+      "artist": "June Miller",
+      "title": "Slow Down",
+      "startTime": null
+    },
+    {
+      "position": 3,
+      "artist": "clipping",
+      "title": "Summertime ft. King T",
+      "startTime": null
+    },
+    {
+      "position": 4,
+      "artist": "Noisia & Mono-poly",
+      "title": "The Nomad",
+      "startTime": null
+    },
+    {
+      "position": 5,
+      "artist": "Apashe & Phace",
+      "title": "Unsafe",
+      "startTime": null
+    },
+    {
+      "position": 6,
+      "artist": "Phace",
+      "title": "Monochrome",
+      "startTime": null
+    },
+    {
+      "position": 7,
+      "artist": "Noer the Boy & Zero Tep",
+      "title": "Sister Transistor",
+      "startTime": null
+    },
+    {
+      "position": 8,
+      "artist": "Baauer",
+      "title": "Sow",
+      "startTime": null
+    },
+    {
+      "position": 9,
+      "artist": "Nasty Habits",
+      "title": "Shadow Boxing (Om Unit)",
+      "startTime": null
+    },
+    {
+      "position": 10,
+      "artist": "Noer the Boy",
+      "title": "Slumpy",
+      "startTime": null
+    },
+    {
+      "position": 11,
+      "artist": "Mr. Bill & The Fruitbat",
+      "title": "Trill Clinton",
+      "startTime": null
+    },
+    {
+      "position": 12,
+      "artist": "Liquid Stranger & Space Jesus",
+      "title": "SPACE BOSS",
+      "startTime": null
+    },
+    {
+      "position": 13,
+      "artist": "G Jones & Bleep Bloop",
+      "title": "Quasars",
+      "startTime": null
+    },
+    {
+      "position": 14,
+      "artist": "Bleep Bloop",
+      "title": "Slippin",
+      "startTime": null
+    },
+    {
+      "position": 15,
+      "artist": "Tsuruda",
+      "title": "TFW u stand on the dj table",
+      "startTime": null
+    },
+    {
+      "position": 16,
+      "artist": "Baauer",
+      "title": "Body",
+      "startTime": null
+    },
+    {
+      "position": 17,
+      "artist": "Machinedrum",
+      "title": "Spectrum Sequence",
+      "startTime": null
+    },
+    {
+      "position": 18,
+      "artist": "DJ Shadow",
+      "title": "The Sideshow",
+      "startTime": null
+    },
+    {
+      "position": 19,
+      "artist": "Machinedrum",
+      "title": "Isometrix",
+      "startTime": null
+    }
+  ]
+}

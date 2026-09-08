@@ -1,0 +1,101 @@
+{
+  "schemaVersion": 1,
+  "id": "wp-293",
+  "slug": "trey-turner-the-toads-mistress",
+  "status": "published",
+  "publishedAt": "2010-06-28T18:00:11.000Z",
+  "title": "The Toad's Mistress",
+  "artist": "Trey Turner",
+  "descriptionHtml": "<p>A unique midtempo breakbeat set inspired by selections made during Flipside 2010.</p>",
+  "guid": "https://nurevolution.net/?p=293",
+  "guidIsPermalink": false,
+  "audioAssetId": "asset-2d938ca4211a912e",
+  "artworkAssetId": "asset-63dade2ffce61f81",
+  "durationSeconds": 2770,
+  "tracks": [
+    {
+      "position": 1,
+      "artist": "Luke Vibert",
+      "title": "Rhythm",
+      "startTime": 0
+    },
+    {
+      "position": 2,
+      "artist": "An-ten-nae",
+      "title": "Djelem",
+      "startTime": 231.823243
+    },
+    {
+      "position": 3,
+      "artist": "Free The Robots",
+      "title": "Select/Start",
+      "startTime": 358.093152
+    },
+    {
+      "position": 4,
+      "artist": "Lazer Sword",
+      "title": "Koopa Boss Mode",
+      "startTime": 555.140091
+    },
+    {
+      "position": 5,
+      "artist": "An-ten-nae",
+      "title": "Tripping on Banana Peels",
+      "startTime": 730.472857
+    },
+    {
+      "position": 6,
+      "artist": "Vent",
+      "title": "Itchy Feet",
+      "startTime": 927.115578
+    },
+    {
+      "position": 7,
+      "artist": "Saeg",
+      "title": "Computer Music (Opiuo)",
+      "startTime": 1148.02848
+    },
+    {
+      "position": 8,
+      "artist": "Funkstorung",
+      "title": "Fat Camp Feva",
+      "startTime": 1405.899523
+    },
+    {
+      "position": 9,
+      "artist": "Electrojuice",
+      "title": "Perfect",
+      "startTime": 1578.71467
+    },
+    {
+      "position": 10,
+      "artist": "Nanda",
+      "title": "Cozmik Dance",
+      "startTime": 1720.405622
+    },
+    {
+      "position": 11,
+      "artist": "TooMuchPorn",
+      "title": "Bad Rush",
+      "startTime": 1896.053468
+    },
+    {
+      "position": 12,
+      "artist": "Mr. Rogers",
+      "title": "winkysassnassterbean",
+      "startTime": 2147.434148
+    },
+    {
+      "position": 13,
+      "artist": "Herrmutt Lobby",
+      "title": "Bien 8 Bits",
+      "startTime": 2421.775123
+    },
+    {
+      "position": 14,
+      "artist": "Fulgeance",
+      "title": "Chico (Dorian Concept)",
+      "startTime": 2582.502334
+    }
+  ]
+}

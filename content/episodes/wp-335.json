@@ -1,0 +1,83 @@
+{
+  "schemaVersion": 1,
+  "id": "wp-335",
+  "slug": "trey-turner-tremor",
+  "status": "published",
+  "publishedAt": "2001-11-01T18:00:00.000Z",
+  "title": "Tremor",
+  "artist": "Trey Turner",
+  "descriptionHtml": "<p>Uptempo breaks</p>",
+  "guid": "https://nurevolution.net/?p=335",
+  "guidIsPermalink": false,
+  "audioAssetId": "asset-72b4fd53c6f0a410",
+  "artworkAssetId": "asset-eece95f342027745",
+  "durationSeconds": 4120,
+  "tracks": [
+    {
+      "position": 1,
+      "artist": "Kriminal",
+      "title": "Loud and Proud (Hybrid)",
+      "startTime": 0
+    },
+    {
+      "position": 2,
+      "artist": "Hybrid",
+      "title": "Burnin'",
+      "startTime": 426.693333
+    },
+    {
+      "position": 3,
+      "artist": "Accadia",
+      "title": "Into the Dawn (Ashtrax)",
+      "startTime": 725.32
+    },
+    {
+      "position": 4,
+      "artist": "Radiohead",
+      "title": "Everything In Its Right Place (Hybrid)",
+      "startTime": 1265.746667
+    },
+    {
+      "position": 5,
+      "artist": "John Creamer & Stephane K",
+      "title": "I Love You (Hybrid)",
+      "startTime": 1754.626667
+    },
+    {
+      "position": 6,
+      "artist": "Uberzone",
+      "title": "Bounce (Max Graham)",
+      "startTime": 2152.84
+    },
+    {
+      "position": 7,
+      "artist": "Leuroj",
+      "title": "Isokora (Bushwacka)",
+      "startTime": 2465.72
+    },
+    {
+      "position": 8,
+      "artist": "Koma & Bones",
+      "title": "High Rollin' (Rennie Pilgrem Remix)",
+      "startTime": 2878.146667
+    },
+    {
+      "position": 9,
+      "artist": "Koma & Bones",
+      "title": "Morpheus",
+      "startTime": 3119.92
+    },
+    {
+      "position": 10,
+      "artist": "Afrika Bombataa & Uberzone",
+      "title": "2 Kool 4 Skool (Remix)",
+      "startTime": 3475.466667
+    },
+    {
+      "position": 11,
+      "artist": "Chris Carter",
+      "title": "Moonshot",
+      "startTime": 3735.026667
+    }
+  ]
+}

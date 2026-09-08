@@ -1,0 +1,137 @@
+{
+  "schemaVersion": 1,
+  "id": "wp-484",
+  "slug": "trey-turner-ruminate",
+  "status": "published",
+  "publishedAt": "2020-05-09T06:02:57.000Z",
+  "title": "Ruminate",
+  "artist": "Trey Turner",
+  "descriptionHtml": "<p>r u m i n a t e</p>",
+  "guid": "https://nurevolution.net/?post_type=one_page_portfolio&p=484",
+  "guidIsPermalink": false,
+  "audioAssetId": "asset-5df28ae03c827b0f",
+  "artworkAssetId": "asset-0aae6b03b5300a3f",
+  "durationSeconds": 3610,
+  "tracks": [
+    {
+      "position": 1,
+      "artist": "Mat Zo",
+      "title": "Troglodyte",
+      "startTime": null
+    },
+    {
+      "position": 2,
+      "artist": "Tsuruda",
+      "title": "Pack Heat",
+      "startTime": null
+    },
+    {
+      "position": 3,
+      "artist": "Ivy Lab",
+      "title": "Orange",
+      "startTime": null
+    },
+    {
+      "position": 4,
+      "artist": "QZB & Vorso",
+      "title": "Needle (QZB)",
+      "startTime": null
+    },
+    {
+      "position": 5,
+      "artist": "Abstract Elements",
+      "title": "Myriapoda",
+      "startTime": null
+    },
+    {
+      "position": 6,
+      "artist": "Bensley",
+      "title": "Arpeggio Deluxe",
+      "startTime": null
+    },
+    {
+      "position": 7,
+      "artist": "Razat",
+      "title": "Bit Crush",
+      "startTime": null
+    },
+    {
+      "position": 8,
+      "artist": "Jimme Pé",
+      "title": "Falangaa",
+      "startTime": null
+    },
+    {
+      "position": 9,
+      "artist": "Subp Yao & DAYLE",
+      "title": "Oxygen",
+      "startTime": null
+    },
+    {
+      "position": 10,
+      "artist": "no puls",
+      "title": "Drama Scene",
+      "startTime": null
+    },
+    {
+      "position": 11,
+      "artist": "Balatron",
+      "title": "Dat Buddah Shii",
+      "startTime": null
+    },
+    {
+      "position": 12,
+      "artist": "Great Dane",
+      "title": "Break It",
+      "startTime": null
+    },
+    {
+      "position": 13,
+      "artist": "Hybris",
+      "title": "Rubber Ducky",
+      "startTime": null
+    },
+    {
+      "position": 14,
+      "artist": "Noisia & The Upbeats",
+      "title": "Halcyon",
+      "startTime": null
+    },
+    {
+      "position": 15,
+      "artist": "Mono/Poly",
+      "title": "The Fuckin' Real",
+      "startTime": null
+    },
+    {
+      "position": 16,
+      "artist": "Sinic",
+      "title": "Take It Or Leave It",
+      "startTime": null
+    },
+    {
+      "position": 17,
+      "artist": "Former",
+      "title": "Fogweaver",
+      "startTime": null
+    },
+    {
+      "position": 18,
+      "artist": "Deadcrow",
+      "title": "#VERYRARE",
+      "startTime": null
+    },
+    {
+      "position": 19,
+      "artist": "Posij",
+      "title": "Pump Pump",
+      "startTime": null
+    },
+    {
+      "position": 20,
+      "artist": "Culprate",
+      "title": "Inside",
+      "startTime": null
+    }
+  ]
+}

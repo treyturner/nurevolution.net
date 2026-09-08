@@ -1,0 +1,89 @@
+{
+  "schemaVersion": 1,
+  "id": "wp-322",
+  "slug": "fracture-and-dj-cubed-slipstream",
+  "status": "published",
+  "publishedAt": "2002-08-15T18:00:13.000Z",
+  "title": "Slipstream",
+  "artist": "Fracture & DJ^3",
+  "descriptionHtml": "<p>Progressive breaks mixed by Trey, JJ Stonebraker and Mitch Burton</p>",
+  "guid": "https://nurevolution.net/?p=322",
+  "guidIsPermalink": false,
+  "audioAssetId": "asset-ed214e146163878c",
+  "artworkAssetId": "asset-b24b3080fa709966",
+  "durationSeconds": 4748,
+  "tracks": [
+    {
+      "position": 1,
+      "artist": "Bahamut",
+      "title": "Fragadelic (Deepsky)",
+      "startTime": 0
+    },
+    {
+      "position": 2,
+      "artist": "Frontside",
+      "title": "Dammerung",
+      "startTime": 359.52
+    },
+    {
+      "position": 3,
+      "artist": "Hybrid",
+      "title": "Kid 2000 (Fracture Edit)",
+      "startTime": 783.76
+    },
+    {
+      "position": 4,
+      "artist": "DJ Tiesto",
+      "title": "Urban Train (Way Out West)",
+      "startTime": 1272.24
+    },
+    {
+      "position": 5,
+      "artist": "Layo & Bushwacka",
+      "title": "Let the Good Times Roll",
+      "startTime": 1653.413333
+    },
+    {
+      "position": 6,
+      "artist": "Dan F",
+      "title": "Bluebox",
+      "startTime": 2084.8
+    },
+    {
+      "position": 7,
+      "artist": "Salt Tank",
+      "title": "Angel's Landing (The Light)",
+      "startTime": 2228.613333
+    },
+    {
+      "position": 8,
+      "artist": "Max Graham",
+      "title": "Falling Together",
+      "startTime": 2559.16
+    },
+    {
+      "position": 9,
+      "artist": "Sasha",
+      "title": "Rabbitweed",
+      "startTime": 3134.746667
+    },
+    {
+      "position": 10,
+      "artist": "9 Nickel",
+      "title": "Rhythm Is Everything",
+      "startTime": 3623.746667
+    },
+    {
+      "position": 11,
+      "artist": "Deepsky",
+      "title": "View From A Stairway",
+      "startTime": 3954.533334
+    },
+    {
+      "position": 12,
+      "artist": "Space Manoeuvres",
+      "title": "Stage One (Total Separation)",
+      "startTime": 4387.773334
+    }
+  ]
+}

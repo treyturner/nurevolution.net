@@ -1,0 +1,71 @@
+{
+  "schemaVersion": 1,
+  "id": "wp-286",
+  "slug": "cody-haynes-live-on-kvrx-91-7fm-apr-12-2007",
+  "status": "published",
+  "publishedAt": "2007-04-12T18:00:32.000Z",
+  "title": "Live on KVRX 91.7FM (Apr. 12, 2007)",
+  "artist": "Cody Haynes",
+  "descriptionHtml": "<p>Glitch and downtempo breaks</p>",
+  "guid": "https://nurevolution.net/?p=286",
+  "guidIsPermalink": false,
+  "audioAssetId": "asset-c57974e04aade227",
+  "artworkAssetId": "asset-7544d06c1a6d0e33",
+  "durationSeconds": 1737,
+  "tracks": [
+    {
+      "position": 1,
+      "artist": "Deceptikon",
+      "title": "Almond Groves",
+      "startTime": null
+    },
+    {
+      "position": 2,
+      "artist": "Tipper",
+      "title": "Daved & Confused",
+      "startTime": null
+    },
+    {
+      "position": 3,
+      "artist": "Shadow Huntaz",
+      "title": "Sown Terror",
+      "startTime": null
+    },
+    {
+      "position": 4,
+      "artist": "Bit Meddler",
+      "title": "Unknown",
+      "startTime": null
+    },
+    {
+      "position": 5,
+      "artist": "Bit Meddler",
+      "title": "Unknown",
+      "startTime": null
+    },
+    {
+      "position": 6,
+      "artist": "Machine Drum",
+      "title": "Bidnezz (Jemapur)",
+      "startTime": null
+    },
+    {
+      "position": 7,
+      "artist": "Delarosa & Asora",
+      "title": "Uptown Ad One",
+      "startTime": null
+    },
+    {
+      "position": 8,
+      "artist": "The Disciple Grin",
+      "title": "Yoke",
+      "startTime": null
+    },
+    {
+      "position": 9,
+      "artist": "Sound Tribe Sector 9",
+      "title": "Better Day (Sub-Id)",
+      "startTime": null
+    }
+  ]
+}

@@ -9,12 +9,14 @@
   "scripts": {
     "dev": "nuxt dev",
     "prepare": "nuxt prepare",
-    "build": "nuxt build",
+    "build": "pnpm check:content && nuxt build",
     "build:fixture": "nuxt build test/fixtures/media-app",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "lint": "eslint .",
-    "typecheck": "nuxt typecheck && vue-tsc --noEmit -p tsconfig.test.json",
+    "typecheck": "nuxt typecheck && vue-tsc --noEmit -p tsconfig.test.json && tsc --noEmit -p tsconfig.content-tools.json",
+    "import:wordpress": "node tools/content/import-wordpress.ts",
+    "check:content": "node tools/content/check.ts",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
     "test:migration": "python3 -m unittest discover -s tools/migration/tests -p 'test_*.py'",
@@ -24,14 +26,17 @@
   },
   "dependencies": {
     "nuxt": "4.5.2",
+    "sanitize-html": "2.17.7",
     "vue": "3.5.42",
-    "vue-router": "5.3.1"
+    "vue-router": "5.3.1",
+    "zod": "4.5.4"
   },
   "devDependencies": {
     "@nuxt/eslint": "1.17.0",
     "@nuxt/test-utils": "4.2.0",
     "@playwright/test": "1.63.0",
     "@types/node": "22.20.1",
+    "@types/sanitize-html": "2.16.1",
     "@vitest/coverage-v8": "4.1.11",
     "@vue/test-utils": "2.5.0",
     "eslint": "10.10.0",

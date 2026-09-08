@@ -1,0 +1,137 @@
+{
+  "schemaVersion": 1,
+  "id": "wp-198",
+  "slug": "trey-turner-trapper-keeper-futura-s-2000",
+  "status": "published",
+  "publishedAt": "2012-09-07T18:00:35.000Z",
+  "title": "Trapper Keeper Futura S2000",
+  "artist": "Trey Turner",
+  "descriptionHtml": "<p>All my eggs in a basket called trap.  Oh there’s some footwork/wonk/8-bit shiz in there too.  Whatevs.</p>",
+  "guid": "https://nurevolution.net/?p=198",
+  "guidIsPermalink": false,
+  "audioAssetId": "asset-48228cdc82a08b46",
+  "artworkAssetId": "asset-1dcc7065d3daf2ac",
+  "durationSeconds": 3642,
+  "tracks": [
+    {
+      "position": 1,
+      "artist": "Ital Tek",
+      "title": "Satellite",
+      "startTime": 0
+    },
+    {
+      "position": 2,
+      "artist": "Doshy",
+      "title": "Redworm",
+      "startTime": 113.652948
+    },
+    {
+      "position": 3,
+      "artist": "Doshy",
+      "title": "Lazor Blaster ft. Unik",
+      "startTime": 305.265034
+    },
+    {
+      "position": 4,
+      "artist": "XLII",
+      "title": "Roll Upon You Like XLII",
+      "startTime": 526.432608
+    },
+    {
+      "position": 5,
+      "artist": "Lana Del Rey",
+      "title": "Blue Jeans ft. Azealia Banks (Simms & Belle)",
+      "startTime": 602.428368
+    },
+    {
+      "position": 6,
+      "artist": "Seven Lions",
+      "title": "Tyven",
+      "startTime": 780.313447
+    },
+    {
+      "position": 7,
+      "artist": "TNGHT",
+      "title": "Easy Easy",
+      "startTime": 1034.717302
+    },
+    {
+      "position": 8,
+      "artist": "Hudson Mohawke",
+      "title": "Thunder Bay",
+      "startTime": 1147.663243
+    },
+    {
+      "position": 9,
+      "artist": "Doshy",
+      "title": "Milky Way",
+      "startTime": 1327.66449
+    },
+    {
+      "position": 10,
+      "artist": "K Theory",
+      "title": "Azealia The B",
+      "startTime": 1572.574309
+    },
+    {
+      "position": 11,
+      "artist": "Seven Lions",
+      "title": "Isis",
+      "startTime": 1777.915964
+    },
+    {
+      "position": 12,
+      "artist": "Sinjin Hawke",
+      "title": "Crystal Dust",
+      "startTime": 1984.09483
+    },
+    {
+      "position": 13,
+      "artist": "TNGHT",
+      "title": "Bugg'n",
+      "startTime": 2236.330658
+    },
+    {
+      "position": 14,
+      "artist": "Kidkanevil",
+      "title": "ZoOoOoOoOp!!! ft. Oddisee",
+      "startTime": 2411.800363
+    },
+    {
+      "position": 15,
+      "artist": "Low Limit",
+      "title": "Trapperkeeper",
+      "startTime": 2537.474513
+    },
+    {
+      "position": 16,
+      "artist": "EPROM",
+      "title": "Honey Badger",
+      "startTime": 2701.222359
+    },
+    {
+      "position": 17,
+      "artist": "EPROM",
+      "title": "Regis Chillbin",
+      "startTime": 2925.130908
+    },
+    {
+      "position": 18,
+      "artist": "Ital Tek",
+      "title": "East District",
+      "startTime": 3076.281407
+    },
+    {
+      "position": 19,
+      "artist": "Ital Tek",
+      "title": "Gonga",
+      "startTime": 3304.280681
+    },
+    {
+      "position": 20,
+      "artist": "TNGHT",
+      "title": "Higher Ground",
+      "startTime": 3472.28279
+    }
+  ]
+}

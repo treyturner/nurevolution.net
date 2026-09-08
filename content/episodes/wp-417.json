@@ -1,0 +1,143 @@
+{
+  "schemaVersion": 1,
+  "id": "wp-417",
+  "slug": "trey-turner-praxis",
+  "status": "published",
+  "publishedAt": "2015-11-20T18:00:41.000Z",
+  "title": "Praxis",
+  "artist": "Trey Turner",
+  "descriptionHtml": "<p>A technical exploration into beats and bass across varied tempos.</p>",
+  "guid": "https://nurevolution.net/?post_type=one_page_portfolio&p=417",
+  "guidIsPermalink": false,
+  "audioAssetId": "asset-cfd112ac1a267eb8",
+  "artworkAssetId": "asset-ed7cf593c99a59a8",
+  "durationSeconds": 3396.349388,
+  "tracks": [
+    {
+      "position": 1,
+      "artist": "KRNE",
+      "title": "Chariots",
+      "startTime": 0
+    },
+    {
+      "position": 2,
+      "artist": "Herzeloyde",
+      "title": "Air",
+      "startTime": 208.794059
+    },
+    {
+      "position": 3,
+      "artist": "Icicle",
+      "title": "Hani",
+      "startTime": 395.481225
+    },
+    {
+      "position": 4,
+      "artist": "Moody Good",
+      "title": "Docbond",
+      "startTime": 573.042903
+    },
+    {
+      "position": 5,
+      "artist": "Hudson Mohawke",
+      "title": "Lil Djembe",
+      "startTime": 654.803629
+    },
+    {
+      "position": 6,
+      "artist": "KRNE & Herzeloyde",
+      "title": "Shows",
+      "startTime": 756.69186
+    },
+    {
+      "position": 7,
+      "artist": "Bil Bless",
+      "title": "Wipher Snapher",
+      "startTime": 916.942994
+    },
+    {
+      "position": 8,
+      "artist": "Djemba Djemba",
+      "title": "Oh Ok Yah Thats Cool",
+      "startTime": 1137.531407
+    },
+    {
+      "position": 9,
+      "artist": "Sibot",
+      "title": "Magnet Jam",
+      "startTime": 1259.446532
+    },
+    {
+      "position": 10,
+      "artist": "Shades",
+      "title": "Into Light",
+      "startTime": 1430.175942
+    },
+    {
+      "position": 11,
+      "artist": "Herzeloyde",
+      "title": "milly.G",
+      "startTime": 1604.092223
+    },
+    {
+      "position": 12,
+      "artist": "Swindle",
+      "title": "Elevator ft. TC",
+      "startTime": 1726.224128
+    },
+    {
+      "position": 13,
+      "artist": "G Jones",
+      "title": "Lavender Town",
+      "startTime": 1956.067008
+    },
+    {
+      "position": 14,
+      "artist": "Mr. Carmack",
+      "title": "Tour For Days",
+      "startTime": 2060.687756
+    },
+    {
+      "position": 15,
+      "artist": "KRNE",
+      "title": "Dollar Sines",
+      "startTime": 2160.129479
+    },
+    {
+      "position": 16,
+      "artist": "Subp Yao",
+      "title": "UNKNWN",
+      "startTime": 2307.326939
+    },
+    {
+      "position": 17,
+      "artist": "EPROM",
+      "title": "Regis Chillbin (Machinedrum)",
+      "startTime": 2421.60542
+    },
+    {
+      "position": 18,
+      "artist": "Icicle",
+      "title": "Mechanisms",
+      "startTime": 2593.592586
+    },
+    {
+      "position": 19,
+      "artist": "RJD2",
+      "title": "Her Majesty's Socialist Request",
+      "startTime": 2745.992835
+    },
+    {
+      "position": 20,
+      "artist": "Tipper",
+      "title": "It's Like",
+      "startTime": 2959.258186
+    },
+    {
+      "position": 21,
+      "artist": "Bil Bless",
+      "title": "ClownBag",
+      "startTime": 3157.442948
+    }
+  ]
+}

@@ -1,0 +1,101 @@
+{
+  "schemaVersion": 1,
+  "id": "wp-324",
+  "slug": "trey-turner-urban-breakbeat-uprising",
+  "status": "published",
+  "publishedAt": "2002-05-01T18:00:40.000Z",
+  "title": "Urban Breakbeat Uprising",
+  "artist": "Trey Turner",
+  "descriptionHtml": "<p>Uptempo dancefloor breaks</p>",
+  "guid": "https://nurevolution.net/?p=324",
+  "guidIsPermalink": false,
+  "audioAssetId": "asset-8ae53574f84681bc",
+  "artworkAssetId": "asset-15c4a645aa42c211",
+  "durationSeconds": 4628,
+  "tracks": [
+    {
+      "position": 1,
+      "artist": "Satoshi Tomiie",
+      "title": "Virus (Reprise)",
+      "startTime": 0
+    },
+    {
+      "position": 2,
+      "artist": "Andy Page & Lee Burridge",
+      "title": "Maladjusted",
+      "startTime": 191.106667
+    },
+    {
+      "position": 3,
+      "artist": "Blame",
+      "title": "Music Takes You (BLIM)",
+      "startTime": 544.04
+    },
+    {
+      "position": 4,
+      "artist": "Plump DJs",
+      "title": "Big Groovy Fucker",
+      "startTime": 798.146667
+    },
+    {
+      "position": 5,
+      "artist": "Buffalo Daughter",
+      "title": "R&B (Elite Force)",
+      "startTime": 1207.533334
+    },
+    {
+      "position": 6,
+      "artist": "Way Out West",
+      "title": "Domination",
+      "startTime": 1604.600001
+    },
+    {
+      "position": 7,
+      "artist": "Fat-liners",
+      "title": "Spoiler",
+      "startTime": 1915.186668
+    },
+    {
+      "position": 8,
+      "artist": "Lightning Seeds",
+      "title": "Sweetest Soul Sensations (Terminalhead)",
+      "startTime": 2296.360001
+    },
+    {
+      "position": 9,
+      "artist": "The Light",
+      "title": "Expand The Room",
+      "startTime": 2543.400001
+    },
+    {
+      "position": 10,
+      "artist": "Bt",
+      "title": "Mad Skillz, Mic Chekka",
+      "startTime": 2966.933334
+    },
+    {
+      "position": 11,
+      "artist": "T-Power",
+      "title": "Dangerous (Aquasky vs. Masterblaster)",
+      "startTime": 3291.560001
+    },
+    {
+      "position": 12,
+      "artist": "ASAP",
+      "title": "Heavy Water",
+      "startTime": 3665.666668
+    },
+    {
+      "position": 13,
+      "artist": "The Light",
+      "title": "Opium (of the Masses)",
+      "startTime": 3939.186668
+    },
+    {
+      "position": 14,
+      "artist": "Beber",
+      "title": "Juvenile Delinquent",
+      "startTime": 4263.880001
+    }
+  ]
+}

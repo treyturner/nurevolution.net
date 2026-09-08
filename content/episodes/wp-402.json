@@ -1,0 +1,59 @@
+{
+  "schemaVersion": 1,
+  "id": "wp-402",
+  "slug": "eazyt-7-weapons-mix",
+  "status": "published",
+  "publishedAt": "2013-12-28T22:41:20.000Z",
+  "title": "7 Weapons Mix",
+  "artist": "EazyT",
+  "descriptionHtml": "<p>A descent from downtempo tribal glitch hop into dark dubstyle drum &amp; bass mixed in Ableton by samurai master EazyT.</p>",
+  "guid": "https://nurevolution.net/?post_type=one_page_portfolio&p=402",
+  "guidIsPermalink": false,
+  "audioAssetId": "asset-65db4c3e4ea878a2",
+  "artworkAssetId": "asset-6070ba3fd2fbcbe0",
+  "durationSeconds": 1781,
+  "tracks": [
+    {
+      "position": 1,
+      "artist": "Hypha",
+      "title": "Chubasco",
+      "startTime": null
+    },
+    {
+      "position": 2,
+      "artist": "Root Mass",
+      "title": "That Distant Place",
+      "startTime": null
+    },
+    {
+      "position": 3,
+      "artist": "Atomic Reactor",
+      "title": "Galactivation Sequence",
+      "startTime": null
+    },
+    {
+      "position": 4,
+      "artist": "Outer Heaven",
+      "title": "Mastodon",
+      "startTime": null
+    },
+    {
+      "position": 5,
+      "artist": "Outer Heaven",
+      "title": "Genjutsu",
+      "startTime": null
+    },
+    {
+      "position": 6,
+      "artist": "Dorian & Skore",
+      "title": "Chin Khang",
+      "startTime": null
+    },
+    {
+      "position": 7,
+      "artist": "Nativ",
+      "title": "Ominous",
+      "startTime": null
+    }
+  ]
+}

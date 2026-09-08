@@ -1,6 +1,6 @@
 # M2 — Canonical content and complete archive
 
-Status: **Ready for implementation**. This document and its Praxis evidence record are plans and inputs; no canonical archive or M2 application code has been implemented.
+Status: **Implemented and locally verified** on 2026-09-08. The original plan is retained below with completed steps; actual results and bounded implementation corrections are recorded in the completion evidence.
 
 Plan date: 2026-09-08. Roadmap: [M2](../../ROADMAP.md#m2--canonical-content-and-complete-archive). Prerequisites: [M0 audit](../migration/MIGRATION-AUDIT.md) and [M1 foundation](M01-foundation-and-verification.md). Project guidance: [BOOTSTRAP.md](../BOOTSTRAP.md).
 
@@ -10,11 +10,11 @@ Create the complete, validated repository archive and a repeatable WordPress imp
 
 Include schemas, canonical JSON, import/reconciliation reports, media references, description normalization, read-only content APIs, and contributor instructions. Implement the data layer without changing the minimal home page into the M4 player. Episode pages and redirects belong to M4; RSS serialization belongs to M3. Media copying, transcoding, deployment, full-file decode checks, and production delivery remain later work. Draft authoring and scheduled publishing are not M2 features; basic filtering must nevertheless prevent unpublished content from escaping.
 
-The owner considers M0 sufficient for planning. Do not reopen archive-wide investigation, clean up WordPress, or repair its stale metadata. Use the frozen public audit inputs plus the narrowly verified Praxis correction below. Preserve original files and all existing uncommitted work. No commit, push, branch creation, or deployment is included.
+The owner considers M0 sufficient for planning. Do not reopen archive-wide investigation, clean up WordPress, or repair its stale metadata. Use the frozen public audit inputs plus the narrowly verified Praxis correction below. Preserve original files and all existing uncommitted work. The owner subsequently authorized committing the existing baseline to `main` and implementing M2 on a `feat/` branch. No push or deployment is included.
 
 ## Entry evidence and baseline
 
-Inspected on 2026-09-08:
+Entry snapshot inspected before implementation on 2026-09-08:
 
 - The checkout has no commits. M0/M1 files are untracked and must be preserved. There is no `content/`, content schema, content API, or M2 importer yet.
 - `app/` contains the SSR shell and injected audio adapter. `server/` and `shared/` are available for the new boundaries. `tools/migration/audit.py` and its Python tests own M0 reconciliation; do not replace them with a second raw-SQL importer.
@@ -179,14 +179,14 @@ Do not expose source-root paths, database representations, import reports, hashe
 
 Implementation order:
 
-1. [ ] Reinspect the checkout, preserve newer work, run `pnpm verify`, validate all four audited/supplemental input identities, and confirm the exact dependencies before installation.
-2. [ ] Add strict schemas, canonical data types, timestamp/duration rules, safe HTML normalization, and pure public selection. Cover invalid/partial cases before connecting filesystem or framework code.
-3. [ ] Implement source mapping and the explicit Praxis correction. Generate candidates in `.local/` and review all normalization decisions, especially emoji/links, GUID entities, multipart records, dates, and media encodings.
-4. [ ] Add dry-run/check/create-only import modes with temporary-directory tests. Prove two clean outputs are byte-identical and an edited destination remains untouched on conflict.
-5. [ ] Create the initial canonical files through the importer. Validate and reconcile 55 episodes, 832 tracks, 338 starts in 22 episodes, 156 assets, both show images, and 55 legacy URLs. Review the report before treating the archive as imported.
-6. [ ] Add the shared catalog repository, Nitro server-asset packaging, and public APIs. Keep the M1 home page and audio adapter behavior unchanged.
-7. [ ] Integrate content checks, importer coverage/type checks, API tests, and a portable production-output check into the existing gate. Retain all M0/M1 checks and all three browser engines.
-8. [ ] Write authoring/reconciliation instructions, run the full final gate, and record actual implementation evidence and M3/M4 readiness in this plan and the roadmap.
+1. [x] Reinspect the checkout, preserve newer work, run `pnpm verify`, validate all four audited/supplemental input identities, and confirm the exact dependencies before installation.
+2. [x] Add strict schemas, canonical data types, timestamp/duration rules, safe HTML normalization, and pure public selection. Cover invalid/partial cases before connecting filesystem or framework code.
+3. [x] Implement source mapping and the explicit Praxis correction. Generate candidates in `.local/` and review all normalization decisions, especially emoji/links, GUID entities, multipart records, dates, and media encodings.
+4. [x] Add dry-run/check/create-only import modes with temporary-directory tests. Prove two clean outputs are byte-identical and an edited destination remains untouched on conflict.
+5. [x] Create the initial canonical files through the importer. Validate and reconcile 55 episodes, 832 tracks, 338 starts in 22 episodes, 156 assets, both show images, and 55 legacy URLs. Review the report before treating the archive as imported.
+6. [x] Add the shared catalog repository, Nitro server-asset packaging, and public APIs. Keep the M1 home page and audio adapter behavior unchanged.
+7. [x] Integrate content checks, importer coverage/type checks, API tests, and a portable production-output check into the existing gate. Retain all M0/M1 checks and all three browser engines.
+8. [x] Write authoring/reconciliation instructions, run the full final gate, and record actual implementation evidence and M3/M4 readiness in this plan and the roadmap.
 
 ## Verification contract
 
@@ -239,14 +239,38 @@ Use disposable copies for conflict/failure tests. Checks and builds must not alt
 
 ## Completion and handoff
 
-- [ ] Canonical schemas, authoring format, stable identity/slug policy, and description rules are implemented and documented.
-- [ ] The complete initial archive and deterministic report reconcile to M0 plus the explicit Praxis correction, with no unexplained loss.
-- [ ] Imports are reproducible and preserve existing edits; ordinary validation remains read-only.
-- [ ] Both show images, all episode media/artwork, and legacy mappings resolve through the model without needing WordPress at runtime.
-- [ ] Public lists/lookups share one predicate and stable order, return safe DTOs, and keep raw records out of client/public output.
-- [ ] Strict tool typing, coverage thresholds, standalone content validation, production packaging, and all M0/M1 checks pass through `pnpm verify`.
-- [ ] Record exact counts, source/output hashes, tests, coverage, build/API/browser results, and remote CI status. Keep planning-time evidence distinct from implementation-time evidence.
-- [ ] `docs/CONTENT.md` explains edits, optional tracks/timing, adding episodes, safe HTML, media references, validation failures, and manual reconciliation. Draft/scheduling documentation points to M8 instead of promising it now.
-- [ ] M3 receives verified identities, publication/enclosure metadata, show metadata, safe full descriptions, and public selection. M4 receives stable slugs, complete details, artwork/audio URLs, tracklists, and legacy mappings.
+- [x] Canonical schemas, authoring format, stable identity/slug policy, and description rules are implemented and documented.
+- [x] The complete initial archive and deterministic report reconcile to M0 plus the explicit Praxis correction, with no unexplained loss.
+- [x] Imports are reproducible and preserve existing edits; ordinary validation remains read-only.
+- [x] Both show images, all episode media/artwork, and legacy mappings resolve through the model without needing WordPress at runtime.
+- [x] Public lists/lookups share one predicate and stable order, return safe DTOs, and keep raw records out of client/public output.
+- [x] Strict tool typing, coverage thresholds, standalone content validation, production packaging, and all M0/M1 checks pass through `pnpm verify`.
+- [x] Record exact counts, source/output hashes, tests, coverage, build/API/browser results, and remote CI status. Keep planning-time evidence distinct from implementation-time evidence.
+- [x] `docs/CONTENT.md` explains edits, optional tracks/timing, adding episodes, safe HTML, media references, validation failures, and manual reconciliation. Draft/scheduling documentation points to M8 instead of promising it now.
+- [x] M3 receives verified identities, publication/enclosure metadata, show metadata, safe full descriptions, and public selection. M4 receives stable slugs, complete details, artwork/audio URLs, tracklists, and legacy mappings.
 
 M2 makes no production changes. Its canonical metadata can be regenerated into a fresh candidate directory while the original archive and frozen evidence remain intact. Full MP3 decode/listening, remote range/download behavior, artwork delivery, feed-client validation, redirects, and cutover remain their assigned later milestones; this plan does not mark them complete.
+
+## Completion evidence — 2026-09-08
+
+The existing M0/M1/planning baseline was committed to `main` as `b7ad63f` after its verification passed. M2 was implemented on `feat/m2-canonical-content` under the owner's subsequent Git instruction. No remote push or deployment was performed.
+
+| Area                      | Observed result                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| ------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Canonical archive         | 55 episodes, 832 ordered tracks, five empty tracklists, 338 known starts across 22 episodes, 156 assets, and 55 legacy URL mappings. Both show images and all 112 referenced assets resolve.                                                                                                                                                                                                                                       |
+| Compatibility             | All 55 historical GUID strings/booleans, publication instants, and enclosure URL/type/length tuples reconcile. Thirteen database GUID entity representations remain only in frozen provenance. The two Mega parts remain separate.                                                                                                                                                                                                 |
+| Praxis                    | Canonical duration is 3396.349388 seconds; all 21 precise starts are present, including 0 and 3157.442948. Frozen M0 still reports 317 starts and its original three non-blocking issues.                                                                                                                                                                                                                                          |
+| Additional text evidence  | `wp-281` track 4 contained U+0092, a legacy Windows-1252 apostrophe. The importer explicitly converts this one known value to U+2019 and records it in `textChanges`. `wp-435` track 11 retains literal `<3`; text validation rejects actual HTML tags and control characters without rejecting this title.                                                                                                                        |
+| Descriptions              | Full text, paragraphs, both links, and the `wp-269` emoji are retained. The import report records WordPress typographic apostrophes for `wp-428` and `wp-444`, the smiley conversion, styling removal, and canonical serialization. Unreviewed import tags, attributes, links, or semantic text differences fail.                                                                                                                  |
+| Reproducibility           | Two fresh candidate directories compare byte-for-byte. Initial `--check` against `content/` passes. Tests cover hand edits, unknown files, duplicate options, invalid input hashes, output overlap, symlinks, concurrent destination creation, I/O failure, and rollback preserving pre-existing files.                                                                                                                            |
+| Runtime                   | `/api/show`, `/api/episodes`, and `/api/episodes/<slug>` use one validated server repository and public predicate. API tests reconcile every episode and all tracks/starts in Chromium, Firefox, and WebKit. Raw content routes return 404; projections and client assets omit provenance.                                                                                                                                         |
+| Packaging                 | Nitro's server-asset directory is anchored to the configuration file with `fileURLToPath(new URL('./content', import.meta.url))`; a relative path would resolve under the server directory in the installed Nitro version. A copied `.output` starts outside the checkout and serves the full archive and Praxis detail. The Node portability check runs once; its duplicate Firefox/WebKit invocations are intentionally skipped. |
+| Dependencies              | Exact Zod 4.5.4, sanitize-html 2.17.7, and development types 2.16.1 installed with the reviewed lockfile. Strict Node-native TypeScript CLI checks are included. No new runtime manager or TS executor was added.                                                                                                                                                                                                                  |
+| Canonical gate            | `CI=1 PATH="$PWD/.local/bin:$PATH" pnpm verify` exited 0: formatting, lint, strict Nuxt/test/tool types, 12 Python tests, the unchanged M0 artifact check, 111 Vitest tests, content validation, both Node builds, and 25 passing browser checks (two redundant portability checks skipped).                                                                                                                                       |
+| Coverage                  | Statements 98.32% (528/537), lines 98.17% (483/492), functions 98.55% (136/138), branches 96.16% (326/339). Existing 95%/90% thresholds and all app/shared/server/tool coverage patterns remain enforced.                                                                                                                                                                                                                          |
+| Clean environment         | A separate copy of all 126 maintained files, with no dependency/generated trees, passed `pnpm install --frozen-lockfile` and `pnpm build` using public repository inputs alone. No private source access was required.                                                                                                                                                                                                             |
+| Read-only verification    | Hashes of all 126 maintained files were identical before and after the full gate. The four frozen audit/correction inputs retain their recorded hashes. Later edits only recorded this completion evidence.                                                                                                                                                                                                                        |
+| Initial output provenance | [wordpress-import.json](../../content/wordpress-import.json) records source hashes, mappings, transformations, timing provenance, dispositions, and all 58 initial content-file fingerprints. Its own SHA-256 is `f3a69efe6183512c530a1bf796e513352608b9b550e7065390a655e1d8ad89dd`.                                                                                                                                               |
+| Handoff                   | [CONTENT.md](../CONTENT.md) documents authoring, validation, protected fields, reconciliation, and server consumers. M3 can use `contentRepository.publicArchive(asOf)`; M4 can use the list/detail DTOs and canonical slug/legacy mappings. Remote GitHub Actions has not run.                                                                                                                                                    |
+
+No M2 implementation checks remain failing. Full historical MP3 integrity/listening, live media delivery, RSS compatibility, episode pages, player behavior, redirects, and cutover remain their assigned later milestones.

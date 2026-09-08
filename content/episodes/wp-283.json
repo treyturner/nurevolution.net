@@ -1,0 +1,203 @@
+{
+  "schemaVersion": 1,
+  "id": "wp-283",
+  "slug": "trey-turner-view-from-a-vignette",
+  "status": "published",
+  "publishedAt": "2010-08-05T18:00:44.000Z",
+  "title": "View From A Vignette",
+  "artist": "Trey Turner",
+  "descriptionHtml": "<p>An hour and forty-five minute set performed at a benefit show held for a friend at Shangri-la. Contains some of the chillest sounds Trey has ever mixed.</p>",
+  "guid": "https://nurevolution.net/?p=283",
+  "guidIsPermalink": false,
+  "audioAssetId": "asset-10be1117a35208e7",
+  "artworkAssetId": "asset-3f7f2190d5a93b50",
+  "durationSeconds": 6342,
+  "tracks": [
+    {
+      "position": 1,
+      "artist": "Dimlite",
+      "title": "Outernational ft. Gaby Hernandez",
+      "startTime": null
+    },
+    {
+      "position": 2,
+      "artist": "Nightmares On Wax",
+      "title": "The Sweetest",
+      "startTime": null
+    },
+    {
+      "position": 3,
+      "artist": "Waldeck",
+      "title": "Make My Day",
+      "startTime": null
+    },
+    {
+      "position": 4,
+      "artist": "Nightmares On Wax",
+      "title": "Pudpots",
+      "startTime": null
+    },
+    {
+      "position": 5,
+      "artist": "Waldeck",
+      "title": "Jerry Weintraub",
+      "startTime": null
+    },
+    {
+      "position": 6,
+      "artist": "Waldeck",
+      "title": "So Black & Blue",
+      "startTime": null
+    },
+    {
+      "position": 7,
+      "artist": "Waldeck",
+      "title": "Get Up Carmen",
+      "startTime": null
+    },
+    {
+      "position": 8,
+      "artist": "Bonobo",
+      "title": "Kong",
+      "startTime": null
+    },
+    {
+      "position": 9,
+      "artist": "Nightmares On Wax",
+      "title": "Humble",
+      "startTime": null
+    },
+    {
+      "position": 10,
+      "artist": "Ratatat",
+      "title": "Bilar",
+      "startTime": null
+    },
+    {
+      "position": 11,
+      "artist": "Nosaj Thing",
+      "title": "Coat of Arms",
+      "startTime": null
+    },
+    {
+      "position": 12,
+      "artist": "Flying Lotus",
+      "title": "Parisian Goldfish (Take)",
+      "startTime": null
+    },
+    {
+      "position": 13,
+      "artist": "Eliot Lipp",
+      "title": "Beamrider",
+      "startTime": null
+    },
+    {
+      "position": 14,
+      "artist": "Take",
+      "title": "Don't Look Now",
+      "startTime": null
+    },
+    {
+      "position": 15,
+      "artist": "Nosaj Thing",
+      "title": "Caves",
+      "startTime": null
+    },
+    {
+      "position": 16,
+      "artist": "Take",
+      "title": "Crystalia",
+      "startTime": null
+    },
+    {
+      "position": 17,
+      "artist": "Bonobo",
+      "title": "Kiara",
+      "startTime": null
+    },
+    {
+      "position": 18,
+      "artist": "Take",
+      "title": "Neon Beams",
+      "startTime": null
+    },
+    {
+      "position": 19,
+      "artist": "Nosaj Thing",
+      "title": "1685 Bach",
+      "startTime": null
+    },
+    {
+      "position": 20,
+      "artist": "Kid Kanevil",
+      "title": "Stomp (ft. Justin Percival)",
+      "startTime": null
+    },
+    {
+      "position": 21,
+      "artist": "Dimlite",
+      "title": "Hungeryears & Advanced Communication",
+      "startTime": null
+    },
+    {
+      "position": 22,
+      "artist": "Bonobo",
+      "title": "El Toro!",
+      "startTime": null
+    },
+    {
+      "position": 23,
+      "artist": "Take",
+      "title": "Quartz For Amber",
+      "startTime": null
+    },
+    {
+      "position": 24,
+      "artist": "Royksopp",
+      "title": "Eple",
+      "startTime": null
+    },
+    {
+      "position": 25,
+      "artist": "Ochre",
+      "title": "Dustlands",
+      "startTime": null
+    },
+    {
+      "position": 26,
+      "artist": "Funkstorung",
+      "title": "I Want Some Fun ft. Jay Jay Johanson",
+      "startTime": null
+    },
+    {
+      "position": 27,
+      "artist": "Machine Drum",
+      "title": "Para Did ft. Sara Ruba & Jaunty",
+      "startTime": null
+    },
+    {
+      "position": 28,
+      "artist": "Ochre",
+      "title": "Lunar Suburbia",
+      "startTime": null
+    },
+    {
+      "position": 29,
+      "artist": "Ochre",
+      "title": "Whispers",
+      "startTime": null
+    },
+    {
+      "position": 30,
+      "artist": "Take",
+      "title": "Juniper",
+      "startTime": null
+    },
+    {
+      "position": 31,
+      "artist": "Bonobo",
+      "title": "We Could Forever",
+      "startTime": null
+    }
+  ]
+}

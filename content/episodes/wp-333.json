@@ -1,0 +1,89 @@
+{
+  "schemaVersion": 1,
+  "id": "wp-333",
+  "slug": "trey-turner-aftershock",
+  "status": "published",
+  "publishedAt": "2001-11-02T18:00:46.000Z",
+  "title": "Aftershock",
+  "artist": "Trey Turner",
+  "descriptionHtml": "<p>Progressive breaks</p>",
+  "guid": "https://nurevolution.net/?p=333",
+  "guidIsPermalink": false,
+  "audioAssetId": "asset-a73fe4f80b864589",
+  "artworkAssetId": "asset-c3e98cbaf6335958",
+  "durationSeconds": 4464,
+  "tracks": [
+    {
+      "position": 1,
+      "artist": "Way Out West",
+      "title": "Sequoia",
+      "startTime": 0
+    },
+    {
+      "position": 2,
+      "artist": "Ashtrax",
+      "title": "Helsinki",
+      "startTime": 455.546667
+    },
+    {
+      "position": 3,
+      "artist": "Bt",
+      "title": "Running Down the Way Up",
+      "startTime": 853.773334
+    },
+    {
+      "position": 4,
+      "artist": "SIGMA 7",
+      "title": "Against the Wall",
+      "startTime": 1205.760001
+    },
+    {
+      "position": 5,
+      "artist": "Pressure Drop",
+      "title": "Warrior Sound (Adam Freeland)",
+      "startTime": 1561.320001
+    },
+    {
+      "position": 6,
+      "artist": "Sonic Infusion",
+      "title": "Reformatted (General MIDI)",
+      "startTime": 1948.853334
+    },
+    {
+      "position": 7,
+      "artist": "Musique vs. U2",
+      "title": "New Year's Dub (Hybrid)",
+      "startTime": 2251.106667
+    },
+    {
+      "position": 8,
+      "artist": "ASAP",
+      "title": "Firebird",
+      "startTime": 2734.653334
+    },
+    {
+      "position": 9,
+      "artist": "Tarentella",
+      "title": "Saturn (Quivver)",
+      "startTime": 3090.226667
+    },
+    {
+      "position": 10,
+      "artist": "Uberzone",
+      "title": "Botz (Organik)",
+      "startTime": 3474.213334
+    },
+    {
+      "position": 11,
+      "artist": "SIGMA 7",
+      "title": "Exotic Punk",
+      "startTime": 3865.306667
+    },
+    {
+      "position": 12,
+      "artist": "Nubreed",
+      "title": "Mutist",
+      "startTime": 4069.746667
+    }
+  ]
+}

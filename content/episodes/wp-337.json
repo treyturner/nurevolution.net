@@ -1,0 +1,95 @@
+{
+  "schemaVersion": 1,
+  "id": "wp-337",
+  "slug": "fracture-broken",
+  "status": "published",
+  "publishedAt": "2001-08-01T18:00:21.000Z",
+  "title": "Broken",
+  "artist": "Fracture",
+  "descriptionHtml": "<p>The pair’s first breakbeat mix. Captures sounds from percussive tribal breaks to the clean futuristic sounds of Uberzone and the thick tech grind of Rhythm Division.</p>",
+  "guid": "https://nurevolution.net/?p=337",
+  "guidIsPermalink": false,
+  "audioAssetId": "asset-f72dfc422712dcb0",
+  "artworkAssetId": "asset-de3638daf5f15cf9",
+  "durationSeconds": 4229,
+  "tracks": [
+    {
+      "position": 1,
+      "artist": "The Chemical Brothers",
+      "title": "It Began in Afrika",
+      "startTime": 0
+    },
+    {
+      "position": 2,
+      "artist": "Lee Combs & Drum Attic Twins",
+      "title": "Tribal Tension",
+      "startTime": 509.8
+    },
+    {
+      "position": 3,
+      "artist": "Rennie Pilgrem & Dub Species",
+      "title": "The Sermon",
+      "startTime": 739.08
+    },
+    {
+      "position": 4,
+      "artist": "Deep Cover",
+      "title": "Beatstalker (General MIDI)",
+      "startTime": 1040.08
+    },
+    {
+      "position": 5,
+      "artist": "Bedrock",
+      "title": "Weekend Warrior (Terminalhead)",
+      "startTime": 1370.306667
+    },
+    {
+      "position": 6,
+      "artist": "La Liga",
+      "title": "Black Russian (Koma & Bones)",
+      "startTime": 1634.026667
+    },
+    {
+      "position": 7,
+      "artist": "Aquasky vs. Master Blaster",
+      "title": "Sure Shot",
+      "startTime": 2012.533334
+    },
+    {
+      "position": 8,
+      "artist": "Uberzone",
+      "title": "Rhythm Device",
+      "startTime": 2301.400001
+    },
+    {
+      "position": 9,
+      "artist": "Rennie Pilgrem",
+      "title": "Eskimo",
+      "startTime": 2617.093334
+    },
+    {
+      "position": 10,
+      "artist": "Sabotage",
+      "title": "I Saw the Future",
+      "startTime": 2918.493334
+    },
+    {
+      "position": 11,
+      "artist": "JDS",
+      "title": "Nine Ways (Plump DJs)",
+      "startTime": 3236.093334
+    },
+    {
+      "position": 12,
+      "artist": "Rhythm Division",
+      "title": "Skin",
+      "startTime": 3579.853334
+    },
+    {
+      "position": 13,
+      "artist": "Hybrid",
+      "title": "Snyper (High Velocity)",
+      "startTime": 3809.573334
+    }
+  ]
+}

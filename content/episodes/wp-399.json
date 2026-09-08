@@ -1,0 +1,125 @@
+{
+  "schemaVersion": 1,
+  "id": "wp-399",
+  "slug": "trey-turner-mmxiv",
+  "status": "published",
+  "publishedAt": "2014-01-01T18:00:32.000Z",
+  "title": "MMXIV",
+  "artist": "Trey Turner",
+  "descriptionHtml": "<p>60 minutes of 808 war machine devastation to ring in your new year.</p>",
+  "guid": "https://nurevolution.net/?post_type=one_page_portfolio&p=399",
+  "guidIsPermalink": false,
+  "audioAssetId": "asset-f066b52dbbab369e",
+  "artworkAssetId": "asset-6b3735a30cc66e15",
+  "durationSeconds": 3394,
+  "tracks": [
+    {
+      "position": 1,
+      "artist": "Si Begg",
+      "title": "From My Laptop",
+      "startTime": 0
+    },
+    {
+      "position": 2,
+      "artist": "Hedflux",
+      "title": "Integrator",
+      "startTime": 309.309002
+    },
+    {
+      "position": 3,
+      "artist": "Lazer Sword",
+      "title": "Batman",
+      "startTime": 573.961678
+    },
+    {
+      "position": 4,
+      "artist": "Machinedrum",
+      "title": "Now U Know Tha Deal 4 Real",
+      "startTime": 799.451293
+    },
+    {
+      "position": 5,
+      "artist": "kLL sMTH",
+      "title": "Shock",
+      "startTime": 1013.48991
+    },
+    {
+      "position": 6,
+      "artist": "Lakritze",
+      "title": "Zooza Sub",
+      "startTime": 1177.692903
+    },
+    {
+      "position": 7,
+      "artist": "G Jones",
+      "title": "32",
+      "startTime": 1268.47669
+    },
+    {
+      "position": 8,
+      "artist": "Doshy",
+      "title": "DolLz",
+      "startTime": 1428.001837
+    },
+    {
+      "position": 9,
+      "artist": "Si Begg",
+      "title": "Let's Roll",
+      "startTime": 1553.179842
+    },
+    {
+      "position": 10,
+      "artist": "Krampfhaft",
+      "title": "Perfect Gain Structure",
+      "startTime": 1811.001747
+    },
+    {
+      "position": 11,
+      "artist": "Krampfhaft",
+      "title": "Twin Prime",
+      "startTime": 1935.323493
+    },
+    {
+      "position": 12,
+      "artist": "Dr. Knobz",
+      "title": "You Swervin",
+      "startTime": 2110.147144
+    },
+    {
+      "position": 13,
+      "artist": "Noisia",
+      "title": "Imperial",
+      "startTime": 2298.130795
+    },
+    {
+      "position": 14,
+      "artist": "Two Fingers",
+      "title": "Defender Rhythm",
+      "startTime": 2574.087439
+    },
+    {
+      "position": 15,
+      "artist": "Martsman",
+      "title": "Halow",
+      "startTime": 2706.335784
+    },
+    {
+      "position": 16,
+      "artist": "N3GUS",
+      "title": "Snakes ft. Carasel",
+      "startTime": 2854.903834
+    },
+    {
+      "position": 17,
+      "artist": "Two Fingers",
+      "title": "Smurf ft. Brefontaine",
+      "startTime": 3008.793471
+    },
+    {
+      "position": 18,
+      "artist": "Bil Bless",
+      "title": "Driple",
+      "startTime": 3145.057575
+    }
+  ]
+}

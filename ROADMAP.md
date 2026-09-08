@@ -1,10 +1,10 @@
 # Nurevolution roadmap
 
-Status: M0 and M1 implemented and locally verified; the M2 implementation plan is ready. M2 implementation has not started. Remote CI has not run.
+Status: M0, M1, and M2 implemented and locally verified. M3–M9 implementation has not started. Remote CI has not run.
 
 Updated: 2026-09-08.
 
-Inputs: [project bootstrap](docs/BOOTSTRAP.md), the owner's product answers dated 2026-09-06, M0/M1 decisions and audit dated 2026-09-07, and M2 planning/Praxis evidence dated 2026-09-08.
+Inputs: [project bootstrap](docs/BOOTSTRAP.md), the owner's product answers dated 2026-09-06, M0/M1 decisions and audit dated 2026-09-07, and M2 implementation/Praxis evidence dated 2026-09-08.
 
 This document defines outcomes, dependencies, and acceptance evidence from which to write implementation-grade milestone plans. M0 has audited the archive and frozen production feed; production infrastructure remains unaudited. Newer owner decisions recorded here take precedence over conflicting defaults in the bootstrap.
 
@@ -48,7 +48,7 @@ Timestamp sharing, lock-screen controls, episode artwork and chapters in the fee
 
 The owner has WordPress source, the database, episode MP3s, and artwork. Their supplied file listing contains **55 MP3 files**, totaling **6,767,918,690 bytes (about 6.30 GiB)**. The largest listed file is **286,927,439 bytes (about 273.64 MiB)**. These figures describe the supplied listing, not a verified episode count or complete storage requirement. Artwork, backups, runtime files, and future growth are additional.
 
-The legacy database and feed supply tracklists but no start timestamps. Frozen M0 evidence derives 317 starts across 21 episodes from owner-supplied split-FLAC durations. During M2 planning, a hash-matched Praxis MP3 duration confirmed that its old duration metadata was stale; the [supplemental evidence](docs/milestones/evidence/M02-praxis-duration.json) supports 21 additional precise starts. M2 therefore targets 338 starts across 22 episodes while preserving the frozen M0 record. Missing timing remains optional; never fabricate it or drop untimed tracks.
+The legacy database and feed supply tracklists but no start timestamps. Frozen M0 evidence derives 317 starts across 21 episodes from owner-supplied split-FLAC durations. During M2 planning, a hash-matched Praxis MP3 duration confirmed that its old duration metadata was stale; the [supplemental evidence](docs/milestones/evidence/M02-praxis-duration.json) supports 21 additional precise starts. M2 imports 338 starts across 22 episodes while preserving the frozen M0 record. Missing timing remains optional; never fabricate it or drop untimed tracks.
 
 M0 reconciled all 55 published records with the frozen feed and files, including the distinct Mega 93.3 FM parts, with no missing/ambiguous episode matches or feed truncation. M2 preserves the agreed UTC publication evidence; filename dates and filesystem modification times remain unsuitable substitutes.
 
@@ -109,7 +109,7 @@ D01-D04 were confirmed by the owner on 2026-09-06. On 2026-09-07 the owner confi
 
 - Nuxt 4, TypeScript with strict checks, normal SSR/hybrid rendering, and client-side episode navigation.
 - One canonical validated content model for UI, RSS, tracklists, audio references, artwork, and publication ordering.
-- M2 planning selects one JSON file per immutable episode ID, separate show/assets/legacy-map files, and normalized safe HTML descriptions. This uses the short audited descriptions and existing JSON workflow; no Nuxt Content, YAML parser, or Markdown renderer is required.
+- M2 uses one JSON file per immutable episode ID, separate show/assets/legacy-map files, and normalized safe HTML descriptions. This uses the short audited descriptions and existing JSON workflow; no Nuxt Content, YAML parser, or Markdown renderer is required.
 - Episode model covers a stable internal identity, legacy GUID and its permalink semantics, stable slug, title, original publication instant, description, audio URL/MIME/byte length, artwork, duration if known, and optional ordered tracks. Optional track fields include artist, title, start seconds, label/release, and outbound links.
 - Keep recording/mix date distinct from publication date if both exist. Episode ordering uses publication time with a deterministic tie-breaker.
 - Store legacy URLs in a mapping, not in routing guesses. Keep feed GUIDs independent of new slugs, website branding, and storage location.
@@ -141,9 +141,9 @@ Feed and media URLs must be usable by podcast clients without interactive browse
 
 ## 6. Milestone sequence
 
-M0 and M1 are **implemented and locally verified**. M2 has a **ready implementation plan**; M2–M9 implementation is **not started**. IDs are stable so later implementation plans can reference them.
+M0, M1, and M2 are **implemented and locally verified**. M3–M9 implementation is **not started**. IDs are stable so later implementation plans can reference them.
 
-Plans and completion evidence are available for [M0 — Migration audit](docs/milestones/M00-migration-audit.md) and [M1 — Foundation and verification](docs/milestones/M01-foundation-and-verification.md). The [M2 — Canonical content plan](docs/milestones/M02-canonical-content.md) specifies schemas, faithful import, protected edits, public data access, and acceptance checks. Writing that plan does not mark M2 implemented.
+Plans and completion evidence are available for [M0 — Migration audit](docs/milestones/M00-migration-audit.md) and [M1 — Foundation and verification](docs/milestones/M01-foundation-and-verification.md). The [M2 — Canonical content record](docs/milestones/M02-canonical-content.md) documents schemas, faithful import, protected edits, public data access, and completed acceptance checks. Owner instructions are in the [content authoring guide](docs/CONTENT.md).
 
 | ID  | Outcome                                                          | Dependencies                                        | Release role                       |
 | --- | ---------------------------------------------------------------- | --------------------------------------------------- | ---------------------------------- |
@@ -199,7 +199,7 @@ M0 and M1 can progress independently. M3 and M4 share M2's model. Infrastructure
 
 ### M2 — Canonical content and complete archive
 
-**Plan ready on 2026-09-08:** [M02-canonical-content.md](docs/milestones/M02-canonical-content.md). It selects JSON authoring, stable slugs derived once from observed legacy URLs, an importer that preserves existing edits, and shared validated content APIs. It includes the explicit Praxis duration correction and 338-start target without rewriting frozen M0 evidence. No additional owner decisions are needed to begin this bounded implementation.
+**Completed locally on 2026-09-08:** [M02-canonical-content.md](docs/milestones/M02-canonical-content.md#completion-evidence--2026-09-08). The canonical archive contains all 55 episodes, 832 tracks, 338 starts across 22 episodes, 156 assets, and 55 legacy mappings. JSON authoring, create-only imports, historical identity protections, and shared public content APIs are implemented. Praxis uses its verified duration and precise splits; one legacy track apostrophe is corrected with provenance, while the original M0 inputs remain unchanged. `pnpm verify` passed with 111 application/content tests, 12 migration tests, 25 browser checks, and coverage above the existing thresholds. Fresh installation/build and portable server-asset loading passed. M3 and M4 can consume the same public repository; no feed or player UI is claimed complete.
 
 **Outcome:** the frontend and feed can consume the same complete, validated archive.
 
@@ -344,7 +344,7 @@ Directory submissions are a possible later owner task, not an automatic effect o
 
 ### Canonical local/CI gate
 
-Canonical command: **`pnpm verify`**, implemented and locally verified in M1. It covers formatting, lint, strict type checking, meaningful application unit/runtime tests with coverage, M0 tooling unit tests, production build, and deterministic Playwright checks. Add content/feed validation as M2/M3 introduce those features. CI uses the same gate rather than a divergent list of partial checks.
+Canonical command: **`pnpm verify`**, implemented and locally verified in M1. It covers formatting, lint, strict type checking, meaningful application unit/runtime tests with coverage, M0 tooling unit tests, production build, and deterministic Playwright checks. M2 adds canonical content validation, importer coverage, full-archive API checks, and production portability. M3 will add feed validation. CI uses the same gate rather than a divergent list of partial checks.
 
 Owner-confirmed initial coverage thresholds for meaningful executable application logic: 95% statements/lines/functions and 90% branches, enforced from M1. Include UI/composable behavior where meaningful, not only pure utilities. Narrow declarative-config exclusions require a rationale; never lower established thresholds simply to pass CI.
 

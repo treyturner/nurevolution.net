@@ -1,0 +1,125 @@
+{
+  "schemaVersion": 1,
+  "id": "wp-435",
+  "slug": "trey-turner-off-the-cuff",
+  "status": "published",
+  "publishedAt": "2016-11-12T03:23:08.000Z",
+  "title": "Off The Cuff",
+  "artist": "Trey Turner",
+  "descriptionHtml": "<p>Bass goes boom. 18 tracks in 45 minutes.</p>",
+  "guid": "https://nurevolution.net/?post_type=one_page_portfolio&p=435",
+  "guidIsPermalink": false,
+  "audioAssetId": "asset-53645f107ecc3374",
+  "artworkAssetId": "asset-7db05c016409aca7",
+  "durationSeconds": 2715,
+  "tracks": [
+    {
+      "position": 1,
+      "artist": "The Gaslamp Killer",
+      "title": "Listen For My Whistle",
+      "startTime": null
+    },
+    {
+      "position": 2,
+      "artist": "EPROM",
+      "title": "9 to Ya Dome",
+      "startTime": null
+    },
+    {
+      "position": 3,
+      "artist": "Apashe",
+      "title": "Day Dream ft. Splitbreed",
+      "startTime": null
+    },
+    {
+      "position": 4,
+      "artist": "EPROM",
+      "title": "Warrior ft. G Jones",
+      "startTime": null
+    },
+    {
+      "position": 5,
+      "artist": "Zebbler Encanti Experience & Halfred",
+      "title": "Grade A",
+      "startTime": null
+    },
+    {
+      "position": 6,
+      "artist": "G Jones",
+      "title": "Fuck What You Heard",
+      "startTime": null
+    },
+    {
+      "position": 7,
+      "artist": "Bleep Bloop",
+      "title": "Obsidian",
+      "startTime": null
+    },
+    {
+      "position": 8,
+      "artist": "Banganagangbangers",
+      "title": "Elevated (Moniker)",
+      "startTime": null
+    },
+    {
+      "position": 9,
+      "artist": "Bleep Bloop",
+      "title": "Kazak",
+      "startTime": null
+    },
+    {
+      "position": 10,
+      "artist": "Shades",
+      "title": "Hypeflex",
+      "startTime": null
+    },
+    {
+      "position": 11,
+      "artist": "Tsuruda",
+      "title": "ode 2 Noer The Boy <3",
+      "startTime": null
+    },
+    {
+      "position": 12,
+      "artist": "Noisia",
+      "title": "Sinkhole",
+      "startTime": null
+    },
+    {
+      "position": 13,
+      "artist": "Shlump",
+      "title": "Westcoast",
+      "startTime": null
+    },
+    {
+      "position": 14,
+      "artist": "Noisia",
+      "title": "Vigilantes",
+      "startTime": null
+    },
+    {
+      "position": 15,
+      "artist": "Bleep Bloop",
+      "title": "All I Wanna Do",
+      "startTime": null
+    },
+    {
+      "position": 16,
+      "artist": "SMKSGNLS & G Jones",
+      "title": "The Realness",
+      "startTime": null
+    },
+    {
+      "position": 17,
+      "artist": "Apashe, Dabin & Kai Wachi",
+      "title": "Kung Fu",
+      "startTime": null
+    },
+    {
+      "position": 18,
+      "artist": "Tipper",
+      "title": "Distal",
+      "startTime": null
+    }
+  ]
+}

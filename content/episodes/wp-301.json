@@ -1,0 +1,107 @@
+{
+  "schemaVersion": 1,
+  "id": "wp-301",
+  "slug": "trey-turner-carpe-noctem-2010",
+  "status": "published",
+  "publishedAt": "2010-06-04T18:00:26.000Z",
+  "title": "Carpe Noctem 2010",
+  "artist": "Trey Turner",
+  "descriptionHtml": "<p>A diverse mix meant to appeal to a wide audience as opposed to focusing on any particular genre.</p>",
+  "guid": "https://nurevolution.net/?p=301",
+  "guidIsPermalink": false,
+  "audioAssetId": "asset-6b1ea0e20c5d1824",
+  "artworkAssetId": "asset-cc24465084ed8fbc",
+  "durationSeconds": 2763,
+  "tracks": [
+    {
+      "position": 1,
+      "artist": "Heralds of Change",
+      "title": "Roc Wit You ft. Unknown & Mudd",
+      "startTime": 0
+    },
+    {
+      "position": 2,
+      "artist": "The Clonious",
+      "title": "One At A Time (Funked Up)",
+      "startTime": 216.623039
+    },
+    {
+      "position": 3,
+      "artist": "Mono/Poly",
+      "title": "Beatles Bitch",
+      "startTime": 422.473719
+    },
+    {
+      "position": 4,
+      "artist": "Thavius Beck",
+      "title": "Sometimes",
+      "startTime": 613.605578
+    },
+    {
+      "position": 5,
+      "artist": "Flying Lotus",
+      "title": "I Feel Like Dying",
+      "startTime": 817.360635
+    },
+    {
+      "position": 6,
+      "artist": "Gonjasufi",
+      "title": "Kowboyz&Indians",
+      "startTime": 959.535284
+    },
+    {
+      "position": 7,
+      "artist": "Tranqill",
+      "title": "Payroll (Paul White's Clean Dub)  ",
+      "startTime": 1116.73093
+    },
+    {
+      "position": 8,
+      "artist": "Dimlite",
+      "title": "Locked",
+      "startTime": 1312.82152
+    },
+    {
+      "position": 9,
+      "artist": "Beck",
+      "title": "Farewell Ride (Subtle)",
+      "startTime": 1547.53508
+    },
+    {
+      "position": 10,
+      "artist": "1000 Names",
+      "title": "Cloudride ft. 215 TFK",
+      "startTime": 1785.961248
+    },
+    {
+      "position": 11,
+      "artist": "Debruit",
+      "title": "Get Blum ft. Eriksolo",
+      "startTime": 1918.545602
+    },
+    {
+      "position": 12,
+      "artist": "Herrmutt Lobby",
+      "title": "Play",
+      "startTime": 2112.820568
+    },
+    {
+      "position": 13,
+      "artist": "Dorian Concept",
+      "title": "Sandwich Terror",
+      "startTime": 2263.723743
+    },
+    {
+      "position": 14,
+      "artist": "Kelpe",
+      "title": "Grappling Hook",
+      "startTime": 2402.169367
+    },
+    {
+      "position": 15,
+      "artist": "Alias",
+      "title": "Justamachine",
+      "startTime": 2508.307508
+    }
+  ]
+}

@@ -1,0 +1,143 @@
+{
+  "schemaVersion": 1,
+  "id": "wp-473",
+  "slug": "trey-turner-the-dark-prophet",
+  "status": "published",
+  "publishedAt": "2019-05-04T19:23:28.000Z",
+  "title": "The Dark Prophet",
+  "artist": "Trey Turner",
+  "descriptionHtml": "<p>Celebrating 20 years of DJing, I assemble 80 minutes of dark drum &amp; bass, starting with a moody vibe and intensifying into gritty and technical breaks.</p>\n<p>This mix is also available as a <a href=\"https://open.spotify.com/user/fracturetrey/playlist/2kethYaaWfARsgzUswwCXP?si=vqhUl6skRoijzCCWpTi0ag\">Spotify playlist</a>.</p>",
+  "guid": "https://nurevolution.net/?post_type=one_page_portfolio&p=473",
+  "guidIsPermalink": false,
+  "audioAssetId": "asset-4d1ddf13eda772f7",
+  "artworkAssetId": "asset-6b34c82e53c12fab",
+  "durationSeconds": 4817,
+  "tracks": [
+    {
+      "position": 1,
+      "artist": "Fre4knc",
+      "title": "The Source",
+      "startTime": 0
+    },
+    {
+      "position": 2,
+      "artist": "Bredren",
+      "title": "Whose Rights",
+      "startTime": 357.514467
+    },
+    {
+      "position": 3,
+      "artist": "Abstract Elements",
+      "title": "Delirium",
+      "startTime": 558.371338
+    },
+    {
+      "position": 4,
+      "artist": "Mystic State",
+      "title": "Sling Blade",
+      "startTime": 826.145714
+    },
+    {
+      "position": 5,
+      "artist": "Black Barrel",
+      "title": "Ghostdive",
+      "startTime": 1049.228843
+    },
+    {
+      "position": 6,
+      "artist": "Sustance",
+      "title": "Recognise",
+      "startTime": 1294.534308
+    },
+    {
+      "position": 7,
+      "artist": "Sully & Outer Heaven",
+      "title": "Dream Sequence",
+      "startTime": 1539.638798
+    },
+    {
+      "position": 8,
+      "artist": "Smuskind & Seibel",
+      "title": "Orbit",
+      "startTime": 1783.47458
+    },
+    {
+      "position": 9,
+      "artist": "Natural Forces",
+      "title": "Bloodline",
+      "startTime": 1917.390476
+    },
+    {
+      "position": 10,
+      "artist": "Sinic",
+      "title": "Left Turn",
+      "startTime": 2139.351746
+    },
+    {
+      "position": 11,
+      "artist": "Reptile",
+      "title": "Just Fade Away VIP",
+      "startTime": 2362.704422
+    },
+    {
+      "position": 12,
+      "artist": "Amoss",
+      "title": "That Way East",
+      "startTime": 2584.564739
+    },
+    {
+      "position": 13,
+      "artist": "Axon",
+      "title": "STTR",
+      "startTime": 2897.124217
+    },
+    {
+      "position": 14,
+      "artist": "Cruk & Signal",
+      "title": "Illusion",
+      "startTime": 3144.142675
+    },
+    {
+      "position": 15,
+      "artist": "Mr. Explicit",
+      "title": "Essential",
+      "startTime": 3346.244013
+    },
+    {
+      "position": 16,
+      "artist": "Black Barrel",
+      "title": "Ultra Violence",
+      "startTime": 3458.489591
+    },
+    {
+      "position": 17,
+      "artist": "Enei",
+      "title": "The Process ft. DRS",
+      "startTime": 3693.962607
+    },
+    {
+      "position": 18,
+      "artist": "Exept & Visages",
+      "title": "Rotary",
+      "startTime": 3884.656893
+    },
+    {
+      "position": 19,
+      "artist": "Phentix",
+      "title": "On By One",
+      "startTime": 4087.947596
+    },
+    {
+      "position": 20,
+      "artist": "Forest Drive West",
+      "title": "Jungle Crack",
+      "startTime": 4335.70009
+    },
+    {
+      "position": 21,
+      "artist": "Picota & Kumbh",
+      "title": "Dancing Swing",
+      "startTime": 4515.864829
+    }
+  ]
+}
