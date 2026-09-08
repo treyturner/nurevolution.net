@@ -2,7 +2,7 @@
 
 A podcast website being rebuilt from WordPress. M1 supplies the minimal dark Nuxt shell and browser-audio boundary. M2 adds the validated 55-episode archive, a repeatable importer, and read-only content APIs. M3 serves the complete podcast RSS with compatibility checks. The full player, branding, and deployment follow in later milestones.
 
-See the [roadmap](ROADMAP.md), [M0 audit plan and evidence](docs/milestones/M00-migration-audit.md), [M1 completion record](docs/milestones/M01-foundation-and-verification.md), [M2 implementation and evidence](docs/milestones/M02-canonical-content.md), [M3 replacement RSS record](docs/milestones/M03-podcast-rss.md), [content authoring guide](docs/CONTENT.md), and [feed validation guide](docs/FEED-VALIDATION.md).
+See the [roadmap](ROADMAP.md), [M0 audit plan and evidence](docs/milestones/M00-migration-audit.md), [M1 completion record](docs/milestones/M01-foundation-and-verification.md), [M2 implementation and evidence](docs/milestones/M02-canonical-content.md), [M3 replacement RSS record](docs/milestones/M03-podcast-rss.md), [M4 archive/player plan](docs/milestones/M04-archive-player.md), [content authoring guide](docs/CONTENT.md), and [feed validation guide](docs/FEED-VALIDATION.md).
 
 ## Setup
 
