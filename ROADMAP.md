@@ -1,6 +1,6 @@
 # Nurevolution roadmap
 
-Status: M0, M1, and M2 implemented and locally verified. M3–M9 implementation has not started. Remote CI has not run.
+Status: M0, M1, and M2 implemented and verified locally and in CI. M2 is merged to `main` through PR #1. M3 is planned and ready for implementation; M3–M9 implementation has not started.
 
 Updated: 2026-09-08.
 
@@ -141,9 +141,9 @@ Feed and media URLs must be usable by podcast clients without interactive browse
 
 ## 6. Milestone sequence
 
-M0, M1, and M2 are **implemented and locally verified**. M3–M9 implementation is **not started**. IDs are stable so later implementation plans can reference them.
+M0, M1, and M2 are **implemented and verified locally and in CI**. M3 is **planned and ready for implementation**; M3–M9 implementation is **not started**. IDs are stable so later implementation plans can reference them.
 
-Plans and completion evidence are available for [M0 — Migration audit](docs/milestones/M00-migration-audit.md) and [M1 — Foundation and verification](docs/milestones/M01-foundation-and-verification.md). The [M2 — Canonical content record](docs/milestones/M02-canonical-content.md) documents schemas, faithful import, protected edits, public data access, and completed acceptance checks. Owner instructions are in the [content authoring guide](docs/CONTENT.md).
+Plans and completion evidence are available for [M0 — Migration audit](docs/milestones/M00-migration-audit.md) and [M1 — Foundation and verification](docs/milestones/M01-foundation-and-verification.md). The [M2 — Canonical content record](docs/milestones/M02-canonical-content.md) documents schemas, faithful import, protected edits, public data access, and completed acceptance checks. The [M3 — Replacement RSS plan](docs/milestones/M03-podcast-rss.md) specifies verified metadata, serialization, aliases, cache behavior, compatibility tests, and the public validation handoff. Owner instructions are in the [content authoring guide](docs/CONTENT.md).
 
 | ID  | Outcome                                                          | Dependencies                                        | Release role                       |
 | --- | ---------------------------------------------------------------- | --------------------------------------------------- | ---------------------------------- |
@@ -217,6 +217,8 @@ M0 and M1 can progress independently. M3 and M4 share M2's model. Infrastructure
 **Acceptance/verification:** normalized published count and identities match M0; no unexplained discarded episodes, tracks, or descriptions; all artwork/audio references reconcile. Tests cover malformed content, duplicates, date/timezone handling, ordering ties, empty/untimed lists, escaping/sanitization, and public-content filtering. Import rerun evidence proves reproducibility. Run the canonical verification command.
 
 ### M3 — Replacement podcast RSS
+
+**Ready for implementation on 2026-09-08:** [M03-podcast-rss.md](docs/milestones/M03-podcast-rss.md). PR #1 is squash merged at `422b52f`; [CI on that main commit](https://github.com/treyturner/nurevolution.net/actions/runs/34268434890) and a fresh local `pnpm verify` passed, including the M2 audio-test fix. Supplemental [feed evidence](docs/milestones/evidence/M03-feed-reference.json) matches the frozen M0 feed body exactly and resolves channel metadata and the two verified aliases. No owner decision blocks M3 planning or implementation. Public validator/client and media-delivery acceptance remain M5/M6 work.
 
 **Outcome:** produce the complete compatible podcast feed without WordPress or podPress at runtime.
 
