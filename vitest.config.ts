@@ -21,7 +21,12 @@ export default defineConfig({
     ],
     coverage: {
       provider: 'v8',
-      include: ['app/**/*.{ts,vue}', 'shared/**/*.ts', 'server/**/*.ts'],
+      include: [
+        'app/**/*.{ts,vue}',
+        'shared/**/*.ts',
+        'server/**/*.ts',
+        'tools/content/**/*.ts',
+      ],
       exclude: ['**/*.d.ts'],
       reporter: ['text', 'html', 'lcov'],
       thresholds: {

@@ -1,0 +1,5096 @@
+{
+  "schemaVersion": 1,
+  "importerVersion": 1,
+  "sourceSnapshotId": "nurevolution-sources-2026-09-07",
+  "sourceHashes": {
+    "docs/migration/inventory.json": "06b0de23c9a22959acf721c9fc9be82e49691a89ab8cc355fc808b7567aa42fe",
+    "docs/migration/legacy-urls.json": "0faa24917ba86aa6bbb76fee19698be2da2f05a208b0b47dfb269352f14fe49f",
+    "docs/migration/track-timings.json": "dd787d166708f4c5b727089a2c6f35aee5b113b7bfac40e907a1cc5f1a7aaed7",
+    "docs/milestones/evidence/M02-praxis-duration.json": "8b83af522374a834ae9354644edb2da9b10c78e3c9359bd9f43b312d0f65ec98"
+  },
+  "expected": {
+    "episodes": 55,
+    "tracks": 832,
+    "starts": 338,
+    "timedEpisodes": 22,
+    "assets": 156,
+    "legacyUrls": 55
+  },
+  "actual": {
+    "episodes": 55,
+    "tracks": 832,
+    "starts": 338,
+    "timedEpisodes": 22,
+    "assets": 156,
+    "legacyUrls": 55
+  },
+  "metadataSources": {
+    "description": "Full feedContentHtml checked against database descriptionHtml; normalized safe HTML",
+    "publication": "databaseUtc checked against feedRfc822",
+    "guid": "Literal parsed feed GUID and boolean",
+    "enclosure": "Frozen feed URL/type/length, agreeing with local and podPress size",
+    "artwork": "Verified file media type and encoded raw uploads path"
+  },
+  "episodes": [
+    {
+      "id": "wp-196",
+      "sourceId": 196,
+      "slug": "eazytom-star-whores",
+      "file": "episodes/wp-196.json",
+      "audioAssetId": "asset-f861b34eac38c3bb",
+      "artworkAssetId": "asset-8852f319e6e2c322",
+      "databaseGuidDiffers": false,
+      "descriptionChanges": [
+        "Canonical HTML serialization and surrounding whitespace"
+      ],
+      "textChanges": [],
+      "timing": [
+        {
+          "position": 1,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 2,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 3,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 4,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 5,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 6,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 7,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 8,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 9,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 10,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 11,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 12,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 13,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 14,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 15,
+          "source": "absent",
+          "startTime": null
+        }
+      ]
+    },
+    {
+      "id": "wp-197",
+      "sourceId": 197,
+      "slug": "trey-turner-radio-silenced",
+      "file": "episodes/wp-197.json",
+      "audioAssetId": "asset-766efa297d3c341c",
+      "artworkAssetId": "asset-569dc869b9011485",
+      "databaseGuidDiffers": false,
+      "descriptionChanges": [
+        "Canonical HTML serialization and surrounding whitespace"
+      ],
+      "textChanges": [],
+      "timing": [
+        {
+          "position": 1,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 2,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 3,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 4,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 5,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 6,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 7,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 8,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 9,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 10,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 11,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 12,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 13,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 14,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 15,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 16,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 17,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 18,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 19,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 20,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 21,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 22,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 23,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 24,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 25,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 26,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 27,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 28,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 29,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 30,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 31,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 32,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 33,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 34,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 35,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 36,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 37,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 38,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 39,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 40,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 41,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 42,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 43,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 44,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 45,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 46,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 47,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 48,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 49,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 50,
+          "source": "absent",
+          "startTime": null
+        }
+      ]
+    },
+    {
+      "id": "wp-198",
+      "sourceId": 198,
+      "slug": "trey-turner-trapper-keeper-futura-s-2000",
+      "file": "episodes/wp-198.json",
+      "audioAssetId": "asset-48228cdc82a08b46",
+      "artworkAssetId": "asset-1dcc7065d3daf2ac",
+      "databaseGuidDiffers": false,
+      "descriptionChanges": [
+        "Canonical HTML serialization and surrounding whitespace"
+      ],
+      "textChanges": [],
+      "timing": [
+        {
+          "position": 1,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 0
+        },
+        {
+          "position": 2,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 113.652948
+        },
+        {
+          "position": 3,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 305.265034
+        },
+        {
+          "position": 4,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 526.432608
+        },
+        {
+          "position": 5,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 602.428368
+        },
+        {
+          "position": 6,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 780.313447
+        },
+        {
+          "position": 7,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 1034.717302
+        },
+        {
+          "position": 8,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 1147.663243
+        },
+        {
+          "position": 9,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 1327.66449
+        },
+        {
+          "position": 10,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 1572.574309
+        },
+        {
+          "position": 11,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 1777.915964
+        },
+        {
+          "position": 12,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 1984.09483
+        },
+        {
+          "position": 13,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 2236.330658
+        },
+        {
+          "position": 14,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 2411.800363
+        },
+        {
+          "position": 15,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 2537.474513
+        },
+        {
+          "position": 16,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 2701.222359
+        },
+        {
+          "position": 17,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 2925.130908
+        },
+        {
+          "position": 18,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 3076.281407
+        },
+        {
+          "position": 19,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 3304.280681
+        },
+        {
+          "position": 20,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 3472.28279
+        }
+      ]
+    },
+    {
+      "id": "wp-199",
+      "sourceId": 199,
+      "slug": "eazytom-bizarre-nye-2013",
+      "file": "episodes/wp-199.json",
+      "audioAssetId": "asset-5a017a042ed0d2fe",
+      "artworkAssetId": "asset-38bc99302587f8b8",
+      "databaseGuidDiffers": false,
+      "descriptionChanges": [
+        "Canonical HTML serialization and surrounding whitespace"
+      ],
+      "textChanges": [],
+      "timing": [
+        {
+          "position": 1,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 2,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 3,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 4,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 5,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 6,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 7,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 8,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 9,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 10,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 11,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 12,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 13,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 14,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 15,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 16,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 17,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 18,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 19,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 20,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 21,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 22,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 23,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 24,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 25,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 26,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 27,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 28,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 29,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 30,
+          "source": "absent",
+          "startTime": null
+        }
+      ]
+    },
+    {
+      "id": "wp-208",
+      "sourceId": 208,
+      "slug": "trey-turner-you-dont-know-me",
+      "file": "episodes/wp-208.json",
+      "audioAssetId": "asset-e09ee0651ac26b3a",
+      "artworkAssetId": "asset-eaed7daa06c44a2c",
+      "databaseGuidDiffers": false,
+      "descriptionChanges": [
+        "Canonical HTML serialization and surrounding whitespace"
+      ],
+      "textChanges": [],
+      "timing": [
+        {
+          "position": 1,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 0
+        },
+        {
+          "position": 2,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 269.75288
+        },
+        {
+          "position": 3,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 537.725465
+        },
+        {
+          "position": 4,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 827.521429
+        },
+        {
+          "position": 5,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 1093.955715
+        },
+        {
+          "position": 6,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 1293.210409
+        },
+        {
+          "position": 7,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 1398.195307
+        },
+        {
+          "position": 8,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 1552.668368
+        },
+        {
+          "position": 9,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 1794.842608
+        },
+        {
+          "position": 10,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 2058.435805
+        },
+        {
+          "position": 11,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 2256.792653
+        },
+        {
+          "position": 12,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 2500.360771
+        },
+        {
+          "position": 13,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 2743.767438
+        },
+        {
+          "position": 14,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 2892.809343
+        },
+        {
+          "position": 15,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 3164.07576
+        },
+        {
+          "position": 16,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 3319.77805
+        }
+      ]
+    },
+    {
+      "id": "wp-251",
+      "sourceId": 251,
+      "slug": "tonebreaker-genisounds",
+      "file": "episodes/wp-251.json",
+      "audioAssetId": "asset-46f23dd6c7e52d10",
+      "artworkAssetId": "asset-d9a94023800184bf",
+      "databaseGuidDiffers": false,
+      "descriptionChanges": [
+        "Canonical HTML serialization and surrounding whitespace"
+      ],
+      "textChanges": [],
+      "timing": [
+        {
+          "position": 1,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 2,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 3,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 4,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 5,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 6,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 7,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 8,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 9,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 10,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 11,
+          "source": "absent",
+          "startTime": null
+        }
+      ]
+    },
+    {
+      "id": "wp-254",
+      "sourceId": 254,
+      "slug": "joseph-noctum-the-bad-boogie",
+      "file": "episodes/wp-254.json",
+      "audioAssetId": "asset-cf2e97ad88f166bc",
+      "artworkAssetId": "asset-194069d8ed9a1c81",
+      "databaseGuidDiffers": false,
+      "descriptionChanges": [
+        "Canonical HTML serialization and surrounding whitespace"
+      ],
+      "textChanges": [],
+      "timing": [
+        {
+          "position": 1,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 2,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 3,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 4,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 5,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 6,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 7,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 8,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 9,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 10,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 11,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 12,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 13,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 14,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 15,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 16,
+          "source": "absent",
+          "startTime": null
+        }
+      ]
+    },
+    {
+      "id": "wp-256",
+      "sourceId": 256,
+      "slug": "eazytom-live-from-the-pink-cybernetic-cabaret",
+      "file": "episodes/wp-256.json",
+      "audioAssetId": "asset-2a98e5e36daa0f0d",
+      "artworkAssetId": "asset-68e35f1c63c59030",
+      "databaseGuidDiffers": false,
+      "descriptionChanges": [
+        "Canonical HTML serialization and surrounding whitespace"
+      ],
+      "textChanges": [],
+      "timing": []
+    },
+    {
+      "id": "wp-259",
+      "sourceId": 259,
+      "slug": "drrtywulvz-live-at-carpe-noctem-2011",
+      "file": "episodes/wp-259.json",
+      "audioAssetId": "asset-9344649bc27ef8ce",
+      "artworkAssetId": "asset-680468b64164c966",
+      "databaseGuidDiffers": false,
+      "descriptionChanges": [
+        "Canonical HTML serialization and surrounding whitespace"
+      ],
+      "textChanges": [],
+      "timing": []
+    },
+    {
+      "id": "wp-262",
+      "sourceId": 262,
+      "slug": "trey-turner-and-joseph-noctum-the-new-sound",
+      "file": "episodes/wp-262.json",
+      "audioAssetId": "asset-192ba9e6e4d8bc7c",
+      "artworkAssetId": "asset-f735ed235fe3eba7",
+      "databaseGuidDiffers": false,
+      "descriptionChanges": [
+        "Canonical HTML serialization and surrounding whitespace"
+      ],
+      "textChanges": [],
+      "timing": [
+        {
+          "position": 1,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 0
+        },
+        {
+          "position": 2,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 61.343129
+        },
+        {
+          "position": 3,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 308.59356
+        },
+        {
+          "position": 4,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 384.102494
+        },
+        {
+          "position": 5,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 618.833764
+        },
+        {
+          "position": 6,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 902.841496
+        },
+        {
+          "position": 7,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 1208.909523
+        },
+        {
+          "position": 8,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 1227.301609
+        },
+        {
+          "position": 9,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 1405.553786
+        },
+        {
+          "position": 10,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 1672.481995
+        },
+        {
+          "position": 11,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 1804.133718
+        },
+        {
+          "position": 12,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 1967.538049
+        },
+        {
+          "position": 13,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 2133.239636
+        },
+        {
+          "position": 14,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 2357.675486
+        },
+        {
+          "position": 15,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 2416.030656
+        },
+        {
+          "position": 16,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 2685.521971
+        },
+        {
+          "position": 17,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 2850.55154
+        },
+        {
+          "position": 18,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 2991.053331
+        },
+        {
+          "position": 19,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 3139.178637
+        },
+        {
+          "position": 20,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 3350.037775
+        },
+        {
+          "position": 21,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 3576.428342
+        },
+        {
+          "position": 22,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 3774.06578
+        },
+        {
+          "position": 23,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 3906.376075
+        },
+        {
+          "position": 24,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 4082.00349
+        },
+        {
+          "position": 25,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 4284.378411
+        }
+      ]
+    },
+    {
+      "id": "wp-265",
+      "sourceId": 265,
+      "slug": "joseph-noctum-in-the-pink",
+      "file": "episodes/wp-265.json",
+      "audioAssetId": "asset-4528e80f69f5822a",
+      "artworkAssetId": "asset-7fb535a7f31c7171",
+      "databaseGuidDiffers": false,
+      "descriptionChanges": [
+        "Canonical HTML serialization and surrounding whitespace"
+      ],
+      "textChanges": [],
+      "timing": [
+        {
+          "position": 1,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 2,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 3,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 4,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 5,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 6,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 7,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 8,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 9,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 10,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 11,
+          "source": "absent",
+          "startTime": null
+        }
+      ]
+    },
+    {
+      "id": "wp-267",
+      "sourceId": 267,
+      "slug": "libations-oscillations-professor-seaglitchs-isle-of-aural-decadence",
+      "file": "episodes/wp-267.json",
+      "audioAssetId": "asset-450a528e2fedc035",
+      "artworkAssetId": "asset-4ba2bbb4d4a07c50",
+      "databaseGuidDiffers": false,
+      "descriptionChanges": [
+        "Canonical HTML serialization and surrounding whitespace"
+      ],
+      "textChanges": [],
+      "timing": [
+        {
+          "position": 1,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 2,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 3,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 4,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 5,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 6,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 7,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 8,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 9,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 10,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 11,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 12,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 13,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 14,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 15,
+          "source": "absent",
+          "startTime": null
+        }
+      ]
+    },
+    {
+      "id": "wp-269",
+      "sourceId": 269,
+      "slug": "trey-turner-the-further-esoteric-adventures-of",
+      "file": "episodes/wp-269.json",
+      "audioAssetId": "asset-30d12a72b047a3d3",
+      "artworkAssetId": "asset-a5aeea1ceb662069",
+      "databaseGuidDiffers": false,
+      "descriptionChanges": [
+        "Canonical HTML serialization and surrounding whitespace",
+        "WordPress smiley image replaced with 😀 text"
+      ],
+      "textChanges": [],
+      "timing": [
+        {
+          "position": 1,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 2,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 3,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 4,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 5,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 6,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 7,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 8,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 9,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 10,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 11,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 12,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 13,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 14,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 15,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 16,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 17,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 18,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 19,
+          "source": "absent",
+          "startTime": null
+        }
+      ]
+    },
+    {
+      "id": "wp-271",
+      "sourceId": 271,
+      "slug": "tonebreaker-glamour-trash-pop",
+      "file": "episodes/wp-271.json",
+      "audioAssetId": "asset-9c9a6aa865a8d23d",
+      "artworkAssetId": "asset-510b0c2b5034c89d",
+      "databaseGuidDiffers": false,
+      "descriptionChanges": [
+        "Canonical HTML serialization and surrounding whitespace"
+      ],
+      "textChanges": [],
+      "timing": [
+        {
+          "position": 1,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 2,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 3,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 4,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 5,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 6,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 7,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 8,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 9,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 10,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 11,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 12,
+          "source": "absent",
+          "startTime": null
+        }
+      ]
+    },
+    {
+      "id": "wp-273",
+      "sourceId": 273,
+      "slug": "trey-turner-slow-your-roll",
+      "file": "episodes/wp-273.json",
+      "audioAssetId": "asset-cb30481ecf597f7d",
+      "artworkAssetId": "asset-133e20b72a933482",
+      "databaseGuidDiffers": false,
+      "descriptionChanges": [
+        "Canonical HTML serialization and surrounding whitespace"
+      ],
+      "textChanges": [],
+      "timing": [
+        {
+          "position": 1,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 0
+        },
+        {
+          "position": 2,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 46.409342
+        },
+        {
+          "position": 3,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 290.474104
+        },
+        {
+          "position": 4,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 391.674898
+        },
+        {
+          "position": 5,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 610.788708
+        },
+        {
+          "position": 6,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 780.586304
+        },
+        {
+          "position": 7,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 991.051973
+        },
+        {
+          "position": 8,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 1191.737642
+        },
+        {
+          "position": 9,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 1363.866962
+        },
+        {
+          "position": 10,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 1483.04449
+        },
+        {
+          "position": 11,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 1648.57551
+        },
+        {
+          "position": 12,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 1884.464422
+        },
+        {
+          "position": 13,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 2098.877846
+        },
+        {
+          "position": 14,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 2286.040227
+        },
+        {
+          "position": 15,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 2455.285193
+        }
+      ]
+    },
+    {
+      "id": "wp-276",
+      "sourceId": 276,
+      "slug": "joseph-noctum-peace-love-crunk",
+      "file": "episodes/wp-276.json",
+      "audioAssetId": "asset-5653f296481726c2",
+      "artworkAssetId": "asset-9f9dd8d7c8e6bf9e",
+      "databaseGuidDiffers": false,
+      "descriptionChanges": [
+        "Canonical HTML serialization and surrounding whitespace"
+      ],
+      "textChanges": [],
+      "timing": [
+        {
+          "position": 1,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 2,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 3,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 4,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 5,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 6,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 7,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 8,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 9,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 10,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 11,
+          "source": "absent",
+          "startTime": null
+        }
+      ]
+    },
+    {
+      "id": "wp-278",
+      "sourceId": 278,
+      "slug": "trey-turner-dancefloor-oriented",
+      "file": "episodes/wp-278.json",
+      "audioAssetId": "asset-76e7493aa6a8caa1",
+      "artworkAssetId": "asset-e0110499f74fda69",
+      "databaseGuidDiffers": false,
+      "descriptionChanges": [
+        "Canonical HTML serialization and surrounding whitespace"
+      ],
+      "textChanges": [],
+      "timing": [
+        {
+          "position": 1,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 2,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 3,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 4,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 5,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 6,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 7,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 8,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 9,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 10,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 11,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 12,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 13,
+          "source": "absent",
+          "startTime": null
+        }
+      ]
+    },
+    {
+      "id": "wp-281",
+      "sourceId": 281,
+      "slug": "joseph-noctum-african-red-bush",
+      "file": "episodes/wp-281.json",
+      "audioAssetId": "asset-7ada051307c78688",
+      "artworkAssetId": "asset-c4f7f3a89ffb9459",
+      "databaseGuidDiffers": false,
+      "descriptionChanges": [
+        "Canonical HTML serialization and surrounding whitespace"
+      ],
+      "textChanges": [
+        "Track 4: decoded legacy Windows-1252 U+0092 apostrophe as U+2019"
+      ],
+      "timing": [
+        {
+          "position": 1,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 2,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 3,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 4,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 5,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 6,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 7,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 8,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 9,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 10,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 11,
+          "source": "absent",
+          "startTime": null
+        }
+      ]
+    },
+    {
+      "id": "wp-283",
+      "sourceId": 283,
+      "slug": "trey-turner-view-from-a-vignette",
+      "file": "episodes/wp-283.json",
+      "audioAssetId": "asset-10be1117a35208e7",
+      "artworkAssetId": "asset-3f7f2190d5a93b50",
+      "databaseGuidDiffers": false,
+      "descriptionChanges": [
+        "Canonical HTML serialization and surrounding whitespace"
+      ],
+      "textChanges": [],
+      "timing": [
+        {
+          "position": 1,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 2,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 3,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 4,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 5,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 6,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 7,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 8,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 9,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 10,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 11,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 12,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 13,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 14,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 15,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 16,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 17,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 18,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 19,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 20,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 21,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 22,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 23,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 24,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 25,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 26,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 27,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 28,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 29,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 30,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 31,
+          "source": "absent",
+          "startTime": null
+        }
+      ]
+    },
+    {
+      "id": "wp-286",
+      "sourceId": 286,
+      "slug": "cody-haynes-live-on-kvrx-91-7fm-apr-12-2007",
+      "file": "episodes/wp-286.json",
+      "audioAssetId": "asset-c57974e04aade227",
+      "artworkAssetId": "asset-7544d06c1a6d0e33",
+      "databaseGuidDiffers": false,
+      "descriptionChanges": [
+        "Canonical HTML serialization and surrounding whitespace"
+      ],
+      "textChanges": [],
+      "timing": [
+        {
+          "position": 1,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 2,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 3,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 4,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 5,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 6,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 7,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 8,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 9,
+          "source": "absent",
+          "startTime": null
+        }
+      ]
+    },
+    {
+      "id": "wp-289",
+      "sourceId": 289,
+      "slug": "cody-haynes-live-on-kvrx-91-7fm-feb-3-2006",
+      "file": "episodes/wp-289.json",
+      "audioAssetId": "asset-45d62250e6619caf",
+      "artworkAssetId": "asset-a15970fdb539a7e3",
+      "databaseGuidDiffers": false,
+      "descriptionChanges": [
+        "Canonical HTML serialization and surrounding whitespace"
+      ],
+      "textChanges": [],
+      "timing": [
+        {
+          "position": 1,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 2,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 3,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 4,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 5,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 6,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 7,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 8,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 9,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 10,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 11,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 12,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 13,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 14,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 15,
+          "source": "absent",
+          "startTime": null
+        }
+      ]
+    },
+    {
+      "id": "wp-291",
+      "sourceId": 291,
+      "slug": "eazytom-dub-noctem",
+      "file": "episodes/wp-291.json",
+      "audioAssetId": "asset-b7f477175bd4b06f",
+      "artworkAssetId": "asset-7b174c8f2ef58543",
+      "databaseGuidDiffers": false,
+      "descriptionChanges": [
+        "Canonical HTML serialization and surrounding whitespace"
+      ],
+      "textChanges": [],
+      "timing": []
+    },
+    {
+      "id": "wp-293",
+      "sourceId": 293,
+      "slug": "trey-turner-the-toads-mistress",
+      "file": "episodes/wp-293.json",
+      "audioAssetId": "asset-2d938ca4211a912e",
+      "artworkAssetId": "asset-63dade2ffce61f81",
+      "databaseGuidDiffers": false,
+      "descriptionChanges": [
+        "Canonical HTML serialization and surrounding whitespace"
+      ],
+      "textChanges": [],
+      "timing": [
+        {
+          "position": 1,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 0
+        },
+        {
+          "position": 2,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 231.823243
+        },
+        {
+          "position": 3,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 358.093152
+        },
+        {
+          "position": 4,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 555.140091
+        },
+        {
+          "position": 5,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 730.472857
+        },
+        {
+          "position": 6,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 927.115578
+        },
+        {
+          "position": 7,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 1148.02848
+        },
+        {
+          "position": 8,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 1405.899523
+        },
+        {
+          "position": 9,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 1578.71467
+        },
+        {
+          "position": 10,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 1720.405622
+        },
+        {
+          "position": 11,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 1896.053468
+        },
+        {
+          "position": 12,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 2147.434148
+        },
+        {
+          "position": 13,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 2421.775123
+        },
+        {
+          "position": 14,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 2582.502334
+        }
+      ]
+    },
+    {
+      "id": "wp-295",
+      "sourceId": 295,
+      "slug": "cody-haynes-live-on-kvrx-91-7fm-nov-12-2005",
+      "file": "episodes/wp-295.json",
+      "audioAssetId": "asset-611f6cbae600362e",
+      "artworkAssetId": "asset-18714043747ff923",
+      "databaseGuidDiffers": false,
+      "descriptionChanges": [
+        "Canonical HTML serialization and surrounding whitespace"
+      ],
+      "textChanges": [],
+      "timing": [
+        {
+          "position": 1,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 2,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 3,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 4,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 5,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 6,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 7,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 8,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 9,
+          "source": "absent",
+          "startTime": null
+        }
+      ]
+    },
+    {
+      "id": "wp-298",
+      "sourceId": 298,
+      "slug": "tonebreaker-rockn-noctem",
+      "file": "episodes/wp-298.json",
+      "audioAssetId": "asset-2a7d87d1472c9f8d",
+      "artworkAssetId": "asset-927fcd4097acf9d6",
+      "databaseGuidDiffers": false,
+      "descriptionChanges": [
+        "Canonical HTML serialization and surrounding whitespace"
+      ],
+      "textChanges": [],
+      "timing": [
+        {
+          "position": 1,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 2,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 3,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 4,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 5,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 6,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 7,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 8,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 9,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 10,
+          "source": "absent",
+          "startTime": null
+        }
+      ]
+    },
+    {
+      "id": "wp-301",
+      "sourceId": 301,
+      "slug": "trey-turner-carpe-noctem-2010",
+      "file": "episodes/wp-301.json",
+      "audioAssetId": "asset-6b1ea0e20c5d1824",
+      "artworkAssetId": "asset-cc24465084ed8fbc",
+      "databaseGuidDiffers": false,
+      "descriptionChanges": [
+        "Canonical HTML serialization and surrounding whitespace"
+      ],
+      "textChanges": [],
+      "timing": [
+        {
+          "position": 1,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 0
+        },
+        {
+          "position": 2,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 216.623039
+        },
+        {
+          "position": 3,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 422.473719
+        },
+        {
+          "position": 4,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 613.605578
+        },
+        {
+          "position": 5,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 817.360635
+        },
+        {
+          "position": 6,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 959.535284
+        },
+        {
+          "position": 7,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 1116.73093
+        },
+        {
+          "position": 8,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 1312.82152
+        },
+        {
+          "position": 9,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 1547.53508
+        },
+        {
+          "position": 10,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 1785.961248
+        },
+        {
+          "position": 11,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 1918.545602
+        },
+        {
+          "position": 12,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 2112.820568
+        },
+        {
+          "position": 13,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 2263.723743
+        },
+        {
+          "position": 14,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 2402.169367
+        },
+        {
+          "position": 15,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 2508.307508
+        }
+      ]
+    },
+    {
+      "id": "wp-306",
+      "sourceId": 306,
+      "slug": "trey-turner-and-cody-haynes-plush-session",
+      "file": "episodes/wp-306.json",
+      "audioAssetId": "asset-20c29632c840c485",
+      "artworkAssetId": "asset-a5aa9e8a9dcdbfd0",
+      "databaseGuidDiffers": false,
+      "descriptionChanges": [
+        "Canonical HTML serialization and surrounding whitespace"
+      ],
+      "textChanges": [],
+      "timing": [
+        {
+          "position": 1,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 2,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 3,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 4,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 5,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 6,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 7,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 8,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 9,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 10,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 11,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 12,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 13,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 14,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 15,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 16,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 17,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 18,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 19,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 20,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 21,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 22,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 23,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 24,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 25,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 26,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 27,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 28,
+          "source": "absent",
+          "startTime": null
+        }
+      ]
+    },
+    {
+      "id": "wp-308",
+      "sourceId": 308,
+      "slug": "trey-turner-and-cody-haynes-better-late-than-never",
+      "file": "episodes/wp-308.json",
+      "audioAssetId": "asset-64aad6f047990931",
+      "artworkAssetId": "asset-f31631059a7297d6",
+      "databaseGuidDiffers": false,
+      "descriptionChanges": [
+        "Canonical HTML serialization and surrounding whitespace"
+      ],
+      "textChanges": [],
+      "timing": [
+        {
+          "position": 1,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 0
+        },
+        {
+          "position": 2,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 261.89415
+        },
+        {
+          "position": 3,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 448.320839
+        },
+        {
+          "position": 4,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 635.8978
+        },
+        {
+          "position": 5,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 878.947505
+        },
+        {
+          "position": 6,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 1063.110816
+        },
+        {
+          "position": 7,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 1174.015555
+        },
+        {
+          "position": 8,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 1380.026122
+        },
+        {
+          "position": 9,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 1445.573809
+        },
+        {
+          "position": 10,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 1504.153673
+        },
+        {
+          "position": 11,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 1770.209024
+        },
+        {
+          "position": 12,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 2013.394761
+        },
+        {
+          "position": 13,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 2291.738049
+        },
+        {
+          "position": 14,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 2593.422561
+        },
+        {
+          "position": 15,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 2804.59077
+        },
+        {
+          "position": 16,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 2902.468366
+        },
+        {
+          "position": 17,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 3135.498298
+        },
+        {
+          "position": 18,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 3351.989432
+        },
+        {
+          "position": 19,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 3582.450679
+        }
+      ]
+    },
+    {
+      "id": "wp-311",
+      "sourceId": 311,
+      "slug": "eazytom-bouche-dincendie-remix-finale",
+      "file": "episodes/wp-311.json",
+      "audioAssetId": "asset-c495a02dc94d23d4",
+      "artworkAssetId": "asset-690d10fab2a837e4",
+      "databaseGuidDiffers": false,
+      "descriptionChanges": [
+        "Canonical HTML serialization and surrounding whitespace"
+      ],
+      "textChanges": [],
+      "timing": [
+        {
+          "position": 1,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 2,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 3,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 4,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 5,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 6,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 7,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 8,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 9,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 10,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 11,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 12,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 13,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 14,
+          "source": "absent",
+          "startTime": null
+        }
+      ]
+    },
+    {
+      "id": "wp-315",
+      "sourceId": 315,
+      "slug": "trey-turner-bijoubreaks-com-breakthru-2",
+      "file": "episodes/wp-315.json",
+      "audioAssetId": "asset-e48b7cae2a462fe7",
+      "artworkAssetId": "asset-6da3935c1b78f01d",
+      "databaseGuidDiffers": false,
+      "descriptionChanges": [
+        "Canonical HTML serialization and surrounding whitespace"
+      ],
+      "textChanges": [],
+      "timing": [
+        {
+          "position": 1,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 0
+        },
+        {
+          "position": 2,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 228.971927
+        },
+        {
+          "position": 3,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 529.369251
+        },
+        {
+          "position": 4,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 757.07619
+        },
+        {
+          "position": 5,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 875.689886
+        },
+        {
+          "position": 6,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 1136.029387
+        },
+        {
+          "position": 7,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 1399.149977
+        }
+      ]
+    },
+    {
+      "id": "wp-317",
+      "sourceId": 317,
+      "slug": "trey-turner-stasis",
+      "file": "episodes/wp-317.json",
+      "audioAssetId": "asset-6c2d1686c644b906",
+      "artworkAssetId": "asset-bf1a8baa054023da",
+      "databaseGuidDiffers": false,
+      "descriptionChanges": [
+        "Canonical HTML serialization and surrounding whitespace"
+      ],
+      "textChanges": [],
+      "timing": [
+        {
+          "position": 1,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 0
+        },
+        {
+          "position": 2,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 400.506667
+        },
+        {
+          "position": 3,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 753.346667
+        },
+        {
+          "position": 4,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 1158.066667
+        },
+        {
+          "position": 5,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 1600.346667
+        },
+        {
+          "position": 6,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 1957.066667
+        },
+        {
+          "position": 7,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 2227.373334
+        },
+        {
+          "position": 8,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 2533.133334
+        },
+        {
+          "position": 9,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 2888.693334
+        },
+        {
+          "position": 10,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 3187.360001
+        },
+        {
+          "position": 11,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 3608.013334
+        }
+      ]
+    },
+    {
+      "id": "wp-320",
+      "sourceId": 320,
+      "slug": "trey-turner-and-contrast-where-do-we-go-from-here",
+      "file": "episodes/wp-320.json",
+      "audioAssetId": "asset-2e7c79fcf44d6c67",
+      "artworkAssetId": "asset-cba5664e28f3f302",
+      "databaseGuidDiffers": false,
+      "descriptionChanges": [
+        "Canonical HTML serialization and surrounding whitespace"
+      ],
+      "textChanges": [],
+      "timing": [
+        {
+          "position": 1,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 0
+        },
+        {
+          "position": 2,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 442.8
+        },
+        {
+          "position": 3,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 754.44
+        },
+        {
+          "position": 4,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 1023.76
+        },
+        {
+          "position": 5,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 1387.853333
+        },
+        {
+          "position": 6,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 1586.226666
+        },
+        {
+          "position": 7,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 1926.293333
+        },
+        {
+          "position": 8,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 2181.346666
+        },
+        {
+          "position": 9,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 2571.013333
+        },
+        {
+          "position": 10,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 2946.506666
+        },
+        {
+          "position": 11,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 3244.066666
+        },
+        {
+          "position": 12,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 3612.493333
+        },
+        {
+          "position": 13,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 3938.386666
+        },
+        {
+          "position": 14,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 4292.639999
+        }
+      ]
+    },
+    {
+      "id": "wp-322",
+      "sourceId": 322,
+      "slug": "fracture-and-dj-cubed-slipstream",
+      "file": "episodes/wp-322.json",
+      "audioAssetId": "asset-ed214e146163878c",
+      "artworkAssetId": "asset-b24b3080fa709966",
+      "databaseGuidDiffers": false,
+      "descriptionChanges": [
+        "Canonical HTML serialization and surrounding whitespace"
+      ],
+      "textChanges": [],
+      "timing": [
+        {
+          "position": 1,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 0
+        },
+        {
+          "position": 2,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 359.52
+        },
+        {
+          "position": 3,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 783.76
+        },
+        {
+          "position": 4,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 1272.24
+        },
+        {
+          "position": 5,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 1653.413333
+        },
+        {
+          "position": 6,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 2084.8
+        },
+        {
+          "position": 7,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 2228.613333
+        },
+        {
+          "position": 8,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 2559.16
+        },
+        {
+          "position": 9,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 3134.746667
+        },
+        {
+          "position": 10,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 3623.746667
+        },
+        {
+          "position": 11,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 3954.533334
+        },
+        {
+          "position": 12,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 4387.773334
+        }
+      ]
+    },
+    {
+      "id": "wp-324",
+      "sourceId": 324,
+      "slug": "trey-turner-urban-breakbeat-uprising",
+      "file": "episodes/wp-324.json",
+      "audioAssetId": "asset-8ae53574f84681bc",
+      "artworkAssetId": "asset-15c4a645aa42c211",
+      "databaseGuidDiffers": false,
+      "descriptionChanges": [
+        "Canonical HTML serialization and surrounding whitespace"
+      ],
+      "textChanges": [],
+      "timing": [
+        {
+          "position": 1,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 0
+        },
+        {
+          "position": 2,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 191.106667
+        },
+        {
+          "position": 3,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 544.04
+        },
+        {
+          "position": 4,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 798.146667
+        },
+        {
+          "position": 5,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 1207.533334
+        },
+        {
+          "position": 6,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 1604.600001
+        },
+        {
+          "position": 7,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 1915.186668
+        },
+        {
+          "position": 8,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 2296.360001
+        },
+        {
+          "position": 9,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 2543.400001
+        },
+        {
+          "position": 10,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 2966.933334
+        },
+        {
+          "position": 11,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 3291.560001
+        },
+        {
+          "position": 12,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 3665.666668
+        },
+        {
+          "position": 13,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 3939.186668
+        },
+        {
+          "position": 14,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 4263.880001
+        }
+      ]
+    },
+    {
+      "id": "wp-328",
+      "sourceId": 328,
+      "slug": "trey-turner-g3-mix-session",
+      "file": "episodes/wp-328.json",
+      "audioAssetId": "asset-37787c9351c33879",
+      "artworkAssetId": "asset-68690678f31c4a41",
+      "databaseGuidDiffers": false,
+      "descriptionChanges": [
+        "Canonical HTML serialization and surrounding whitespace"
+      ],
+      "textChanges": [],
+      "timing": [
+        {
+          "position": 1,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 0
+        },
+        {
+          "position": 2,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 360.453333
+        },
+        {
+          "position": 3,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 673.346666
+        },
+        {
+          "position": 4,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 957.786666
+        },
+        {
+          "position": 5,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 1270.666666
+        },
+        {
+          "position": 6,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 1540.866666
+        },
+        {
+          "position": 7,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 1867.959999
+        },
+        {
+          "position": 8,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 2209.279999
+        },
+        {
+          "position": 9,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 2507.946666
+        },
+        {
+          "position": 10,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 2778.159999
+        },
+        {
+          "position": 11,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 3083.919999
+        },
+        {
+          "position": 12,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 3467.906666
+        },
+        {
+          "position": 13,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 3709.693333
+        },
+        {
+          "position": 14,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 4022.586666
+        }
+      ]
+    },
+    {
+      "id": "wp-330",
+      "sourceId": 330,
+      "slug": "fracture-movement",
+      "file": "episodes/wp-330.json",
+      "audioAssetId": "asset-ec66a266ab6606bd",
+      "artworkAssetId": "asset-7a07eed886d30eab",
+      "databaseGuidDiffers": false,
+      "descriptionChanges": [
+        "Canonical HTML serialization and surrounding whitespace"
+      ],
+      "textChanges": [],
+      "timing": [
+        {
+          "position": 1,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 0
+        },
+        {
+          "position": 2,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 591.08
+        },
+        {
+          "position": 3,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 972.706667
+        },
+        {
+          "position": 4,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 1339.706667
+        },
+        {
+          "position": 5,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 1956.24
+        },
+        {
+          "position": 6,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 2359.893333
+        },
+        {
+          "position": 7,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 2736.04
+        },
+        {
+          "position": 8,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 3062.64
+        },
+        {
+          "position": 9,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 3458.92
+        },
+        {
+          "position": 10,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 3884.24
+        },
+        {
+          "position": 11,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 4442.4
+        }
+      ]
+    },
+    {
+      "id": "wp-333",
+      "sourceId": 333,
+      "slug": "trey-turner-aftershock",
+      "file": "episodes/wp-333.json",
+      "audioAssetId": "asset-a73fe4f80b864589",
+      "artworkAssetId": "asset-c3e98cbaf6335958",
+      "databaseGuidDiffers": false,
+      "descriptionChanges": [
+        "Canonical HTML serialization and surrounding whitespace"
+      ],
+      "textChanges": [],
+      "timing": [
+        {
+          "position": 1,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 0
+        },
+        {
+          "position": 2,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 455.546667
+        },
+        {
+          "position": 3,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 853.773334
+        },
+        {
+          "position": 4,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 1205.760001
+        },
+        {
+          "position": 5,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 1561.320001
+        },
+        {
+          "position": 6,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 1948.853334
+        },
+        {
+          "position": 7,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 2251.106667
+        },
+        {
+          "position": 8,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 2734.653334
+        },
+        {
+          "position": 9,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 3090.226667
+        },
+        {
+          "position": 10,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 3474.213334
+        },
+        {
+          "position": 11,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 3865.306667
+        },
+        {
+          "position": 12,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 4069.746667
+        }
+      ]
+    },
+    {
+      "id": "wp-335",
+      "sourceId": 335,
+      "slug": "trey-turner-tremor",
+      "file": "episodes/wp-335.json",
+      "audioAssetId": "asset-72b4fd53c6f0a410",
+      "artworkAssetId": "asset-eece95f342027745",
+      "databaseGuidDiffers": false,
+      "descriptionChanges": [
+        "Canonical HTML serialization and surrounding whitespace"
+      ],
+      "textChanges": [],
+      "timing": [
+        {
+          "position": 1,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 0
+        },
+        {
+          "position": 2,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 426.693333
+        },
+        {
+          "position": 3,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 725.32
+        },
+        {
+          "position": 4,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 1265.746667
+        },
+        {
+          "position": 5,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 1754.626667
+        },
+        {
+          "position": 6,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 2152.84
+        },
+        {
+          "position": 7,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 2465.72
+        },
+        {
+          "position": 8,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 2878.146667
+        },
+        {
+          "position": 9,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 3119.92
+        },
+        {
+          "position": 10,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 3475.466667
+        },
+        {
+          "position": 11,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 3735.026667
+        }
+      ]
+    },
+    {
+      "id": "wp-337",
+      "sourceId": 337,
+      "slug": "fracture-broken",
+      "file": "episodes/wp-337.json",
+      "audioAssetId": "asset-f72dfc422712dcb0",
+      "artworkAssetId": "asset-de3638daf5f15cf9",
+      "databaseGuidDiffers": false,
+      "descriptionChanges": [
+        "Canonical HTML serialization and surrounding whitespace"
+      ],
+      "textChanges": [],
+      "timing": [
+        {
+          "position": 1,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 0
+        },
+        {
+          "position": 2,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 509.8
+        },
+        {
+          "position": 3,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 739.08
+        },
+        {
+          "position": 4,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 1040.08
+        },
+        {
+          "position": 5,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 1370.306667
+        },
+        {
+          "position": 6,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 1634.026667
+        },
+        {
+          "position": 7,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 2012.533334
+        },
+        {
+          "position": 8,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 2301.400001
+        },
+        {
+          "position": 9,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 2617.093334
+        },
+        {
+          "position": 10,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 2918.493334
+        },
+        {
+          "position": 11,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 3236.093334
+        },
+        {
+          "position": 12,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 3579.853334
+        },
+        {
+          "position": 13,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 3809.573334
+        }
+      ]
+    },
+    {
+      "id": "wp-340",
+      "sourceId": 340,
+      "slug": "cody-haynes-live-on-kvrx-91-7fm-sep-26-2006",
+      "file": "episodes/wp-340.json",
+      "audioAssetId": "asset-e3ae0e57cae4eef4",
+      "artworkAssetId": "asset-cc8b3eb5d0ea3f25",
+      "databaseGuidDiffers": false,
+      "descriptionChanges": [
+        "Canonical HTML serialization and surrounding whitespace"
+      ],
+      "textChanges": [],
+      "timing": [
+        {
+          "position": 1,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 2,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 3,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 4,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 5,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 6,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 7,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 8,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 9,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 10,
+          "source": "absent",
+          "startTime": null
+        }
+      ]
+    },
+    {
+      "id": "wp-342",
+      "sourceId": 342,
+      "slug": "fracture-live-on-mega-93-3fm-mar-21-2002-part-1",
+      "file": "episodes/wp-342.json",
+      "audioAssetId": "asset-f47b47e3fbf09500",
+      "artworkAssetId": "asset-4f28530d0509b084",
+      "databaseGuidDiffers": false,
+      "descriptionChanges": [
+        "Canonical HTML serialization and surrounding whitespace"
+      ],
+      "textChanges": [],
+      "timing": []
+    },
+    {
+      "id": "wp-344",
+      "sourceId": 344,
+      "slug": "fracture-live-on-mega-93-3-fm-mar-21-2002-part-2",
+      "file": "episodes/wp-344.json",
+      "audioAssetId": "asset-27f168df9ffe8484",
+      "artworkAssetId": "asset-a7b9ed1524bfa423",
+      "databaseGuidDiffers": false,
+      "descriptionChanges": [
+        "Canonical HTML serialization and surrounding whitespace"
+      ],
+      "textChanges": [],
+      "timing": []
+    },
+    {
+      "id": "wp-389",
+      "sourceId": 389,
+      "slug": "trey-turner-phoning-it-in",
+      "file": "episodes/wp-389.json",
+      "audioAssetId": "asset-3f430484c0c8acb0",
+      "artworkAssetId": "asset-9516b8c25ea9409e",
+      "databaseGuidDiffers": true,
+      "descriptionChanges": [
+        "Canonical HTML serialization and surrounding whitespace"
+      ],
+      "textChanges": [],
+      "timing": [
+        {
+          "position": 1,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 0
+        },
+        {
+          "position": 2,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 225.0339
+        },
+        {
+          "position": 3,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 404.471587
+        },
+        {
+          "position": 4,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 595.710771
+        },
+        {
+          "position": 5,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 730.899184
+        },
+        {
+          "position": 6,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 856.755851
+        },
+        {
+          "position": 7,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 924.266735
+        },
+        {
+          "position": 8,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 1141.376236
+        },
+        {
+          "position": 9,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 1293.247234
+        },
+        {
+          "position": 10,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 1474.084332
+        },
+        {
+          "position": 11,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 1569.663765
+        },
+        {
+          "position": 12,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 1752.642336
+        },
+        {
+          "position": 13,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 1989.361882
+        },
+        {
+          "position": 14,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 2138.415533
+        },
+        {
+          "position": 15,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 2357.814603
+        },
+        {
+          "position": 16,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 2542.083923
+        },
+        {
+          "position": 17,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 2727.825238
+        },
+        {
+          "position": 18,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 2904.088911
+        },
+        {
+          "position": 19,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 3040.250838
+        },
+        {
+          "position": 20,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 3190.801586
+        },
+        {
+          "position": 21,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 3364.988253
+        }
+      ]
+    },
+    {
+      "id": "wp-399",
+      "sourceId": 399,
+      "slug": "trey-turner-mmxiv",
+      "file": "episodes/wp-399.json",
+      "audioAssetId": "asset-f066b52dbbab369e",
+      "artworkAssetId": "asset-6b3735a30cc66e15",
+      "databaseGuidDiffers": true,
+      "descriptionChanges": [
+        "Canonical HTML serialization and surrounding whitespace"
+      ],
+      "textChanges": [],
+      "timing": [
+        {
+          "position": 1,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 0
+        },
+        {
+          "position": 2,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 309.309002
+        },
+        {
+          "position": 3,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 573.961678
+        },
+        {
+          "position": 4,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 799.451293
+        },
+        {
+          "position": 5,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 1013.48991
+        },
+        {
+          "position": 6,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 1177.692903
+        },
+        {
+          "position": 7,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 1268.47669
+        },
+        {
+          "position": 8,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 1428.001837
+        },
+        {
+          "position": 9,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 1553.179842
+        },
+        {
+          "position": 10,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 1811.001747
+        },
+        {
+          "position": 11,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 1935.323493
+        },
+        {
+          "position": 12,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 2110.147144
+        },
+        {
+          "position": 13,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 2298.130795
+        },
+        {
+          "position": 14,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 2574.087439
+        },
+        {
+          "position": 15,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 2706.335784
+        },
+        {
+          "position": 16,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 2854.903834
+        },
+        {
+          "position": 17,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 3008.793471
+        },
+        {
+          "position": 18,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 3145.057575
+        }
+      ]
+    },
+    {
+      "id": "wp-402",
+      "sourceId": 402,
+      "slug": "eazyt-7-weapons-mix",
+      "file": "episodes/wp-402.json",
+      "audioAssetId": "asset-65db4c3e4ea878a2",
+      "artworkAssetId": "asset-6070ba3fd2fbcbe0",
+      "databaseGuidDiffers": true,
+      "descriptionChanges": [
+        "Canonical HTML serialization and surrounding whitespace"
+      ],
+      "textChanges": [],
+      "timing": [
+        {
+          "position": 1,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 2,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 3,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 4,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 5,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 6,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 7,
+          "source": "absent",
+          "startTime": null
+        }
+      ]
+    },
+    {
+      "id": "wp-417",
+      "sourceId": 417,
+      "slug": "trey-turner-praxis",
+      "file": "episodes/wp-417.json",
+      "audioAssetId": "asset-cfd112ac1a267eb8",
+      "artworkAssetId": "asset-ed7cf593c99a59a8",
+      "databaseGuidDiffers": true,
+      "descriptionChanges": [
+        "Canonical HTML serialization and surrounding whitespace"
+      ],
+      "textChanges": [],
+      "timing": [
+        {
+          "position": 1,
+          "source": "m2-praxis-duration-2026-09-08",
+          "startTime": 0
+        },
+        {
+          "position": 2,
+          "source": "m2-praxis-duration-2026-09-08",
+          "startTime": 208.794059
+        },
+        {
+          "position": 3,
+          "source": "m2-praxis-duration-2026-09-08",
+          "startTime": 395.481225
+        },
+        {
+          "position": 4,
+          "source": "m2-praxis-duration-2026-09-08",
+          "startTime": 573.042903
+        },
+        {
+          "position": 5,
+          "source": "m2-praxis-duration-2026-09-08",
+          "startTime": 654.803629
+        },
+        {
+          "position": 6,
+          "source": "m2-praxis-duration-2026-09-08",
+          "startTime": 756.69186
+        },
+        {
+          "position": 7,
+          "source": "m2-praxis-duration-2026-09-08",
+          "startTime": 916.942994
+        },
+        {
+          "position": 8,
+          "source": "m2-praxis-duration-2026-09-08",
+          "startTime": 1137.531407
+        },
+        {
+          "position": 9,
+          "source": "m2-praxis-duration-2026-09-08",
+          "startTime": 1259.446532
+        },
+        {
+          "position": 10,
+          "source": "m2-praxis-duration-2026-09-08",
+          "startTime": 1430.175942
+        },
+        {
+          "position": 11,
+          "source": "m2-praxis-duration-2026-09-08",
+          "startTime": 1604.092223
+        },
+        {
+          "position": 12,
+          "source": "m2-praxis-duration-2026-09-08",
+          "startTime": 1726.224128
+        },
+        {
+          "position": 13,
+          "source": "m2-praxis-duration-2026-09-08",
+          "startTime": 1956.067008
+        },
+        {
+          "position": 14,
+          "source": "m2-praxis-duration-2026-09-08",
+          "startTime": 2060.687756
+        },
+        {
+          "position": 15,
+          "source": "m2-praxis-duration-2026-09-08",
+          "startTime": 2160.129479
+        },
+        {
+          "position": 16,
+          "source": "m2-praxis-duration-2026-09-08",
+          "startTime": 2307.326939
+        },
+        {
+          "position": 17,
+          "source": "m2-praxis-duration-2026-09-08",
+          "startTime": 2421.60542
+        },
+        {
+          "position": 18,
+          "source": "m2-praxis-duration-2026-09-08",
+          "startTime": 2593.592586
+        },
+        {
+          "position": 19,
+          "source": "m2-praxis-duration-2026-09-08",
+          "startTime": 2745.992835
+        },
+        {
+          "position": 20,
+          "source": "m2-praxis-duration-2026-09-08",
+          "startTime": 2959.258186
+        },
+        {
+          "position": 21,
+          "source": "m2-praxis-duration-2026-09-08",
+          "startTime": 3157.442948
+        }
+      ]
+    },
+    {
+      "id": "wp-421",
+      "sourceId": 421,
+      "slug": "trey-turner-carrier-detect",
+      "file": "episodes/wp-421.json",
+      "audioAssetId": "asset-c1941d585fb2d88c",
+      "artworkAssetId": "asset-1a8119c7140491ec",
+      "databaseGuidDiffers": true,
+      "descriptionChanges": [
+        "Canonical HTML serialization and surrounding whitespace"
+      ],
+      "textChanges": [],
+      "timing": [
+        {
+          "position": 1,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 2,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 3,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 4,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 5,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 6,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 7,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 8,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 9,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 10,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 11,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 12,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 13,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 14,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 15,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 16,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 17,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 18,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 19,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 20,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 21,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 22,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 23,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 24,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 25,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 26,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 27,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 28,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 29,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 30,
+          "source": "absent",
+          "startTime": null
+        }
+      ]
+    },
+    {
+      "id": "wp-428",
+      "sourceId": 428,
+      "slug": "trey-turner-cody-haynes-archived-transmission",
+      "file": "episodes/wp-428.json",
+      "audioAssetId": "asset-58818eef16928111",
+      "artworkAssetId": "asset-be4e37f201b9c6e4",
+      "databaseGuidDiffers": true,
+      "descriptionChanges": [
+        "Canonical HTML serialization and surrounding whitespace",
+        "Preserved WordPress typographic apostrophes from full feed content"
+      ],
+      "textChanges": [],
+      "timing": [
+        {
+          "position": 1,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 0
+        },
+        {
+          "position": 2,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 189.79576
+        },
+        {
+          "position": 3,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 390.282268
+        },
+        {
+          "position": 4,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 606.282268
+        },
+        {
+          "position": 5,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 864.709275
+        },
+        {
+          "position": 6,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 1116.826168
+        },
+        {
+          "position": 7,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 1380.711474
+        },
+        {
+          "position": 8,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 1678.96898
+        },
+        {
+          "position": 9,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 2074.115805
+        },
+        {
+          "position": 10,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 2379.590612
+        },
+        {
+          "position": 11,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 2791.099909
+        },
+        {
+          "position": 12,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 3157.854648
+        },
+        {
+          "position": 13,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 3626.852947
+        },
+        {
+          "position": 14,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 3936.473446
+        }
+      ]
+    },
+    {
+      "id": "wp-431",
+      "sourceId": 431,
+      "slug": "trey-turner-is-this-thing-on",
+      "file": "episodes/wp-431.json",
+      "audioAssetId": "asset-c828f22321a3b059",
+      "artworkAssetId": "asset-161f24d30919d412",
+      "databaseGuidDiffers": true,
+      "descriptionChanges": [
+        "Canonical HTML serialization and surrounding whitespace"
+      ],
+      "textChanges": [],
+      "timing": [
+        {
+          "position": 1,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 2,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 3,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 4,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 5,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 6,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 7,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 8,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 9,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 10,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 11,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 12,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 13,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 14,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 15,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 16,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 17,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 18,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 19,
+          "source": "absent",
+          "startTime": null
+        }
+      ]
+    },
+    {
+      "id": "wp-435",
+      "sourceId": 435,
+      "slug": "trey-turner-off-the-cuff",
+      "file": "episodes/wp-435.json",
+      "audioAssetId": "asset-53645f107ecc3374",
+      "artworkAssetId": "asset-7db05c016409aca7",
+      "databaseGuidDiffers": true,
+      "descriptionChanges": [
+        "Canonical HTML serialization and surrounding whitespace"
+      ],
+      "textChanges": [],
+      "timing": [
+        {
+          "position": 1,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 2,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 3,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 4,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 5,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 6,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 7,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 8,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 9,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 10,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 11,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 12,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 13,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 14,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 15,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 16,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 17,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 18,
+          "source": "absent",
+          "startTime": null
+        }
+      ]
+    },
+    {
+      "id": "wp-444",
+      "sourceId": 444,
+      "slug": "trey-turner-lost-in-translation",
+      "file": "episodes/wp-444.json",
+      "audioAssetId": "asset-486937c569bbbf76",
+      "artworkAssetId": "asset-267a5855fb201d22",
+      "databaseGuidDiffers": true,
+      "descriptionChanges": [
+        "Canonical HTML serialization and surrounding whitespace",
+        "Preserved WordPress typographic apostrophes from full feed content"
+      ],
+      "textChanges": [],
+      "timing": [
+        {
+          "position": 1,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 2,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 3,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 4,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 5,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 6,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 7,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 8,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 9,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 10,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 11,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 12,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 13,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 14,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 15,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 16,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 17,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 18,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 19,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 20,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 21,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 22,
+          "source": "absent",
+          "startTime": null
+        }
+      ]
+    },
+    {
+      "id": "wp-454",
+      "sourceId": 454,
+      "slug": "trey-turner-bass-face-space-race",
+      "file": "episodes/wp-454.json",
+      "audioAssetId": "asset-a8bdef3a4271db43",
+      "artworkAssetId": "asset-9612f3ffa603b37f",
+      "databaseGuidDiffers": true,
+      "descriptionChanges": [
+        "Canonical HTML serialization and surrounding whitespace"
+      ],
+      "textChanges": [],
+      "timing": [
+        {
+          "position": 1,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 2,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 3,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 4,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 5,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 6,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 7,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 8,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 9,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 10,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 11,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 12,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 13,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 14,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 15,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 16,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 17,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 18,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 19,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 20,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 21,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 22,
+          "source": "absent",
+          "startTime": null
+        }
+      ]
+    },
+    {
+      "id": "wp-459",
+      "sourceId": 459,
+      "slug": "trey-turner-impulse",
+      "file": "episodes/wp-459.json",
+      "audioAssetId": "asset-22e61b6a576f3ecf",
+      "artworkAssetId": "asset-ba4a562c6fb310c4",
+      "databaseGuidDiffers": true,
+      "descriptionChanges": [
+        "Canonical HTML serialization and surrounding whitespace"
+      ],
+      "textChanges": [],
+      "timing": [
+        {
+          "position": 1,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 2,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 3,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 4,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 5,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 6,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 7,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 8,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 9,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 10,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 11,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 12,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 13,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 14,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 15,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 16,
+          "source": "absent",
+          "startTime": null
+        }
+      ]
+    },
+    {
+      "id": "wp-473",
+      "sourceId": 473,
+      "slug": "trey-turner-the-dark-prophet",
+      "file": "episodes/wp-473.json",
+      "audioAssetId": "asset-4d1ddf13eda772f7",
+      "artworkAssetId": "asset-6b34c82e53c12fab",
+      "databaseGuidDiffers": true,
+      "descriptionChanges": [
+        "Canonical HTML serialization and surrounding whitespace"
+      ],
+      "textChanges": [],
+      "timing": [
+        {
+          "position": 1,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 0
+        },
+        {
+          "position": 2,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 357.514467
+        },
+        {
+          "position": 3,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 558.371338
+        },
+        {
+          "position": 4,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 826.145714
+        },
+        {
+          "position": 5,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 1049.228843
+        },
+        {
+          "position": 6,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 1294.534308
+        },
+        {
+          "position": 7,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 1539.638798
+        },
+        {
+          "position": 8,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 1783.47458
+        },
+        {
+          "position": 9,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 1917.390476
+        },
+        {
+          "position": 10,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 2139.351746
+        },
+        {
+          "position": 11,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 2362.704422
+        },
+        {
+          "position": 12,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 2584.564739
+        },
+        {
+          "position": 13,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 2897.124217
+        },
+        {
+          "position": 14,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 3144.142675
+        },
+        {
+          "position": 15,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 3346.244013
+        },
+        {
+          "position": 16,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 3458.489591
+        },
+        {
+          "position": 17,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 3693.962607
+        },
+        {
+          "position": 18,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 3884.656893
+        },
+        {
+          "position": 19,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 4087.947596
+        },
+        {
+          "position": 20,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 4335.70009
+        },
+        {
+          "position": 21,
+          "source": "track-timings-392f70d1e8ccc88c",
+          "startTime": 4515.864829
+        }
+      ]
+    },
+    {
+      "id": "wp-484",
+      "sourceId": 484,
+      "slug": "trey-turner-ruminate",
+      "file": "episodes/wp-484.json",
+      "audioAssetId": "asset-5df28ae03c827b0f",
+      "artworkAssetId": "asset-0aae6b03b5300a3f",
+      "databaseGuidDiffers": true,
+      "descriptionChanges": [
+        "Canonical HTML serialization and surrounding whitespace",
+        "Removed inline styling"
+      ],
+      "textChanges": [],
+      "timing": [
+        {
+          "position": 1,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 2,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 3,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 4,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 5,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 6,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 7,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 8,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 9,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 10,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 11,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 12,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 13,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 14,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 15,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 16,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 17,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 18,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 19,
+          "source": "absent",
+          "startTime": null
+        },
+        {
+          "position": 20,
+          "source": "absent",
+          "startTime": null
+        }
+      ]
+    }
+  ],
+  "issues": [
+    {
+      "id": "M0-ACF-SIZE-278",
+      "disposition": "Retained stale ACF provenance; local/podPress/enclosure sizes selected"
+    },
+    {
+      "id": "M0-ACF-SIZE-340",
+      "disposition": "Retained stale ACF provenance; local/podPress/enclosure sizes selected"
+    },
+    {
+      "id": "M0-TRACK-TIMING-417",
+      "disposition": "Corrected duration and 21 starts using m2-praxis-duration-2026-09-08; M0 preserved"
+    }
+  ],
+  "outputHashes": {
+    "show.json": "6127bced22a9465c596ced6a434edaa0a2f5923cc94bf2a1ab0495613007b72b",
+    "assets.json": "07269c1e501c91a864a6d7070fa72aaadeee2b74e6ef8eff90ac7e40db9e61f4",
+    "legacy-urls.json": "c696e44d42bd6cc4bd7ff6a0ffe74eaefe068586c8f10fb92e50157222450f4f",
+    "episodes/wp-196.json": "1589209e32ea0f6e2ed9273fe87534b57e972311fbac085f0d523841f0e2bbb7",
+    "episodes/wp-197.json": "81be82c222e059442747d15da2ff66468181140b9d6d75479c86d1fb0e490f19",
+    "episodes/wp-198.json": "3130dc201484e4cd63ed23be6dbc59955f93fbeb59009a850daf23da4f99cee8",
+    "episodes/wp-199.json": "7e2dfedc35412f301bcfb282cd6e75cd89e921891ca4edbbc66134f418272f70",
+    "episodes/wp-208.json": "ccb20eaeb179de5d229447c37c34568b17fe63475402e2c027b4629e54a2ec38",
+    "episodes/wp-251.json": "0375c6aba9f437313d0d51c90735837dfdaf3c39b67af6da28382ced93f89c09",
+    "episodes/wp-254.json": "67336af1ea9cccff8e92cb9947b59349e5ec35ddefc022bcaa2bc53c75ab8b26",
+    "episodes/wp-256.json": "e7b0cef8223bf2716bbbfe85cb9a3ab2ff693882e69f9957eae6affd32924754",
+    "episodes/wp-259.json": "41c272f70848b90422b172a0ab99b830434bb85b2e2b005112e678f63ab4c3fa",
+    "episodes/wp-262.json": "46b3e50623e45d5191146c52540d54f7e5cad08e98321506addc965923844cc3",
+    "episodes/wp-265.json": "ea592131e6f6de1af732b4ce85cc146c14a5c32ff40617de8a099bf3ca572d0e",
+    "episodes/wp-267.json": "e405667da6603f00d06ccf2a4ba51d2839c37ea08b9f88e2d715bff22983225a",
+    "episodes/wp-269.json": "efaa26ad9cbacb79d1267c6f5fe47e91b1c911717d36c140704095716854d051",
+    "episodes/wp-271.json": "9936e948b701f0792dc6d00218d9193c131f6af78d8660a163eb3d3a857144b5",
+    "episodes/wp-273.json": "2d53e59fe4f392e84b9e58e38c341b5d46bcd60571a5a0eb7c78846bb63bfc0f",
+    "episodes/wp-276.json": "df4b50e00488a03dc15d2bd0a6f5f24c63619b44b67484c24b605c5804f0d4b3",
+    "episodes/wp-278.json": "f68725bd7fa5fdad0e7bf038ea0a192fb0f85ae2d89e7d6ee32a73f9de8f04f6",
+    "episodes/wp-281.json": "cfeb1ff7a7660c0a173f9681adab13b50bf43e8373e892a9dc4c247d7ccdc31c",
+    "episodes/wp-283.json": "9d6faf7fa335df0ba8cc06197575cad5774603914ee4899d8cf4b63fa798e1c5",
+    "episodes/wp-286.json": "8c6e014948a60f4639b8db1b5d4a3fca7ce278950cb2063ca62ac7924d9076a0",
+    "episodes/wp-289.json": "c0c42edeb2845bd06fa7c0aebaf20d0ba3579512c37ec0116913a37e1653bc78",
+    "episodes/wp-291.json": "64a191d41ad2b24112d814f152657e81dce2e6fbddf7d13852e717353ac9af69",
+    "episodes/wp-293.json": "65e9b4f2d3631d02391689240eec2167648c046d659d0ff29e29e03790ba570c",
+    "episodes/wp-295.json": "ad04f083281c7e92a14be230a93d355cf9f1793638ddc7eeca363c1cb97343d6",
+    "episodes/wp-298.json": "b0d5112b49a3d5c94aa45489ae54c3a9d723d092b9550a096d666284d99fcde1",
+    "episodes/wp-301.json": "24ee1fbf34b6ee7bfc5353a3d6757dbb40d9d430ad5f99befa349def60d90018",
+    "episodes/wp-306.json": "63a78464f1be7f6f3e7d1f88cf27becb8150c2260faf9100816b82555d3a49ec",
+    "episodes/wp-308.json": "c814fb1ae573766fcd92b19ad49adf3d57e7f49702891ec3cf41fbeb28c58d00",
+    "episodes/wp-311.json": "a082a20022d300e993eb9922ccecd223379233be44937868a10606cf88cdd123",
+    "episodes/wp-315.json": "2537577e8493d779b74be4db1f4954fd6f3d5fe4a77e4a25fdd1838c51afb86d",
+    "episodes/wp-317.json": "62486baaa2ca64182c803a3f92faf6ce2b248d166d3b6804a64466ca6fe94c9a",
+    "episodes/wp-320.json": "3aa76fd9a345d79797fe803edb281126b0f32f62dfb9c2d4c5a3e43820b912c9",
+    "episodes/wp-322.json": "d9a615b77ac746c43aabc03b3bfd418ef9189a21acf0776463f0fa5121684e36",
+    "episodes/wp-324.json": "d1eb987aeac610fa54a2cdc550e28ee58d54a1af6416261435114e49937050b0",
+    "episodes/wp-328.json": "7d53538b2403290637f7e78533f49dd72fea86a9de16b8b32d82f1fb0f35296f",
+    "episodes/wp-330.json": "a6fae02131f5e7e6f92c828046e36d4da3f0b4452a0c4faeb3dc239476cd8628",
+    "episodes/wp-333.json": "8452519553c8d3ffc32f3c484ee1b857fa00cf960ae17ab5cc4bd9712238c682",
+    "episodes/wp-335.json": "81c54c1ba4185b8fad0d33e0d0cb34f0bc8e49f37955daf282a6b5451fcc1758",
+    "episodes/wp-337.json": "121d78bd54c810f9854d30e2778975d98ba13a60eba1f6b89ac335c8a3971e34",
+    "episodes/wp-340.json": "2f1ac41e27a67b4675a19d55226f2d15c3db4d598f5bbf75337dd3a124454f89",
+    "episodes/wp-342.json": "931e19ad82d504bda0cfb726ba25b3a8f86050143c712ca58cacfa4d8c390374",
+    "episodes/wp-344.json": "1e851f9f9803a4b3755fba4bc5a8b61bfd05626ac6b162169608c99ea2bc701c",
+    "episodes/wp-389.json": "525a8e1c203baaada982edfc5c1dfcc9f5363a2fee2fcb93878e47ec48f856a1",
+    "episodes/wp-399.json": "c90b42b9b200956d0766b407a1d277f756dfb54bdd2c5c09a6c2cfa928cdb20f",
+    "episodes/wp-402.json": "01f0d0766564cc37723d77000a1702ce4d2958c32f34e070b32d6c08cee7c60e",
+    "episodes/wp-417.json": "fde3de4159880b3f378dbbb9a2e1c7dad879bd151c36aed30cff7e6663189817",
+    "episodes/wp-421.json": "34d4051693597535297862cd0211814ef27c2ea9bfb650a06cfa837679e41fe6",
+    "episodes/wp-428.json": "5789fe7c93cad972792818d60459e6cc4b96ad0caccba94c352778458c01ba3f",
+    "episodes/wp-431.json": "c39c90792b1fe07944c59aede58a53a9997a40c33fe0de215901e5440b6a0554",
+    "episodes/wp-435.json": "3539c1726a1367137502d5e6486fa132291bb97dd1a64a095afdf889c07a503b",
+    "episodes/wp-444.json": "505ce4feee87e60e455a1998ded690952c57a6ba5ab0c4de91a3e0062e04f1da",
+    "episodes/wp-454.json": "2cf495e3bad7abb2192ce27f1559358fde67c06054e388d55ac99ae66e0e1746",
+    "episodes/wp-459.json": "8f1833c47a83eab0542609815cadf695116bb30152144c5feff0c493343438f8",
+    "episodes/wp-473.json": "4c9ef9506ca70c20c1786c60c42cf34706becb50ff1aa101e203acaf30315e9a",
+    "episodes/wp-484.json": "5bf89714068615d4e5e94a46d8e8438fab15235a3933ea213769b1bcc3ca7473"
+  }
+}

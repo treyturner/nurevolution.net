@@ -1,0 +1,83 @@
+{
+  "schemaVersion": 1,
+  "id": "wp-251",
+  "slug": "tonebreaker-genisounds",
+  "status": "published",
+  "publishedAt": "2011-07-10T18:00:57.000Z",
+  "title": "Genisounds",
+  "artist": "Tonebreaker",
+  "descriptionHtml": "<p>The following 56 minutes of audio is another Tonebreaker blend for Carpe Noctem at Burning Flipside 2011. It rages through breaks and electro with the sole purpose of moving the floor and working its listeners up into a sweaty boil.</p>\n<p>Do not play around people with pacemakers.</p>",
+  "guid": "https://nurevolution.net/?p=251",
+  "guidIsPermalink": false,
+  "audioAssetId": "asset-46f23dd6c7e52d10",
+  "artworkAssetId": "asset-d9a94023800184bf",
+  "durationSeconds": 3382,
+  "tracks": [
+    {
+      "position": 1,
+      "artist": "Shpongle vs. Far Too Loud",
+      "title": "Play It Loud",
+      "startTime": null
+    },
+    {
+      "position": 2,
+      "artist": "Far Too Loud",
+      "title": "You Know The Sound ft. Subsource",
+      "startTime": null
+    },
+    {
+      "position": 3,
+      "artist": "Future Funk Squad",
+      "title": "Chris Carter (Product.01)",
+      "startTime": null
+    },
+    {
+      "position": 4,
+      "artist": "Vandal",
+      "title": "Obey ft. Odissi",
+      "startTime": null
+    },
+    {
+      "position": 5,
+      "artist": "Colombo",
+      "title": "Summit",
+      "startTime": null
+    },
+    {
+      "position": 6,
+      "artist": "Way Out West",
+      "title": "Sharkhunt",
+      "startTime": null
+    },
+    {
+      "position": 7,
+      "artist": "Retroid",
+      "title": "Supernatural (Karton)",
+      "startTime": null
+    },
+    {
+      "position": 8,
+      "artist": "DaVIP",
+      "title": "Brick (Imetic)",
+      "startTime": null
+    },
+    {
+      "position": 9,
+      "artist": "Quadrat Beat",
+      "title": "Just Me (Funkrash)",
+      "startTime": null
+    },
+    {
+      "position": 10,
+      "artist": "Kraddy",
+      "title": "Into The Labyrinth",
+      "startTime": null
+    },
+    {
+      "position": 11,
+      "artist": "Emancipator",
+      "title": "Old Devil",
+      "startTime": null
+    }
+  ]
+}

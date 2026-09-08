@@ -1,0 +1,167 @@
+{
+  "schemaVersion": 1,
+  "id": "wp-262",
+  "slug": "trey-turner-and-joseph-noctum-the-new-sound",
+  "status": "published",
+  "publishedAt": "2011-06-04T18:00:34.000Z",
+  "title": "The New Sound",
+  "artist": "Trey Turner & Joseph Noctum",
+  "descriptionHtml": "<p>As released on disc and gifted at Burning Flipside 2011, this mix represents the first artistic collaborative effort between Trey &amp; Joe and touches on a variety of sounds and tempos.</p>",
+  "guid": "https://nurevolution.net/?p=262",
+  "guidIsPermalink": false,
+  "audioAssetId": "asset-192ba9e6e4d8bc7c",
+  "artworkAssetId": "asset-f735ed235fe3eba7",
+  "durationSeconds": 4298,
+  "tracks": [
+    {
+      "position": 1,
+      "artist": "The Mighty Boosh",
+      "title": "The New Note",
+      "startTime": 0
+    },
+    {
+      "position": 2,
+      "artist": "Mix N Blend & Narch",
+      "title": "I Got... (Beats Antique)",
+      "startTime": 61.343129
+    },
+    {
+      "position": 3,
+      "artist": "The Mighty Boosh",
+      "title": "El Sonido Nuevo",
+      "startTime": 308.59356
+    },
+    {
+      "position": 4,
+      "artist": "Panzer Kunst",
+      "title": "Halo Around The Sun Or Moon",
+      "startTime": 384.102494
+    },
+    {
+      "position": 5,
+      "artist": "Bird of Prey",
+      "title": "Walkabout",
+      "startTime": 618.833764
+    },
+    {
+      "position": 6,
+      "artist": "Hybrid",
+      "title": "I'm Still Awake",
+      "startTime": 902.841496
+    },
+    {
+      "position": 7,
+      "artist": "The Mighty Boosh",
+      "title": "Let Us Begin Our Quest",
+      "startTime": 1208.909523
+    },
+    {
+      "position": 8,
+      "artist": "Danny Breaks",
+      "title": "The Sound",
+      "startTime": 1227.301609
+    },
+    {
+      "position": 9,
+      "artist": "Modeselektor",
+      "title": "Monkeyflip",
+      "startTime": 1405.553786
+    },
+    {
+      "position": 10,
+      "artist": "Ash Trey Jinkins",
+      "title": "Yodaz Brain (Monk Fly)",
+      "startTime": 1672.481995
+    },
+    {
+      "position": 11,
+      "artist": "Sket1",
+      "title": "Robopimp",
+      "startTime": 1804.133718
+    },
+    {
+      "position": 12,
+      "artist": "An-ten-nae",
+      "title": "Get Low",
+      "startTime": 1967.538049
+    },
+    {
+      "position": 13,
+      "artist": "Senz Beats",
+      "title": "Beautiful Life ft. Megabusive",
+      "startTime": 2133.239636
+    },
+    {
+      "position": 14,
+      "artist": "The Mighty Boosh",
+      "title": "That New Sound",
+      "startTime": 2357.675486
+    },
+    {
+      "position": 15,
+      "artist": "Moderat",
+      "title": "Rusty Nails",
+      "startTime": 2416.030656
+    },
+    {
+      "position": 16,
+      "artist": "Doshy",
+      "title": "3ws",
+      "startTime": 2685.521971
+    },
+    {
+      "position": 17,
+      "artist": "Rustie",
+      "title": "Hyperthrust",
+      "startTime": 2850.55154
+    },
+    {
+      "position": 18,
+      "artist": "Rustie",
+      "title": "Dragonfly",
+      "startTime": 2991.053331
+    },
+    {
+      "position": 19,
+      "artist": "Pixelord",
+      "title": "Cybernator (PXLRD)",
+      "startTime": 3139.178637
+    },
+    {
+      "position": 20,
+      "artist": "Bird of Prey",
+      "title": "Stargazer",
+      "startTime": 3350.037775
+    },
+    {
+      "position": 21,
+      "artist": "Diplo vs. Sunday Girl",
+      "title": "Four Floors",
+      "startTime": 3576.428342
+    },
+    {
+      "position": 22,
+      "artist": "DCarls",
+      "title": "When Everything Is Over",
+      "startTime": 3774.06578
+    },
+    {
+      "position": 23,
+      "artist": "Doshy",
+      "title": "2086",
+      "startTime": 3906.376075
+    },
+    {
+      "position": 24,
+      "artist": "Modeselektor",
+      "title": "Art & Cash (SBTRKT)",
+      "startTime": 4082.00349
+    },
+    {
+      "position": 25,
+      "artist": "The Mighty Boosh",
+      "title": "A Long Journey",
+      "startTime": 4284.378411
+    }
+  ]
+}

@@ -1,0 +1,77 @@
+{
+  "schemaVersion": 1,
+  "id": "wp-340",
+  "slug": "cody-haynes-live-on-kvrx-91-7fm-sep-26-2006",
+  "status": "published",
+  "publishedAt": "2006-09-26T18:00:14.000Z",
+  "title": "Live on KVRX 91.7FM (Sep. 26, 2006)",
+  "artist": "Cody Haynes",
+  "descriptionHtml": "<p>Glitch and downtempo breaks</p>",
+  "guid": "https://nurevolution.net/?p=340",
+  "guidIsPermalink": false,
+  "audioAssetId": "asset-e3ae0e57cae4eef4",
+  "artworkAssetId": "asset-cc8b3eb5d0ea3f25",
+  "durationSeconds": 2928,
+  "tracks": [
+    {
+      "position": 1,
+      "artist": "Eliot Lipp",
+      "title": "Linc",
+      "startTime": null
+    },
+    {
+      "position": 2,
+      "artist": "Machine Drum",
+      "title": "Are I (Xela)",
+      "startTime": null
+    },
+    {
+      "position": 3,
+      "artist": "Up, Bustle and Out",
+      "title": "Lazy Daze",
+      "startTime": null
+    },
+    {
+      "position": 4,
+      "artist": "Alias",
+      "title": "Quitting Time",
+      "startTime": null
+    },
+    {
+      "position": 5,
+      "artist": "Eliot Lipp",
+      "title": "Vallejo",
+      "startTime": null
+    },
+    {
+      "position": 6,
+      "artist": "Alias",
+      "title": "Something Borrowed",
+      "startTime": null
+    },
+    {
+      "position": 7,
+      "artist": "Dabrye",
+      "title": "Hyped Up Plus Tax",
+      "startTime": null
+    },
+    {
+      "position": 8,
+      "artist": "Dosage",
+      "title": "My Rap",
+      "startTime": null
+    },
+    {
+      "position": 9,
+      "artist": "Scientific American",
+      "title": "Between Urban Movements",
+      "startTime": null
+    },
+    {
+      "position": 10,
+      "artist": "Eliot Lipp",
+      "title": "Real Tragic",
+      "startTime": null
+    }
+  ]
+}

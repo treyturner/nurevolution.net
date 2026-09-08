@@ -1,0 +1,149 @@
+{
+  "schemaVersion": 1,
+  "id": "wp-454",
+  "slug": "trey-turner-bass-face-space-race",
+  "status": "published",
+  "publishedAt": "2018-01-06T18:00:45.000Z",
+  "title": "Bass Face Space Race",
+  "artist": "Trey Turner",
+  "descriptionHtml": "<p>75 minutes of continuously mixed and increasingly intense drum &amp; bass bangers mixed by Trey Turner out of Austin. Featuring Hybris, Halogenix, Ivy Lab, UFO!, Culprate, Dub Pizix, Current Value, Noisia, The Upbeats, Audio, Black Sun Empire, Fourward, Posij, Prolix, Phace, Mefjus, June Miller, and more.</p>",
+  "guid": "https://nurevolution.net/?post_type=one_page_portfolio&p=454",
+  "guidIsPermalink": false,
+  "audioAssetId": "asset-a8bdef3a4271db43",
+  "artworkAssetId": "asset-9612f3ffa603b37f",
+  "durationSeconds": 4508,
+  "tracks": [
+    {
+      "position": 1,
+      "artist": "Hybris",
+      "title": "Nitty Gritty Committee",
+      "startTime": null
+    },
+    {
+      "position": 2,
+      "artist": "Halogenix",
+      "title": "Porcupine",
+      "startTime": null
+    },
+    {
+      "position": 3,
+      "artist": "Ivy Lab",
+      "title": "Peninsula",
+      "startTime": null
+    },
+    {
+      "position": 4,
+      "artist": "UFO!",
+      "title": "Logue",
+      "startTime": null
+    },
+    {
+      "position": 5,
+      "artist": "Culprate",
+      "title": "Diablo (VIP)",
+      "startTime": null
+    },
+    {
+      "position": 6,
+      "artist": "Dub Phizix",
+      "title": "Doberman ft. Ward 21",
+      "startTime": null
+    },
+    {
+      "position": 7,
+      "artist": "Current Value",
+      "title": "Phaselock",
+      "startTime": null
+    },
+    {
+      "position": 8,
+      "artist": "Hybris",
+      "title": "Mind Grind",
+      "startTime": null
+    },
+    {
+      "position": 9,
+      "artist": "Noisia & The Upbeats",
+      "title": "Dead Limit (Noisia's Outer Edges)",
+      "startTime": null
+    },
+    {
+      "position": 10,
+      "artist": "Audio",
+      "title": "Break It",
+      "startTime": null
+    },
+    {
+      "position": 11,
+      "artist": "Black Sun Empire & Neonlight",
+      "title": "Abduction",
+      "startTime": null
+    },
+    {
+      "position": 12,
+      "artist": "Current Value",
+      "title": "Happy Mode",
+      "startTime": null
+    },
+    {
+      "position": 13,
+      "artist": "Fourward",
+      "title": "Sequencer",
+      "startTime": null
+    },
+    {
+      "position": 14,
+      "artist": "Black Sun Empire",
+      "title": "Immersion ft. Belle Doron",
+      "startTime": null
+    },
+    {
+      "position": 15,
+      "artist": "Posij",
+      "title": "Attention",
+      "startTime": null
+    },
+    {
+      "position": 16,
+      "artist": "Black Sun Empire & Prolix",
+      "title": "No Advance",
+      "startTime": null
+    },
+    {
+      "position": 17,
+      "artist": "Phace & Mefjus",
+      "title": "Decisions",
+      "startTime": null
+    },
+    {
+      "position": 18,
+      "artist": "Noisia & Prolix",
+      "title": "Asteroids",
+      "startTime": null
+    },
+    {
+      "position": 19,
+      "artist": "June Miller ft. Virus Syndicate",
+      "title": "Stormtrooper ",
+      "startTime": null
+    },
+    {
+      "position": 20,
+      "artist": "June Miller ft. Mefjus",
+      "title": "Saus",
+      "startTime": null
+    },
+    {
+      "position": 21,
+      "artist": "Audio",
+      "title": "Heads Up (VIP)",
+      "startTime": null
+    },
+    {
+      "position": 22,
+      "artist": "Phace",
+      "title": "Plastic Acid",
+      "startTime": null
+    }
+  ]
+}

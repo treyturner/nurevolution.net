@@ -1,0 +1,95 @@
+{
+  "schemaVersion": 1,
+  "id": "wp-278",
+  "slug": "trey-turner-dancefloor-oriented",
+  "status": "published",
+  "publishedAt": "2010-10-27T18:00:31.000Z",
+  "title": "Dancefloor Oriented",
+  "artist": "Trey Turner",
+  "descriptionHtml": "<p>Trey returns to the uptempo arena with an hour long driving and often dark breakbeat mix.</p>",
+  "guid": "https://nurevolution.net/?p=278",
+  "guidIsPermalink": false,
+  "audioAssetId": "asset-76e7493aa6a8caa1",
+  "artworkAssetId": "asset-e0110499f74fda69",
+  "durationSeconds": 3714,
+  "tracks": [
+    {
+      "position": 1,
+      "artist": "Chris Carter",
+      "title": "Panorama",
+      "startTime": null
+    },
+    {
+      "position": 2,
+      "artist": "Roxiller",
+      "title": "Creature Feature",
+      "startTime": null
+    },
+    {
+      "position": 3,
+      "artist": "KiloWatts",
+      "title": "Teknopera Part 1",
+      "startTime": null
+    },
+    {
+      "position": 4,
+      "artist": "Mad tek",
+      "title": "Dread",
+      "startTime": null
+    },
+    {
+      "position": 5,
+      "artist": "Roxiller",
+      "title": "Fear 2",
+      "startTime": null
+    },
+    {
+      "position": 6,
+      "artist": "JHz",
+      "title": "Chips",
+      "startTime": null
+    },
+    {
+      "position": 7,
+      "artist": "Son Of The Electric Ghost",
+      "title": "Concept of Nature",
+      "startTime": null
+    },
+    {
+      "position": 8,
+      "artist": "The Disciple Grin",
+      "title": "Call The Vulture",
+      "startTime": null
+    },
+    {
+      "position": 9,
+      "artist": "Funk Monster",
+      "title": "Brainscan",
+      "startTime": null
+    },
+    {
+      "position": 10,
+      "artist": "Amb",
+      "title": "Romeo (Raster's Rework)",
+      "startTime": null
+    },
+    {
+      "position": 11,
+      "artist": "Dirty South vs. Contax",
+      "title": "WMD",
+      "startTime": null
+    },
+    {
+      "position": 12,
+      "artist": "White Papoo",
+      "title": "Carnivore",
+      "startTime": null
+    },
+    {
+      "position": 13,
+      "artist": "Stormtrooperz",
+      "title": "Substrate",
+      "startTime": null
+    }
+  ]
+}

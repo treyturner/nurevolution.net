@@ -1,0 +1,1565 @@
+{
+  "schemaVersion": 1,
+  "assets": [
+    {
+      "id": "asset-0212eb6f43f84ce6",
+      "kind": "artwork",
+      "url": "https://nurevolution.net/wp/wp-content/uploads/2019/05/2019_05_04-Trey_Turner-The_Dark_Prophet-tiny-300x300.png",
+      "mediaType": "image/png",
+      "byteLength": 137522,
+      "sha256": "6031d2727c1c260a395e7183c2d178213910d5bc7949226f527a79d626b05722",
+      "sourceRoot": "uploads",
+      "relativePath": "2019/05/2019_05_04-Trey_Turner-The_Dark_Prophet-tiny-300x300.png"
+    },
+    {
+      "id": "asset-062d8df6c29e6650",
+      "kind": "artwork",
+      "url": "https://nurevolution.net/wp/wp-content/uploads/2019/05/2019_05_04-Trey_Turner-The_Dark_Prophet-tiny-230x230.png",
+      "mediaType": "image/png",
+      "byteLength": 81632,
+      "sha256": "89518b328e16f2e4f87488b629a7eeb37b4d7de981aa048a922182f5e3c4da6d",
+      "sourceRoot": "uploads",
+      "relativePath": "2019/05/2019_05_04-Trey_Turner-The_Dark_Prophet-tiny-230x230.png"
+    },
+    {
+      "id": "asset-0aae6b03b5300a3f",
+      "kind": "artwork",
+      "url": "https://nurevolution.net/wp/wp-content/uploads/2020/05/2020_05_09-Trey_Turner-Ruminate.png",
+      "mediaType": "image/png",
+      "byteLength": 1266283,
+      "sha256": "ae4698f5975ac028c89ba41857d32a81fe2a7bd5b3f8f8ab828210f6582b0ac1",
+      "sourceRoot": "uploads",
+      "relativePath": "2020/05/2020_05_09-Trey_Turner-Ruminate.png"
+    },
+    {
+      "id": "asset-10be1117a35208e7",
+      "kind": "audio",
+      "url": "https://podcast.nurevolution.net/2010_08_05-trey_turner-view_from_a_vignette-v0.mp3",
+      "mediaType": "audio/mpeg",
+      "byteLength": 191942428,
+      "sha256": "45312d0756a4d19738d81cba30891c156cc84dcdc05199eb4f1a66a884d8cd34",
+      "sourceRoot": "audio",
+      "relativePath": "2010_08_05-trey_turner-view_from_a_vignette-v0.mp3"
+    },
+    {
+      "id": "asset-133e20b72a933482",
+      "kind": "artwork",
+      "url": "https://nurevolution.net/wp/wp-content/uploads/2013/06/bpm_1080.png",
+      "mediaType": "image/png",
+      "byteLength": 174278,
+      "sha256": "370dd6818a3f81a833046362c172f09f6ef7313c04ef4b239e7246a01f444903",
+      "sourceRoot": "uploads",
+      "relativePath": "2013/06/bpm_1080.png"
+    },
+    {
+      "id": "asset-15c4a645aa42c211",
+      "kind": "artwork",
+      "url": "https://nurevolution.net/wp/wp-content/uploads/2013/06/tall_buildings_black_and_white.jpg",
+      "mediaType": "image/jpeg",
+      "byteLength": 164099,
+      "sha256": "c54da811d9c1ba9acef7d4b243866b154b384b72ed89396353ba8dcc2eadd969",
+      "sourceRoot": "uploads",
+      "relativePath": "2013/06/tall_buildings_black_and_white.jpg"
+    },
+    {
+      "id": "asset-161f24d30919d412",
+      "kind": "artwork",
+      "url": "https://nurevolution.net/wp/wp-content/uploads/2016/10/2016_10_12-Trey_Turner-Is_This_Thing_On.png",
+      "mediaType": "image/png",
+      "byteLength": 168748,
+      "sha256": "4fc694359d994b2f80b7d2498dda62e6c7a3ea497261f8a6c12bf14997c8c675",
+      "sourceRoot": "uploads",
+      "relativePath": "2016/10/2016_10_12-Trey_Turner-Is_This_Thing_On.png"
+    },
+    {
+      "id": "asset-18714043747ff923",
+      "kind": "artwork",
+      "url": "https://nurevolution.net/wp/wp-content/uploads/2013/06/sideways_building_1080.jpg",
+      "mediaType": "image/jpeg",
+      "byteLength": 672149,
+      "sha256": "1768421eb7c960875d8c1818b4f5015b75fa89213a1feb42777a9c8caf30b6c4",
+      "sourceRoot": "uploads",
+      "relativePath": "2013/06/sideways_building_1080.jpg"
+    },
+    {
+      "id": "asset-192ba9e6e4d8bc7c",
+      "kind": "audio",
+      "url": "https://podcast.nurevolution.net/2011_06_04-Trey_Turner_and_Joseph_Noctum-The_New_Sound-v0.mp3",
+      "mediaType": "audio/mpeg",
+      "byteLength": 138363524,
+      "sha256": "022df5b20c2d68056af36ce1aa03b1ba0635e962a277ba5ba030ca56cbbb93f3",
+      "sourceRoot": "audio",
+      "relativePath": "2011_06_04-Trey_Turner_and_Joseph_Noctum-The_New_Sound-v0.mp3"
+    },
+    {
+      "id": "asset-194069d8ed9a1c81",
+      "kind": "artwork",
+      "url": "https://nurevolution.net/wp/wp-content/uploads/2013/06/2011_07_03-Joseph_Noctum-The_Bad_Boogie-v0.jpg",
+      "mediaType": "image/jpeg",
+      "byteLength": 216104,
+      "sha256": "34f9fdb6bbceb576e67a7c3da61ce35c95f9e42e5bf3eafb32d85ca8b3de428e",
+      "sourceRoot": "uploads",
+      "relativePath": "2013/06/2011_07_03-Joseph_Noctum-The_Bad_Boogie-v0.jpg"
+    },
+    {
+      "id": "asset-1a8119c7140491ec",
+      "kind": "artwork",
+      "url": "https://nurevolution.net/wp/wp-content/uploads/2016/03/2016_03_30-Trey_Turner-Carrier_Detect.png",
+      "mediaType": "image/png",
+      "byteLength": 289958,
+      "sha256": "08a086626431bfd74a4054614a84a24c0da050d0fd78dbd402064dceca72c5be",
+      "sourceRoot": "uploads",
+      "relativePath": "2016/03/2016_03_30-Trey_Turner-Carrier_Detect.png"
+    },
+    {
+      "id": "asset-1c41163f56bcae97",
+      "kind": "artwork",
+      "url": "https://nurevolution.net/wp/wp-content/uploads/2013/03/nu_orange_trans_144x144.jpg",
+      "mediaType": "image/jpeg",
+      "byteLength": 22571,
+      "sha256": "6c2232682bd82dcbcbf6dbfb0009e83636cceca2bdc4f7f5b0e78c1512a9b77e",
+      "sourceRoot": "uploads",
+      "relativePath": "2013/03/nu_orange_trans_144x144.jpg"
+    },
+    {
+      "id": "asset-1dcc7065d3daf2ac",
+      "kind": "artwork",
+      "url": "https://nurevolution.net/wp/wp-content/uploads/2013/03/Trey_Turner-Trapper_Keeper_Futura_S_2000.png",
+      "mediaType": "image/png",
+      "byteLength": 660711,
+      "sha256": "fc57e827c270652f8e075e1754b4f42047387c16f3c8653d660d6d4c821ab5f7",
+      "sourceRoot": "uploads",
+      "relativePath": "2013/03/Trey_Turner-Trapper_Keeper_Futura_S_2000.png"
+    },
+    {
+      "id": "asset-20c29632c840c485",
+      "kind": "audio",
+      "url": "https://podcast.nurevolution.net/2009_10_08-trey_turner_and_cody_haynes-plush_session-v0.mp3",
+      "mediaType": "audio/mpeg",
+      "byteLength": 149130776,
+      "sha256": "da4eacc72c82dedc9ab2df38c92b3272cce5afbc3a6680173ba7c658ec17f916",
+      "sourceRoot": "audio",
+      "relativePath": "2009_10_08-trey_turner_and_cody_haynes-plush_session-v0.mp3"
+    },
+    {
+      "id": "asset-22e61b6a576f3ecf",
+      "kind": "audio",
+      "url": "https://podcast.nurevolution.net/2018_04_13-Trey_Turner-Impulse-320kbps.mp3",
+      "mediaType": "audio/mpeg",
+      "byteLength": 131974356,
+      "sha256": "566e455a49b52dc7692b9b39cf3941429f504f7938b670e33ba5183e203db726",
+      "sourceRoot": "audio",
+      "relativePath": "2018_04_13-Trey_Turner-Impulse-320kbps.mp3"
+    },
+    {
+      "id": "asset-23a9caf6027c11f3",
+      "kind": "artwork",
+      "url": "https://nurevolution.net/wp/wp-content/uploads/2019/05/2019_05_04-Trey_Turner-The_Dark_Prophet-tiny-250x250.png",
+      "mediaType": "image/png",
+      "byteLength": 94809,
+      "sha256": "62d0e08c2195e302e4af657a3eec1ab742bf4501734ac809593a8104f41eb561",
+      "sourceRoot": "uploads",
+      "relativePath": "2019/05/2019_05_04-Trey_Turner-The_Dark_Prophet-tiny-250x250.png"
+    },
+    {
+      "id": "asset-23c08f74623ccbae",
+      "kind": "artwork",
+      "url": "https://nurevolution.net/wp/wp-content/uploads/2013/03/07-06-16-768x768.jpg",
+      "mediaType": "image/jpeg",
+      "byteLength": 102810,
+      "sha256": "1a49734c33771d96f0bcd0646f81fd429a1b57a2f07a622fe3b7e807e4fd9f2e",
+      "sourceRoot": "uploads",
+      "relativePath": "2013/03/07-06-16-768x768.jpg"
+    },
+    {
+      "id": "asset-267a5855fb201d22",
+      "kind": "artwork",
+      "url": "https://nurevolution.net/wp/wp-content/uploads/2017/11/trey_turner-lost_in_translation.png",
+      "mediaType": "image/png",
+      "byteLength": 797770,
+      "sha256": "b6a27005d6b9c9ab39fcd15d02593df38caffa929370311e411e7fa8cf51549b",
+      "sourceRoot": "uploads",
+      "relativePath": "2017/11/trey_turner-lost_in_translation.png"
+    },
+    {
+      "id": "asset-27367d811456ecc6",
+      "kind": "artwork",
+      "url": "https://nurevolution.net/wp/wp-content/uploads/2019/05/2019_05_04-Trey_Turner-The_Dark_Prophet-tiny-768x768.png",
+      "mediaType": "image/png",
+      "byteLength": 943638,
+      "sha256": "81686ca26251fde800d964ba6f7cc14c96be62babfeb17929678b6176bad63da",
+      "sourceRoot": "uploads",
+      "relativePath": "2019/05/2019_05_04-Trey_Turner-The_Dark_Prophet-tiny-768x768.png"
+    },
+    {
+      "id": "asset-27f168df9ffe8484",
+      "kind": "audio",
+      "url": "https://podcast.nurevolution.net/2002_03_21-fracture-live_on_mega_93.3_fm-part2-192kbps.mp3",
+      "mediaType": "audio/mpeg",
+      "byteLength": 71215416,
+      "sha256": "63326a3c5c3efd52c8847a7e0f772246fc5322a3ed7936d798c0f3c2abcb3af0",
+      "sourceRoot": "audio",
+      "relativePath": "2002_03_21-fracture-live_on_mega_93.3_fm-part2-192kbps.mp3"
+    },
+    {
+      "id": "asset-2a7d87d1472c9f8d",
+      "kind": "audio",
+      "url": "https://podcast.nurevolution.net/2010_06_04-Tonebreaker-Rock%27n_Noctem-v0.mp3",
+      "mediaType": "audio/mpeg",
+      "byteLength": 117730918,
+      "sha256": "baf7405098d56c1ee406c39797f87136c62f95842ac6f7dbe4b7fb3bdbfc6480",
+      "sourceRoot": "audio",
+      "relativePath": "2010_06_04-Tonebreaker-Rock'n_Noctem-v0.mp3"
+    },
+    {
+      "id": "asset-2a98e5e36daa0f0d",
+      "kind": "audio",
+      "url": "https://podcast.nurevolution.net/2011_06_26-Eazy_Tom-Live_from_the_Pink_Cybernetic_Cabaret-v0.mp3",
+      "mediaType": "audio/mpeg",
+      "byteLength": 200152077,
+      "sha256": "2c8c51bc4065c482b73e258090cfc5f559d3f9500c7835fa20b13a643c5504d4",
+      "sourceRoot": "audio",
+      "relativePath": "2011_06_26-Eazy_Tom-Live_from_the_Pink_Cybernetic_Cabaret-v0.mp3"
+    },
+    {
+      "id": "asset-2d938ca4211a912e",
+      "kind": "audio",
+      "url": "https://podcast.nurevolution.net/2010_06_28-trey_turner-the_toad's_mistress-v0.mp3",
+      "mediaType": "audio/mpeg",
+      "byteLength": 90550452,
+      "sha256": "993083837889cc251902710a05b203ebafdfa6e1e015d6e42cd8fa8e3eea4f8c",
+      "sourceRoot": "audio",
+      "relativePath": "2010_06_28-trey_turner-the_toad's_mistress-v0.mp3"
+    },
+    {
+      "id": "asset-2e7c79fcf44d6c67",
+      "kind": "audio",
+      "url": "https://podcast.nurevolution.net/2002_10_28-trey_turner_and_contrast-where_do_we_go_from_here-v0.mp3",
+      "mediaType": "audio/mpeg",
+      "byteLength": 138051394,
+      "sha256": "0e4e12b89245ba76ceabd62bf6ccdc29b3b9913bed0b9dfc0008f630ffbdd9d8",
+      "sourceRoot": "audio",
+      "relativePath": "2002_10_28-trey_turner_and_contrast-where_do_we_go_from_here-v0.mp3"
+    },
+    {
+      "id": "asset-30d12a72b047a3d3",
+      "kind": "audio",
+      "url": "https://podcast.nurevolution.net/2011_03_23-Trey_Turner-The_Further_Esoteric_Adventures_of-v0.mp3",
+      "mediaType": "audio/mpeg",
+      "byteLength": 112402133,
+      "sha256": "9bc9104128d09b25a4ab71b5837ea96f0907f3e45de3de7a4395aede1725df38",
+      "sourceRoot": "audio",
+      "relativePath": "2011_03_23-Trey_Turner-The_Further_Esoteric_Adventures_of-v0.mp3"
+    },
+    {
+      "id": "asset-37787c9351c33879",
+      "kind": "audio",
+      "url": "https://podcast.nurevolution.net/2002_03_01-trey_turner-g3_mix_session_01-v0.mp3",
+      "mediaType": "audio/mpeg",
+      "byteLength": 140169960,
+      "sha256": "347cae6157563241c8efb20aa9a4c7aa96f9f5e7b9c4973028d396de2bb68d95",
+      "sourceRoot": "audio",
+      "relativePath": "2002_03_01-trey_turner-g3_mix_session_01-v0.mp3"
+    },
+    {
+      "id": "asset-38bc99302587f8b8",
+      "kind": "artwork",
+      "url": "https://nurevolution.net/wp/wp-content/uploads/2013/03/427758_10200325922573472_417354599_n.jpg",
+      "mediaType": "image/jpeg",
+      "byteLength": 34019,
+      "sha256": "22063efa9613a842086c1878e758f2bd31e166f835713a673b466a8682327702",
+      "sourceRoot": "uploads",
+      "relativePath": "2013/03/427758_10200325922573472_417354599_n.jpg"
+    },
+    {
+      "id": "asset-3978a9c06bde01e2",
+      "kind": "artwork",
+      "url": "https://nurevolution.net/wp/wp-content/uploads/2013/03/animoog-anisotropic-edit-page-dimmed.png",
+      "mediaType": "image/png",
+      "byteLength": 782565,
+      "sha256": "30c9edf872f254edcfa4bc0ba00184a4804db6fb57985bd9075dcc8dbeade8cf",
+      "sourceRoot": "uploads",
+      "relativePath": "2013/03/animoog-anisotropic-edit-page-dimmed.png"
+    },
+    {
+      "id": "asset-3d44e5acb6efdc05",
+      "kind": "artwork",
+      "url": "https://nurevolution.net/wp/wp-content/uploads/2013/03/07-06-16-410x160.jpg",
+      "mediaType": "image/jpeg",
+      "byteLength": 24302,
+      "sha256": "9d5602df695651841a94e382f46c620a881228164d69b65289247770016efd70",
+      "sourceRoot": "uploads",
+      "relativePath": "2013/03/07-06-16-410x160.jpg"
+    },
+    {
+      "id": "asset-3f015739e8dce548",
+      "kind": "artwork",
+      "url": "https://nurevolution.net/wp/wp-content/uploads/2013/03/artworks-000045647294-260204-original.jpg",
+      "mediaType": "image/jpeg",
+      "byteLength": 790503,
+      "sha256": "8ab362c701019486d6f48c962147ddb27cc17b660bc53900d4f8078c20fed8e3",
+      "sourceRoot": "uploads",
+      "relativePath": "2013/03/artworks-000045647294-260204-original.jpg"
+    },
+    {
+      "id": "asset-3f430484c0c8acb0",
+      "kind": "audio",
+      "url": "https://podcast.nurevolution.net/2013_07_18-Trey_Turner-Phoning_It_In-v0.mp3",
+      "mediaType": "audio/mpeg",
+      "byteLength": 117608357,
+      "sha256": "3b2a632e2b06bcffcd0ace3370298d9d5291a5e43f2a61afcbc07a4f7cb2dec9",
+      "sourceRoot": "audio",
+      "relativePath": "2013_07_18-Trey_Turner-Phoning_It_In-v0.mp3"
+    },
+    {
+      "id": "asset-3f7f2190d5a93b50",
+      "kind": "artwork",
+      "url": "https://nurevolution.net/wp/wp-content/uploads/2013/06/ship_vignette.jpg",
+      "mediaType": "image/jpeg",
+      "byteLength": 143182,
+      "sha256": "08d351cf4a6b14e05a785151dbd1f334eae0811109e6e70bf6a33ecdeecfd00e",
+      "sourceRoot": "uploads",
+      "relativePath": "2013/06/ship_vignette.jpg"
+    },
+    {
+      "id": "asset-42edca19915d1e1b",
+      "kind": "artwork",
+      "url": "https://nurevolution.net/wp/wp-content/uploads/2013/02/flex-holder.jpg",
+      "mediaType": "image/jpeg",
+      "byteLength": 19730,
+      "sha256": "3f38be4ee70a80e3f6b80e5c11dbd2460edd606718f54c09ecb1446e1e7de716",
+      "sourceRoot": "uploads",
+      "relativePath": "2013/02/flex-holder.jpg"
+    },
+    {
+      "id": "asset-450a528e2fedc035",
+      "kind": "audio",
+      "url": "https://podcast.nurevolution.net/2011_04_22-Libations_%26_Oscillations-Professor_Seaglitch's_Isle_of_Aural_Decadence-v0.mp3",
+      "mediaType": "audio/mpeg",
+      "byteLength": 112950027,
+      "sha256": "a5b7fa6d5e31a96f172e39583b518d33eeaa19f53149788b48baef80de054dee",
+      "sourceRoot": "audio",
+      "relativePath": "2011_04_22-Libations_&_Oscillations-Professor_Seaglitch's_Isle_of_Aural_Decadence-v0.mp3"
+    },
+    {
+      "id": "asset-4528e80f69f5822a",
+      "kind": "audio",
+      "url": "https://podcast.nurevolution.net/2011_05_04-Joseph_Noctum-In_The_Pink-v0.mp3",
+      "mediaType": "audio/mpeg",
+      "byteLength": 77177208,
+      "sha256": "0420d44b0e99249aaa6b122b1eeedd9483c0ae72a9dcd0dacc4a114d824449e5",
+      "sourceRoot": "audio",
+      "relativePath": "2011_05_04-Joseph_Noctum-In_The_Pink-v0.mp3"
+    },
+    {
+      "id": "asset-45cd83269a1f5472",
+      "kind": "artwork",
+      "url": "https://nurevolution.net/wp/wp-content/uploads/2013/03/07-06-16-1024x1024.jpg",
+      "mediaType": "image/jpeg",
+      "byteLength": 175587,
+      "sha256": "e3c83ba325b2392492a8342c997c032e3f227442f3e6d29d8ef4a540a91e6905",
+      "sourceRoot": "uploads",
+      "relativePath": "2013/03/07-06-16-1024x1024.jpg"
+    },
+    {
+      "id": "asset-45d62250e6619caf",
+      "kind": "audio",
+      "url": "https://podcast.nurevolution.net/2006_02_03-Cody_Haynes-Live_On_The_Chill_Zone_KVRX_91.7_FM_Austin.mp3",
+      "mediaType": "audio/mpeg",
+      "byteLength": 102817433,
+      "sha256": "5782b39c4e58fac853ac325d35a7b29a0f7d6acafe74f5f839bc74835f419924",
+      "sourceRoot": "audio",
+      "relativePath": "2006_02_03-Cody_Haynes-Live_On_The_Chill_Zone_KVRX_91.7_FM_Austin.mp3"
+    },
+    {
+      "id": "asset-46f23dd6c7e52d10",
+      "kind": "audio",
+      "url": "https://podcast.nurevolution.net/2011_07_10-Tonebreaker-Genisounds-224kbps.mp3",
+      "mediaType": "audio/mpeg",
+      "byteLength": 94843513,
+      "sha256": "96edc74e49f08489aa346f8deee36994788ba487ebd964af93af26787d473afe",
+      "sourceRoot": "audio",
+      "relativePath": "2011_07_10-Tonebreaker-Genisounds-224kbps.mp3"
+    },
+    {
+      "id": "asset-48228cdc82a08b46",
+      "kind": "audio",
+      "url": "https://podcast.nurevolution.net/2012_09_07-Trey_Turner-Trapper_Keeper_Futura_S_2000-v0.mp3",
+      "mediaType": "audio/mpeg",
+      "byteLength": 116405379,
+      "sha256": "bde290f723bf51304ae1fd5e09e82d9066902bea400d0055acb1e98c03c04019",
+      "sourceRoot": "audio",
+      "relativePath": "2012_09_07-Trey_Turner-Trapper_Keeper_Futura_S_2000-v0.mp3"
+    },
+    {
+      "id": "asset-486937c569bbbf76",
+      "kind": "audio",
+      "url": "https://podcast.nurevolution.net/2017_11_01-Trey_Turner-Lost_In_Translation-320kbps.mp3",
+      "mediaType": "audio/mpeg",
+      "byteLength": 123889586,
+      "sha256": "c3bc8bedf4991363b1d66ad8b69b30a49604447ac00d2917cdb58a8b3363e129",
+      "sourceRoot": "audio",
+      "relativePath": "2017_11_01-Trey_Turner-Lost_In_Translation-320kbps.mp3"
+    },
+    {
+      "id": "asset-4ba2bbb4d4a07c50",
+      "kind": "artwork",
+      "url": "https://nurevolution.net/wp/wp-content/uploads/2013/06/2011_04_22-Libations__Oscillations-Professor_Seaglitchs_Isle_of_Aural_Decadence-v0.jpg",
+      "mediaType": "image/jpeg",
+      "byteLength": 152593,
+      "sha256": "33658ef421ffd36a40a9ae2baffc8515791d8256f37d04efb1cd96df6d0ef925",
+      "sourceRoot": "uploads",
+      "relativePath": "2013/06/2011_04_22-Libations__Oscillations-Professor_Seaglitchs_Isle_of_Aural_Decadence-v0.jpg"
+    },
+    {
+      "id": "asset-4d1ddf13eda772f7",
+      "kind": "audio",
+      "url": "https://podcast.nurevolution.net/2019_05_04-Trey_Turner-The_Dark_Prophet-320kbps.mp3",
+      "mediaType": "audio/mpeg",
+      "byteLength": 195297097,
+      "sha256": "2e3ab70751bd05cd9c6f2d9a5dc440289958b79370180355846166ac1adb0d75",
+      "sourceRoot": "audio",
+      "relativePath": "2019_05_04-Trey_Turner-The_Dark_Prophet-320kbps.mp3"
+    },
+    {
+      "id": "asset-4ef42d93a381d98c",
+      "kind": "artwork",
+      "url": "https://nurevolution.net/wp/wp-content/uploads/2013/03/program.png",
+      "mediaType": "image/png",
+      "byteLength": 2934,
+      "sha256": "a2f9c5e379a0c93ee3a635dc0c85cbef3a3720d04add34cca56b77d768c6a231",
+      "sourceRoot": "uploads",
+      "relativePath": "2013/03/program.png"
+    },
+    {
+      "id": "asset-4f28530d0509b084",
+      "kind": "artwork",
+      "url": "https://nurevolution.net/wp/wp-content/uploads/2013/06/louvre.jpg",
+      "mediaType": "image/jpeg",
+      "byteLength": 1571359,
+      "sha256": "a94fc71ba3f7dde5feebafa650b37e97335895dcaad0153fcfc2fa9b9b329d82",
+      "sourceRoot": "uploads",
+      "relativePath": "2013/06/louvre.jpg"
+    },
+    {
+      "id": "asset-4feaf8d7bbec690b",
+      "kind": "artwork",
+      "url": "https://nurevolution.net/wp/wp-content/uploads/2013/03/07-06-16-144px.jpg",
+      "mediaType": "image/jpeg",
+      "byteLength": 31631,
+      "sha256": "01cefd02df2af92abf4b57edcfe50c46002a8a8f74887d75534c4ba67a9a0258",
+      "sourceRoot": "uploads",
+      "relativePath": "2013/03/07-06-16-144px.jpg"
+    },
+    {
+      "id": "asset-510b0c2b5034c89d",
+      "kind": "artwork",
+      "url": "https://nurevolution.net/wp/wp-content/uploads/2013/06/2011_03_08-Tonebreaker-Glamour_Trash_Pop.png",
+      "mediaType": "image/png",
+      "byteLength": 161038,
+      "sha256": "8d77aa85a78b938009785b768c5b955c0e0ce22aeca306cb031365297b8edeff",
+      "sourceRoot": "uploads",
+      "relativePath": "2013/06/2011_03_08-Tonebreaker-Glamour_Trash_Pop.png"
+    },
+    {
+      "id": "asset-5168fb158a1eec64",
+      "kind": "artwork",
+      "url": "https://nurevolution.net/wp/wp-content/uploads/2013/03/07-06-16-250x250.jpg",
+      "mediaType": "image/jpeg",
+      "byteLength": 23273,
+      "sha256": "8d9dd873ca01d08897e0c9304c7f4bb624e984b2f1c78a15907364c74167c5e4",
+      "sourceRoot": "uploads",
+      "relativePath": "2013/03/07-06-16-250x250.jpg"
+    },
+    {
+      "id": "asset-522fa4c70df7943a",
+      "kind": "artwork",
+      "url": "https://nurevolution.net/wp/wp-content/uploads/2013/03/07-06-16-410x230.jpg",
+      "mediaType": "image/jpeg",
+      "byteLength": 30161,
+      "sha256": "d7f9edf3b408df5085fe328ff6f27af764bc6880b1b96fdfe23fc31b5e7e92f1",
+      "sourceRoot": "uploads",
+      "relativePath": "2013/03/07-06-16-410x230.jpg"
+    },
+    {
+      "id": "asset-53645f107ecc3374",
+      "kind": "audio",
+      "url": "https://podcast.nurevolution.net/2016_11_11-Trey_Turner-Off_The_Cuff-320kbps.mp3",
+      "mediaType": "audio/mpeg",
+      "byteLength": 110893305,
+      "sha256": "dd37e9333b3a5fe6a89636e21ce0d622cf9b4910e37ea96bd727ed7207caed00",
+      "sourceRoot": "audio",
+      "relativePath": "2016_11_11-Trey_Turner-Off_The_Cuff-320kbps.mp3"
+    },
+    {
+      "id": "asset-5653f296481726c2",
+      "kind": "audio",
+      "url": "https://podcast.nurevolution.net/2010_12_12-joseph_noctum-peace_love_crunk-v0.mp3",
+      "mediaType": "audio/mpeg",
+      "byteLength": 80973406,
+      "sha256": "e921bc736e4e8bd37ec16debf59c11a8a9e4062cfbefc08850e214f7a9d595cd",
+      "sourceRoot": "audio",
+      "relativePath": "2010_12_12-joseph_noctum-peace_love_crunk-v0.mp3"
+    },
+    {
+      "id": "asset-569dc869b9011485",
+      "kind": "artwork",
+      "url": "https://nurevolution.net/wp/wp-content/uploads/2013/03/2012_07_20-trey_turner-radio_silenced-v0.png",
+      "mediaType": "image/png",
+      "byteLength": 618511,
+      "sha256": "7f2abdf36dfd536a4ab46375b081949e2e56082ef77ae2cc799cabe9a5cbbab1",
+      "sourceRoot": "uploads",
+      "relativePath": "2013/03/2012_07_20-trey_turner-radio_silenced-v0.png"
+    },
+    {
+      "id": "asset-57fe373471790156",
+      "kind": "artwork",
+      "url": "https://nurevolution.net/wp/wp-content/uploads/2020/05/2020_05_09-Trey_Turner-Ruminate-768x768.png",
+      "mediaType": "image/png",
+      "byteLength": 684681,
+      "sha256": "28a3843f0e6c896f9151a25cd4d929b9674cd8ab4225811b79fedc22c08c94d6",
+      "sourceRoot": "uploads",
+      "relativePath": "2020/05/2020_05_09-Trey_Turner-Ruminate-768x768.png"
+    },
+    {
+      "id": "asset-58818eef16928111",
+      "kind": "audio",
+      "url": "https://podcast.nurevolution.net/2016_08_28-Trey_Turner_and_Cody_Haynes-Archived_Transmission-320kbps.mp3",
+      "mediaType": "audio/mpeg",
+      "byteLength": 165911340,
+      "sha256": "ed7f1db5065eda59fd494dfea8007d1d2254495c0a9698365350fb10ef715dbb",
+      "sourceRoot": "audio",
+      "relativePath": "2016_08_28-Trey_Turner_and_Cody_Haynes-Archived_Transmission-320kbps.mp3"
+    },
+    {
+      "id": "asset-5a017a042ed0d2fe",
+      "kind": "audio",
+      "url": "https://podcast.nurevolution.net/2013_01_04-EazyTom-Bizarre_NYE_2013-v0.mp3",
+      "mediaType": "audio/mpeg",
+      "byteLength": 282596110,
+      "sha256": "f2698ef8aa1efa3d4ea1f9acdd9ce9cde4a38996526d9ddfa8ebf456d0f4ca46",
+      "sourceRoot": "audio",
+      "relativePath": "2013_01_04-EazyTom-Bizarre_NYE_2013-v0.mp3"
+    },
+    {
+      "id": "asset-5df28ae03c827b0f",
+      "kind": "audio",
+      "url": "https://podcast.nurevolution.net/2020_05_09-Trey_Turner-Ruminate-320kbps.mp3",
+      "mediaType": "audio/mpeg",
+      "byteLength": 145672454,
+      "sha256": "6e3c6ba6c9689ab2acc3727f3e7e3fe3598d19520c0af127742f7fe7525ee507",
+      "sourceRoot": "audio",
+      "relativePath": "2020_05_09-Trey_Turner-Ruminate-320kbps.mp3"
+    },
+    {
+      "id": "asset-6070ba3fd2fbcbe0",
+      "kind": "artwork",
+      "url": "https://nurevolution.net/wp/wp-content/uploads/2013/12/2013_12_28-EazyT-7_Weapons_mix-320kbps.png",
+      "mediaType": "image/png",
+      "byteLength": 41837,
+      "sha256": "9e5e6ebdb5539926eeb36ede2ad3bac8a75b260f88a4cca45b85726e9e95fb7c",
+      "sourceRoot": "uploads",
+      "relativePath": "2013/12/2013_12_28-EazyT-7_Weapons_mix-320kbps.png"
+    },
+    {
+      "id": "asset-611f6cbae600362e",
+      "kind": "audio",
+      "url": "https://podcast.nurevolution.net/2005_11_12-Cody_Haynes-Live_On_The_Chill_Zone_KVRX_91.7_FM_Austin.mp3",
+      "mediaType": "audio/mpeg",
+      "byteLength": 63375706,
+      "sha256": "d054867603bf3f0bc20d5327aea1579f4fb1c6661c406ff129fe221290a9f862",
+      "sourceRoot": "audio",
+      "relativePath": "2005_11_12-Cody_Haynes-Live_On_The_Chill_Zone_KVRX_91.7_FM_Austin.mp3"
+    },
+    {
+      "id": "asset-6170d96c277c6620",
+      "kind": "artwork",
+      "url": "https://nurevolution.net/wp/wp-content/uploads/2013/03/maint.png",
+      "mediaType": "image/png",
+      "byteLength": 3479,
+      "sha256": "8ca7a20de4b8c5051e9be8489b14f274c4e3aaf1afbe95ce39e587d5732b434a",
+      "sourceRoot": "uploads",
+      "relativePath": "2013/03/maint.png"
+    },
+    {
+      "id": "asset-63dade2ffce61f81",
+      "kind": "artwork",
+      "url": "https://nurevolution.net/wp/wp-content/uploads/2013/06/trey_turner-the_toads_mistress-350x350.jpg",
+      "mediaType": "image/jpeg",
+      "byteLength": 59090,
+      "sha256": "6144199c3764f36b01cd141a5dd95a1599b7bb98a77dc2d91ded9de82fcaeb68",
+      "sourceRoot": "uploads",
+      "relativePath": "2013/06/trey_turner-the_toads_mistress-350x350.jpg"
+    },
+    {
+      "id": "asset-64aad6f047990931",
+      "kind": "audio",
+      "url": "https://podcast.nurevolution.net/2009_07_31-trey_turner_and_cody_haynes-better_late_than_never-v0.mp3",
+      "mediaType": "audio/mpeg",
+      "byteLength": 119087339,
+      "sha256": "48165f5309abff0f4e9c15d92e5510ef02c1f992e5bdeb680415187ed71ac79b",
+      "sourceRoot": "audio",
+      "relativePath": "2009_07_31-trey_turner_and_cody_haynes-better_late_than_never-v0.mp3"
+    },
+    {
+      "id": "asset-65db4c3e4ea878a2",
+      "kind": "audio",
+      "url": "https://podcast.nurevolution.net/2013_12_28-EazyT-7_Weapons_Mix-320kbps.mp3",
+      "mediaType": "audio/mpeg",
+      "byteLength": 71285336,
+      "sha256": "f1d7d49c82f7086938f8529262eb7f1a731729c60e5c34ed7528027f6ff7a5ae",
+      "sourceRoot": "audio",
+      "relativePath": "2013_12_28-EazyT-7_Weapons_Mix-320kbps.mp3"
+    },
+    {
+      "id": "asset-65dfc086b8f371d3",
+      "kind": "artwork",
+      "url": "https://nurevolution.net/wp/wp-content/uploads/2013/03/07-06-16-300x300.jpg",
+      "mediaType": "image/jpeg",
+      "byteLength": 27536,
+      "sha256": "82a5ebcd7c6169ae727c035f1bbc8a49cefe71bb24eeeb6c99132f5ae16856b7",
+      "sourceRoot": "uploads",
+      "relativePath": "2013/03/07-06-16-300x300.jpg"
+    },
+    {
+      "id": "asset-680468b64164c966",
+      "kind": "artwork",
+      "url": "https://nurevolution.net/wp/wp-content/uploads/2013/06/2011_06_19-DRRTYWULVZ-Live_at_Carpe_Noctem_2011-320kbps.png",
+      "mediaType": "image/png",
+      "byteLength": 312874,
+      "sha256": "50c54e58e44da462610e7296e5310968f31c32f49529a73846c83cd380cb20ff",
+      "sourceRoot": "uploads",
+      "relativePath": "2013/06/2011_06_19-DRRTYWULVZ-Live_at_Carpe_Noctem_2011-320kbps.png"
+    },
+    {
+      "id": "asset-68690678f31c4a41",
+      "kind": "artwork",
+      "url": "https://nurevolution.net/wp/wp-content/uploads/2013/06/building_overhang.jpg",
+      "mediaType": "image/jpeg",
+      "byteLength": 823199,
+      "sha256": "5c966aa87114b66d3a6b9ad557b727d1cef0106caf931f093c490a2f7a8794b5",
+      "sourceRoot": "uploads",
+      "relativePath": "2013/06/building_overhang.jpg"
+    },
+    {
+      "id": "asset-68e35f1c63c59030",
+      "kind": "artwork",
+      "url": "https://nurevolution.net/wp/wp-content/uploads/2011/09/2011_06_26-Eazy_Tom-Live_from_the_Pink_Cybernetic_Cabaret-v0.png",
+      "mediaType": "image/png",
+      "byteLength": 166592,
+      "sha256": "e2ba8f71e604965d301a9cd814847b4722b135e25e6a7289b8a5b5724692e975",
+      "sourceRoot": "uploads",
+      "relativePath": "2011/09/2011_06_26-Eazy_Tom-Live_from_the_Pink_Cybernetic_Cabaret-v0.png"
+    },
+    {
+      "id": "asset-690d10fab2a837e4",
+      "kind": "artwork",
+      "url": "https://nurevolution.net/wp/wp-content/uploads/2013/06/magnetic_ball.jpg",
+      "mediaType": "image/jpeg",
+      "byteLength": 460606,
+      "sha256": "d80d552681646445b387d01f3eeb49edfd862196ccc0fccebb6d74f4197a0a5c",
+      "sourceRoot": "uploads",
+      "relativePath": "2013/06/magnetic_ball.jpg"
+    },
+    {
+      "id": "asset-693aadab8770ee0e",
+      "kind": "artwork",
+      "url": "https://nurevolution.net/wp/wp-content/uploads/2019/05/2019_05_04-Trey_Turner-The_Dark_Prophet-tiny-1024x1024.png",
+      "mediaType": "image/png",
+      "byteLength": 1739931,
+      "sha256": "266c8d8466f7195a0c715dd0cdfcb952795ad73e49978569e72ac9fc092d014e",
+      "sourceRoot": "uploads",
+      "relativePath": "2019/05/2019_05_04-Trey_Turner-The_Dark_Prophet-tiny-1024x1024.png"
+    },
+    {
+      "id": "asset-6a586afe89debeee",
+      "kind": "artwork",
+      "url": "https://nurevolution.net/wp/wp-content/uploads/2020/05/2020_05_09-Trey_Turner-Ruminate-150x150.png",
+      "mediaType": "image/png",
+      "byteLength": 35488,
+      "sha256": "f0d3e13e4f5adf5bbbfa87e082df9bd68afb72f195abd69d280985ea1f17f801",
+      "sourceRoot": "uploads",
+      "relativePath": "2020/05/2020_05_09-Trey_Turner-Ruminate-150x150.png"
+    },
+    {
+      "id": "asset-6b1ea0e20c5d1824",
+      "kind": "audio",
+      "url": "https://podcast.nurevolution.net/2010_06_17-trey_turner-carpe_noctem_2010-v0.mp3",
+      "mediaType": "audio/mpeg",
+      "byteLength": 85184681,
+      "sha256": "b16b89f0842339e71bf43e51fec726a6e874ed39a7af0a71d18d13c79feddd70",
+      "sourceRoot": "audio",
+      "relativePath": "2010_06_17-trey_turner-carpe_noctem_2010-v0.mp3"
+    },
+    {
+      "id": "asset-6b34c82e53c12fab",
+      "kind": "artwork",
+      "url": "https://nurevolution.net/wp/wp-content/uploads/2019/05/2019_05_04-Trey_Turner-The_Dark_Prophet-tiny.png",
+      "mediaType": "image/png",
+      "byteLength": 839026,
+      "sha256": "9f9b6091ba3fe79240ffb66ae3b9744098aa03c5243f695182e3c33f60219c3c",
+      "sourceRoot": "uploads",
+      "relativePath": "2019/05/2019_05_04-Trey_Turner-The_Dark_Prophet-tiny.png"
+    },
+    {
+      "id": "asset-6b3735a30cc66e15",
+      "kind": "artwork",
+      "url": "https://nurevolution.net/wp/wp-content/uploads/2014/01/2014_01_01-Trey_Turner-MMXIV.png",
+      "mediaType": "image/png",
+      "byteLength": 592317,
+      "sha256": "4fea114e7018cf2e035a95a3f7c843a3430047ea8820fbc38d1bc3b659fb4d8a",
+      "sourceRoot": "uploads",
+      "relativePath": "2014/01/2014_01_01-Trey_Turner-MMXIV.png"
+    },
+    {
+      "id": "asset-6ba4f7b2a2d0be86",
+      "kind": "artwork",
+      "url": "https://nurevolution.net/wp/wp-content/uploads/2013/06/Yam_cs30_hr_01_crop_mini1.jpg",
+      "mediaType": "image/jpeg",
+      "byteLength": 221904,
+      "sha256": "9f30c1ee94eff368bf401a1987650e41c827a97ba72bd056d9819de826ea50bb",
+      "sourceRoot": "uploads",
+      "relativePath": "2013/06/Yam_cs30_hr_01_crop_mini1.jpg"
+    },
+    {
+      "id": "asset-6c2d1686c644b906",
+      "kind": "audio",
+      "url": "https://podcast.nurevolution.net/2004_05_24-trey_turner-stasis-v0.mp3",
+      "mediaType": "audio/mpeg",
+      "byteLength": 120512693,
+      "sha256": "9a5010bf141d6a724953bf408fc36ec06c962984c952989caa37917db2ceb833",
+      "sourceRoot": "audio",
+      "relativePath": "2004_05_24-trey_turner-stasis-v0.mp3"
+    },
+    {
+      "id": "asset-6da3935c1b78f01d",
+      "kind": "artwork",
+      "url": "https://nurevolution.net/wp/wp-content/uploads/2013/06/cutout_building.jpg",
+      "mediaType": "image/jpeg",
+      "byteLength": 1284693,
+      "sha256": "a45a90e8dbc16438b266c701a726076b5d7d60d9c8bf2a584be2bc7962223c63",
+      "sourceRoot": "uploads",
+      "relativePath": "2013/06/cutout_building.jpg"
+    },
+    {
+      "id": "asset-72b4fd53c6f0a410",
+      "kind": "audio",
+      "url": "https://podcast.nurevolution.net/2001_11_01-trey_turner-tremor-v0.mp3",
+      "mediaType": "audio/mpeg",
+      "byteLength": 121716216,
+      "sha256": "408bdff3847fb295e4e682816ed06b66f1ddfc3af72709d1b3a4b1f4341eb5fc",
+      "sourceRoot": "audio",
+      "relativePath": "2001_11_01-trey_turner-tremor-v0.mp3"
+    },
+    {
+      "id": "asset-7544d06c1a6d0e33",
+      "kind": "artwork",
+      "url": "https://nurevolution.net/wp/wp-content/uploads/2013/06/metallic_reflection_with_holes.jpg",
+      "mediaType": "image/jpeg",
+      "byteLength": 225879,
+      "sha256": "1c69430427eca14d536b60883ab8761bdbbc7df29f6fa7b71e3583b70aea11f9",
+      "sourceRoot": "uploads",
+      "relativePath": "2013/06/metallic_reflection_with_holes.jpg"
+    },
+    {
+      "id": "asset-766efa297d3c341c",
+      "kind": "audio",
+      "url": "https://podcast.nurevolution.net/2012_07_20-Trey_Turner-Radio_Silenced-v0.mp3",
+      "mediaType": "audio/mpeg",
+      "byteLength": 221848218,
+      "sha256": "a820e34676ec51318ec9de8b0979d15576272dd1af15b9df68ded4c7c02ead2f",
+      "sourceRoot": "audio",
+      "relativePath": "2012_07_20-Trey_Turner-Radio_Silenced-v0.mp3"
+    },
+    {
+      "id": "asset-768f527072c3ca87",
+      "kind": "artwork",
+      "url": "https://nurevolution.net/wp/wp-content/uploads/2013/03/slim_phatty_m4l_patcher.png",
+      "mediaType": "image/png",
+      "byteLength": 57274,
+      "sha256": "67f5c0c63c32c09c8b9dc4c1d4750ae351d1eedf7fbffd50ce331ae4ee69b740",
+      "sourceRoot": "uploads",
+      "relativePath": "2013/03/slim_phatty_m4l_patcher.png"
+    },
+    {
+      "id": "asset-76cad5add22590a0",
+      "kind": "artwork",
+      "url": "https://nurevolution.net/wp/wp-content/uploads/2013/03/nurevolution_soundsystem.jpg",
+      "mediaType": "image/jpeg",
+      "byteLength": 202734,
+      "sha256": "8b1b027fa4d5d8402797b6e6e7adb5a4391f9db1751d2411e4d9f630bbc4b071",
+      "sourceRoot": "uploads",
+      "relativePath": "2013/03/nurevolution_soundsystem.jpg"
+    },
+    {
+      "id": "asset-76e7493aa6a8caa1",
+      "kind": "audio",
+      "url": "https://podcast.nurevolution.net/2010_10_27-trey_turner-dancefloor_oriented-v0.mp3",
+      "mediaType": "audio/mpeg",
+      "byteLength": 117345591,
+      "sha256": "5d3d34cc1af69171106e0964fb672e4066f15a1f12591c603e3b2bf08434a888",
+      "sourceRoot": "audio",
+      "relativePath": "2010_10_27-trey_turner-dancefloor_oriented-v0.mp3"
+    },
+    {
+      "id": "asset-7a07eed886d30eab",
+      "kind": "artwork",
+      "url": "https://nurevolution.net/wp/wp-content/uploads/2002/01/circular_building_upshot_1080.jpg",
+      "mediaType": "image/jpeg",
+      "byteLength": 427538,
+      "sha256": "fae9f0b4dca6bb481a0a44fa82e68a395bd53e7e1cc035ad25e0516a6bcdb17d",
+      "sourceRoot": "uploads",
+      "relativePath": "2002/01/circular_building_upshot_1080.jpg"
+    },
+    {
+      "id": "asset-7ada051307c78688",
+      "kind": "audio",
+      "url": "https://podcast.nurevolution.net/2010_08_23-Joseph_Noctum-African_Red_Bush-192kbps.mp3",
+      "mediaType": "audio/mpeg",
+      "byteLength": 51594198,
+      "sha256": "5c57c42d4405217351eca266e2d16d0fe7534c07b61fb36fa4587b5ced3ef786",
+      "sourceRoot": "audio",
+      "relativePath": "2010_08_23-Joseph_Noctum-African_Red_Bush-192kbps.mp3"
+    },
+    {
+      "id": "asset-7b174c8f2ef58543",
+      "kind": "artwork",
+      "url": "https://nurevolution.net/wp/wp-content/uploads/2013/06/succulent_cover_300.png",
+      "mediaType": "image/png",
+      "byteLength": 171791,
+      "sha256": "966c5477f6d0613725a4ed67b4e6e649b65af32673183a1ebc4de94651ec7af2",
+      "sourceRoot": "uploads",
+      "relativePath": "2013/06/succulent_cover_300.png"
+    },
+    {
+      "id": "asset-7db05c016409aca7",
+      "kind": "artwork",
+      "url": "https://nurevolution.net/wp/wp-content/uploads/2016/11/2016_11_11-Trey_Turner-Off_The_Cuff.png",
+      "mediaType": "image/png",
+      "byteLength": 227769,
+      "sha256": "8beebbdef746fe411604707de31c0516510c1a8a25987bf802a6c8c8da0caad9",
+      "sourceRoot": "uploads",
+      "relativePath": "2016/11/2016_11_11-Trey_Turner-Off_The_Cuff.png"
+    },
+    {
+      "id": "asset-7fb535a7f31c7171",
+      "kind": "artwork",
+      "url": "https://nurevolution.net/wp/wp-content/uploads/2013/06/2011_05_04-Joseph_Noctum-In_The_Pink-v0.jpg",
+      "mediaType": "image/jpeg",
+      "byteLength": 568975,
+      "sha256": "22bf5da97ba5bf2f1e7292cc80f562fc5ae21983eba47b3e7cf824afefae9462",
+      "sourceRoot": "uploads",
+      "relativePath": "2013/06/2011_05_04-Joseph_Noctum-In_The_Pink-v0.jpg"
+    },
+    {
+      "id": "asset-855c7a48155a1447",
+      "kind": "artwork",
+      "url": "https://nurevolution.net/wp/wp-content/uploads/2013/06/Yam_cs30_hr_01_1799x970_crop_dimmed.png",
+      "mediaType": "image/jpeg",
+      "byteLength": 442688,
+      "sha256": "ee17cf46b95428d3b3ec02697febf73d008c1ad76256e77f2e38c9a946180ead",
+      "sourceRoot": "uploads",
+      "relativePath": "2013/06/Yam_cs30_hr_01_1799x970_crop_dimmed.png"
+    },
+    {
+      "id": "asset-866b604055b533ee",
+      "kind": "artwork",
+      "url": "https://nurevolution.net/wp/wp-content/uploads/2020/05/2020_05_09-Trey_Turner-Ruminate-160x160.png",
+      "mediaType": "image/png",
+      "byteLength": 39935,
+      "sha256": "deccdaf7fe7f6d913bfe4c025b36bf300acf8be50b71c7bbff9767ced7412c75",
+      "sourceRoot": "uploads",
+      "relativePath": "2020/05/2020_05_09-Trey_Turner-Ruminate-160x160.png"
+    },
+    {
+      "id": "asset-8673504511618907",
+      "kind": "artwork",
+      "url": "https://nurevolution.net/wp/wp-content/uploads/2013/03/slim_phatty_m4l_patcher-1.png",
+      "mediaType": "image/png",
+      "byteLength": 55744,
+      "sha256": "3673b44197f753eb2ae6f8348a143c550ee96b4a6a6223ad6cf33544358ba59c",
+      "sourceRoot": "uploads",
+      "relativePath": "2013/03/slim_phatty_m4l_patcher-1.png"
+    },
+    {
+      "id": "asset-87bae38e8c0cb873",
+      "kind": "artwork",
+      "url": "https://nurevolution.net/wp/wp-content/uploads/2013/03/07-06-16-230x230.jpg",
+      "mediaType": "image/jpeg",
+      "byteLength": 21735,
+      "sha256": "836f61b8c9c9209b51c09af1879b56f391dfe8d35ef5b981902f58cc43bf2d2d",
+      "sourceRoot": "uploads",
+      "relativePath": "2013/03/07-06-16-230x230.jpg"
+    },
+    {
+      "id": "asset-8852f319e6e2c322",
+      "kind": "artwork",
+      "url": "https://nurevolution.net/wp/wp-content/uploads/2011/09/2011_09_14-Eazy_Tom-Star_Whores_Live_at_the_Pink_Palace-320kbps.png",
+      "mediaType": "image/png",
+      "byteLength": 932325,
+      "sha256": "8abd98fcfe65ccd0bced56380295662f338eb21cf09e0dd6c26178278e7d1791",
+      "sourceRoot": "uploads",
+      "relativePath": "2011/09/2011_09_14-Eazy_Tom-Star_Whores_Live_at_the_Pink_Palace-320kbps.png"
+    },
+    {
+      "id": "asset-88953e1233201c8b",
+      "kind": "artwork",
+      "url": "https://nurevolution.net/wp/wp-content/uploads/2013/02/parallax-holder.jpg",
+      "mediaType": "image/jpeg",
+      "byteLength": 50188,
+      "sha256": "4f631d8c14c829b97815edb9e8c68222c1c34b5f96a45acba78073aa3ede0a3c",
+      "sourceRoot": "uploads",
+      "relativePath": "2013/02/parallax-holder.jpg"
+    },
+    {
+      "id": "asset-89889748c8be755c",
+      "kind": "artwork",
+      "url": "https://nurevolution.net/wp/wp-content/uploads/2020/05/2020_05_09-Trey_Turner-Ruminate-1024x1024.png",
+      "mediaType": "image/png",
+      "byteLength": 1091214,
+      "sha256": "02883ab387f60c5663590f8791a60d67104ab4d014ccecf9b34b33206db2dab0",
+      "sourceRoot": "uploads",
+      "relativePath": "2020/05/2020_05_09-Trey_Turner-Ruminate-1024x1024.png"
+    },
+    {
+      "id": "asset-899b1cee22a26802",
+      "kind": "artwork",
+      "url": "https://nurevolution.net/wp/wp-content/uploads/2020/05/2020_05_09-Trey_Turner-Ruminate-230x230.png",
+      "mediaType": "image/png",
+      "byteLength": 78891,
+      "sha256": "e9edc1a52653032fddd4520e21929469302c029add76cd4da324d9f62a028300",
+      "sourceRoot": "uploads",
+      "relativePath": "2020/05/2020_05_09-Trey_Turner-Ruminate-230x230.png"
+    },
+    {
+      "id": "asset-8ae53574f84681bc",
+      "kind": "audio",
+      "url": "https://podcast.nurevolution.net/2002_05_01-trey_turner-urban_breakbeat_uprising-v0.mp3",
+      "mediaType": "audio/mpeg",
+      "byteLength": 133149980,
+      "sha256": "8f0aa6ff58df47bdfd5f786ae6fe989e60aefc15b9ae974ec534a6c4a51dd173",
+      "sourceRoot": "audio",
+      "relativePath": "2002_05_01-trey_turner-urban_breakbeat_uprising-v0.mp3"
+    },
+    {
+      "id": "asset-926078568518b099",
+      "kind": "artwork",
+      "url": "https://nurevolution.net/wp/wp-content/uploads/2020/05/2020_05_09-Trey_Turner-Ruminate-250x250.png",
+      "mediaType": "image/png",
+      "byteLength": 92321,
+      "sha256": "99637d1b322b100fce1aaa0af138b5f1fe20726ebaeb9c2ff334ca2c3e8f32cc",
+      "sourceRoot": "uploads",
+      "relativePath": "2020/05/2020_05_09-Trey_Turner-Ruminate-250x250.png"
+    },
+    {
+      "id": "asset-927fcd4097acf9d6",
+      "kind": "artwork",
+      "url": "https://nurevolution.net/wp/wp-content/uploads/2013/06/2528717870_8998263298_o_mini.jpg",
+      "mediaType": "image/jpeg",
+      "byteLength": 257338,
+      "sha256": "8f68f7ac612d50d1c1559463c70623c924bf8ea2ce427b0afc168704ca4d9057",
+      "sourceRoot": "uploads",
+      "relativePath": "2013/06/2528717870_8998263298_o_mini.jpg"
+    },
+    {
+      "id": "asset-9344649bc27ef8ce",
+      "kind": "audio",
+      "url": "https://podcast.nurevolution.net/2011_06_19-DRRTYWULVZ-Live_at_Carpe_Noctem_2011-320kbps.mp3",
+      "mediaType": "audio/mpeg",
+      "byteLength": 286927439,
+      "sha256": "6a229323a5a082d8d59e8155a0bc9929a970ffcc082ae8cfc4d6628baf14d4d5",
+      "sourceRoot": "audio",
+      "relativePath": "2011_06_19-DRRTYWULVZ-Live_at_Carpe_Noctem_2011-320kbps.mp3"
+    },
+    {
+      "id": "asset-93f74e575ad4da50",
+      "kind": "artwork",
+      "url": "https://nurevolution.net/wp/wp-content/uploads/2013/03/ableton_session_dimmed.png",
+      "mediaType": "image/png",
+      "byteLength": 26639,
+      "sha256": "b2203af53abe42cacbb5e783d61a6f31f91917599b7589732bc00058cc686583",
+      "sourceRoot": "uploads",
+      "relativePath": "2013/03/ableton_session_dimmed.png"
+    },
+    {
+      "id": "asset-9516b8c25ea9409e",
+      "kind": "artwork",
+      "url": "https://nurevolution.net/wp/wp-content/uploads/2013/07/trey_turner-phoning_it_in.png",
+      "mediaType": "image/png",
+      "byteLength": 1128464,
+      "sha256": "45b2e4221498f5fc2d778e4b4a609f9df8f5d40259adf47f5ffeace4e4f30001",
+      "sourceRoot": "uploads",
+      "relativePath": "2013/07/trey_turner-phoning_it_in.png"
+    },
+    {
+      "id": "asset-9612f3ffa603b37f",
+      "kind": "artwork",
+      "url": "https://nurevolution.net/wp/wp-content/uploads/2018/01/2018_01_06-Trey_Turner-Bass_Face_Space_Race.jpg",
+      "mediaType": "image/jpeg",
+      "byteLength": 910149,
+      "sha256": "0caca49206a09f8cbf45c0a4129046fd75e8a7be5d2f5c5641b8f8d27bf3649c",
+      "sourceRoot": "uploads",
+      "relativePath": "2018/01/2018_01_06-Trey_Turner-Bass_Face_Space_Race.jpg"
+    },
+    {
+      "id": "asset-9c9a6aa865a8d23d",
+      "kind": "audio",
+      "url": "https://podcast.nurevolution.net/2011_03_08-Tonebreaker-Glamour!_Trash!_Pop!-v0.mp3",
+      "mediaType": "audio/mpeg",
+      "byteLength": 103299755,
+      "sha256": "862f8c62e43fab16c80c35b575ccfb58acd0bddabd28844e14fcd16efcec126a",
+      "sourceRoot": "audio",
+      "relativePath": "2011_03_08-Tonebreaker-Glamour!_Trash!_Pop!-v0.mp3"
+    },
+    {
+      "id": "asset-9f9dd8d7c8e6bf9e",
+      "kind": "artwork",
+      "url": "https://nurevolution.net/wp/wp-content/uploads/2013/06/2010_12_12-joseph_noctum-peace_love_crunk.jpg",
+      "mediaType": "image/jpeg",
+      "byteLength": 228290,
+      "sha256": "9f0edf62b85b53e0c2e4b6607960577c449c8d03e7b99791aea28384de6766e0",
+      "sourceRoot": "uploads",
+      "relativePath": "2013/06/2010_12_12-joseph_noctum-peace_love_crunk.jpg"
+    },
+    {
+      "id": "asset-a0d008d21eb87c9a",
+      "kind": "artwork",
+      "url": "https://nurevolution.net/wp/wp-content/uploads/2019/05/2019_05_04-Trey_Turner-The_Dark_Prophet-tiny-150x150.png",
+      "mediaType": "image/png",
+      "byteLength": 37597,
+      "sha256": "ebf9bdb2fb08d59b1bbd4ac3603513967dd62b680cd546615a77f5f5012d7b25",
+      "sourceRoot": "uploads",
+      "relativePath": "2019/05/2019_05_04-Trey_Turner-The_Dark_Prophet-tiny-150x150.png"
+    },
+    {
+      "id": "asset-a15970fdb539a7e3",
+      "kind": "artwork",
+      "url": "https://nurevolution.net/wp/wp-content/uploads/2013/06/building_in_snow.jpg",
+      "mediaType": "image/jpeg",
+      "byteLength": 225560,
+      "sha256": "77b939f0da0aeeacd249874b0a683f50827bfb52f743c54370eb70dc0da51499",
+      "sourceRoot": "uploads",
+      "relativePath": "2013/06/building_in_snow.jpg"
+    },
+    {
+      "id": "asset-a40ca4eb77e6c513",
+      "kind": "artwork",
+      "url": "https://nurevolution.net/wp/wp-content/uploads/2013/03/07-06-16-150x150.jpg",
+      "mediaType": "image/jpeg",
+      "byteLength": 16644,
+      "sha256": "e26e70ea74505a8edfa31076344da08223008f8b361b7af8a2b4fd0618978e74",
+      "sourceRoot": "uploads",
+      "relativePath": "2013/03/07-06-16-150x150.jpg"
+    },
+    {
+      "id": "asset-a5aa9e8a9dcdbfd0",
+      "kind": "artwork",
+      "url": "https://nurevolution.net/wp/wp-content/uploads/2013/06/space_needle.jpg",
+      "mediaType": "image/jpeg",
+      "byteLength": 1074913,
+      "sha256": "c8428b372d6468171b353dfe5ac8a32c2758f2b0837a4e0286991016aad54896",
+      "sourceRoot": "uploads",
+      "relativePath": "2013/06/space_needle.jpg"
+    },
+    {
+      "id": "asset-a5aeea1ceb662069",
+      "kind": "artwork",
+      "url": "https://nurevolution.net/wp/wp-content/uploads/2013/06/trey_turner-the_further_esoteric_adventures_of.png",
+      "mediaType": "image/png",
+      "byteLength": 1202042,
+      "sha256": "5f26bf8e64e9e70faba23c706d684bfc3b51609b093b5e2a71d146dff12122cf",
+      "sourceRoot": "uploads",
+      "relativePath": "2013/06/trey_turner-the_further_esoteric_adventures_of.png"
+    },
+    {
+      "id": "asset-a73fe4f80b864589",
+      "kind": "audio",
+      "url": "https://podcast.nurevolution.net/2001_11_02-trey_turner-aftershock-v0.mp3",
+      "mediaType": "audio/mpeg",
+      "byteLength": 128762894,
+      "sha256": "c954c8aa722f4edeae0079ac7277f3755aea796032e67689daa4771583bca18b",
+      "sourceRoot": "audio",
+      "relativePath": "2001_11_02-trey_turner-aftershock-v0.mp3"
+    },
+    {
+      "id": "asset-a7b9ed1524bfa423",
+      "kind": "artwork",
+      "url": "https://nurevolution.net/wp/wp-content/uploads/2013/06/concentric_circular_hotel.jpg",
+      "mediaType": "image/jpeg",
+      "byteLength": 605164,
+      "sha256": "a907c80a6deb72e6d44de3a2906f4300f09693705016d021fbb50b3cb2cabcf3",
+      "sourceRoot": "uploads",
+      "relativePath": "2013/06/concentric_circular_hotel.jpg"
+    },
+    {
+      "id": "asset-a8bdef3a4271db43",
+      "kind": "audio",
+      "url": "https://podcast.nurevolution.net/2018_01_06-Trey_Turner-Bass_Face_Space_Race-320kbps.mp3",
+      "mediaType": "audio/mpeg",
+      "byteLength": 181221040,
+      "sha256": "5e4f1ca774d7ec1338d3d1877cc4015aaa50ab4b57e239910e8098c4e9a01cb8",
+      "sourceRoot": "audio",
+      "relativePath": "2018_01_06-Trey_Turner-Bass_Face_Space_Race-320kbps.mp3"
+    },
+    {
+      "id": "asset-ab67e577010fc1dc",
+      "kind": "artwork",
+      "url": "https://nurevolution.net/wp/wp-content/uploads/2013/06/Parallax-Header-1799x916.jpg",
+      "mediaType": "image/jpeg",
+      "byteLength": 324343,
+      "sha256": "2403e69be5bef295ac311f9edba531b47b20c89d4aa8b3a846313e99f19b89a9",
+      "sourceRoot": "uploads",
+      "relativePath": "2013/06/Parallax-Header-1799x916.jpg"
+    },
+    {
+      "id": "asset-b24b3080fa709966",
+      "kind": "artwork",
+      "url": "https://nurevolution.net/wp/wp-content/uploads/2002/08/fracture_and_dj_cubed-slipstream-cover_art.jpg",
+      "mediaType": "image/jpeg",
+      "byteLength": 118967,
+      "sha256": "a394655b95a5e3edb205c54b3d82c2f0f66dc4afd04462b205e58dcff093025a",
+      "sourceRoot": "uploads",
+      "relativePath": "2002/08/fracture_and_dj_cubed-slipstream-cover_art.jpg"
+    },
+    {
+      "id": "asset-b7f477175bd4b06f",
+      "kind": "audio",
+      "url": "https://podcast.nurevolution.net/2010_07_17-EazyTom-Dub_Noctem-v0.mp3",
+      "mediaType": "audio/mpeg",
+      "byteLength": 102561731,
+      "sha256": "4fee5a703e72b93213c0e5e22f928e342d2ccb3970e450d08abf9fe0a681d2c2",
+      "sourceRoot": "audio",
+      "relativePath": "2010_07_17-EazyTom-Dub_Noctem-v0.mp3"
+    },
+    {
+      "id": "asset-b9389e6ad1d01c92",
+      "kind": "artwork",
+      "url": "https://nurevolution.net/wp/wp-content/uploads/2013/03/parallax-holder.jpg",
+      "mediaType": "image/jpeg",
+      "byteLength": 50188,
+      "sha256": "4f631d8c14c829b97815edb9e8c68222c1c34b5f96a45acba78073aa3ede0a3c",
+      "sourceRoot": "uploads",
+      "relativePath": "2013/03/parallax-holder.jpg"
+    },
+    {
+      "id": "asset-ba4a562c6fb310c4",
+      "kind": "artwork",
+      "url": "https://nurevolution.net/wp/wp-content/uploads/2018/04/2018_04_13-Trey_Turner-Impulse.jpg",
+      "mediaType": "image/jpeg",
+      "byteLength": 1036812,
+      "sha256": "278b6a68c34da81c1776442bc3c0682927a5b6c7c8da23e5cedf4363b48bb17c",
+      "sourceRoot": "uploads",
+      "relativePath": "2018/04/2018_04_13-Trey_Turner-Impulse.jpg"
+    },
+    {
+      "id": "asset-be4e37f201b9c6e4",
+      "kind": "artwork",
+      "url": "https://nurevolution.net/wp/wp-content/uploads/2016/08/trey_turner__cody_haynes-archived_transmission.png",
+      "mediaType": "image/png",
+      "byteLength": 155139,
+      "sha256": "ad542f880dc7e761e0a49a6ee7815fd2cb9483fb7be0bf53e27819eed9c36568",
+      "sourceRoot": "uploads",
+      "relativePath": "2016/08/trey_turner__cody_haynes-archived_transmission.png"
+    },
+    {
+      "id": "asset-bf1a8baa054023da",
+      "kind": "artwork",
+      "url": "https://nurevolution.net/wp/wp-content/uploads/2013/06/3d_cube_building.jpg",
+      "mediaType": "image/jpeg",
+      "byteLength": 609116,
+      "sha256": "77f088c64acb80ee5a736e0b0425fcfaaab7a85bcda4e20c681dcf00c3c45a58",
+      "sourceRoot": "uploads",
+      "relativePath": "2013/06/3d_cube_building.jpg"
+    },
+    {
+      "id": "asset-c1941d585fb2d88c",
+      "kind": "audio",
+      "url": "https://podcast.nurevolution.net/2016_03_30-Trey_Turner-Carrier_Detect-320kbps.mp3",
+      "mediaType": "audio/mpeg",
+      "byteLength": 178778236,
+      "sha256": "8555f7453808ff403bf0123759f56bcecff7643f05fdbfb0cbb288bb664b1a3b",
+      "sourceRoot": "audio",
+      "relativePath": "2016_03_30-Trey_Turner-Carrier_Detect-320kbps.mp3"
+    },
+    {
+      "id": "asset-c1b98cca750338f6",
+      "kind": "artwork",
+      "url": "https://nurevolution.net/wp/wp-content/uploads/2013/03/07-06-16.jpg",
+      "mediaType": "image/jpeg",
+      "byteLength": 1461673,
+      "sha256": "6e17436fbad0ee2d7c388e75dd3e4545694f3a7bbb2b8206370c4a1460454440",
+      "sourceRoot": "uploads",
+      "relativePath": "2013/03/07-06-16.jpg"
+    },
+    {
+      "id": "asset-c3e98cbaf6335958",
+      "kind": "artwork",
+      "url": "https://nurevolution.net/wp/wp-content/uploads/2013/06/building_reflection.jpg",
+      "mediaType": "image/jpeg",
+      "byteLength": 693612,
+      "sha256": "07adbd4062baae3ba472b11cdd083cd44b0970832bfc7b0b5a90a0f790037f12",
+      "sourceRoot": "uploads",
+      "relativePath": "2013/06/building_reflection.jpg"
+    },
+    {
+      "id": "asset-c495a02dc94d23d4",
+      "kind": "audio",
+      "url": "https://podcast.nurevolution.net/2009_06_22-EazyTom-bouche_d%27incendie_remix_finale-v0.mp3",
+      "mediaType": "audio/mpeg",
+      "byteLength": 101514979,
+      "sha256": "41164ad16e41158afc55b106fc10eb0127a055286312305c0fb9d25273b0ded9",
+      "sourceRoot": "audio",
+      "relativePath": "2009_06_22-EazyTom-bouche_d'incendie_remix_finale-v0.mp3"
+    },
+    {
+      "id": "asset-c4f7f3a89ffb9459",
+      "kind": "artwork",
+      "url": "https://nurevolution.net/wp/wp-content/uploads/2013/06/statue_in_tree_1080.jpg",
+      "mediaType": "image/jpeg",
+      "byteLength": 852228,
+      "sha256": "40b2c48e88aee29dbf8b5a5c2001dc5bff13dd8f127c72b45a8e3625b91a4d3a",
+      "sourceRoot": "uploads",
+      "relativePath": "2013/06/statue_in_tree_1080.jpg"
+    },
+    {
+      "id": "asset-c57974e04aade227",
+      "kind": "audio",
+      "url": "https://podcast.nurevolution.net/2007_04_12-Cody_Haynes-Live_On_The_Chill_Zone_KVRX_91.7_FM_Austin.mp3",
+      "mediaType": "audio/mpeg",
+      "byteLength": 41697124,
+      "sha256": "65dafa4b5817319c6f0c242ed649171059f613fb0b0a84deb76ee4d2e0acca34",
+      "sourceRoot": "audio",
+      "relativePath": "2007_04_12-Cody_Haynes-Live_On_The_Chill_Zone_KVRX_91.7_FM_Austin.mp3"
+    },
+    {
+      "id": "asset-c828f22321a3b059",
+      "kind": "audio",
+      "url": "https://podcast.nurevolution.net/2016_10_11-Trey_Turner-Is_This_Thing_On-320kbps.mp3",
+      "mediaType": "audio/mpeg",
+      "byteLength": 120192396,
+      "sha256": "2e00dff489799ff7a70f2d0ea83deca884f17e8cc531c361a5aa67139ba6547e",
+      "sourceRoot": "audio",
+      "relativePath": "2016_10_11-Trey_Turner-Is_This_Thing_On-320kbps.mp3"
+    },
+    {
+      "id": "asset-caedae2863e8adae",
+      "kind": "artwork",
+      "url": "https://nurevolution.net/wp/wp-content/uploads/2013/03/2539327523_5dbecd4dd9.jpg",
+      "mediaType": "image/jpeg",
+      "byteLength": 141285,
+      "sha256": "96642d39c1afb34f3199aa73d9cb1684147c8846872f3237e965a6ee4693c8f6",
+      "sourceRoot": "uploads",
+      "relativePath": "2013/03/2539327523_5dbecd4dd9.jpg"
+    },
+    {
+      "id": "asset-cb30481ecf597f7d",
+      "kind": "audio",
+      "url": "https://podcast.nurevolution.net/2011_01_20-trey_turner-slow_your_roll-v0.mp3",
+      "mediaType": "audio/mpeg",
+      "byteLength": 82757266,
+      "sha256": "595b3a43fa94b9fb6e7bfb9e7e11e2d4e29675d55d2fe7651474ab9337978407",
+      "sourceRoot": "audio",
+      "relativePath": "2011_01_20-trey_turner-slow_your_roll-v0.mp3"
+    },
+    {
+      "id": "asset-cb94afa0b1e276fd",
+      "kind": "artwork",
+      "url": "https://nurevolution.net/wp/wp-content/uploads/2013/06/Parallax-Header-1799x9161.jpg",
+      "mediaType": "image/jpeg",
+      "byteLength": 324343,
+      "sha256": "2403e69be5bef295ac311f9edba531b47b20c89d4aa8b3a846313e99f19b89a9",
+      "sourceRoot": "uploads",
+      "relativePath": "2013/06/Parallax-Header-1799x9161.jpg"
+    },
+    {
+      "id": "asset-cba5664e28f3f302",
+      "kind": "artwork",
+      "url": "https://nurevolution.net/wp/wp-content/uploads/2002/10/pritzker_pavilion_2.jpg",
+      "mediaType": "image/jpeg",
+      "byteLength": 125428,
+      "sha256": "9c7827898a5bd8d4607cd69a43d1d9fec1434782ff123a86bfc5a3cc551801f0",
+      "sourceRoot": "uploads",
+      "relativePath": "2002/10/pritzker_pavilion_2.jpg"
+    },
+    {
+      "id": "asset-cc24465084ed8fbc",
+      "kind": "artwork",
+      "url": "https://nurevolution.net/wp/wp-content/uploads/2013/06/disco_sphere_mini.jpg",
+      "mediaType": "image/jpeg",
+      "byteLength": 653704,
+      "sha256": "30ec0909c76b9a61c1f170c12774c8a54d826710e1ae2ec4b5c300f19dd00502",
+      "sourceRoot": "uploads",
+      "relativePath": "2013/06/disco_sphere_mini.jpg"
+    },
+    {
+      "id": "asset-cc8b3eb5d0ea3f25",
+      "kind": "artwork",
+      "url": "https://nurevolution.net/wp/wp-content/uploads/2013/06/hemisphere.jpg",
+      "mediaType": "image/jpeg",
+      "byteLength": 1082947,
+      "sha256": "73c2a92d10ff84ec73518b17a39ff545f33ee75502998f1b6935419141c746c4",
+      "sourceRoot": "uploads",
+      "relativePath": "2013/06/hemisphere.jpg"
+    },
+    {
+      "id": "asset-cf2e97ad88f166bc",
+      "kind": "audio",
+      "url": "https://podcast.nurevolution.net/2011_07_03-Joseph_Noctum-The_Bad_Boogie-v0.mp3",
+      "mediaType": "audio/mpeg",
+      "byteLength": 114112500,
+      "sha256": "eab828a0f76e6f666f6d476540ff3d26bf73bce28ae5cc5dd2507ad1ac9a8627",
+      "sourceRoot": "audio",
+      "relativePath": "2011_07_03-Joseph_Noctum-The_Bad_Boogie-v0.mp3"
+    },
+    {
+      "id": "asset-cfd112ac1a267eb8",
+      "kind": "audio",
+      "url": "https://podcast.nurevolution.net/2015_11_20-Trey_Turner-Praxis-v0.mp3",
+      "mediaType": "audio/mpeg",
+      "byteLength": 104560655,
+      "sha256": "03b4cb9a682b02711095cf7543b48a31a8f08e4155a4aa68b9632921c7e5f227",
+      "sourceRoot": "audio",
+      "relativePath": "2015_11_20-Trey_Turner-Praxis-v0.mp3"
+    },
+    {
+      "id": "asset-d44ce6f4fdb2f717",
+      "kind": "artwork",
+      "url": "https://nurevolution.net/wp/wp-content/uploads/2013/03/nu_orange_trans.jpg",
+      "mediaType": "image/jpeg",
+      "byteLength": 30051,
+      "sha256": "c20e92489aae5b9f4ee17780d78b2ac3cdde0a2852d869bce4c6f07871573e04",
+      "sourceRoot": "uploads",
+      "relativePath": "2013/03/nu_orange_trans.jpg"
+    },
+    {
+      "id": "asset-d8c109f5049b9aef",
+      "kind": "artwork",
+      "url": "https://nurevolution.net/wp/wp-content/uploads/2020/05/2020_05_09-Trey_Turner-Ruminate-300x300.png",
+      "mediaType": "image/png",
+      "byteLength": 128299,
+      "sha256": "e404ef71b4be695db5afc6007abdb4974b5e6f722406c4308db6f68f4e24b314",
+      "sourceRoot": "uploads",
+      "relativePath": "2020/05/2020_05_09-Trey_Turner-Ruminate-300x300.png"
+    },
+    {
+      "id": "asset-d9a94023800184bf",
+      "kind": "artwork",
+      "url": "https://nurevolution.net/wp/wp-content/uploads/2011/07/2011_07_10-Tonebreaker-Genisounds-224kbps-350x350.jpg",
+      "mediaType": "image/jpeg",
+      "byteLength": 105254,
+      "sha256": "a3ee8236ae0d021ec1fd47bedb092d969b0a25ee1285aa1490808b2788f66e42",
+      "sourceRoot": "uploads",
+      "relativePath": "2011/07/2011_07_10-Tonebreaker-Genisounds-224kbps-350x350.jpg"
+    },
+    {
+      "id": "asset-dadfafd8c89162fa",
+      "kind": "artwork",
+      "url": "https://nurevolution.net/wp/wp-content/uploads/2019/05/2019_05_04-Trey_Turner-The_Dark_Prophet-tiny-160x160.png",
+      "mediaType": "image/png",
+      "byteLength": 42226,
+      "sha256": "470e3561b9f0c6370615537c4f43436feb8fff70186e9c77b49bee3cf7ebdb64",
+      "sourceRoot": "uploads",
+      "relativePath": "2019/05/2019_05_04-Trey_Turner-The_Dark_Prophet-tiny-160x160.png"
+    },
+    {
+      "id": "asset-dca66617f48c45c2",
+      "kind": "artwork",
+      "url": "https://nurevolution.net/wp/wp-content/uploads/2013/03/07-06-16-610x230.jpg",
+      "mediaType": "image/jpeg",
+      "byteLength": 36605,
+      "sha256": "18de73ef102c6d0b582c1022485b3d4cc08cd5d52b737196db438792978da2d1",
+      "sourceRoot": "uploads",
+      "relativePath": "2013/03/07-06-16-610x230.jpg"
+    },
+    {
+      "id": "asset-dcab5033daf569de",
+      "kind": "artwork",
+      "url": "https://nurevolution.net/wp/wp-content/uploads/2013/03/more.png",
+      "mediaType": "image/png",
+      "byteLength": 3220,
+      "sha256": "55fdbd348d8db57e93866a282a96ecf185191c9f7187578f7409aec58bd09f6e",
+      "sourceRoot": "uploads",
+      "relativePath": "2013/03/more.png"
+    },
+    {
+      "id": "asset-dce91fd43f6fea8e",
+      "kind": "artwork",
+      "url": "https://nurevolution.net/wp/wp-content/uploads/2013/03/animoog-anisotropic-edit-page.png",
+      "mediaType": "image/png",
+      "byteLength": 503412,
+      "sha256": "358b3bcbca346cafdd771e2d9ced7f3d9aff06d89e22e91c5b597452be133a98",
+      "sourceRoot": "uploads",
+      "relativePath": "2013/03/animoog-anisotropic-edit-page.png"
+    },
+    {
+      "id": "asset-de3638daf5f15cf9",
+      "kind": "artwork",
+      "url": "https://nurevolution.net/wp/wp-content/uploads/2013/06/tree_on_beach.jpg",
+      "mediaType": "image/jpeg",
+      "byteLength": 344493,
+      "sha256": "c951ffb993a98ff016deb7739add3db0fab0e27b5b0a5fafc123d0c10421b3ff",
+      "sourceRoot": "uploads",
+      "relativePath": "2013/06/tree_on_beach.jpg"
+    },
+    {
+      "id": "asset-e0110499f74fda69",
+      "kind": "artwork",
+      "url": "https://nurevolution.net/wp/wp-content/uploads/2013/06/pritzker_pavilion.jpg",
+      "mediaType": "image/jpeg",
+      "byteLength": 197072,
+      "sha256": "b943a2ca835d132ff5bfd59a272e89ab01742decf657113e219bcf84bc2595cd",
+      "sourceRoot": "uploads",
+      "relativePath": "2013/06/pritzker_pavilion.jpg"
+    },
+    {
+      "id": "asset-e09ee0651ac26b3a",
+      "kind": "audio",
+      "url": "https://podcast.nurevolution.net/2013_03_20-Trey_Turner-You_Don't_Know_Me-v0.mp3",
+      "mediaType": "audio/mpeg",
+      "byteLength": 112826876,
+      "sha256": "e2fd925bd0d753d90ff7f027099f900d255af82dbe38c9aaf8b4b825e44c79bc",
+      "sourceRoot": "audio",
+      "relativePath": "2013_03_20-Trey_Turner-You_Don't_Know_Me-v0.mp3"
+    },
+    {
+      "id": "asset-e3ae0e57cae4eef4",
+      "kind": "audio",
+      "url": "https://podcast.nurevolution.net/2006_09_26-Cody_Haynes-Live_On_The_Chill_Zone_KVRX_91.7_FM_Austin.mp3",
+      "mediaType": "audio/mpeg",
+      "byteLength": 44030050,
+      "sha256": "0da7ee2500d2a6c7f9f8f575f0baea3a33232d566e502bb45629584d55566487",
+      "sourceRoot": "audio",
+      "relativePath": "2006_09_26-Cody_Haynes-Live_On_The_Chill_Zone_KVRX_91.7_FM_Austin.mp3"
+    },
+    {
+      "id": "asset-e48b7cae2a462fe7",
+      "kind": "audio",
+      "url": "https://podcast.nurevolution.net/2006_08_31-trey_turner-bijoubreaks.com_breakthru_2-v0.mp3",
+      "mediaType": "audio/mpeg",
+      "byteLength": 48977394,
+      "sha256": "a7c7fe3c913725ab940887c923eed0d96c1e15f4c199ea23c6b764321336953a",
+      "sourceRoot": "audio",
+      "relativePath": "2006_08_31-trey_turner-bijoubreaks.com_breakthru_2-v0.mp3"
+    },
+    {
+      "id": "asset-eaed7daa06c44a2c",
+      "kind": "artwork",
+      "url": "https://nurevolution.net/wp/wp-content/uploads/2013/03/00-trey_turner-you_dont_know_me.png",
+      "mediaType": "image/png",
+      "byteLength": 786236,
+      "sha256": "9763203cc5689c2636c117c0e029dd7845967ba725d9547dc0f2e7f656784d68",
+      "sourceRoot": "uploads",
+      "relativePath": "2013/03/00-trey_turner-you_dont_know_me.png"
+    },
+    {
+      "id": "asset-ec66a266ab6606bd",
+      "kind": "audio",
+      "url": "https://podcast.nurevolution.net/2002_01_01-fracture-movement-v0.mp3",
+      "mediaType": "audio/mpeg",
+      "byteLength": 136614893,
+      "sha256": "5b5ea24abb71834679110b002112dbd12718a08728b5a8de879ea70e63c5f4ec",
+      "sourceRoot": "audio",
+      "relativePath": "2002_01_01-fracture-movement-v0.mp3"
+    },
+    {
+      "id": "asset-ed214e146163878c",
+      "kind": "audio",
+      "url": "https://podcast.nurevolution.net/2002_08_15-fracture_and_dj_cubed-slipstream-v0.mp3",
+      "mediaType": "audio/mpeg",
+      "byteLength": 134966954,
+      "sha256": "771d84bc2cc4e6c5ab8d1703c13bc5a0e4bcad9524d77da1b742bd33739b25ad",
+      "sourceRoot": "audio",
+      "relativePath": "2002_08_15-fracture_and_dj_cubed-slipstream-v0.mp3"
+    },
+    {
+      "id": "asset-ed7cf593c99a59a8",
+      "kind": "artwork",
+      "url": "https://nurevolution.net/wp/wp-content/uploads/2015/11/2015_11_20-Trey_Turner-Praxis-v0.jpg",
+      "mediaType": "image/jpeg",
+      "byteLength": 597796,
+      "sha256": "2eaff06917ed9e6d6ffa8e9e7ccf880c0d2dadb8d1c6c9c11cd932c34c1401c3",
+      "sourceRoot": "uploads",
+      "relativePath": "2015/11/2015_11_20-Trey_Turner-Praxis-v0.jpg"
+    },
+    {
+      "id": "asset-eece95f342027745",
+      "kind": "artwork",
+      "url": "https://nurevolution.net/wp/wp-content/uploads/2013/06/buildings.jpg",
+      "mediaType": "image/jpeg",
+      "byteLength": 372845,
+      "sha256": "615ae0cb0b63a9cefa50efdd5e327761ff5e2234a622db1efcca55e85c498ec6",
+      "sourceRoot": "uploads",
+      "relativePath": "2013/06/buildings.jpg"
+    },
+    {
+      "id": "asset-f066b52dbbab369e",
+      "kind": "audio",
+      "url": "https://podcast.nurevolution.net/2014_01_01-Trey_Turner-MMXIV-v0.mp3",
+      "mediaType": "audio/mpeg",
+      "byteLength": 108312711,
+      "sha256": "9dd6d7f809f7efe5e79cbdb96230ce716f036f1af6484aa2ae23d38dc88e3847",
+      "sourceRoot": "audio",
+      "relativePath": "2014_01_01-Trey_Turner-MMXIV-v0.mp3"
+    },
+    {
+      "id": "asset-f31631059a7297d6",
+      "kind": "artwork",
+      "url": "https://nurevolution.net/wp/wp-content/uploads/2013/06/staircase_through_glass_windows.jpg",
+      "mediaType": "image/jpeg",
+      "byteLength": 229252,
+      "sha256": "32b004bd708b70ef42dadbcebcaa5c9216c25c1797f4db9dc4fd058ed0e90bd5",
+      "sourceRoot": "uploads",
+      "relativePath": "2013/06/staircase_through_glass_windows.jpg"
+    },
+    {
+      "id": "asset-f47b47e3fbf09500",
+      "kind": "audio",
+      "url": "https://podcast.nurevolution.net/2002_03_21-fracture-live_on_mega_93.3_fm-part1-192kbps.mp3",
+      "mediaType": "audio/mpeg",
+      "byteLength": 58630247,
+      "sha256": "153ab259468fbcb429d75c76acf79f77c89475d8d4b425e4475997ba99753e22",
+      "sourceRoot": "audio",
+      "relativePath": "2002_03_21-fracture-live_on_mega_93.3_fm-part1-192kbps.mp3"
+    },
+    {
+      "id": "asset-f72dfc422712dcb0",
+      "kind": "audio",
+      "url": "https://podcast.nurevolution.net/2001_08_01-fracture-broken-v0.mp3",
+      "mediaType": "audio/mpeg",
+      "byteLength": 129448564,
+      "sha256": "4cc7eb59cb6a04995eca2338ebbde55d37e397de2f4d95b3755c3b972c8ca9f4",
+      "sourceRoot": "audio",
+      "relativePath": "2001_08_01-fracture-broken-v0.mp3"
+    },
+    {
+      "id": "asset-f735ed235fe3eba7",
+      "kind": "artwork",
+      "url": "https://nurevolution.net/wp/wp-content/uploads/2013/06/trey_turner_and_joseph_noctum-the_new_sound-v0.png",
+      "mediaType": "image/png",
+      "byteLength": 979979,
+      "sha256": "ff828361a03c660c09cee58bf4905f0468b2708c96297149277c21df1611b1f8",
+      "sourceRoot": "uploads",
+      "relativePath": "2013/06/trey_turner_and_joseph_noctum-the_new_sound-v0.png"
+    },
+    {
+      "id": "asset-f861b34eac38c3bb",
+      "kind": "audio",
+      "url": "https://podcast.nurevolution.net/2011_09_14-Eazy_Tom-Star_Whores_Live_at_the_Pink_Palace-320kbps.mp3",
+      "mediaType": "audio/mpeg",
+      "byteLength": 133906379,
+      "sha256": "f0c70d87606a56356239e0fa3fbd03ebfcc63b0f1d362586b51b9c705851c539",
+      "sourceRoot": "audio",
+      "relativePath": "2011_09_14-Eazy_Tom-Star_Whores_Live_at_the_Pink_Palace-320kbps.mp3"
+    },
+    {
+      "id": "asset-fe3ffea4e2c932c4",
+      "kind": "artwork",
+      "url": "https://nurevolution.net/wp/wp-content/uploads/2013/03/nu_orange_trans_embiggened_1400x1400.jpg",
+      "mediaType": "image/jpeg",
+      "byteLength": 136643,
+      "sha256": "45cd05a465843daf172f6d7b79c39f12ffe4ea0d8db687eda88e9b9df47d87c1",
+      "sourceRoot": "uploads",
+      "relativePath": "2013/03/nu_orange_trans_embiggened_1400x1400.jpg"
+    }
+  ]
+}

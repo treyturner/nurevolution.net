@@ -1,0 +1,185 @@
+{
+  "schemaVersion": 1,
+  "id": "wp-306",
+  "slug": "trey-turner-and-cody-haynes-plush-session",
+  "status": "published",
+  "publishedAt": "2009-10-08T18:00:47.000Z",
+  "title": "Plush Session",
+  "artist": "Trey Turner & Cody Haynes",
+  "descriptionHtml": "<p>A studio master of what went down at Plush on 9/27.</p>",
+  "guid": "https://nurevolution.net/?p=306",
+  "guidIsPermalink": false,
+  "audioAssetId": "asset-20c29632c840c485",
+  "artworkAssetId": "asset-a5aa9e8a9dcdbfd0",
+  "durationSeconds": 4772,
+  "tracks": [
+    {
+      "position": 1,
+      "artist": "Funkstorung",
+      "title": "Think",
+      "startTime": null
+    },
+    {
+      "position": 2,
+      "artist": "Machine Drum",
+      "title": "0000001",
+      "startTime": null
+    },
+    {
+      "position": 3,
+      "artist": "Eskmo",
+      "title": "San Francisco (The Rhythm)",
+      "startTime": null
+    },
+    {
+      "position": 4,
+      "artist": "Mark Pritchard vs. Om'mas Keith",
+      "title": "Wind It Up",
+      "startTime": null
+    },
+    {
+      "position": 5,
+      "artist": "Stagga",
+      "title": "Lopside (Doshy)",
+      "startTime": null
+    },
+    {
+      "position": 6,
+      "artist": "Hudson Mohawke",
+      "title": "Zooooooooooooooom",
+      "startTime": null
+    },
+    {
+      "position": 7,
+      "artist": "Heralds of Change ft. Olivier Daysoul",
+      "title": "Bopgunn",
+      "startTime": null
+    },
+    {
+      "position": 8,
+      "artist": "Eskmo",
+      "title": "Harmony",
+      "startTime": null
+    },
+    {
+      "position": 9,
+      "artist": "Thom Yorke",
+      "title": "Skip Divided (Modeselektor)",
+      "startTime": null
+    },
+    {
+      "position": 10,
+      "artist": "Daedelus",
+      "title": "Cuts Like An Axe (Eight Frozen Modules)",
+      "startTime": null
+    },
+    {
+      "position": 11,
+      "artist": "Stagga",
+      "title": "The Science of Skank ft. Juakali",
+      "startTime": null
+    },
+    {
+      "position": 12,
+      "artist": "RSD",
+      "title": "Firewall ft. Wilks",
+      "startTime": null
+    },
+    {
+      "position": 13,
+      "artist": "Toasty",
+      "title": "The Knowledge (Untold)",
+      "startTime": null
+    },
+    {
+      "position": 14,
+      "artist": "Ghislain Poirier",
+      "title": "Blazin' (Modeselektor)",
+      "startTime": null
+    },
+    {
+      "position": 15,
+      "artist": "Rustie",
+      "title": "Tempered",
+      "startTime": null
+    },
+    {
+      "position": 16,
+      "artist": "Jaybird",
+      "title": "Work Dat Box",
+      "startTime": null
+    },
+    {
+      "position": 17,
+      "artist": "Landslide vs. Slaughter Mob",
+      "title": "Splurt (Skream)",
+      "startTime": null
+    },
+    {
+      "position": 18,
+      "artist": "Bar 9",
+      "title": "Strung Out",
+      "startTime": null
+    },
+    {
+      "position": 19,
+      "artist": "Rico Tubbs",
+      "title": "Gangsters (Tes La Rok)",
+      "startTime": null
+    },
+    {
+      "position": 20,
+      "artist": "Mochipet",
+      "title": "Marshall Bass Stacks",
+      "startTime": null
+    },
+    {
+      "position": 21,
+      "artist": "Phoenecia",
+      "title": "Odd Job (Otto von Schirach)",
+      "startTime": null
+    },
+    {
+      "position": 22,
+      "artist": "Caspa",
+      "title": "Louder VIP",
+      "startTime": null
+    },
+    {
+      "position": 23,
+      "artist": "Stagga",
+      "title": "Lopside",
+      "startTime": null
+    },
+    {
+      "position": 24,
+      "artist": "Rusko",
+      "title": "Moaners",
+      "startTime": null
+    },
+    {
+      "position": 25,
+      "artist": "Rustie",
+      "title": "Response",
+      "startTime": null
+    },
+    {
+      "position": 26,
+      "artist": "Chasing Shadows",
+      "title": "ILL",
+      "startTime": null
+    },
+    {
+      "position": 27,
+      "artist": "Ed Solo",
+      "title": "Egyptian Horns",
+      "startTime": null
+    },
+    {
+      "position": 28,
+      "artist": "The Black Ghosts",
+      "title": "Full Moon (Marlow)",
+      "startTime": null
+    }
+  ]
+}

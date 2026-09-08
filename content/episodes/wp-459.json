@@ -1,0 +1,113 @@
+{
+  "schemaVersion": 1,
+  "id": "wp-459",
+  "slug": "trey-turner-impulse",
+  "status": "published",
+  "publishedAt": "2018-04-14T01:01:42.000Z",
+  "title": "Impulse",
+  "artist": "Trey Turner",
+  "descriptionHtml": "<p>An hour of bleeding edge drum &amp; bass kicked off with some half-time.</p>",
+  "guid": "https://nurevolution.net/?post_type=one_page_portfolio&p=459",
+  "guidIsPermalink": false,
+  "audioAssetId": "asset-22e61b6a576f3ecf",
+  "artworkAssetId": "asset-ba4a562c6fb310c4",
+  "durationSeconds": 3273,
+  "tracks": [
+    {
+      "position": 1,
+      "artist": "Sinic",
+      "title": "One Makes One",
+      "startTime": null
+    },
+    {
+      "position": 2,
+      "artist": "Glyph & Survey",
+      "title": "El Conquistador",
+      "startTime": null
+    },
+    {
+      "position": 3,
+      "artist": "HøST & Ak:Hash",
+      "title": "Mad City",
+      "startTime": null
+    },
+    {
+      "position": 4,
+      "artist": "Ordure",
+      "title": "Pow",
+      "startTime": null
+    },
+    {
+      "position": 5,
+      "artist": "Chee",
+      "title": "Darker Than Black (Subp Yao)",
+      "startTime": null
+    },
+    {
+      "position": 6,
+      "artist": "Kings of the Rollers",
+      "title": "Burnt Ends",
+      "startTime": null
+    },
+    {
+      "position": 7,
+      "artist": "Black Sun Empire & Pythius",
+      "title": "Scarif (Emperor)",
+      "startTime": null
+    },
+    {
+      "position": 8,
+      "artist": "Wilkinson",
+      "title": "Decompression",
+      "startTime": null
+    },
+    {
+      "position": 9,
+      "artist": "Akov & The Clamps",
+      "title": "Games With God",
+      "startTime": null
+    },
+    {
+      "position": 10,
+      "artist": "Gydra",
+      "title": "Hearing Damage",
+      "startTime": null
+    },
+    {
+      "position": 11,
+      "artist": "Gydra",
+      "title": "Alarm",
+      "startTime": null
+    },
+    {
+      "position": 12,
+      "artist": "Bensley",
+      "title": "Ascension",
+      "startTime": null
+    },
+    {
+      "position": 13,
+      "artist": "Cruk",
+      "title": "Full Tilt",
+      "startTime": null
+    },
+    {
+      "position": 14,
+      "artist": "Gridlok & Hive",
+      "title": "Gunrunner",
+      "startTime": null
+    },
+    {
+      "position": 15,
+      "artist": "Gridlok",
+      "title": "Cybercrime",
+      "startTime": null
+    },
+    {
+      "position": 16,
+      "artist": "Neonlight",
+      "title": "Boom",
+      "startTime": null
+    }
+  ]
+}

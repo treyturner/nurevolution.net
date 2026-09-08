@@ -1,0 +1,317 @@
+{
+  "schemaVersion": 1,
+  "id": "wp-197",
+  "slug": "trey-turner-radio-silenced",
+  "status": "published",
+  "publishedAt": "2012-07-20T18:00:10.000Z",
+  "title": "Radio Silenced",
+  "artist": "Trey Turner",
+  "descriptionHtml": "<p>50 tracks over two hours, with a focus on smooth tempo variations, 8-bit and hip-hop influence.  Special thanks to <a href=\"http://beeple-crap.com/\">Beeple</a> and Cate Mulherin for the artwork.</p>",
+  "guid": "https://nurevolution.net/?p=197",
+  "guidIsPermalink": false,
+  "audioAssetId": "asset-766efa297d3c341c",
+  "artworkAssetId": "asset-569dc869b9011485",
+  "durationSeconds": 7054,
+  "tracks": [
+    {
+      "position": 1,
+      "artist": "dBridge",
+      "title": "So Lonely",
+      "startTime": null
+    },
+    {
+      "position": 2,
+      "artist": "King Midas Sound",
+      "title": "Lost (Flying Lotus)",
+      "startTime": null
+    },
+    {
+      "position": 3,
+      "artist": "Bobby Tank",
+      "title": "Needin Me",
+      "startTime": null
+    },
+    {
+      "position": 4,
+      "artist": "Hudson Mohawke",
+      "title": "Cbat",
+      "startTime": null
+    },
+    {
+      "position": 5,
+      "artist": "Snoop Dogg",
+      "title": "Drop It Like Its Hot ft. Pharrell",
+      "startTime": null
+    },
+    {
+      "position": 6,
+      "artist": "Nadsroic",
+      "title": "Room Mist",
+      "startTime": null
+    },
+    {
+      "position": 7,
+      "artist": "Stephan Jacobs & GriZ",
+      "title": "Pretty Boy",
+      "startTime": null
+    },
+    {
+      "position": 8,
+      "artist": "Freddy Todd & Black Mic",
+      "title": "Dopesauce ft. Fat Ray",
+      "startTime": null
+    },
+    {
+      "position": 9,
+      "artist": "Mad Zach",
+      "title": "Jazz Arpeggiator",
+      "startTime": null
+    },
+    {
+      "position": 10,
+      "artist": "Bobby Tank",
+      "title": "Vanquish",
+      "startTime": null
+    },
+    {
+      "position": 11,
+      "artist": "Taso",
+      "title": "I Get High",
+      "startTime": null
+    },
+    {
+      "position": 12,
+      "artist": "LAS",
+      "title": "Power Surge",
+      "startTime": null
+    },
+    {
+      "position": 13,
+      "artist": "Megalodon",
+      "title": "High Rollin",
+      "startTime": null
+    },
+    {
+      "position": 14,
+      "artist": "Fatboy Slim",
+      "title": "Star 69",
+      "startTime": null
+    },
+    {
+      "position": 15,
+      "artist": "Freddy Todd & Black Mic",
+      "title": "dragonFLY",
+      "startTime": null
+    },
+    {
+      "position": 16,
+      "artist": "Son of Kick",
+      "title": "From Here (Night Drugs)",
+      "startTime": null
+    },
+    {
+      "position": 17,
+      "artist": "WAFA",
+      "title": "Choir Crunch (Bubble Machine)",
+      "startTime": null
+    },
+    {
+      "position": 18,
+      "artist": "Odea",
+      "title": "Boar",
+      "startTime": null
+    },
+    {
+      "position": 19,
+      "artist": "Odea",
+      "title": "Chatty",
+      "startTime": null
+    },
+    {
+      "position": 20,
+      "artist": "Bobby Tank",
+      "title": "Plug",
+      "startTime": null
+    },
+    {
+      "position": 21,
+      "artist": "Kahn",
+      "title": "Illy",
+      "startTime": null
+    },
+    {
+      "position": 22,
+      "artist": "Rustie",
+      "title": "All Nite",
+      "startTime": null
+    },
+    {
+      "position": 23,
+      "artist": "OhPlus",
+      "title": "An Artificial Paradise",
+      "startTime": null
+    },
+    {
+      "position": 24,
+      "artist": "Pieraldi",
+      "title": "PDG",
+      "startTime": null
+    },
+    {
+      "position": 25,
+      "artist": "Depone",
+      "title": "Gangsta Shit",
+      "startTime": null
+    },
+    {
+      "position": 26,
+      "artist": "Taso",
+      "title": "Dilladub",
+      "startTime": null
+    },
+    {
+      "position": 27,
+      "artist": "Eskmo",
+      "title": "RedFog",
+      "startTime": null
+    },
+    {
+      "position": 28,
+      "artist": "Doshy",
+      "title": "Chip (Curtamos)",
+      "startTime": null
+    },
+    {
+      "position": 29,
+      "artist": "Demokracy",
+      "title": "Zeroth Law",
+      "startTime": null
+    },
+    {
+      "position": 30,
+      "artist": "The Electric",
+      "title": "Toot Toot (Daddy Vad 12\")",
+      "startTime": null
+    },
+    {
+      "position": 31,
+      "artist": "The Electric",
+      "title": "Toot Toot (Zed's Dead)",
+      "startTime": null
+    },
+    {
+      "position": 32,
+      "artist": "Monolithium",
+      "title": "Selfish Lil Crunk",
+      "startTime": null
+    },
+    {
+      "position": 33,
+      "artist": "Freddy Todd & Black Mic",
+      "title": "Star Trek Shit",
+      "startTime": null
+    },
+    {
+      "position": 34,
+      "artist": "Fat Pat",
+      "title": "Packed Man",
+      "startTime": null
+    },
+    {
+      "position": 35,
+      "artist": "Hovatron",
+      "title": "sUperSoaker (Doshy)",
+      "startTime": null
+    },
+    {
+      "position": 36,
+      "artist": "ill.Gates",
+      "title": "Grinder ft. Masia One",
+      "startTime": null
+    },
+    {
+      "position": 37,
+      "artist": "ill.Gates",
+      "title": "Crystal Math",
+      "startTime": null
+    },
+    {
+      "position": 38,
+      "artist": "Mad Zach",
+      "title": "Falling Into The Mine",
+      "startTime": null
+    },
+    {
+      "position": 39,
+      "artist": "Hovatron",
+      "title": "Delorean Driver ft. Resun",
+      "startTime": null
+    },
+    {
+      "position": 40,
+      "artist": "Hovatron",
+      "title": "Gas Brake Dippin (Remix)",
+      "startTime": null
+    },
+    {
+      "position": 41,
+      "artist": "ill.Gates",
+      "title": "Otoro",
+      "startTime": null
+    },
+    {
+      "position": 42,
+      "artist": "Hovatron",
+      "title": "Gold Star Radiation (Cryptical)",
+      "startTime": null
+    },
+    {
+      "position": 43,
+      "artist": "Hovatron",
+      "title": "Already Know (Remix)",
+      "startTime": null
+    },
+    {
+      "position": 44,
+      "artist": "Bobby Tank",
+      "title": "Vanquish (Kid Kanevil)",
+      "startTime": null
+    },
+    {
+      "position": 45,
+      "artist": "Demokracy",
+      "title": "Zone",
+      "startTime": null
+    },
+    {
+      "position": 46,
+      "artist": "Demokracy",
+      "title": "Deadhead",
+      "startTime": null
+    },
+    {
+      "position": 47,
+      "artist": "Greg Reve",
+      "title": "Decoy (ill.Gates & Dov)",
+      "startTime": null
+    },
+    {
+      "position": 48,
+      "artist": "Stephan Jacobs",
+      "title": "Izzo ft. Smash LeFunk",
+      "startTime": null
+    },
+    {
+      "position": 49,
+      "artist": "VENT",
+      "title": "Eush!",
+      "startTime": null
+    },
+    {
+      "position": 50,
+      "artist": "Mochipet",
+      "title": "Lazy Day ft. Kflay (Starting Teeth)",
+      "startTime": null
+    }
+  ]
+}

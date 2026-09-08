@@ -1,0 +1,131 @@
+{
+  "schemaVersion": 1,
+  "id": "wp-308",
+  "slug": "trey-turner-and-cody-haynes-better-late-than-never",
+  "status": "published",
+  "publishedAt": "2009-07-31T18:00:41.000Z",
+  "title": "Better Late Than Never",
+  "artist": "Trey Turner & Cody Haynes",
+  "descriptionHtml": "<p>Tech and glitchy midtempo breakbeats highlighted by some interesting MC work</p>",
+  "guid": "https://nurevolution.net/?p=308",
+  "guidIsPermalink": false,
+  "audioAssetId": "asset-64aad6f047990931",
+  "artworkAssetId": "asset-f31631059a7297d6",
+  "durationSeconds": 3880,
+  "tracks": [
+    {
+      "position": 1,
+      "artist": "Divinci",
+      "title": "Gnat (Gnastie)",
+      "startTime": 0
+    },
+    {
+      "position": 2,
+      "artist": "Modeselektor",
+      "title": "Das Claudia Woelkey Massa",
+      "startTime": 261.89415
+    },
+    {
+      "position": 3,
+      "artist": "East Flatbush Project",
+      "title": "Tried by 12 (Autechre)",
+      "startTime": 448.320839
+    },
+    {
+      "position": 4,
+      "artist": "Take",
+      "title": "Make Believe (Dimlite)",
+      "startTime": 635.8978
+    },
+    {
+      "position": 5,
+      "artist": "Sixtoo",
+      "title": "Jackals and Viupers in Envy of Man, Pt. 10",
+      "startTime": 878.947505
+    },
+    {
+      "position": 6,
+      "artist": "Ra",
+      "title": "Let The Wxfdswxc Hit'Em",
+      "startTime": 1063.110816
+    },
+    {
+      "position": 7,
+      "artist": "The Disciple Grin",
+      "title": "Yoke",
+      "startTime": 1174.015555
+    },
+    {
+      "position": 8,
+      "artist": "Bit Meddler",
+      "title": "Whitelabels",
+      "startTime": 1380.026122
+    },
+    {
+      "position": 9,
+      "artist": "Kristuit Salu",
+      "title": "Conceptial Devaihdn",
+      "startTime": 1445.573809
+    },
+    {
+      "position": 10,
+      "artist": "Crystal Distortion",
+      "title": "Hypnotism Hop",
+      "startTime": 1504.153673
+    },
+    {
+      "position": 11,
+      "artist": "Si Begg",
+      "title": "Logan's Run 3000",
+      "startTime": 1770.209024
+    },
+    {
+      "position": 12,
+      "artist": "Si Begg",
+      "title": "Control This Thing",
+      "startTime": 2013.394761
+    },
+    {
+      "position": 13,
+      "artist": "BreakBeatBuddha",
+      "title": "Dissent",
+      "startTime": 2291.738049
+    },
+    {
+      "position": 14,
+      "artist": "Modeselektor",
+      "title": "The Dark Side of the Sun ft. Puppetmastaz",
+      "startTime": 2593.422561
+    },
+    {
+      "position": 15,
+      "artist": "Cabbage Boy",
+      "title": "Cutting Japan",
+      "startTime": 2804.59077
+    },
+    {
+      "position": 16,
+      "artist": "Bil Bless",
+      "title": "CheeseHOG",
+      "startTime": 2902.468366
+    },
+    {
+      "position": 17,
+      "artist": "DJ Rupture",
+      "title": "Bonechip",
+      "startTime": 3135.498298
+    },
+    {
+      "position": 18,
+      "artist": "El-P",
+      "title": "Dead Disnee",
+      "startTime": 3351.989432
+    },
+    {
+      "position": 19,
+      "artist": "Shadow Huntaz",
+      "title": "Medic",
+      "startTime": 3582.450679
+    }
+  ]
+}

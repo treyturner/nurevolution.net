@@ -1,0 +1,83 @@
+{
+  "schemaVersion": 1,
+  "id": "wp-281",
+  "slug": "joseph-noctum-african-red-bush",
+  "status": "published",
+  "publishedAt": "2010-08-23T18:00:04.000Z",
+  "title": "African Red Bush",
+  "artist": "Joseph Noctum",
+  "descriptionHtml": "<p>A good friend steps up to the nurevolution podcast for the first time. Thirty-five minutes of super chill breakbeats to better your perspective on life.</p>",
+  "guid": "https://nurevolution.net/?p=281",
+  "guidIsPermalink": false,
+  "audioAssetId": "asset-7ada051307c78688",
+  "artworkAssetId": "asset-c4f7f3a89ffb9459",
+  "durationSeconds": 2147,
+  "tracks": [
+    {
+      "position": 1,
+      "artist": "Roland Klinkenbergsdf",
+      "title": "Dusty Horizon Interlude",
+      "startTime": null
+    },
+    {
+      "position": 2,
+      "artist": "Miika Kuisma",
+      "title": "Trying My New Wings",
+      "startTime": null
+    },
+    {
+      "position": 3,
+      "artist": "Thievery Corporation",
+      "title": "Facing East",
+      "startTime": null
+    },
+    {
+      "position": 4,
+      "artist": "Jef Stott",
+      "title": "Funky Nawari (Drumspyder’s Midnight Snack Wrap Up)",
+      "startTime": null
+    },
+    {
+      "position": 5,
+      "artist": "Sabo & Zeb",
+      "title": "Con Chill",
+      "startTime": null
+    },
+    {
+      "position": 6,
+      "artist": "Nightmares On Wax",
+      "title": "I Am You (Negghead Remix)",
+      "startTime": null
+    },
+    {
+      "position": 7,
+      "artist": "Mo' Horizons",
+      "title": "So Ma Guisee",
+      "startTime": null
+    },
+    {
+      "position": 8,
+      "artist": "Dezaarate",
+      "title": "The 79 Years",
+      "startTime": null
+    },
+    {
+      "position": 9,
+      "artist": "Culprit 1",
+      "title": "Strings Outro",
+      "startTime": null
+    },
+    {
+      "position": 10,
+      "artist": "Stac",
+      "title": "Balls Bounce (Bonobo Remix)",
+      "startTime": null
+    },
+    {
+      "position": 11,
+      "artist": "Urban Myth Club",
+      "title": "Breathe",
+      "startTime": null
+    }
+  ]
+}

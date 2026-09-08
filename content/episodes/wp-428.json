@@ -1,0 +1,101 @@
+{
+  "schemaVersion": 1,
+  "id": "wp-428",
+  "slug": "trey-turner-cody-haynes-archived-transmission",
+  "status": "published",
+  "publishedAt": "2016-08-28T18:00:32.000Z",
+  "title": "Archived Transmission",
+  "artist": "Trey Turner & Cody Haynes",
+  "descriptionHtml": "<p>Here’s a midtempo and nuskool breakbeat set imagined 12 years ago by Cody and Trey but never released. We gave it a studio mixdown treatment this month and are putting it out to show not only how far breakbeat has come in the past decade, but how nuskool set the tone for what was to come.</p>",
+  "guid": "https://nurevolution.net/?post_type=one_page_portfolio&p=428",
+  "guidIsPermalink": false,
+  "audioAssetId": "asset-58818eef16928111",
+  "artworkAssetId": "asset-be4e37f201b9c6e4",
+  "durationSeconds": 4139,
+  "tracks": [
+    {
+      "position": 1,
+      "artist": "Tipper",
+      "title": "Tip Hop",
+      "startTime": 0
+    },
+    {
+      "position": 2,
+      "artist": "Hive",
+      "title": "Sci-Clone",
+      "startTime": 189.79576
+    },
+    {
+      "position": 3,
+      "artist": "Adam Freeland",
+      "title": "Fear",
+      "startTime": 390.282268
+    },
+    {
+      "position": 4,
+      "artist": "Terminalhead",
+      "title": "No Conflict",
+      "startTime": 606.282268
+    },
+    {
+      "position": 5,
+      "artist": "Leftfield",
+      "title": "Inspection (Check One)",
+      "startTime": 864.709275
+    },
+    {
+      "position": 6,
+      "artist": "Webcore",
+      "title": "Control Freak",
+      "startTime": 1116.826168
+    },
+    {
+      "position": 7,
+      "artist": "Way Out West",
+      "title": "King of the Funk",
+      "startTime": 1380.711474
+    },
+    {
+      "position": 8,
+      "artist": "Lunatic Calm",
+      "title": "Centista (Elite Force)",
+      "startTime": 1678.96898
+    },
+    {
+      "position": 9,
+      "artist": "Chris Carter",
+      "title": "Siren",
+      "startTime": 2074.115805
+    },
+    {
+      "position": 10,
+      "artist": "Evil Nine",
+      "title": "Cakehole (Midnight Son)",
+      "startTime": 2379.590612
+    },
+    {
+      "position": 11,
+      "artist": "Fine Cut Bodies",
+      "title": "Trekk Far",
+      "startTime": 2791.099909
+    },
+    {
+      "position": 12,
+      "artist": "Amb",
+      "title": "Moxa (Raster's Rewire)",
+      "startTime": 3157.854648
+    },
+    {
+      "position": 13,
+      "artist": "2nd Gen",
+      "title": "And/Or (Buckfunk 3000)",
+      "startTime": 3626.852947
+    },
+    {
+      "position": 14,
+      "artist": "Leftfield & Roots Manuva",
+      "title": " Dusted (Tipper)",
+      "startTime": 3936.473446
+    }
+  ]
+}

@@ -1,0 +1,107 @@
+{
+  "schemaVersion": 1,
+  "id": "wp-273",
+  "slug": "trey-turner-slow-your-roll",
+  "status": "published",
+  "publishedAt": "2011-01-20T18:00:17.000Z",
+  "title": "Slow Your Roll",
+  "artist": "Trey Turner",
+  "descriptionHtml": "<p>As handed out at Freezer Burn 2011: A 45 minute journey begging the listener to consider the unique vibes offered by lower and midrange tempos. With a touch of dubstep flavor but keeping his recent 8-bit influence intact, Trey offers another piece of mind to the fans.</p>",
+  "guid": "https://nurevolution.net/?p=273",
+  "guidIsPermalink": false,
+  "audioAssetId": "asset-cb30481ecf597f7d",
+  "artworkAssetId": "asset-133e20b72a933482",
+  "durationSeconds": 2664,
+  "tracks": [
+    {
+      "position": 1,
+      "artist": "Super Smoky Soul",
+      "title": "Huge Magical Vision",
+      "startTime": 0
+    },
+    {
+      "position": 2,
+      "artist": "Ismael Guziel",
+      "title": "Bamboo Forest ft. Louis C.K.",
+      "startTime": 46.409342
+    },
+    {
+      "position": 3,
+      "artist": "KidKanevil",
+      "title": "Lantern 1",
+      "startTime": 290.474104
+    },
+    {
+      "position": 4,
+      "artist": "Vent",
+      "title": "Evolution",
+      "startTime": 391.674898
+    },
+    {
+      "position": 5,
+      "artist": "Venetian Snares",
+      "title": "Black Sabbath",
+      "startTime": 610.788708
+    },
+    {
+      "position": 6,
+      "artist": "Jon Hopkins",
+      "title": "Vessel",
+      "startTime": 780.586304
+    },
+    {
+      "position": 7,
+      "artist": "STS9",
+      "title": "Shock Doctrine (Eskmo)",
+      "startTime": 991.051973
+    },
+    {
+      "position": 8,
+      "artist": "Bil Bless",
+      "title": "How Live Is Live",
+      "startTime": 1191.737642
+    },
+    {
+      "position": 9,
+      "artist": "Mimosa",
+      "title": "Flux For Life",
+      "startTime": 1363.866962
+    },
+    {
+      "position": 10,
+      "artist": "Rustie",
+      "title": "Bad Science",
+      "startTime": 1483.04449
+    },
+    {
+      "position": 11,
+      "artist": "Free The Robots",
+      "title": "Mental Universe",
+      "startTime": 1648.57551
+    },
+    {
+      "position": 12,
+      "artist": "Eskmo",
+      "title": "Gold & Stone",
+      "startTime": 1884.464422
+    },
+    {
+      "position": 13,
+      "artist": "Shlohmo",
+      "title": "Hot Boxing The Cockpit",
+      "startTime": 2098.877846
+    },
+    {
+      "position": 14,
+      "artist": "Pixelord",
+      "title": "Boss Worm (Jameszoo Roparrot Recompose)",
+      "startTime": 2286.040227
+    },
+    {
+      "position": 15,
+      "artist": "B-Ju",
+      "title": "Metronoma",
+      "startTime": 2455.285193
+    }
+  ]
+}

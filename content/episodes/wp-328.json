@@ -1,0 +1,101 @@
+{
+  "schemaVersion": 1,
+  "id": "wp-328",
+  "slug": "trey-turner-g3-mix-session",
+  "status": "published",
+  "publishedAt": "2002-03-01T18:00:36.000Z",
+  "title": "g3 Mix Session",
+  "artist": "Trey Turner",
+  "descriptionHtml": "<p>Funky and nuskool breakbeat</p>",
+  "guid": "https://nurevolution.net/?p=328",
+  "guidIsPermalink": false,
+  "audioAssetId": "asset-37787c9351c33879",
+  "artworkAssetId": "asset-68690678f31c4a41",
+  "durationSeconds": 4396,
+  "tracks": [
+    {
+      "position": 1,
+      "artist": "Banco de Gaia",
+      "title": "Drunk as a Monk (Rabbit in the Moon)",
+      "startTime": 0
+    },
+    {
+      "position": 2,
+      "artist": "Bushwacka",
+      "title": "Monster",
+      "startTime": 360.453333
+    },
+    {
+      "position": 3,
+      "artist": "Peacemaker",
+      "title": "Crisis",
+      "startTime": 673.346666
+    },
+    {
+      "position": 4,
+      "artist": "Rennie Pilgrem & BLIM",
+      "title": "Eskimo (Yellow Snow)",
+      "startTime": 957.786666
+    },
+    {
+      "position": 5,
+      "artist": "Scissorkicks",
+      "title": "Livin' For Kicks",
+      "startTime": 1270.666666
+    },
+    {
+      "position": 6,
+      "artist": "Stirfry",
+      "title": "Breakin' in the Streets",
+      "startTime": 1540.866666
+    },
+    {
+      "position": 7,
+      "artist": "Chris Carter",
+      "title": "Noncompos",
+      "startTime": 1867.959999
+    },
+    {
+      "position": 8,
+      "artist": "SubHQ",
+      "title": "The Abyss",
+      "startTime": 2209.279999
+    },
+    {
+      "position": 9,
+      "artist": "Player One",
+      "title": "Into The Darkness",
+      "startTime": 2507.946666
+    },
+    {
+      "position": 10,
+      "artist": "Atomic Hooligan",
+      "title": "Club Shaker",
+      "startTime": 2778.159999
+    },
+    {
+      "position": 11,
+      "artist": "Aquasky vs. Masterblaster",
+      "title": "777",
+      "startTime": 3083.919999
+    },
+    {
+      "position": 12,
+      "artist": "Meat Katie",
+      "title": "rotten dot com",
+      "startTime": 3467.906666
+    },
+    {
+      "position": 13,
+      "artist": "Spider Mite",
+      "title": "Three Guesser",
+      "startTime": 3709.693333
+    },
+    {
+      "position": 14,
+      "artist": "Mechanoise Sound System",
+      "title": "Psychotic Break",
+      "startTime": 4022.586666
+    }
+  ]
+}

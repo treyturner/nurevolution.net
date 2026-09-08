@@ -1,0 +1,143 @@
+{
+  "schemaVersion": 1,
+  "id": "wp-389",
+  "slug": "trey-turner-phoning-it-in",
+  "status": "published",
+  "publishedAt": "2013-07-18T05:38:59.000Z",
+  "title": "Phoning It In",
+  "artist": "Trey Turner",
+  "descriptionHtml": "<p>An eclectic midtempo breaks mix presented as a gift to participants at Burning Flipside 2013.</p>",
+  "guid": "https://nurevolution.net/?post_type=one_page_portfolio&p=389",
+  "guidIsPermalink": false,
+  "audioAssetId": "asset-3f430484c0c8acb0",
+  "artworkAssetId": "asset-9516b8c25ea9409e",
+  "durationSeconds": 3588,
+  "tracks": [
+    {
+      "position": 1,
+      "artist": "Rudy Zygadlo",
+      "title": "Melpomene",
+      "startTime": 0
+    },
+    {
+      "position": 2,
+      "artist": "Moonbase Commander",
+      "title": "Ekisaitobaiku",
+      "startTime": 225.0339
+    },
+    {
+      "position": 3,
+      "artist": "Krampfhaft",
+      "title": "Makin' Magic",
+      "startTime": 404.471587
+    },
+    {
+      "position": 4,
+      "artist": "Funckarma",
+      "title": "Nays of Dight (Herrmutt Lobby)",
+      "startTime": 595.710771
+    },
+    {
+      "position": 5,
+      "artist": "Doshy",
+      "title": "Phases",
+      "startTime": 730.899184
+    },
+    {
+      "position": 6,
+      "artist": "Doshy",
+      "title": "Toys",
+      "startTime": 856.755851
+    },
+    {
+      "position": 7,
+      "artist": "Krampfhaft",
+      "title": "Cork",
+      "startTime": 924.266735
+    },
+    {
+      "position": 8,
+      "artist": "Eloq",
+      "title": "Inner G",
+      "startTime": 1141.376236
+    },
+    {
+      "position": 9,
+      "artist": "Two Fingers",
+      "title": "Vengeance Rhythm (KOAN Sound)",
+      "startTime": 1293.247234
+    },
+    {
+      "position": 10,
+      "artist": "Damscray",
+      "title": "Smellin Feelin (+verb)",
+      "startTime": 1474.084332
+    },
+    {
+      "position": 11,
+      "artist": "Eloq",
+      "title": "C'mon",
+      "startTime": 1569.663765
+    },
+    {
+      "position": 12,
+      "artist": "Koloah",
+      "title": "Mirage",
+      "startTime": 1752.642336
+    },
+    {
+      "position": 13,
+      "artist": "Aquadrop",
+      "title": "Street Player (Instrumental)",
+      "startTime": 1989.361882
+    },
+    {
+      "position": 14,
+      "artist": "TNGHT",
+      "title": "Acrylics",
+      "startTime": 2138.415533
+    },
+    {
+      "position": 15,
+      "artist": "Rudy Zygadlo",
+      "title": "Arrows",
+      "startTime": 2357.814603
+    },
+    {
+      "position": 16,
+      "artist": "Eloq",
+      "title": "Last Night A Random Girl (She Saved My Life)",
+      "startTime": 2542.083923
+    },
+    {
+      "position": 17,
+      "artist": "Mr. Rogers",
+      "title": "Too Many Notes",
+      "startTime": 2727.825238
+    },
+    {
+      "position": 18,
+      "artist": "Lakritze",
+      "title": "Tropical Meat",
+      "startTime": 2904.088911
+    },
+    {
+      "position": 19,
+      "artist": "Kelpe",
+      "title": "Margins",
+      "startTime": 3040.250838
+    },
+    {
+      "position": 20,
+      "artist": "Kelpe",
+      "title": "No Film",
+      "startTime": 3190.801586
+    },
+    {
+      "position": 21,
+      "artist": "Kelpe",
+      "title": "Goldfishing",
+      "startTime": 3364.988253
+    }
+  ]
+}

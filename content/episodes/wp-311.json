@@ -1,0 +1,101 @@
+{
+  "schemaVersion": 1,
+  "id": "wp-311",
+  "slug": "eazytom-bouche-dincendie-remix-finale",
+  "status": "published",
+  "publishedAt": "2009-06-22T18:00:35.000Z",
+  "title": "Bouche d'Incendie Remix Finale",
+  "artist": "EazyTom",
+  "descriptionHtml": "<p>Midtempo nuskool breakbeat</p>",
+  "guid": "https://nurevolution.net/?p=311",
+  "guidIsPermalink": false,
+  "audioAssetId": "asset-c495a02dc94d23d4",
+  "artworkAssetId": "asset-690d10fab2a837e4",
+  "durationSeconds": 3398,
+  "tracks": [
+    {
+      "position": 1,
+      "artist": "SeventhSwami",
+      "title": "Praise And War Ship (Genji)",
+      "startTime": null
+    },
+    {
+      "position": 2,
+      "artist": "EPROM",
+      "title": "64 Bytes (Weaponshouse)",
+      "startTime": null
+    },
+    {
+      "position": 3,
+      "artist": "Minitronic",
+      "title": "Ami",
+      "startTime": null
+    },
+    {
+      "position": 4,
+      "artist": "SeventhSwami",
+      "title": "Dance Of The Apparatuses",
+      "startTime": null
+    },
+    {
+      "position": 5,
+      "artist": "SeventhSwami",
+      "title": "Forever You Forever Me",
+      "startTime": null
+    },
+    {
+      "position": 6,
+      "artist": "Freeland",
+      "title": "Do You (PANTyRAiD)",
+      "startTime": null
+    },
+    {
+      "position": 7,
+      "artist": ":Metaphor:",
+      "title": "Clear the Stagnation",
+      "startTime": null
+    },
+    {
+      "position": 8,
+      "artist": "Heoyka",
+      "title": "Alien Gibberish",
+      "startTime": null
+    },
+    {
+      "position": 9,
+      "artist": "Heyoka",
+      "title": "Galactic Tea Pad",
+      "startTime": null
+    },
+    {
+      "position": 10,
+      "artist": "Heyoka",
+      "title": "Tangolypto",
+      "startTime": null
+    },
+    {
+      "position": 11,
+      "artist": ":Metaphor:",
+      "title": "Beez in the Birds ft. Kristen",
+      "startTime": null
+    },
+    {
+      "position": 12,
+      "artist": "Melchior Sultana",
+      "title": "Maltese Nights",
+      "startTime": null
+    },
+    {
+      "position": 13,
+      "artist": "Gramatik",
+      "title": "Loungin'",
+      "startTime": null
+    },
+    {
+      "position": 14,
+      "artist": "SeventhSwami",
+      "title": "Praise And War Ship",
+      "startTime": null
+    }
+  ]
+}

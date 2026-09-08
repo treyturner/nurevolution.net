@@ -1,0 +1,83 @@
+{
+  "schemaVersion": 1,
+  "id": "wp-330",
+  "slug": "fracture-movement",
+  "status": "published",
+  "publishedAt": "2002-01-01T18:00:27.000Z",
+  "title": "Movement",
+  "artist": "Fracture",
+  "descriptionHtml": "<p>Progressive breaks</p>",
+  "guid": "https://nurevolution.net/?p=330",
+  "guidIsPermalink": false,
+  "audioAssetId": "asset-ec66a266ab6606bd",
+  "artworkAssetId": "asset-7a07eed886d30eab",
+  "durationSeconds": 4795,
+  "tracks": [
+    {
+      "position": 1,
+      "artist": "Way Out West",
+      "title": "Earth (Waveform)",
+      "startTime": 0
+    },
+    {
+      "position": 2,
+      "artist": "Miro",
+      "title": "Paradise (Farmatronic)",
+      "startTime": 591.08
+    },
+    {
+      "position": 3,
+      "artist": "Amiel",
+      "title": "The Chase (Hi-Fi Bugs)",
+      "startTime": 972.706667
+    },
+    {
+      "position": 4,
+      "artist": "Gus Gus",
+      "title": "Purple",
+      "startTime": 1339.706667
+    },
+    {
+      "position": 5,
+      "artist": "Beber & Tamra",
+      "title": "You Wonder (Starecase)",
+      "startTime": 1956.24
+    },
+    {
+      "position": 6,
+      "artist": "Jan Johnston",
+      "title": "As The Cracks Appear (Humate)",
+      "startTime": 2359.893333
+    },
+    {
+      "position": 7,
+      "artist": "Clanger",
+      "title": "Seadog (Way Out West)",
+      "startTime": 2736.04
+    },
+    {
+      "position": 8,
+      "artist": "Austin Leeds",
+      "title": "Nutmeg (The Light vs. Proper Filthy Naughty)",
+      "startTime": 3062.64
+    },
+    {
+      "position": 9,
+      "artist": "Freefall feat. Jan Johnston",
+      "title": "Skydive (Hi-Fi Bugs)",
+      "startTime": 3458.92
+    },
+    {
+      "position": 10,
+      "artist": "Hi-Fi Bugs",
+      "title": "Lydian and the Dinosaur",
+      "startTime": 3884.24
+    },
+    {
+      "position": 11,
+      "artist": "Private Taste",
+      "title": "First (Ashtrax)",
+      "startTime": 4442.4
+    }
+  ]
+}
