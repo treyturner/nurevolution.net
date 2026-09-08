@@ -1,10 +1,10 @@
 # Nurevolution roadmap
 
-Status: M0–M3 implemented and locally verified. M0–M2 also passed CI; M2 is merged to `main` through PR #1. M3 is implemented on `feat/m3-podcast-rss`; its remote CI and public deployment checks are pending. M4–M9 implementation has not started.
+Status: M0–M3 implemented, locally verified, and covered by passing main CI. M2 and M3 are merged to `main` through PRs #1 and #2. M4 is planned and ready for implementation, with the owner's mobile layout review due during implementation. M4–M9 implementation and public deployment checks have not started.
 
 Updated: 2026-09-08.
 
-Inputs: [project bootstrap](docs/BOOTSTRAP.md), the owner's product answers dated 2026-09-06, M0/M1 decisions and audit dated 2026-09-07, and M2 implementation/Praxis evidence dated 2026-09-08.
+Inputs: [project bootstrap](docs/BOOTSTRAP.md), the owner's product answers dated 2026-09-06, M0/M1 decisions and audit dated 2026-09-07, and M2 implementation/Praxis evidence, M3 completion/merge, and M4 planning evidence dated 2026-09-08.
 
 This document defines outcomes, dependencies, and acceptance evidence from which to write implementation-grade milestone plans. M0 has audited the archive and frozen production feed; production infrastructure remains unaudited. Newer owner decisions recorded here take precedence over conflicting defaults in the bootstrap.
 
@@ -218,7 +218,7 @@ M0 and M1 can progress independently. M3 and M4 share M2's model. Infrastructure
 
 ### M3 — Replacement podcast RSS
 
-**Completed locally on 2026-09-08:** [M03-podcast-rss.md](docs/milestones/M03-podcast-rss.md#completion-evidence), implementation commit `5a244d4` on `feat/m3-podcast-rss`. The complete 55-item RSS, verified show settings, both legacy aliases, GET/HEAD/304 behavior, stable weak ETags, and independent offline feed gate are implemented. `CI=1 pnpm verify` passed with 187 application tests, 12 migration tests, and 37 browser checks; coverage exceeds all existing thresholds. Historical episode/media identities and frozen source/report hashes remain unchanged. M3 remote CI has not run. Public validator/client and media-delivery acceptance remain M5/M6 work; M4 can use the feed and must supply historical page redirects.
+**Completed and merged on 2026-09-08:** [M03-podcast-rss.md](docs/milestones/M03-podcast-rss.md#completion-evidence). PR [#2](https://github.com/treyturner/nurevolution.net/pull/2) was rebased and merged to `main` at `fc0f261`; [main CI passed](https://github.com/treyturner/nurevolution.net/actions/runs/34289605132). The complete 55-item RSS, verified show settings, both legacy aliases, GET/HEAD/304 behavior, stable weak ETags, and independent offline feed gate are implemented. A fresh merged-main `CI=1 pnpm verify` passed with 187 application tests, 12 migration tests, and 37 browser checks; coverage exceeds all existing thresholds. Historical episode/media identities and frozen source/report hashes remain unchanged. Public validator/client and media-delivery acceptance remain M5/M6 work; M4 can use the feed and must supply historical page redirects.
 
 **Outcome:** produce the complete compatible podcast feed without WordPress or podPress at runtime.
 
@@ -238,6 +238,8 @@ Run `pnpm verify`. External validator/client results are provisional until repea
 
 ### M4 — Initial archive player and responsive dark design
 
+**Planned on 2026-09-08:** [M04-archive-player.md](docs/milestones/M04-archive-player.md), based on merged M3 and a passing canonical baseline. No product answer blocks implementation. The plan specifies SSR pages, one native persistent player, navigation/race behavior, static tracklists, same-origin streaming downloads, legacy redirects, and integrated tests. D06's choice between working stacked and tabbed mobile layouts remains an implementation review checkpoint. Manual device observations and later public delivery checks must be recorded separately from automated results.
+
 **Outcome:** satisfy R1's website requirements with the imported archive.
 
 **Deliverables:** canonical episode pages, shared persistent player, episode list, artwork display, static tracklists, episode downloads, RSS link, minimal dark visual system, mobile prototype decision, and known legacy episode redirects.
@@ -250,6 +252,7 @@ Run `pnpm verify`. External validator/client results are provisional until repea
 - Synchronize canonical URL, selected episode, metadata, artwork, and tracklist. Do not replace the audio element on each route change.
 - Display available tracklists without requiring timing or interactivity. Provide clear empty/loading/error states and recoverable media failures.
 - Provide real download behavior, not merely an anchor whose `download` attribute is ignored by the chosen cross-origin media host. Use an appropriate media response/header strategy and verify filenames with punctuation.
+- Use `/downloads/<saved-slug>` for same-origin attachment downloads in M4, streaming the canonical media with bounded resource use. M5 must retain that URL/filename contract when offloading downloads to the droplet's file-serving layer; playback and RSS enclosure URLs remain unchanged.
 - Implement reasonable redirects from M0's known episode paths; unknown paths receive ordinary not-found behavior rather than guessed episode redirects.
 - Let the owner try stacked and tabbed mobile layouts with real long titles/tracklists; record the chosen approach before finalizing.
 

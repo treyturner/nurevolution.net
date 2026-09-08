@@ -1,6 +1,6 @@
 # M3 — Replacement podcast RSS
 
-Status: **Implemented and locally verified** on 2026-09-08, on `feat/m3-podcast-rss`. The original plan is retained below; actual results and a bounded date-precision clarification are recorded in [completion evidence](#completion-evidence). Production cutover and public directory/client checks remain M5/M6 work.
+Status: **Implemented, verified, and merged** on 2026-09-08. PR [#2](https://github.com/treyturner/nurevolution.net/pull/2) was rebased and merged to `main` at `fc0f261`; [main CI passed](https://github.com/treyturner/nurevolution.net/actions/runs/34289605132). The original plan and branch-commit evidence are retained below; actual results and a bounded date-precision clarification are recorded in [completion evidence](#completion-evidence). Production cutover and public directory/client checks remain M5/M6 work.
 
 Roadmap: [M3](../../ROADMAP.md#m3--replacement-podcast-rss). Prerequisites: [M2 content and completion evidence](M02-canonical-content.md), [M0 audit](../migration/MIGRATION-AUDIT.md), and [BOOTSTRAP.md](../BOOTSTRAP.md). Supplemental source evidence: [M03-feed-reference.json](evidence/M03-feed-reference.json).
 
@@ -213,7 +213,9 @@ M3 is complete when the canonical metadata extension, serializer, route/aliases,
 
 ## Completion evidence
 
-Verified implementation commit: **`5a244d461522e0eb182218d19151e1776d7e5b14`** on `feat/m3-podcast-rss`. This completion record follows in a documentation-only commit. The plan was committed first as `ad17bc3`, followed by metadata/projection (`4c8a4a5`), serialization and independent assertions (`bcf729c`), HTTP/aliases (`6f6644c`), and the offline build gate and guide (`5a244d4`). No M3 remote CI run or production deployment is claimed.
+Verified implementation commit: **`5a244d461522e0eb182218d19151e1776d7e5b14`** on `feat/m3-podcast-rss`. This completion record follows in a documentation-only commit. The plan was committed first as `ad17bc3`, followed by metadata/projection (`4c8a4a5`), serialization and independent assertions (`bcf729c`), HTTP/aliases (`6f6644c`), and the offline build gate and guide (`5a244d4`). At this local completion checkpoint, no M3 remote CI run or production deployment was claimed.
+
+Subsequent merge evidence: PR #2 was rebased and merged on 2026-09-08 to `fc0f26111d0632b5ff90f3656c1ed65e6464508a`. The merged tree matches the final branch tip `22bc0d9`; rebase changed commit identities without changing that tree. Main CI and a fresh local `CI=1 pnpm verify` passed with the same test counts and coverage below. The [M4 plan](M04-archive-player.md#readiness-and-repository-evidence) records this starting point. Production checks remain pending.
 
 The implementation supplies the complete 55-item feed through the shared repository, verified channel settings, exact subscription identities and media references, full canonical descriptions, deterministic XML/ETags, GET/HEAD/304 handling, both verified aliases, bounded caching, and generic non-cacheable failures. JSON API shapes are unchanged. The development-only XML parser is pinned at `@xmldom/xmldom` 0.9.12; other dependency versions and coverage thresholds are unchanged.
 
