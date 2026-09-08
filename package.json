@@ -9,7 +9,7 @@
   "scripts": {
     "dev": "nuxt dev",
     "prepare": "nuxt prepare",
-    "build": "pnpm check:content && nuxt build",
+    "build": "pnpm check:content && pnpm check:feed && nuxt build",
     "build:fixture": "nuxt build test/fixtures/media-app",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
@@ -17,6 +17,7 @@
     "typecheck": "nuxt typecheck && vue-tsc --noEmit -p tsconfig.test.json && tsc --noEmit -p tsconfig.content-tools.json",
     "import:wordpress": "node tools/content/import-wordpress.ts",
     "check:content": "node tools/content/check.ts",
+    "check:feed": "node tools/content/check-feed.ts",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
     "test:migration": "python3 -m unittest discover -s tools/migration/tests -p 'test_*.py'",
