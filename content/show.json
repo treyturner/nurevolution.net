@@ -6,5 +6,17 @@
   "siteUrl": "https://nurevolution.net",
   "feedUrl": "https://nurevolution.net/feed/podcast",
   "standardArtworkAssetId": "asset-4feaf8d7bbec690b",
-  "itunesArtworkAssetId": "asset-c1b98cca750338f6"
+  "itunesArtworkAssetId": "asset-c1b98cca750338f6",
+  "rss": {
+    "language": "en-US",
+    "category": "Music",
+    "author": "nurevolution studios",
+    "explicit": false,
+    "subtitle": "Austin DJ/Producers Trey Turner & friends",
+    "copyright": "Copyright © nurevolution studios 2026",
+    "owner": {
+      "name": "nurevolution studios",
+      "email": "tturner@nurevolution.net"
+    }
+  }
 }

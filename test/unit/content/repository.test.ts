@@ -3,13 +3,13 @@ import {
   createContentRepository,
   readCatalog,
 } from '../../../server/content/repository.ts'
-import { candidate, reader } from './fixtures.ts'
+import { candidate, reader, runnableCatalog } from './fixtures.ts'
 
 afterEach(() => vi.unstubAllGlobals())
 
 describe('content document loading and public repository', () => {
   it('loads complete documents and fails for missing, unknown, invalid or unreadable content', async () => {
-    expect((await readCatalog(reader())).catalog).toEqual(candidate.catalog)
+    expect((await readCatalog(reader())).catalog).toEqual(runnableCatalog())
     await expect(
       readCatalog({ ...reader(), list: async () => [] }),
     ).rejects.toThrow('Missing content')
@@ -49,7 +49,7 @@ describe('content document loading and public repository', () => {
     expect(archive.episodes.map((e) => e.id)).toEqual(
       (await repo.list(at)).map((e) => e.id),
     )
-    expect(archive.show).toEqual(await repo.show())
+    expect(archive.show).toMatchObject(await repo.show())
     expect(spy).toHaveBeenCalledTimes(1)
   })
   it('refreshes development content and permits recovery after a failed load', async () => {

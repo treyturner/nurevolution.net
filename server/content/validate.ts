@@ -4,6 +4,7 @@ import {
   legacySchema,
   showSchema,
   type Catalog,
+  type Show,
 } from '../../shared/content/schema.ts'
 import { normalizeDescription } from './description.ts'
 import type { ZodType } from 'zod'
@@ -24,6 +25,14 @@ export function unique(values: string[], label: string) {
     if (seen.has(value)) throw new Error(`${label}: duplicate ${value}`)
     seen.add(value)
   }
+}
+
+export function requireRssMetadata(show: Show) {
+  if (!show.rss)
+    throw new Error(
+      'show.json: rss settings are required for a runnable catalog',
+    )
+  return show.rss
 }
 
 export function validateCatalog(

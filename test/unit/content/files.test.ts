@@ -16,7 +16,7 @@ import {
   projectRoot,
   readSources,
 } from '../../../tools/content/source.ts'
-import { candidate, catalog } from './fixtures.ts'
+import { candidate, catalog, runnableCatalog } from './fixtures.ts'
 
 let root: string
 beforeEach(async () => {
@@ -154,7 +154,20 @@ describe('CLI and historical compatibility', () => {
     expect(await importWordpress(['--check', '--output', output], print)).toBe(
       0,
     )
+    await expect(checkContent(['--output', output], print)).rejects.toThrow(
+      'rss settings are required',
+    )
+    await fs.writeFile(
+      resolve(output, 'show.json'),
+      JSON.stringify(runnableCatalog().show),
+    )
     expect(await checkContent(['--output', output], print)).toBe(0)
+    expect(await importWordpress(['--check', '--output', output], print)).toBe(
+      2,
+    )
+    expect(JSON.parse(print.mock.calls.at(-1)![0]).conflicts).toEqual([
+      'show.json',
+    ])
     await fs.writeFile(resolve(output, 'show.json'), 'edited')
     expect(await importWordpress(['--write', '--output', output], print)).toBe(
       2,

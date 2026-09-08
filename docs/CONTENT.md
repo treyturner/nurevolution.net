@@ -12,7 +12,15 @@ The canonical archive is in `content/`. It contains 55 historical episodes, 832 
 | `content/legacy-urls.json`      | Observed historical page URLs mapped to stable episode IDs.                                         |
 | `content/wordpress-import.json` | Generated initial-import evidence. Keep it unchanged when editing content.                          |
 
-The strict contracts live in [schema.ts](../shared/content/schema.ts). Unexpected keys and wrong types fail validation. Fields are required unless explicitly nullable. Use JSON `null` for absent duration or timing, and `[]` for an empty tracklist; do not use empty strings or invented zero values for missing information.
+The strict contracts live in [schema.ts](../shared/content/schema.ts). Unexpected keys and wrong types fail validation. Fields are required unless documented as optional or nullable. Use JSON `null` for absent duration or timing, and `[]` for an empty tracklist; do not use empty strings or invented zero values for missing information.
+
+## Show RSS settings
+
+`content/show.json` requires `rss` in every runnable archive: `language: "en-US"`, `category: "Music"`, nonblank `author`, and boolean `explicit`. These preserve the existing published settings. Optional `subtitle`, `copyright`, and `owner: { name, email }` preserve additional feed metadata. Omit an optional field entirely when unavailable; an owner requires both a name and valid email. The existing language/category are the supported values for this show; changing them requires updating and reviewing the corresponding schema. The public owner address is emitted in RSS and adds no website contact feature. Copyright is authored text, with no automatic year change.
+
+An episode may override the show rating using optional boolean `explicit`. An absent override inherits the show value; `false` explicitly overrides `true`. All 55 original episodes retain their existing clean label by inheriting the show's verified `false` setting. Text must contain valid XML 1.0 characters; invalid controls or isolated UTF-16 surrogates are errors, not silently repaired text.
+
+The original M2 import deliberately omits these subsequently authored settings. Its candidate and provenance report remain unchanged. Generating a fresh import still succeeds, but add reviewed RSS settings before validating it as a runnable archive. On the maintained archive, `import:wordpress --check` now reports the expected `show.json` conflict (exit 2), while `check:content` passes. Preserve the report; do not reimport over authored settings.
 
 Edit titles, artists, descriptions, and track information directly, then run:
 
