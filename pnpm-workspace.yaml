@@ -1,0 +1,11 @@
+strictPeerDependencies: true
+
+allowBuilds:
+  esbuild@0.28.2: true
+  unrs-resolver@1.12.2: true
+
+# Supply this optional peer locally; other tooling requires cac 7.
+packageExtensions:
+  '@nuxt/cli@3.37.0':
+    dependencies:
+      cac: 6.7.14

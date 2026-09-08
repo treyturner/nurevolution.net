@@ -1,0 +1,45 @@
+name: Verify
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: verify-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version-file: .node-version
+      - name: Enable the declared pnpm version
+        run: corepack enable
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version-file: .python-version
+      - name: Install locked dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Install browsers and system dependencies
+        run: pnpm exec playwright install --with-deps chromium firefox webkit
+      - name: Verify
+        run: pnpm verify
+      - name: Retain verification reports
+        if: always()
+        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5
+        with:
+          name: verification-reports
+          path: |
+            coverage/
+            playwright-report/
+            test-results/
+          if-no-files-found: ignore
+          retention-days: 14

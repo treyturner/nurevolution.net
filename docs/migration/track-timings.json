@@ -1,0 +1,2380 @@
+{
+  "derivation": {
+    "directoryDatesUsedForMatching": false,
+    "masterDurationToleranceSeconds": 1.0,
+    "method": "Each startTime is the exact cumulative duration of preceding numbered split FLACs."
+  },
+  "episodes": [
+    {
+      "continuousFiles": [],
+      "durationDifferenceSeconds": 0.529049,
+      "episodeDurationSeconds": 3642,
+      "episodeId": "wp-198",
+      "metadataMismatchPositions": [],
+      "sourceDirectory": "2012-09-06 - Trey Turner - Trapper Keeper Ultra Keeper Futura S 2000",
+      "splitDurationSeconds": 3642.529049,
+      "status": "applied",
+      "trackCount": 20,
+      "tracks": [
+        {
+          "durationSeconds": 113.652948,
+          "filename": "01. Ital Tek - Satellite.flac",
+          "position": 1,
+          "startTime": 0.0
+        },
+        {
+          "durationSeconds": 191.612086,
+          "filename": "02. Doshy - Redworm.flac",
+          "position": 2,
+          "startTime": 113.652948
+        },
+        {
+          "durationSeconds": 221.167574,
+          "filename": "03. Doshy - Lazor Blaster ft. Unik.flac",
+          "position": 3,
+          "startTime": 305.265034
+        },
+        {
+          "durationSeconds": 75.99576,
+          "filename": "04. XLII - Roll Upon You Like XLII.flac",
+          "position": 4,
+          "startTime": 526.432608
+        },
+        {
+          "durationSeconds": 177.885079,
+          "filename": "05. Lana Del Rey - Blue Jeans ft. Azealia Banks (Simms & Belle).flac",
+          "position": 5,
+          "startTime": 602.428368
+        },
+        {
+          "durationSeconds": 254.403855,
+          "filename": "06. Seven Lions - Tyven.flac",
+          "position": 6,
+          "startTime": 780.313447
+        },
+        {
+          "durationSeconds": 112.945941,
+          "filename": "07. TNGHT - Easy Easy.flac",
+          "position": 7,
+          "startTime": 1034.717302
+        },
+        {
+          "durationSeconds": 180.001247,
+          "filename": "08. Hudson Mohawke - Thunder Bay.flac",
+          "position": 8,
+          "startTime": 1147.663243
+        },
+        {
+          "durationSeconds": 244.909819,
+          "filename": "09. Doshy - Milky Way.flac",
+          "position": 9,
+          "startTime": 1327.66449
+        },
+        {
+          "durationSeconds": 205.341655,
+          "filename": "10. K Theory - Azealia The B.flac",
+          "position": 10,
+          "startTime": 1572.574309
+        },
+        {
+          "durationSeconds": 206.178866,
+          "filename": "11. Seven Lions - Isis.flac",
+          "position": 11,
+          "startTime": 1777.915964
+        },
+        {
+          "durationSeconds": 252.235828,
+          "filename": "12. Sinjin Hawke - Crystal Dust.flac",
+          "position": 12,
+          "startTime": 1984.09483
+        },
+        {
+          "durationSeconds": 175.469705,
+          "filename": "13. TNGHT - Bugg'n.flac",
+          "position": 13,
+          "startTime": 2236.330658
+        },
+        {
+          "durationSeconds": 125.67415,
+          "filename": "14. Kidkanevil - ZoOoOoOoOp!!! ft. Oddisee.flac",
+          "position": 14,
+          "startTime": 2411.800363
+        },
+        {
+          "durationSeconds": 163.747846,
+          "filename": "15. Low Limit - Trapperkeeper.flac",
+          "position": 15,
+          "startTime": 2537.474513
+        },
+        {
+          "durationSeconds": 223.908549,
+          "filename": "16. EPROM - Honey Badger.flac",
+          "position": 16,
+          "startTime": 2701.222359
+        },
+        {
+          "durationSeconds": 151.150499,
+          "filename": "17. EPROM - Regis Chillbin.flac",
+          "position": 17,
+          "startTime": 2925.130908
+        },
+        {
+          "durationSeconds": 227.999274,
+          "filename": "18. Ital Tek - East District.flac",
+          "position": 18,
+          "startTime": 3076.281407
+        },
+        {
+          "durationSeconds": 168.002109,
+          "filename": "19. Ital Tek - Gonga.flac",
+          "position": 19,
+          "startTime": 3304.280681
+        },
+        {
+          "durationSeconds": 170.246259,
+          "filename": "20. TNGHT - Higher Ground.flac",
+          "position": 20,
+          "startTime": 3472.28279
+        }
+      ]
+    },
+    {
+      "continuousFiles": [],
+      "durationDifferenceSeconds": 0.801633,
+      "episodeDurationSeconds": 3644,
+      "episodeId": "wp-208",
+      "metadataMismatchPositions": [],
+      "sourceDirectory": "2013-03-20 - Trey Turner - You Don't Know Me Project",
+      "splitDurationSeconds": 3644.801633,
+      "status": "applied",
+      "trackCount": 16,
+      "tracks": [
+        {
+          "durationSeconds": 269.75288,
+          "filename": "01. Frederic Robinson - Laughing at Clouds.flac",
+          "position": 1,
+          "startTime": 0.0
+        },
+        {
+          "durationSeconds": 267.972585,
+          "filename": "02. SpectraSoul - The Curb.flac",
+          "position": 2,
+          "startTime": 269.75288
+        },
+        {
+          "durationSeconds": 289.795964,
+          "filename": "03. Makoto - Woe ft. Deeizm.flac",
+          "position": 3,
+          "startTime": 537.725465
+        },
+        {
+          "durationSeconds": 266.434286,
+          "filename": "04. Fanu - About Life and Death.flac",
+          "position": 4,
+          "startTime": 827.521429
+        },
+        {
+          "durationSeconds": 199.254694,
+          "filename": "05. Rido & Hybris - First Contact.flac",
+          "position": 5,
+          "startTime": 1093.955715
+        },
+        {
+          "durationSeconds": 104.984898,
+          "filename": "06. Receptor - Friendship.flac",
+          "position": 6,
+          "startTime": 1293.210409
+        },
+        {
+          "durationSeconds": 154.473061,
+          "filename": "07. Sub Focus - Join The Dots.flac",
+          "position": 7,
+          "startTime": 1398.195307
+        },
+        {
+          "durationSeconds": 242.17424,
+          "filename": "08. Mindscape - Bounce.flac",
+          "position": 8,
+          "startTime": 1552.668368
+        },
+        {
+          "durationSeconds": 263.593197,
+          "filename": "09. Camo & Krooked - Cross The Line ft. Ayah Marar (Metrik).flac",
+          "position": 9,
+          "startTime": 1794.842608
+        },
+        {
+          "durationSeconds": 198.356848,
+          "filename": "10. Danny Byrd - Love You Like This.flac",
+          "position": 10,
+          "startTime": 2058.435805
+        },
+        {
+          "durationSeconds": 243.568118,
+          "filename": "11. The Prototypes - Your Future.flac",
+          "position": 11,
+          "startTime": 2256.792653
+        },
+        {
+          "durationSeconds": 243.406667,
+          "filename": "12. Noisia & Phace - Program.flac",
+          "position": 12,
+          "startTime": 2500.360771
+        },
+        {
+          "durationSeconds": 149.041905,
+          "filename": "13. Chase & Status - End Credits (VIP).flac",
+          "position": 13,
+          "startTime": 2743.767438
+        },
+        {
+          "durationSeconds": 271.266417,
+          "filename": "14. Tipper - Shatter Box.flac",
+          "position": 14,
+          "startTime": 2892.809343
+        },
+        {
+          "durationSeconds": 155.70229,
+          "filename": "15. The Prototypes - Pandora.flac",
+          "position": 15,
+          "startTime": 3164.07576
+        },
+        {
+          "durationSeconds": 325.023583,
+          "filename": "16. Major Lazer - Get Free (Andy C).flac",
+          "position": 16,
+          "startTime": 3319.77805
+        }
+      ]
+    },
+    {
+      "continuousFiles": [
+        {
+          "durationSeconds": 4298.232993,
+          "filename": "Trey Turner & Joseph Noctum - 2011 - The New Sound.flac"
+        }
+      ],
+      "durationDifferenceSeconds": 0.232991,
+      "episodeDurationSeconds": 4298,
+      "episodeId": "wp-262",
+      "metadataMismatchPositions": [],
+      "sourceDirectory": "2011-05-15 - Trey Turner & Joseph Noctum - The New Sound",
+      "splitDurationSeconds": 4298.232991,
+      "status": "applied",
+      "trackCount": 25,
+      "tracks": [
+        {
+          "durationSeconds": 61.343129,
+          "filename": "01 - The Mighty Boosh - The New Note.flac",
+          "position": 1,
+          "startTime": 0.0
+        },
+        {
+          "durationSeconds": 247.250431,
+          "filename": "02 - Mix N Blend & Narch - I Got... (Beats Antique).flac",
+          "position": 2,
+          "startTime": 61.343129
+        },
+        {
+          "durationSeconds": 75.508934,
+          "filename": "03 - The Mighty Boosh - El Sonido Nuevo.flac",
+          "position": 3,
+          "startTime": 308.59356
+        },
+        {
+          "durationSeconds": 234.73127,
+          "filename": "04 - Panzer Kunst - Halo Around The Sun Or Moon.flac",
+          "position": 4,
+          "startTime": 384.102494
+        },
+        {
+          "durationSeconds": 284.007732,
+          "filename": "05 - Bird of Prey - Walkabout.flac",
+          "position": 5,
+          "startTime": 618.833764
+        },
+        {
+          "durationSeconds": 306.068027,
+          "filename": "06 - Hybrid - I'm Still Awake.flac",
+          "position": 6,
+          "startTime": 902.841496
+        },
+        {
+          "durationSeconds": 18.392086,
+          "filename": "07 - The Mighty Boosh - Let Us Begin Our Quest.flac",
+          "position": 7,
+          "startTime": 1208.909523
+        },
+        {
+          "durationSeconds": 178.252177,
+          "filename": "08 - Danny Breaks - The Sound.flac",
+          "position": 8,
+          "startTime": 1227.301609
+        },
+        {
+          "durationSeconds": 266.928209,
+          "filename": "09 - Modeselektor - Monkeyflip.flac",
+          "position": 9,
+          "startTime": 1405.553786
+        },
+        {
+          "durationSeconds": 131.651723,
+          "filename": "10 - Ash Trey Jinkins - Yodaz Brain (Monk Fly).flac",
+          "position": 10,
+          "startTime": 1672.481995
+        },
+        {
+          "durationSeconds": 163.404331,
+          "filename": "11 - Sket1 - Robopimp.flac",
+          "position": 11,
+          "startTime": 1804.133718
+        },
+        {
+          "durationSeconds": 165.701587,
+          "filename": "12 - An-ten-nae - Get Low.flac",
+          "position": 12,
+          "startTime": 1967.538049
+        },
+        {
+          "durationSeconds": 224.43585,
+          "filename": "13 - Senz Beats - Beautiful Life ft. Megabusive.flac",
+          "position": 13,
+          "startTime": 2133.239636
+        },
+        {
+          "durationSeconds": 58.35517,
+          "filename": "14 - The Mighty Boosh - That New Sound.flac",
+          "position": 14,
+          "startTime": 2357.675486
+        },
+        {
+          "durationSeconds": 269.491315,
+          "filename": "15 - Moderat - Rusty Nails.flac",
+          "position": 15,
+          "startTime": 2416.030656
+        },
+        {
+          "durationSeconds": 165.029569,
+          "filename": "16 - Doshy - 3ws.flac",
+          "position": 16,
+          "startTime": 2685.521971
+        },
+        {
+          "durationSeconds": 140.501791,
+          "filename": "17 - Rustie - Hyperthrust.flac",
+          "position": 17,
+          "startTime": 2850.55154
+        },
+        {
+          "durationSeconds": 148.125306,
+          "filename": "18 - Rustie - Dragonfly.flac",
+          "position": 18,
+          "startTime": 2991.053331
+        },
+        {
+          "durationSeconds": 210.859138,
+          "filename": "19 - Pixelord - Cybernator (PXLRD).flac",
+          "position": 19,
+          "startTime": 3139.178637
+        },
+        {
+          "durationSeconds": 226.390567,
+          "filename": "20 - Bird of Prey - Stargazer.flac",
+          "position": 20,
+          "startTime": 3350.037775
+        },
+        {
+          "durationSeconds": 197.637438,
+          "filename": "21 - Diplo vs. Sunday Girl - Four Floors.flac",
+          "position": 21,
+          "startTime": 3576.428342
+        },
+        {
+          "durationSeconds": 132.310295,
+          "filename": "22 - DCarls - When Everything Is Over.flac",
+          "position": 22,
+          "startTime": 3774.06578
+        },
+        {
+          "durationSeconds": 175.627415,
+          "filename": "23 - Doshy - 2086.flac",
+          "position": 23,
+          "startTime": 3906.376075
+        },
+        {
+          "durationSeconds": 202.374921,
+          "filename": "24 - Modeselektor - Art & Cash (SBTRKT).flac",
+          "position": 24,
+          "startTime": 4082.00349
+        },
+        {
+          "durationSeconds": 13.85458,
+          "filename": "25 - The Mighty Boosh - A Long Journey.flac",
+          "position": 25,
+          "startTime": 4284.378411
+        }
+      ]
+    },
+    {
+      "continuousFiles": [],
+      "durationDifferenceSeconds": -0.347959,
+      "episodeDurationSeconds": 2664,
+      "episodeId": "wp-273",
+      "metadataMismatchPositions": [],
+      "sourceDirectory": "2011-01-20 - Trey Turner - Slow Your Roll",
+      "splitDurationSeconds": 2663.652041,
+      "status": "applied",
+      "trackCount": 15,
+      "tracks": [
+        {
+          "durationSeconds": 46.409342,
+          "filename": "01. Super Smoky Soul - Huge Magical Vision.flac",
+          "position": 1,
+          "startTime": 0.0
+        },
+        {
+          "durationSeconds": 244.064762,
+          "filename": "02. Ismael Guziel - Bamboo Forest ft. Louis C.K..flac",
+          "position": 2,
+          "startTime": 46.409342
+        },
+        {
+          "durationSeconds": 101.200794,
+          "filename": "03. KidKanevil - Lantern 1.flac",
+          "position": 3,
+          "startTime": 290.474104
+        },
+        {
+          "durationSeconds": 219.11381,
+          "filename": "04. Vent - Evolution.flac",
+          "position": 4,
+          "startTime": 391.674898
+        },
+        {
+          "durationSeconds": 169.797596,
+          "filename": "05. Venetian Snares - Black Sabbath.flac",
+          "position": 5,
+          "startTime": 610.788708
+        },
+        {
+          "durationSeconds": 210.465669,
+          "filename": "06. Jon Hopkins - Vessel.flac",
+          "position": 6,
+          "startTime": 780.586304
+        },
+        {
+          "durationSeconds": 200.685669,
+          "filename": "07. STS9 - Shock Doctrine (Eskmo).flac",
+          "position": 7,
+          "startTime": 991.051973
+        },
+        {
+          "durationSeconds": 172.12932,
+          "filename": "08. Bil Bless - How Live Is Live.flac",
+          "position": 8,
+          "startTime": 1191.737642
+        },
+        {
+          "durationSeconds": 119.177528,
+          "filename": "09. Mimosa - Flux For Life.flac",
+          "position": 9,
+          "startTime": 1363.866962
+        },
+        {
+          "durationSeconds": 165.53102,
+          "filename": "10. Rustie - Bad Science.flac",
+          "position": 10,
+          "startTime": 1483.04449
+        },
+        {
+          "durationSeconds": 235.888912,
+          "filename": "11. Free The Robots - Mental Universe.flac",
+          "position": 11,
+          "startTime": 1648.57551
+        },
+        {
+          "durationSeconds": 214.413424,
+          "filename": "12. Eskmo - Gold & Stone.flac",
+          "position": 12,
+          "startTime": 1884.464422
+        },
+        {
+          "durationSeconds": 187.162381,
+          "filename": "13. Shlohmo - Hot Boxing The Cockpit.flac",
+          "position": 13,
+          "startTime": 2098.877846
+        },
+        {
+          "durationSeconds": 169.244966,
+          "filename": "14. Pixelord - Boss Worm (Jameszoo Roparrot Recompose).flac",
+          "position": 14,
+          "startTime": 2286.040227
+        },
+        {
+          "durationSeconds": 208.366848,
+          "filename": "15. B-Ju - Metronoma.flac",
+          "position": 15,
+          "startTime": 2455.285193
+        }
+      ]
+    },
+    {
+      "continuousFiles": [],
+      "durationDifferenceSeconds": -0.114786,
+      "episodeDurationSeconds": 2770,
+      "episodeId": "wp-293",
+      "metadataMismatchPositions": [],
+      "sourceDirectory": "2010-06-28 - Trey Turner - The Toad's Mistress",
+      "splitDurationSeconds": 2769.885214,
+      "status": "applied",
+      "trackCount": 14,
+      "tracks": [
+        {
+          "durationSeconds": 231.823243,
+          "filename": "01. Luke Vibert - Rhythm.flac",
+          "position": 1,
+          "startTime": 0.0
+        },
+        {
+          "durationSeconds": 126.269909,
+          "filename": "02. An-ten-nae - Djelem.flac",
+          "position": 2,
+          "startTime": 231.823243
+        },
+        {
+          "durationSeconds": 197.046939,
+          "filename": "03. Free the Robots - Select-Start.flac",
+          "position": 3,
+          "startTime": 358.093152
+        },
+        {
+          "durationSeconds": 175.332766,
+          "filename": "04. Lazer Sword - Koopa Boss Mode.flac",
+          "position": 4,
+          "startTime": 555.140091
+        },
+        {
+          "durationSeconds": 196.642721,
+          "filename": "05. An-ten-nae - Tripping on Banana Peels.flac",
+          "position": 5,
+          "startTime": 730.472857
+        },
+        {
+          "durationSeconds": 220.912902,
+          "filename": "06. Vent - Itchy Feet.flac",
+          "position": 6,
+          "startTime": 927.115578
+        },
+        {
+          "durationSeconds": 257.871043,
+          "filename": "07. Saeg - Computer Music (Opiuo).flac",
+          "position": 7,
+          "startTime": 1148.02848
+        },
+        {
+          "durationSeconds": 172.815147,
+          "filename": "08. Funkstorung - Fat Camp Feva.flac",
+          "position": 8,
+          "startTime": 1405.899523
+        },
+        {
+          "durationSeconds": 141.690952,
+          "filename": "09. Electrojuice - Perfect.flac",
+          "position": 9,
+          "startTime": 1578.71467
+        },
+        {
+          "durationSeconds": 175.647846,
+          "filename": "10. Nanda - Cozmik Dance.flac",
+          "position": 10,
+          "startTime": 1720.405622
+        },
+        {
+          "durationSeconds": 251.38068,
+          "filename": "11. TooMuchPorn - Bad Rush.flac",
+          "position": 11,
+          "startTime": 1896.053468
+        },
+        {
+          "durationSeconds": 274.340975,
+          "filename": "12. Mr. Rogers - winkysassnassterbean.flac",
+          "position": 12,
+          "startTime": 2147.434148
+        },
+        {
+          "durationSeconds": 160.727211,
+          "filename": "13. Herrmutt Lobby - Bien 8 Bits.flac",
+          "position": 13,
+          "startTime": 2421.775123
+        },
+        {
+          "durationSeconds": 187.38288,
+          "filename": "14. Fulgeance - Chico (Dorian Concept).flac",
+          "position": 14,
+          "startTime": 2582.502334
+        }
+      ]
+    },
+    {
+      "continuousFiles": [],
+      "durationDifferenceSeconds": -0.21349,
+      "episodeDurationSeconds": 2763,
+      "episodeId": "wp-301",
+      "metadataMismatchPositions": [],
+      "sourceDirectory": "2010-06-17 - Trey Turner & Vegenaut - Carpe Noctem 2010",
+      "splitDurationSeconds": 2762.78651,
+      "status": "applied",
+      "trackCount": 15,
+      "tracks": [
+        {
+          "durationSeconds": 216.623039,
+          "filename": "01. Heralds of Change - Roc Wit You ft. Unknown & Mudd.flac",
+          "position": 1,
+          "startTime": 0.0
+        },
+        {
+          "durationSeconds": 205.85068,
+          "filename": "02. The Clonious - One At A Time (Funked Up).flac",
+          "position": 2,
+          "startTime": 216.623039
+        },
+        {
+          "durationSeconds": 191.131859,
+          "filename": "03. MonoPoly - Beatles Bitch.flac",
+          "position": 3,
+          "startTime": 422.473719
+        },
+        {
+          "durationSeconds": 203.755057,
+          "filename": "04. Thavius Beck - Sometimes.flac",
+          "position": 4,
+          "startTime": 613.605578
+        },
+        {
+          "durationSeconds": 142.174649,
+          "filename": "05. Flying Lotus - I Feel Like Dying.flac",
+          "position": 5,
+          "startTime": 817.360635
+        },
+        {
+          "durationSeconds": 157.195646,
+          "filename": "06. Gonjasufi - Kowboyz&Indians.flac",
+          "position": 6,
+          "startTime": 959.535284
+        },
+        {
+          "durationSeconds": 196.09059,
+          "filename": "07. Tranqill - Payroll (Paul White's Clean Dub).flac",
+          "position": 7,
+          "startTime": 1116.73093
+        },
+        {
+          "durationSeconds": 234.71356,
+          "filename": "08. Dimlite - Locked.flac",
+          "position": 8,
+          "startTime": 1312.82152
+        },
+        {
+          "durationSeconds": 238.426168,
+          "filename": "09. Beck - Farewell Ride (Subtle).flac",
+          "position": 9,
+          "startTime": 1547.53508
+        },
+        {
+          "durationSeconds": 132.584354,
+          "filename": "10. 1000 Names - Cloudride ft. 215 TFK.flac",
+          "position": 10,
+          "startTime": 1785.961248
+        },
+        {
+          "durationSeconds": 194.274966,
+          "filename": "11. Debruit - Get Blum ft. Eriksolo.flac",
+          "position": 11,
+          "startTime": 1918.545602
+        },
+        {
+          "durationSeconds": 150.903175,
+          "filename": "12. Herrmutt Lobby - Play.flac",
+          "position": 12,
+          "startTime": 2112.820568
+        },
+        {
+          "durationSeconds": 138.445624,
+          "filename": "13. Dorian Concept - Sandwich Terror.flac",
+          "position": 13,
+          "startTime": 2263.723743
+        },
+        {
+          "durationSeconds": 106.138141,
+          "filename": "14. Kelpe - Grappling Hook.flac",
+          "position": 14,
+          "startTime": 2402.169367
+        },
+        {
+          "durationSeconds": 254.479002,
+          "filename": "15. Alias - Justamachine.flac",
+          "position": 15,
+          "startTime": 2508.307508
+        }
+      ]
+    },
+    {
+      "continuousFiles": [
+        {
+          "durationSeconds": 4772.31712,
+          "filename": "Trey Turner & Cody Haynes - 2009 - Plush Session.flac"
+        }
+      ],
+      "episodeId": "wp-306",
+      "sourceDirectory": "2009-10-08 - Trey Turner & Cody Haynes - Plush Session",
+      "status": "continuous-only",
+      "tracks": []
+    },
+    {
+      "continuousFiles": [],
+      "durationDifferenceSeconds": 0.168366,
+      "episodeDurationSeconds": 3880,
+      "episodeId": "wp-308",
+      "metadataMismatchPositions": [
+        5
+      ],
+      "sourceDirectory": "2009-07-31 - Trey Turner & Cody Haynes - Better Late Than Never Project",
+      "splitDurationSeconds": 3880.168366,
+      "status": "applied",
+      "trackCount": 19,
+      "tracks": [
+        {
+          "durationSeconds": 261.89415,
+          "filename": "01 - Divinci - Gnat (Gnastie).flac",
+          "position": 1,
+          "startTime": 0.0
+        },
+        {
+          "durationSeconds": 186.426689,
+          "filename": "02 - Modeselektor - Das Claudia Woelkey Massa.flac",
+          "position": 2,
+          "startTime": 261.89415
+        },
+        {
+          "durationSeconds": 187.576961,
+          "filename": "03 - East Flatbush Project - Tried by 12 (Autechre).flac",
+          "position": 3,
+          "startTime": 448.320839
+        },
+        {
+          "durationSeconds": 243.049705,
+          "filename": "04 - Take - Make Believe (Dimlite).flac",
+          "position": 4,
+          "startTime": 635.8978
+        },
+        {
+          "durationSeconds": 184.163311,
+          "filename": "05 - Sixtoo - Jackals and Vipers in Envy of Man, Pt. 10.flac",
+          "position": 5,
+          "startTime": 878.947505
+        },
+        {
+          "durationSeconds": 110.904739,
+          "filename": "06 - Ra - Let The Wxfdswxc Hit'Em.flac",
+          "position": 6,
+          "startTime": 1063.110816
+        },
+        {
+          "durationSeconds": 206.010567,
+          "filename": "07 - The Disciple Grin - Yoke.flac",
+          "position": 7,
+          "startTime": 1174.015555
+        },
+        {
+          "durationSeconds": 65.547687,
+          "filename": "08 - Bit Meddler - Whitelabels.flac",
+          "position": 8,
+          "startTime": 1380.026122
+        },
+        {
+          "durationSeconds": 58.579864,
+          "filename": "09 - Kristuit Salu - Conceptial Devaihdn.flac",
+          "position": 9,
+          "startTime": 1445.573809
+        },
+        {
+          "durationSeconds": 266.055351,
+          "filename": "10 - Crystal Distortion - Hypnotism Hop.flac",
+          "position": 10,
+          "startTime": 1504.153673
+        },
+        {
+          "durationSeconds": 243.185737,
+          "filename": "11 - Si Begg - Logan's Run 3000.flac",
+          "position": 11,
+          "startTime": 1770.209024
+        },
+        {
+          "durationSeconds": 278.343288,
+          "filename": "12 - Si Begg - Control This Thing.flac",
+          "position": 12,
+          "startTime": 2013.394761
+        },
+        {
+          "durationSeconds": 301.684512,
+          "filename": "13 - BreakBeatBuddha - Dissent.flac",
+          "position": 13,
+          "startTime": 2291.738049
+        },
+        {
+          "durationSeconds": 211.168209,
+          "filename": "14 - Modeselektor - The Dark Side of the Sun ft. Puppetmastaz.flac",
+          "position": 14,
+          "startTime": 2593.422561
+        },
+        {
+          "durationSeconds": 97.877596,
+          "filename": "15 - Cabbage Boy - Cutting Japan.flac",
+          "position": 15,
+          "startTime": 2804.59077
+        },
+        {
+          "durationSeconds": 233.029932,
+          "filename": "16 - Bil Bless - CheeseHOG.flac",
+          "position": 16,
+          "startTime": 2902.468366
+        },
+        {
+          "durationSeconds": 216.491134,
+          "filename": "17 - DJ Rupture - Bonechip.flac",
+          "position": 17,
+          "startTime": 3135.498298
+        },
+        {
+          "durationSeconds": 230.461247,
+          "filename": "18 - El-P - Dead Disnee.flac",
+          "position": 18,
+          "startTime": 3351.989432
+        },
+        {
+          "durationSeconds": 297.717687,
+          "filename": "19 - Shadow Huntaz - Medic.flac",
+          "position": 19,
+          "startTime": 3582.450679
+        }
+      ]
+    },
+    {
+      "continuousFiles": [],
+      "durationDifferenceSeconds": 0.245918,
+      "episodeDurationSeconds": 1682,
+      "episodeId": "wp-315",
+      "metadataMismatchPositions": [],
+      "sourceDirectory": "2006-08-31 - Trey Turner - BijouBreaks Breakthru 2",
+      "splitDurationSeconds": 1682.245918,
+      "status": "applied",
+      "trackCount": 7,
+      "tracks": [
+        {
+          "durationSeconds": 228.971927,
+          "filename": "01 - Alien Soap Opera - Voladores (BLIM).flac",
+          "position": 1,
+          "startTime": 0.0
+        },
+        {
+          "durationSeconds": 300.397324,
+          "filename": "02 - Kelis - Trick Me (Adam Freeland).flac",
+          "position": 2,
+          "startTime": 228.971927
+        },
+        {
+          "durationSeconds": 227.706939,
+          "filename": "03 - Dub Pistols - Cyclone (Bushwacka).flac",
+          "position": 3,
+          "startTime": 529.369251
+        },
+        {
+          "durationSeconds": 118.613696,
+          "filename": "04 - Kiril - Primitive Science (Bushwacka).flac",
+          "position": 4,
+          "startTime": 757.07619
+        },
+        {
+          "durationSeconds": 260.339501,
+          "filename": "05 - Son of the Electric Ghost - Learn My Lesson.flac",
+          "position": 5,
+          "startTime": 875.689886
+        },
+        {
+          "durationSeconds": 263.12059,
+          "filename": "06 - Fine Cut Bodies - Trekk Far (Elite Force).flac",
+          "position": 6,
+          "startTime": 1136.029387
+        },
+        {
+          "durationSeconds": 283.095941,
+          "filename": "07 - Bassnectar - Creation Lullaby.flac",
+          "position": 7,
+          "startTime": 1399.149977
+        }
+      ]
+    },
+    {
+      "continuousFiles": [],
+      "durationDifferenceSeconds": 0.040001,
+      "episodeDurationSeconds": 4106,
+      "episodeId": "wp-317",
+      "metadataMismatchPositions": [
+        9
+      ],
+      "sourceDirectory": "2004-05-24 - Trey Turner - Stasis",
+      "splitDurationSeconds": 4106.040001,
+      "status": "applied",
+      "trackCount": 11,
+      "tracks": [
+        {
+          "durationSeconds": 400.506667,
+          "filename": "01. 2 Sinners - Patterns.flac",
+          "position": 1,
+          "startTime": 0.0
+        },
+        {
+          "durationSeconds": 352.84,
+          "filename": "02. Introspective - Time Travel (Loes Lee).flac",
+          "position": 2,
+          "startTime": 400.506667
+        },
+        {
+          "durationSeconds": 404.72,
+          "filename": "03. Brothers of Dub - After Time (Ek).flac",
+          "position": 3,
+          "startTime": 753.346667
+        },
+        {
+          "durationSeconds": 442.28,
+          "filename": "04. Puretone - Stuck in a Groove (Koma & Bones).flac",
+          "position": 4,
+          "startTime": 1158.066667
+        },
+        {
+          "durationSeconds": 356.72,
+          "filename": "05. Stisch & Dan F - Heads.flac",
+          "position": 5,
+          "startTime": 1600.346667
+        },
+        {
+          "durationSeconds": 270.306667,
+          "filename": "06. Webcore - Garlick.flac",
+          "position": 6,
+          "startTime": 1957.066667
+        },
+        {
+          "durationSeconds": 305.76,
+          "filename": "07. Dan F & DJ Hyper - Triad.flac",
+          "position": 7,
+          "startTime": 2227.373334
+        },
+        {
+          "durationSeconds": 355.56,
+          "filename": "08. General Midi - U Will Be Under.flac",
+          "position": 8,
+          "startTime": 2533.133334
+        },
+        {
+          "durationSeconds": 298.666667,
+          "filename": "09. Unkle - Eye for an Eye (Force Mass Motion).flac",
+          "position": 9,
+          "startTime": 2888.693334
+        },
+        {
+          "durationSeconds": 420.653333,
+          "filename": "10. Hybrid - Out of the Dark.flac",
+          "position": 10,
+          "startTime": 3187.360001
+        },
+        {
+          "durationSeconds": 498.026667,
+          "filename": "11. Infusion - Legacy (Junkie XL).flac",
+          "position": 11,
+          "startTime": 3608.013334
+        }
+      ]
+    },
+    {
+      "continuousFiles": [],
+      "durationDifferenceSeconds": -0.226668,
+      "episodeDurationSeconds": 4643,
+      "episodeId": "wp-320",
+      "metadataMismatchPositions": [
+        7,
+        11,
+        12,
+        14
+      ],
+      "sourceDirectory": "2002-10-28 - Trey Turner & Contrast - Where Do We Go From Here",
+      "splitDurationSeconds": 4642.773332,
+      "status": "applied",
+      "trackCount": 14,
+      "tracks": [
+        {
+          "durationSeconds": 442.8,
+          "filename": "01. John Creamer & Stephane K - I Wish You Were Here (PMT).flac",
+          "position": 1,
+          "startTime": 0.0
+        },
+        {
+          "durationSeconds": 311.64,
+          "filename": "02. Dan F - Double Take.flac",
+          "position": 2,
+          "startTime": 442.8
+        },
+        {
+          "durationSeconds": 269.32,
+          "filename": "03. Phantom Beats - The Drop (Future Funk Squad).flac",
+          "position": 3,
+          "startTime": 754.44
+        },
+        {
+          "durationSeconds": 364.093333,
+          "filename": "04. Elite Force - Crew One.flac",
+          "position": 4,
+          "startTime": 1023.76
+        },
+        {
+          "durationSeconds": 198.373333,
+          "filename": "05. Ek - Raiders.flac",
+          "position": 5,
+          "startTime": 1387.853333
+        },
+        {
+          "durationSeconds": 340.066667,
+          "filename": "06. DB+ - That Thing (Koma & Bones).flac",
+          "position": 6,
+          "startTime": 1586.226666
+        },
+        {
+          "durationSeconds": 255.053333,
+          "filename": "07. Infiniti & Keith MacKenzie - Shadow (DJ Hyper).flac",
+          "position": 7,
+          "startTime": 1926.293333
+        },
+        {
+          "durationSeconds": 389.666667,
+          "filename": "08. BLIM & Carter - itsaremix.flac",
+          "position": 8,
+          "startTime": 2181.346666
+        },
+        {
+          "durationSeconds": 375.493333,
+          "filename": "09. BLIM - Crazy Things.flac",
+          "position": 9,
+          "startTime": 2571.013333
+        },
+        {
+          "durationSeconds": 297.56,
+          "filename": "10. Big Head - 2604.flac",
+          "position": 10,
+          "startTime": 2946.506666
+        },
+        {
+          "durationSeconds": 368.426667,
+          "filename": "11. Orbital - Funny Break (Plump DJs Remix).flac",
+          "position": 11,
+          "startTime": 3244.066666
+        },
+        {
+          "durationSeconds": 325.893333,
+          "filename": "12. Luke Slater - Stars & Heroes (Pilgrem & BLIM).flac",
+          "position": 12,
+          "startTime": 3612.493333
+        },
+        {
+          "durationSeconds": 354.253333,
+          "filename": "13. Hybrid - Visible Noise.flac",
+          "position": 13,
+          "startTime": 3938.386666
+        },
+        {
+          "durationSeconds": 350.133333,
+          "filename": "14. Filter - Where Do We Go From Here (DJ Hyper).flac",
+          "position": 14,
+          "startTime": 4292.639999
+        }
+      ]
+    },
+    {
+      "continuousFiles": [],
+      "durationDifferenceSeconds": 0.053334,
+      "episodeDurationSeconds": 4748,
+      "episodeId": "wp-322",
+      "metadataMismatchPositions": [
+        3,
+        7
+      ],
+      "sourceDirectory": "2002-08-15 - Fracture & DJ^3 - Slipstream",
+      "splitDurationSeconds": 4748.053334,
+      "status": "applied",
+      "trackCount": 12,
+      "tracks": [
+        {
+          "durationSeconds": 359.52,
+          "filename": "01. Bahamut - Fragadelic (Deepsky).flac",
+          "position": 1,
+          "startTime": 0.0
+        },
+        {
+          "durationSeconds": 424.24,
+          "filename": "02. Frontside - Dammerung.flac",
+          "position": 2,
+          "startTime": 359.52
+        },
+        {
+          "durationSeconds": 488.48,
+          "filename": "03. Hybrid - Kid 2000.flac",
+          "position": 3,
+          "startTime": 783.76
+        },
+        {
+          "durationSeconds": 381.173333,
+          "filename": "04. DJ Tiesto - Urban Train (Way Out West).flac",
+          "position": 4,
+          "startTime": 1272.24
+        },
+        {
+          "durationSeconds": 431.386667,
+          "filename": "05. Layo & Bushwacka - Let the Good Times Roll.flac",
+          "position": 5,
+          "startTime": 1653.413333
+        },
+        {
+          "durationSeconds": 143.813333,
+          "filename": "06. Dan F - Bluebox.flac",
+          "position": 6,
+          "startTime": 2084.8
+        },
+        {
+          "durationSeconds": 330.546667,
+          "filename": "07. Salt Tank - Angels Landing (The Lights).flac",
+          "position": 7,
+          "startTime": 2228.613333
+        },
+        {
+          "durationSeconds": 575.586667,
+          "filename": "08. Max Graham - Falling Together.flac",
+          "position": 8,
+          "startTime": 2559.16
+        },
+        {
+          "durationSeconds": 489.0,
+          "filename": "09. Sasha - Rabbitweed.flac",
+          "position": 9,
+          "startTime": 3134.746667
+        },
+        {
+          "durationSeconds": 330.786667,
+          "filename": "10. 9 Nickel - Rhythm Is Everything.flac",
+          "position": 10,
+          "startTime": 3623.746667
+        },
+        {
+          "durationSeconds": 433.24,
+          "filename": "11. Deepsky - View From a Stairway.flac",
+          "position": 11,
+          "startTime": 3954.533334
+        },
+        {
+          "durationSeconds": 360.28,
+          "filename": "12. Space Manoeuvres - Stage One (Total Separation).flac",
+          "position": 12,
+          "startTime": 4387.773334
+        }
+      ]
+    },
+    {
+      "continuousFiles": [],
+      "durationDifferenceSeconds": -0.426666,
+      "episodeDurationSeconds": 4628,
+      "episodeId": "wp-324",
+      "metadataMismatchPositions": [],
+      "sourceDirectory": "2002-05-01 - Trey Turner - Urban Breakbeat Uprising",
+      "splitDurationSeconds": 4627.573334,
+      "status": "applied",
+      "trackCount": 14,
+      "tracks": [
+        {
+          "durationSeconds": 191.106667,
+          "filename": "01. Satoshi Tomiie - Virus (Reprise).flac",
+          "position": 1,
+          "startTime": 0.0
+        },
+        {
+          "durationSeconds": 352.933333,
+          "filename": "02. Andy Page & Lee Burridge - Maladjusted.flac",
+          "position": 2,
+          "startTime": 191.106667
+        },
+        {
+          "durationSeconds": 254.106667,
+          "filename": "03. Blame - Music Takes You (BLIM).flac",
+          "position": 3,
+          "startTime": 544.04
+        },
+        {
+          "durationSeconds": 409.386667,
+          "filename": "04. Plump DJs - Big Groovy Fucker.flac",
+          "position": 4,
+          "startTime": 798.146667
+        },
+        {
+          "durationSeconds": 397.066667,
+          "filename": "05. Buffalo Daughter - R&B (Elite Force).flac",
+          "position": 5,
+          "startTime": 1207.533334
+        },
+        {
+          "durationSeconds": 310.586667,
+          "filename": "06. Way Out West - Domination.flac",
+          "position": 6,
+          "startTime": 1604.600001
+        },
+        {
+          "durationSeconds": 381.173333,
+          "filename": "07. Fat-liners - Spoiler.flac",
+          "position": 7,
+          "startTime": 1915.186668
+        },
+        {
+          "durationSeconds": 247.04,
+          "filename": "08. Lightning Seeds - Sweetest Soul Sensations (Terminalhead).flac",
+          "position": 8,
+          "startTime": 2296.360001
+        },
+        {
+          "durationSeconds": 423.533333,
+          "filename": "09. The Light - Expand the Room.flac",
+          "position": 9,
+          "startTime": 2543.400001
+        },
+        {
+          "durationSeconds": 324.626667,
+          "filename": "10. BT - Mad Skillz Mic Chekka.flac",
+          "position": 10,
+          "startTime": 2966.933334
+        },
+        {
+          "durationSeconds": 374.106667,
+          "filename": "11. T-Power - Dangerous (Aquasky vs. Masterblaster).flac",
+          "position": 11,
+          "startTime": 3291.560001
+        },
+        {
+          "durationSeconds": 273.52,
+          "filename": "12. ASAP - Heavy Water.flac",
+          "position": 12,
+          "startTime": 3665.666668
+        },
+        {
+          "durationSeconds": 324.693333,
+          "filename": "13. The Light - Opium (of the Masses).flac",
+          "position": 13,
+          "startTime": 3939.186668
+        },
+        {
+          "durationSeconds": 363.693333,
+          "filename": "14. Beber - Juvenile Delinquent.flac",
+          "position": 14,
+          "startTime": 4263.880001
+        }
+      ]
+    },
+    {
+      "continuousFiles": [],
+      "durationDifferenceSeconds": -0.626667,
+      "episodeDurationSeconds": 4396,
+      "episodeId": "wp-328",
+      "metadataMismatchPositions": [],
+      "sourceDirectory": "2002-03-01 - Trey Turner - g3 Mix Session 01",
+      "splitDurationSeconds": 4395.373333,
+      "status": "applied",
+      "trackCount": 14,
+      "tracks": [
+        {
+          "durationSeconds": 360.453333,
+          "filename": "01. Banco de Gaia - Drunk as a Monk (Rabbit in the Moon).flac",
+          "position": 1,
+          "startTime": 0.0
+        },
+        {
+          "durationSeconds": 312.893333,
+          "filename": "02. Bushwacka - Monster.flac",
+          "position": 2,
+          "startTime": 360.453333
+        },
+        {
+          "durationSeconds": 284.44,
+          "filename": "03. Peacemaker - Crisis.flac",
+          "position": 3,
+          "startTime": 673.346666
+        },
+        {
+          "durationSeconds": 312.88,
+          "filename": "04. Rennie Pilgrem & BLIM - Eskimo (Yellow Snow).flac",
+          "position": 4,
+          "startTime": 957.786666
+        },
+        {
+          "durationSeconds": 270.2,
+          "filename": "05. Scissorkicks - Livin' for Kicks.flac",
+          "position": 5,
+          "startTime": 1270.666666
+        },
+        {
+          "durationSeconds": 327.093333,
+          "filename": "06. Stirfry - Breakin' in the Streets.flac",
+          "position": 6,
+          "startTime": 1540.866666
+        },
+        {
+          "durationSeconds": 341.32,
+          "filename": "07. Chris Carter - Noncompos.flac",
+          "position": 7,
+          "startTime": 1867.959999
+        },
+        {
+          "durationSeconds": 298.666667,
+          "filename": "08. SubHQ - The Abyss.flac",
+          "position": 8,
+          "startTime": 2209.279999
+        },
+        {
+          "durationSeconds": 270.213333,
+          "filename": "09. Player One - Into the Darkness.flac",
+          "position": 9,
+          "startTime": 2507.946666
+        },
+        {
+          "durationSeconds": 305.76,
+          "filename": "10. Atomic Hooligan - Club Shaker.flac",
+          "position": 10,
+          "startTime": 2778.159999
+        },
+        {
+          "durationSeconds": 383.986667,
+          "filename": "11. Aquasky vs. Masterblaster - 777.flac",
+          "position": 11,
+          "startTime": 3083.919999
+        },
+        {
+          "durationSeconds": 241.786667,
+          "filename": "12. Meat Katie - rotten dot com.flac",
+          "position": 12,
+          "startTime": 3467.906666
+        },
+        {
+          "durationSeconds": 312.893333,
+          "filename": "13. Spider Mite - Three Guesser.flac",
+          "position": 13,
+          "startTime": 3709.693333
+        },
+        {
+          "durationSeconds": 372.786667,
+          "filename": "14. Mechanoise Sound System - Psychotic Break.flac",
+          "position": 14,
+          "startTime": 4022.586666
+        }
+      ]
+    },
+    {
+      "continuousFiles": [],
+      "durationDifferenceSeconds": -0.546667,
+      "episodeDurationSeconds": 4795,
+      "episodeId": "wp-330",
+      "metadataMismatchPositions": [
+        6,
+        9,
+        10
+      ],
+      "sourceDirectory": "2002-01-01 - Fracture - Movement",
+      "splitDurationSeconds": 4794.453333,
+      "status": "applied",
+      "trackCount": 11,
+      "tracks": [
+        {
+          "durationSeconds": 591.08,
+          "filename": "01. Way Out West - Earth (Waveform).flac",
+          "position": 1,
+          "startTime": 0.0
+        },
+        {
+          "durationSeconds": 381.626667,
+          "filename": "02. Miro - Paradise (Farmatronic).flac",
+          "position": 2,
+          "startTime": 591.08
+        },
+        {
+          "durationSeconds": 367.0,
+          "filename": "03. Amiel - The Chase (Hi-Fi Bugs).flac",
+          "position": 3,
+          "startTime": 972.706667
+        },
+        {
+          "durationSeconds": 616.533333,
+          "filename": "04. Gus Gus - Purple.flac",
+          "position": 4,
+          "startTime": 1339.706667
+        },
+        {
+          "durationSeconds": 403.653333,
+          "filename": "05. Beber & Tamra - You Wonder (Starecase).flac",
+          "position": 5,
+          "startTime": 1956.24
+        },
+        {
+          "durationSeconds": 376.146667,
+          "filename": "06. Jan Johnston - As The Cracks Appears (Humate).flac",
+          "position": 6,
+          "startTime": 2359.893333
+        },
+        {
+          "durationSeconds": 326.6,
+          "filename": "07. Clanger - Seadog (Way Out West).flac",
+          "position": 7,
+          "startTime": 2736.04
+        },
+        {
+          "durationSeconds": 396.28,
+          "filename": "08. Austin Leeds - Nutmeg (The Light vs. Proper Filthy Naughty).flac",
+          "position": 8,
+          "startTime": 3062.64
+        },
+        {
+          "durationSeconds": 425.32,
+          "filename": "09. Freefall ft. Jan Johnston - Skydive (Hi-Fi Bugs).flac",
+          "position": 9,
+          "startTime": 3458.92
+        },
+        {
+          "durationSeconds": 558.16,
+          "filename": "10. Hi-Fi Bugs - Lydian & The Dinosaur.flac",
+          "position": 10,
+          "startTime": 3884.24
+        },
+        {
+          "durationSeconds": 352.053333,
+          "filename": "11. Private Taste - First (Ashtrax).flac",
+          "position": 11,
+          "startTime": 4442.4
+        }
+      ]
+    },
+    {
+      "continuousFiles": [],
+      "durationDifferenceSeconds": -0.04,
+      "episodeDurationSeconds": 4464,
+      "episodeId": "wp-333",
+      "metadataMismatchPositions": [
+        10,
+        12
+      ],
+      "sourceDirectory": "2001-11-02 - Trey Turner - Aftershock",
+      "splitDurationSeconds": 4463.96,
+      "status": "applied",
+      "trackCount": 12,
+      "tracks": [
+        {
+          "durationSeconds": 455.546667,
+          "filename": "01. Way Out West - Sequoia.flac",
+          "position": 1,
+          "startTime": 0.0
+        },
+        {
+          "durationSeconds": 398.226667,
+          "filename": "02. Ashtrax - Helsinki.flac",
+          "position": 2,
+          "startTime": 455.546667
+        },
+        {
+          "durationSeconds": 351.986667,
+          "filename": "03. BT - Running Down the Way Up.flac",
+          "position": 3,
+          "startTime": 853.773334
+        },
+        {
+          "durationSeconds": 355.56,
+          "filename": "04. SIGMA 7 - Against the Wall.flac",
+          "position": 4,
+          "startTime": 1205.760001
+        },
+        {
+          "durationSeconds": 387.533333,
+          "filename": "05. Pressure Drop - Warrior Sound (Adam Freeland).flac",
+          "position": 5,
+          "startTime": 1561.320001
+        },
+        {
+          "durationSeconds": 302.253333,
+          "filename": "06. Sonic Infusion - Reformatted (General Midi).flac",
+          "position": 6,
+          "startTime": 1948.853334
+        },
+        {
+          "durationSeconds": 483.546667,
+          "filename": "07. Musique vs. U2 - New Year's Dub (Hybrid).flac",
+          "position": 7,
+          "startTime": 2251.106667
+        },
+        {
+          "durationSeconds": 355.573333,
+          "filename": "08. ASAP - Firebird.flac",
+          "position": 8,
+          "startTime": 2734.653334
+        },
+        {
+          "durationSeconds": 383.986667,
+          "filename": "09. Tarentella - Saturn (Quivver).flac",
+          "position": 9,
+          "startTime": 3090.226667
+        },
+        {
+          "durationSeconds": 391.093333,
+          "filename": "10. ├£berzone - Botz (Organik).flac",
+          "position": 10,
+          "startTime": 3474.213334
+        },
+        {
+          "durationSeconds": 204.44,
+          "filename": "11. SIGMA 7 - Exotic Punk.flac",
+          "position": 11,
+          "startTime": 3865.306667
+        },
+        {
+          "durationSeconds": 394.213333,
+          "filename": "12. Nubreed - Mutst.flac",
+          "position": 12,
+          "startTime": 4069.746667
+        }
+      ]
+    },
+    {
+      "continuousFiles": [],
+      "durationDifferenceSeconds": -0.08,
+      "episodeDurationSeconds": 4120,
+      "episodeId": "wp-335",
+      "metadataMismatchPositions": [
+        6,
+        7,
+        8,
+        10
+      ],
+      "sourceDirectory": "2001-11-01 - Trey Turner - Tremor",
+      "splitDurationSeconds": 4119.92,
+      "status": "applied",
+      "trackCount": 11,
+      "tracks": [
+        {
+          "durationSeconds": 426.693333,
+          "filename": "01. Kriminal - Loud and Proud (Hybrid).flac",
+          "position": 1,
+          "startTime": 0.0
+        },
+        {
+          "durationSeconds": 298.626667,
+          "filename": "02. Hybrid - Burnin'.flac",
+          "position": 2,
+          "startTime": 426.693333
+        },
+        {
+          "durationSeconds": 540.426667,
+          "filename": "03. Accadia - Into the Dawn (Ashtrax).flac",
+          "position": 3,
+          "startTime": 725.32
+        },
+        {
+          "durationSeconds": 488.88,
+          "filename": "04. Radiohead - Everything in Its Right Place (Hybrid).flac",
+          "position": 4,
+          "startTime": 1265.746667
+        },
+        {
+          "durationSeconds": 398.213333,
+          "filename": "05. John Creamer & Stephane K - I Love You (Hybrid).flac",
+          "position": 5,
+          "startTime": 1754.626667
+        },
+        {
+          "durationSeconds": 312.88,
+          "filename": "06. ├£berzone - Bounce (Max Graham).flac",
+          "position": 6,
+          "startTime": 2152.84
+        },
+        {
+          "durationSeconds": 412.426667,
+          "filename": "07. Leurol - Isokora (Bushwacka).flac",
+          "position": 7,
+          "startTime": 2465.72
+        },
+        {
+          "durationSeconds": 241.773333,
+          "filename": "08. Koma & Bones - High Rollin' (Rennie Pilgrem).flac",
+          "position": 8,
+          "startTime": 2878.146667
+        },
+        {
+          "durationSeconds": 355.546667,
+          "filename": "09. Koma & Bones - Morpheus.flac",
+          "position": 9,
+          "startTime": 3119.92
+        },
+        {
+          "durationSeconds": 259.56,
+          "filename": "10. ├£berzone - 2 Kool 4 Skool ft. Afrika Bombataa (Rennie Pilgrem).flac",
+          "position": 10,
+          "startTime": 3475.466667
+        },
+        {
+          "durationSeconds": 384.893333,
+          "filename": "11. Chris Carter - Moonshot.flac",
+          "position": 11,
+          "startTime": 3735.026667
+        }
+      ]
+    },
+    {
+      "continuousFiles": [],
+      "durationDifferenceSeconds": 0.200001,
+      "episodeDurationSeconds": 4229,
+      "episodeId": "wp-337",
+      "metadataMismatchPositions": [],
+      "sourceDirectory": "2001-08-01 - Fracture - Broken",
+      "splitDurationSeconds": 4229.200001,
+      "status": "applied",
+      "trackCount": 13,
+      "tracks": [
+        {
+          "durationSeconds": 509.8,
+          "filename": "01. The Chemical Brothers - It Began in Afrika.flac",
+          "position": 1,
+          "startTime": 0.0
+        },
+        {
+          "durationSeconds": 229.28,
+          "filename": "02. Lee Combs & Drum Attic Twins - Tribal Tension.flac",
+          "position": 2,
+          "startTime": 509.8
+        },
+        {
+          "durationSeconds": 301.0,
+          "filename": "03. Rennie Pilgrem & Dub Species - The Sermon.flac",
+          "position": 3,
+          "startTime": 739.08
+        },
+        {
+          "durationSeconds": 330.226667,
+          "filename": "04. Deep Cover - Beatstalker (General Midi).flac",
+          "position": 4,
+          "startTime": 1040.08
+        },
+        {
+          "durationSeconds": 263.72,
+          "filename": "05. Bedrock - Weekend Warrior (Terminalhead).flac",
+          "position": 5,
+          "startTime": 1370.306667
+        },
+        {
+          "durationSeconds": 378.506667,
+          "filename": "06. La Liga - Black Russian (Koma & Bones).flac",
+          "position": 6,
+          "startTime": 1634.026667
+        },
+        {
+          "durationSeconds": 288.866667,
+          "filename": "07. Aquasky vs. Master Blaster - Sure Shot.flac",
+          "position": 7,
+          "startTime": 2012.533334
+        },
+        {
+          "durationSeconds": 315.693333,
+          "filename": "08. Uberzone - Rhythm Device.flac",
+          "position": 8,
+          "startTime": 2301.400001
+        },
+        {
+          "durationSeconds": 301.4,
+          "filename": "09. Rennie Pilgrem - Eskimo.flac",
+          "position": 9,
+          "startTime": 2617.093334
+        },
+        {
+          "durationSeconds": 317.6,
+          "filename": "10. Sabotage - I Saw the Future.flac",
+          "position": 10,
+          "startTime": 2918.493334
+        },
+        {
+          "durationSeconds": 343.76,
+          "filename": "11. JDS - Nine Ways (Plump DJs).flac",
+          "position": 11,
+          "startTime": 3236.093334
+        },
+        {
+          "durationSeconds": 229.72,
+          "filename": "12. Rhythm Division - Skin.flac",
+          "position": 12,
+          "startTime": 3579.853334
+        },
+        {
+          "durationSeconds": 419.626667,
+          "filename": "13. Hybrid - Snyper (High Velocity).flac",
+          "position": 13,
+          "startTime": 3809.573334
+        }
+      ]
+    },
+    {
+      "continuousFiles": [],
+      "durationDifferenceSeconds": -0.402813,
+      "episodeDurationSeconds": 3588,
+      "episodeId": "wp-389",
+      "metadataMismatchPositions": [],
+      "sourceDirectory": "2013-05-19 - Trey Turner - Phoning It In",
+      "splitDurationSeconds": 3587.597187,
+      "status": "applied",
+      "trackCount": 21,
+      "tracks": [
+        {
+          "durationSeconds": 225.0339,
+          "filename": "01. Rudy Zygadlo - Melpomene.flac",
+          "position": 1,
+          "startTime": 0.0
+        },
+        {
+          "durationSeconds": 179.437687,
+          "filename": "02. Moonbase Commander  - Ekisaitobaiku.flac",
+          "position": 2,
+          "startTime": 225.0339
+        },
+        {
+          "durationSeconds": 191.239184,
+          "filename": "03. Krampfhaft - Makin' Magic.flac",
+          "position": 3,
+          "startTime": 404.471587
+        },
+        {
+          "durationSeconds": 135.188413,
+          "filename": "04. Funckarma - Nays of Dight (Herrmutt Lobby).flac",
+          "position": 4,
+          "startTime": 595.710771
+        },
+        {
+          "durationSeconds": 125.856667,
+          "filename": "05. Doshy - Phases.flac",
+          "position": 5,
+          "startTime": 730.899184
+        },
+        {
+          "durationSeconds": 67.510884,
+          "filename": "06. Doshy - Toys.flac",
+          "position": 6,
+          "startTime": 856.755851
+        },
+        {
+          "durationSeconds": 217.109501,
+          "filename": "07. Krampfhaft - Cork.flac",
+          "position": 7,
+          "startTime": 924.266735
+        },
+        {
+          "durationSeconds": 151.870998,
+          "filename": "08. Eloq - Inner G.flac",
+          "position": 8,
+          "startTime": 1141.376236
+        },
+        {
+          "durationSeconds": 180.837098,
+          "filename": "09. Two Fingers - Vengeance Rhythm (KOAN Sound).flac",
+          "position": 9,
+          "startTime": 1293.247234
+        },
+        {
+          "durationSeconds": 95.579433,
+          "filename": "10. Damscray - Smellin Feelin (+verb).flac",
+          "position": 10,
+          "startTime": 1474.084332
+        },
+        {
+          "durationSeconds": 182.978571,
+          "filename": "11. Eloq - C'mon.flac",
+          "position": 11,
+          "startTime": 1569.663765
+        },
+        {
+          "durationSeconds": 236.719546,
+          "filename": "12. Koloah - Mirage.flac",
+          "position": 12,
+          "startTime": 1752.642336
+        },
+        {
+          "durationSeconds": 149.053651,
+          "filename": "13. Aquadrop - Street Player (Instrumental).flac",
+          "position": 13,
+          "startTime": 1989.361882
+        },
+        {
+          "durationSeconds": 219.39907,
+          "filename": "14. TNGHT - Acrylics.flac",
+          "position": 14,
+          "startTime": 2138.415533
+        },
+        {
+          "durationSeconds": 184.26932,
+          "filename": "15. Rudy Zygadlo - Arrows.flac",
+          "position": 15,
+          "startTime": 2357.814603
+        },
+        {
+          "durationSeconds": 185.741315,
+          "filename": "16. Eloq - Last Night A Random Girl (She Saved My Life).flac",
+          "position": 16,
+          "startTime": 2542.083923
+        },
+        {
+          "durationSeconds": 176.263673,
+          "filename": "17. Mr. Rogers - Too Many Notes.flac",
+          "position": 17,
+          "startTime": 2727.825238
+        },
+        {
+          "durationSeconds": 136.161927,
+          "filename": "18. Lakritze - Tropical Meat.flac",
+          "position": 18,
+          "startTime": 2904.088911
+        },
+        {
+          "durationSeconds": 150.550748,
+          "filename": "19. Kelpe - Margins.flac",
+          "position": 19,
+          "startTime": 3040.250838
+        },
+        {
+          "durationSeconds": 174.186667,
+          "filename": "20. Kelpe - No Film.flac",
+          "position": 20,
+          "startTime": 3190.801586
+        },
+        {
+          "durationSeconds": 222.608934,
+          "filename": "21. Kelpe - Goldfishing.flac",
+          "position": 21,
+          "startTime": 3364.988253
+        }
+      ]
+    },
+    {
+      "continuousFiles": [],
+      "durationDifferenceSeconds": 0.193561,
+      "episodeDurationSeconds": 3394,
+      "episodeId": "wp-399",
+      "metadataMismatchPositions": [],
+      "sourceDirectory": "2014-01-01 - Trey Turner - MMXIV",
+      "splitDurationSeconds": 3394.193561,
+      "status": "applied",
+      "trackCount": 18,
+      "tracks": [
+        {
+          "durationSeconds": 309.309002,
+          "filename": "01. Si Begg - From My Laptop.flac",
+          "position": 1,
+          "startTime": 0.0
+        },
+        {
+          "durationSeconds": 264.652676,
+          "filename": "02. Hedflux - Integrator.flac",
+          "position": 2,
+          "startTime": 309.309002
+        },
+        {
+          "durationSeconds": 225.489615,
+          "filename": "03. Lazer Sword - Batman.flac",
+          "position": 3,
+          "startTime": 573.961678
+        },
+        {
+          "durationSeconds": 214.038617,
+          "filename": "04. Machinedrum - Now U Know Tha Deal 4 Real.flac",
+          "position": 4,
+          "startTime": 799.451293
+        },
+        {
+          "durationSeconds": 164.202993,
+          "filename": "05. kLL sMTH - Shock.flac",
+          "position": 5,
+          "startTime": 1013.48991
+        },
+        {
+          "durationSeconds": 90.783787,
+          "filename": "06. Lakritze - Zooza Sub.flac",
+          "position": 6,
+          "startTime": 1177.692903
+        },
+        {
+          "durationSeconds": 159.525147,
+          "filename": "07. G Jones - 32.flac",
+          "position": 7,
+          "startTime": 1268.47669
+        },
+        {
+          "durationSeconds": 125.178005,
+          "filename": "08. Doshy - DolLz.flac",
+          "position": 8,
+          "startTime": 1428.001837
+        },
+        {
+          "durationSeconds": 257.821905,
+          "filename": "09. Si Begg - Let's Roll.flac",
+          "position": 9,
+          "startTime": 1553.179842
+        },
+        {
+          "durationSeconds": 124.321746,
+          "filename": "10. Krampfhaft - Perfect Gain Structure.flac",
+          "position": 10,
+          "startTime": 1811.001747
+        },
+        {
+          "durationSeconds": 174.823651,
+          "filename": "11. Krampfhaft - Twin Prime.flac",
+          "position": 11,
+          "startTime": 1935.323493
+        },
+        {
+          "durationSeconds": 187.983651,
+          "filename": "12. Dr. Knobz - You Swervin.flac",
+          "position": 12,
+          "startTime": 2110.147144
+        },
+        {
+          "durationSeconds": 275.956644,
+          "filename": "13. Noisia - Imperial.flac",
+          "position": 13,
+          "startTime": 2298.130795
+        },
+        {
+          "durationSeconds": 132.248345,
+          "filename": "14. Two Fingers - Defender Rhythm.flac",
+          "position": 14,
+          "startTime": 2574.087439
+        },
+        {
+          "durationSeconds": 148.56805,
+          "filename": "15. Martsman - Halow.flac",
+          "position": 15,
+          "startTime": 2706.335784
+        },
+        {
+          "durationSeconds": 153.889637,
+          "filename": "16. N3GUS - Snakes ft. Carasel.flac",
+          "position": 16,
+          "startTime": 2854.903834
+        },
+        {
+          "durationSeconds": 136.264104,
+          "filename": "17. Two Fingers - Smurf ft. Brefontaine.flac",
+          "position": 17,
+          "startTime": 3008.793471
+        },
+        {
+          "durationSeconds": 249.135986,
+          "filename": "18. Bil Bless - Driple.flac",
+          "position": 18,
+          "startTime": 3145.057575
+        }
+      ]
+    },
+    {
+      "continuousFiles": [],
+      "durationDifferenceSeconds": -19.650612,
+      "episodeDurationSeconds": 3416,
+      "episodeId": "wp-417",
+      "metadataMismatchPositions": [],
+      "sourceDirectory": "2015-11-20 - Trey Turner - Praxis",
+      "splitDurationSeconds": 3396.349388,
+      "status": "withheld-duration-mismatch",
+      "trackCount": 21,
+      "tracks": [
+        {
+          "durationSeconds": 208.794059,
+          "filename": "01. KRNE - Chariots.flac",
+          "position": 1,
+          "startTime": 0.0
+        },
+        {
+          "durationSeconds": 186.687166,
+          "filename": "02. Herzeloyde - Air.flac",
+          "position": 2,
+          "startTime": 208.794059
+        },
+        {
+          "durationSeconds": 177.561678,
+          "filename": "03. Icicle - Hani.flac",
+          "position": 3,
+          "startTime": 395.481225
+        },
+        {
+          "durationSeconds": 81.760726,
+          "filename": "04. Moody Good - Docbond.flac",
+          "position": 4,
+          "startTime": 573.042903
+        },
+        {
+          "durationSeconds": 101.888231,
+          "filename": "05. Hudson Mohawke - Lil Djembe.flac",
+          "position": 5,
+          "startTime": 654.803629
+        },
+        {
+          "durationSeconds": 160.251134,
+          "filename": "06. KRNE & Herzeloyde - Shows.flac",
+          "position": 6,
+          "startTime": 756.69186
+        },
+        {
+          "durationSeconds": 220.588413,
+          "filename": "07. Bil Bless - Wipher Snapher.flac",
+          "position": 7,
+          "startTime": 916.942994
+        },
+        {
+          "durationSeconds": 121.915125,
+          "filename": "08. Djemba Djemba - Oh Ok Yah Thats Cool.flac",
+          "position": 8,
+          "startTime": 1137.531407
+        },
+        {
+          "durationSeconds": 170.72941,
+          "filename": "09. Sibot - Magnet Jam.flac",
+          "position": 9,
+          "startTime": 1259.446532
+        },
+        {
+          "durationSeconds": 173.916281,
+          "filename": "10. Shades - Into Light.flac",
+          "position": 10,
+          "startTime": 1430.175942
+        },
+        {
+          "durationSeconds": 122.131905,
+          "filename": "11. Herzeloyde - milly.G.flac",
+          "position": 11,
+          "startTime": 1604.092223
+        },
+        {
+          "durationSeconds": 229.84288,
+          "filename": "12. Swindle - Elevator ft. TC.flac",
+          "position": 12,
+          "startTime": 1726.224128
+        },
+        {
+          "durationSeconds": 104.620748,
+          "filename": "13. G Jones - Lavender Town.flac",
+          "position": 13,
+          "startTime": 1956.067008
+        },
+        {
+          "durationSeconds": 99.441723,
+          "filename": "14. Mr. Carmack - Tour For Days.flac",
+          "position": 14,
+          "startTime": 2060.687756
+        },
+        {
+          "durationSeconds": 147.19746,
+          "filename": "15. KRNE - Dollar Sines.flac",
+          "position": 15,
+          "startTime": 2160.129479
+        },
+        {
+          "durationSeconds": 114.278481,
+          "filename": "16. Subp Yao - UNKNWN.flac",
+          "position": 16,
+          "startTime": 2307.326939
+        },
+        {
+          "durationSeconds": 171.987166,
+          "filename": "17. EPROM - Regis Chillbin (Machinedrum).flac",
+          "position": 17,
+          "startTime": 2421.60542
+        },
+        {
+          "durationSeconds": 152.400249,
+          "filename": "18. Icicle - Mechanisms.flac",
+          "position": 18,
+          "startTime": 2593.592586
+        },
+        {
+          "durationSeconds": 213.265351,
+          "filename": "19. RJD2 - Her Majesty's Socialist Request.flac",
+          "position": 19,
+          "startTime": 2745.992835
+        },
+        {
+          "durationSeconds": 198.184762,
+          "filename": "20. Tipper - It's Like.flac",
+          "position": 20,
+          "startTime": 2959.258186
+        },
+        {
+          "durationSeconds": 238.90644,
+          "filename": "21. Bil Bless - ClownBag.flac",
+          "position": 21,
+          "startTime": 3157.442948
+        }
+      ]
+    },
+    {
+      "continuousFiles": [],
+      "durationDifferenceSeconds": -0.260386,
+      "episodeDurationSeconds": 4139,
+      "episodeId": "wp-428",
+      "metadataMismatchPositions": [],
+      "sourceDirectory": "2016-08-28 - Trey Turner & Cody Haynes - Archived Transmission",
+      "splitDurationSeconds": 4138.739614,
+      "status": "applied",
+      "trackCount": 14,
+      "tracks": [
+        {
+          "durationSeconds": 189.79576,
+          "filename": "01. Tipper - Tip Hop.flac",
+          "position": 1,
+          "startTime": 0.0
+        },
+        {
+          "durationSeconds": 200.486508,
+          "filename": "02. Hive - Sci-Clone.flac",
+          "position": 2,
+          "startTime": 189.79576
+        },
+        {
+          "durationSeconds": 216.0,
+          "filename": "03. Adam Freeland - Fear.flac",
+          "position": 3,
+          "startTime": 390.282268
+        },
+        {
+          "durationSeconds": 258.427007,
+          "filename": "04. Terminalhead - No Conflict.flac",
+          "position": 4,
+          "startTime": 606.282268
+        },
+        {
+          "durationSeconds": 252.116893,
+          "filename": "05. Leftfield - Inspection (Check One).flac",
+          "position": 5,
+          "startTime": 864.709275
+        },
+        {
+          "durationSeconds": 263.885306,
+          "filename": "06. Webcore - Control Freak.flac",
+          "position": 6,
+          "startTime": 1116.826168
+        },
+        {
+          "durationSeconds": 298.257506,
+          "filename": "07. Way Out West - King of the Funk.flac",
+          "position": 7,
+          "startTime": 1380.711474
+        },
+        {
+          "durationSeconds": 395.146825,
+          "filename": "08. Lunatic Calm - Centista (Elite Force).flac",
+          "position": 8,
+          "startTime": 1678.96898
+        },
+        {
+          "durationSeconds": 305.474807,
+          "filename": "09. Chris Carter - Siren.flac",
+          "position": 9,
+          "startTime": 2074.115805
+        },
+        {
+          "durationSeconds": 411.509297,
+          "filename": "10. Evil Nine - Cakehole (Midnight Son).flac",
+          "position": 10,
+          "startTime": 2379.590612
+        },
+        {
+          "durationSeconds": 366.754739,
+          "filename": "11. Fine Cut Bodies - Trekk Far.flac",
+          "position": 11,
+          "startTime": 2791.099909
+        },
+        {
+          "durationSeconds": 468.998299,
+          "filename": "12. Amb - Moxa (Raster's Rewire).flac",
+          "position": 12,
+          "startTime": 3157.854648
+        },
+        {
+          "durationSeconds": 309.620499,
+          "filename": "13. 2nd Gen - And Or (Buckfunk 3000).flac",
+          "position": 13,
+          "startTime": 3626.852947
+        },
+        {
+          "durationSeconds": 202.266168,
+          "filename": "14. Leftfield & Roots Manuva - Dusted (Tipper).flac",
+          "position": 14,
+          "startTime": 3936.473446
+        }
+      ]
+    },
+    {
+      "continuousFiles": [],
+      "durationDifferenceSeconds": 0.098389,
+      "episodeDurationSeconds": 4817,
+      "episodeId": "wp-473",
+      "metadataMismatchPositions": [],
+      "sourceDirectory": "2019-05-04 - Trey Turner - The Dark Prophet",
+      "splitDurationSeconds": 4817.098389,
+      "status": "applied",
+      "trackCount": 21,
+      "tracks": [
+        {
+          "durationSeconds": 357.514467,
+          "filename": "01. Fre4knc - The Source.flac",
+          "position": 1,
+          "startTime": 0.0
+        },
+        {
+          "durationSeconds": 200.856871,
+          "filename": "02. Bredren - Whose Rights.flac",
+          "position": 2,
+          "startTime": 357.514467
+        },
+        {
+          "durationSeconds": 267.774376,
+          "filename": "03. Abstract Elements - Delirium.flac",
+          "position": 3,
+          "startTime": 558.371338
+        },
+        {
+          "durationSeconds": 223.083129,
+          "filename": "04. Mystic State - Sling Blade.flac",
+          "position": 4,
+          "startTime": 826.145714
+        },
+        {
+          "durationSeconds": 245.305465,
+          "filename": "05. Black Barrel - Ghostdive.flac",
+          "position": 5,
+          "startTime": 1049.228843
+        },
+        {
+          "durationSeconds": 245.10449,
+          "filename": "06. Sustance - Recognise.flac",
+          "position": 6,
+          "startTime": 1294.534308
+        },
+        {
+          "durationSeconds": 243.835782,
+          "filename": "07. Sully & Outer Heaven - Dream Sequence.flac",
+          "position": 7,
+          "startTime": 1539.638798
+        },
+        {
+          "durationSeconds": 133.915896,
+          "filename": "08. Smuskind & Seibel - Orbit.flac",
+          "position": 8,
+          "startTime": 1783.47458
+        },
+        {
+          "durationSeconds": 221.96127,
+          "filename": "09. Natural Forces - Bloodline.flac",
+          "position": 9,
+          "startTime": 1917.390476
+        },
+        {
+          "durationSeconds": 223.352676,
+          "filename": "10. Sinic - Left Turn.flac",
+          "position": 10,
+          "startTime": 2139.351746
+        },
+        {
+          "durationSeconds": 221.860317,
+          "filename": "11. Reptile - Just Fade Away VIP.flac",
+          "position": 11,
+          "startTime": 2362.704422
+        },
+        {
+          "durationSeconds": 312.559478,
+          "filename": "12. Amoss - That Way East.flac",
+          "position": 12,
+          "startTime": 2584.564739
+        },
+        {
+          "durationSeconds": 247.018458,
+          "filename": "13. Axon - STTR.flac",
+          "position": 13,
+          "startTime": 2897.124217
+        },
+        {
+          "durationSeconds": 202.101338,
+          "filename": "14. Cruk & Signal - Illusion.flac",
+          "position": 14,
+          "startTime": 3144.142675
+        },
+        {
+          "durationSeconds": 112.245578,
+          "filename": "15. Mr. Explicit - Essential.flac",
+          "position": 15,
+          "startTime": 3346.244013
+        },
+        {
+          "durationSeconds": 235.473016,
+          "filename": "16. Black Barrel - Ultra Violence.flac",
+          "position": 16,
+          "startTime": 3458.489591
+        },
+        {
+          "durationSeconds": 190.694286,
+          "filename": "17. Enei - The Process ft. DRS.flac",
+          "position": 17,
+          "startTime": 3693.962607
+        },
+        {
+          "durationSeconds": 203.290703,
+          "filename": "18. Exept & Visages - Rotary.flac",
+          "position": 18,
+          "startTime": 3884.656893
+        },
+        {
+          "durationSeconds": 247.752494,
+          "filename": "19. Phentix - On By One.flac",
+          "position": 19,
+          "startTime": 4087.947596
+        },
+        {
+          "durationSeconds": 180.164739,
+          "filename": "20. Forest Drive West - Jungle Crack.flac",
+          "position": 20,
+          "startTime": 4335.70009
+        },
+        {
+          "durationSeconds": 301.23356,
+          "filename": "21. Picota & Kumbh - Dancing Swing.flac",
+          "position": 21,
+          "startTime": 4515.864829
+        }
+      ]
+    }
+  ],
+  "formatVersion": 1,
+  "id": "track-timings-392f70d1e8ccc88c",
+  "source": {
+    "kind": "owner-supplied ffprobe split-FLAC duration listing",
+    "receivedDate": "2026-09-07",
+    "sha256": "0c654d844c2464abfc2a1359cb92344cb51c6ba87dfd0def7d1c1c9abfe3ac80"
+  },
+  "summary": {
+    "appliedEpisodeCount": 21,
+    "appliedTrackCount": 317,
+    "continuousOnlyEpisodeCount": 1,
+    "listedFileCount": 340,
+    "matchedEpisodeCount": 23,
+    "splitTrackFileCount": 338,
+    "withheldEpisodeCount": 1
+  }
+}

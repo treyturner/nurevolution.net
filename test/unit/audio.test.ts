@@ -1,0 +1,135 @@
+import { describe, expect, it, vi } from 'vitest'
+import {
+  createAudioAdapter,
+  type AudioEvent,
+  type AudioPort,
+} from '../../app/services/audio'
+
+class ControlledAudio extends EventTarget implements AudioPort {
+  src = ''
+  paused = true
+  load = vi.fn(() => {
+    this.paused = true
+  })
+  play = vi.fn(async () => {
+    this.paused = false
+    this.dispatchEvent(new Event('play'))
+  })
+  pause = vi.fn(() => {
+    this.paused = true
+    this.dispatchEvent(new Event('pause'))
+  })
+}
+
+describe('audio adapter', () => {
+  it('loads a source without initiating playback', () => {
+    const element = new ControlledAudio()
+    const audio = createAudioAdapter(element)
+    expect(element.load).not.toHaveBeenCalled()
+    audio.load('/episode.mp3')
+    expect(element.src).toBe('/episode.mp3')
+    expect(element.load).toHaveBeenCalledOnce()
+    expect(element.paused).toBe(true)
+    expect(element.play).not.toHaveBeenCalled()
+  })
+
+  it('allows explicit playback and pause', async () => {
+    const element = new ControlledAudio()
+    const audio = createAudioAdapter(element)
+    await audio.play()
+    expect(element.paused).toBe(false)
+    audio.pause()
+    expect(element.paused).toBe(true)
+  })
+
+  it('propagates a rejected play request without retrying', async () => {
+    const element = new ControlledAudio()
+    const rejection = new Error('Playback was denied')
+    element.play.mockRejectedValueOnce(rejection)
+    await expect(createAudioAdapter(element).play()).rejects.toBe(rejection)
+    expect(element.play).toHaveBeenCalledOnce()
+    expect(element.paused).toBe(true)
+  })
+
+  it.each<AudioEvent>(['loadedmetadata', 'play', 'pause', 'ended', 'error'])(
+    'subscribes to %s and stops notifications after unsubscribe',
+    (name) => {
+      const element = new ControlledAudio()
+      const listener = vi.fn()
+      const unsubscribe = createAudioAdapter(element).subscribe(name, listener)
+      const event = new Event(name)
+      element.dispatchEvent(event)
+      expect(listener).toHaveBeenCalledWith(event)
+      unsubscribe()
+      unsubscribe()
+      element.dispatchEvent(new Event(name))
+      expect(listener).toHaveBeenCalledOnce()
+    },
+  )
+
+  it('keeps subscriptions with the same callback independent', () => {
+    const element = new ControlledAudio()
+    const audio = createAudioAdapter(element)
+    const listener = vi.fn()
+    const first = audio.subscribe('play', listener)
+    const second = audio.subscribe('play', listener)
+    element.dispatchEvent(new Event('play'))
+    expect(listener).toHaveBeenCalledTimes(2)
+    first()
+    element.dispatchEvent(new Event('play'))
+    expect(listener).toHaveBeenCalledTimes(3)
+    second()
+    element.dispatchEvent(new Event('play'))
+    expect(listener).toHaveBeenCalledTimes(3)
+  })
+
+  it('disposes its own listeners, pauses, and tolerates repeated cleanup', async () => {
+    const element = new ControlledAudio()
+    const audio = createAudioAdapter(element)
+    const owned = vi.fn()
+    const external = vi.fn()
+    element.addEventListener('pause', external)
+    const unsubscribe = audio.subscribe('pause', owned)
+    audio.subscribe('ended', owned)
+    await audio.play()
+    audio.dispose()
+    expect(element.paused).toBe(true)
+    expect(external).toHaveBeenCalledOnce()
+    expect(owned).not.toHaveBeenCalled()
+    audio.dispose()
+    unsubscribe()
+    element.dispatchEvent(new Event('ended'))
+    expect(owned).not.toHaveBeenCalled()
+    expect(element.pause).toHaveBeenCalledOnce()
+  })
+
+  it('rejects operations after disposal so stale owners cannot restart audio', () => {
+    const element = new ControlledAudio()
+    const audio = createAudioAdapter(element)
+    audio.dispose()
+    for (const operation of [
+      () => audio.load('/another.mp3'),
+      () => audio.play(),
+      () => audio.pause(),
+      () => audio.subscribe('play', vi.fn()),
+    ]) {
+      expect(operation).toThrow('disposed')
+    }
+    expect(element.play).not.toHaveBeenCalled()
+    expect(element.load).not.toHaveBeenCalled()
+  })
+
+  it('keeps separate players isolated', async () => {
+    const first = new ControlledAudio()
+    const second = new ControlledAudio()
+    const firstAdapter = createAudioAdapter(first)
+    const secondAdapter = createAudioAdapter(second)
+    firstAdapter.load('/first.mp3')
+    secondAdapter.load('/second.mp3')
+    await firstAdapter.play()
+    secondAdapter.dispose()
+    expect(first.src).toBe('/first.mp3')
+    expect(first.paused).toBe(false)
+    expect(second.paused).toBe(true)
+  })
+})

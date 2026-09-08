@@ -1,0 +1,397 @@
+{
+  "episodes": [
+    {
+      "artist": "EazyTom",
+      "artworkAssetId": "asset-8852f319e6e2c322",
+      "artworkEvidence": {
+        "attachmentId": 257,
+        "derivativeAssetIds": [],
+        "feedArtworkUrl": null,
+        "relativePath": "2011/09/2011_09_14-Eazy_Tom-Star_Whores_Live_at_the_Pink_Palace-320kbps.png",
+        "storage": "file-backed"
+      },
+      "audioAssetId": "asset-f861b34eac38c3bb",
+      "databaseMedia": {
+        "byteLength": 133906379,
+        "duration": "55:24",
+        "feedDuration": "0:55:24",
+        "filename": "2011_09_14-Eazy_Tom-Star_Whores_Live_at_the_Pink_Palace-320kbps.mp3",
+        "podPressByteLength": 133906379,
+        "podPressRepresentation": "PHP serialized _podPressMedia"
+      },
+      "descriptionHtml": "Time traveling glitch DJ EazyTom takes a pause to drop a new mixdown dunked in crunk and dusted with a glaze of glitch from another planet.",
+      "disposition": "migrate",
+      "enclosure": {
+        "byteLength": 133906379,
+        "type": "audio/mpeg",
+        "url": "https://podcast.nurevolution.net/2011_09_14-Eazy_Tom-Star_Whores_Live_at_the_Pink_Palace-320kbps.mp3"
+      },
+      "exclusionReason": null,
+      "feedContentHtml": "<p>Time traveling glitch DJ EazyTom takes a pause to drop a new mixdown dunked in crunk and dusted with a glaze of glitch from another planet.</p>\n",
+      "feedDescriptionHtml": "Time traveling glitch DJ EazyTom takes a pause to drop a new mixdown dunked in crunk and dusted with a glaze of glitch from another planet.",
+      "id": "wp-196",
+      "legacyUrls": [
+        "https://nurevolution.net/podcast/eazytom-star_whores"
+      ],
+      "originalIdentity": {
+        "databaseGuid": "https://nurevolution.net/?p=196",
+        "feedGuid": "https://nurevolution.net/?p=196",
+        "feedGuidIsPermalink": false,
+        "feedGuidIsPermalinkSource": "false"
+      },
+      "publication": {
+        "databaseLocal": "2011-09-14 12:00:50",
+        "databaseUtc": "2011-09-14 18:00:50",
+        "feedRfc822": "Wed, 14 Sep 2011 18:00:50 +0000"
+      },
+      "sourceRecord": {
+        "id": 196,
+        "postType": "one_page_portfolio",
+        "table": "fnnehoc_posts"
+      },
+      "title": "Star Whores",
+      "tracklist": {
+        "count": 15,
+        "source": "ACF repeater postmeta",
+        "timestampsAvailable": false,
+        "tracks": [
+          {
+            "artist": "Juno Reactor",
+            "position": 1,
+            "startTime": null,
+            "title": "Landing"
+          },
+          {
+            "artist": "Deru",
+            "position": 2,
+            "startTime": null,
+            "title": "Confused"
+          },
+          {
+            "artist": "Hypha",
+            "position": 3,
+            "startTime": null,
+            "title": "Puddle Melter"
+          },
+          {
+            "artist": "Hypha",
+            "position": 4,
+            "startTime": null,
+            "title": "Casaverde"
+          },
+          {
+            "artist": "Hypha",
+            "position": 5,
+            "startTime": null,
+            "title": "Phixations"
+          },
+          {
+            "artist": "Electromass",
+            "position": 6,
+            "startTime": null,
+            "title": "Dripping"
+          },
+          {
+            "artist": "Thriftworks",
+            "position": 7,
+            "startTime": null,
+            "title": "Port Au Mento"
+          },
+          {
+            "artist": "Knight Riderz",
+            "position": 8,
+            "startTime": null,
+            "title": "12th Dimension"
+          },
+          {
+            "artist": "Blunt Instrument",
+            "position": 9,
+            "startTime": null,
+            "title": "Battle Toad"
+          },
+          {
+            "artist": "Heyoka",
+            "position": 10,
+            "startTime": null,
+            "title": "Glibidy Glob"
+          },
+          {
+            "artist": "Heyoka",
+            "position": 11,
+            "startTime": null,
+            "title": "Jade"
+          },
+          {
+            "artist": "Opiuo",
+            "position": 12,
+            "startTime": null,
+            "title": "King Prawn"
+          },
+          {
+            "artist": "Love & Light",
+            "position": 13,
+            "startTime": null,
+            "title": "Structural Liberation"
+          },
+          {
+            "artist": "Opiuo",
+            "position": 14,
+            "startTime": null,
+            "title": "Petrichor"
+          },
+          {
+            "artist": "Thriftworks",
+            "position": 15,
+            "startTime": null,
+            "title": "Eisenblaster"
+          }
+        ]
+      }
+    },
+    {
+      "artist": "Fracture",
+      "artworkAssetId": "asset-4f28530d0509b084",
+      "artworkEvidence": {
+        "attachmentId": 343,
+        "derivativeAssetIds": [],
+        "feedArtworkUrl": null,
+        "relativePath": "2013/06/louvre.jpg",
+        "storage": "file-backed"
+      },
+      "audioAssetId": "asset-f47b47e3fbf09500",
+      "databaseMedia": {
+        "byteLength": 58630247,
+        "duration": "40:43",
+        "feedDuration": "0:40:43",
+        "filename": "2002_03_21-fracture-live_on_mega_93.3_fm-part1-192kbps.mp3",
+        "podPressByteLength": 58630247,
+        "podPressRepresentation": "PHP serialized _podPressMedia"
+      },
+      "descriptionHtml": "Nuskool breakbeat mixed live on the air",
+      "disposition": "migrate",
+      "enclosure": {
+        "byteLength": 58630247,
+        "type": "audio/mpeg",
+        "url": "https://podcast.nurevolution.net/2002_03_21-fracture-live_on_mega_93.3_fm-part1-192kbps.mp3"
+      },
+      "exclusionReason": null,
+      "feedContentHtml": "<p>Nuskool breakbeat mixed live on the air</p>\n",
+      "feedDescriptionHtml": "Nuskool breakbeat mixed live",
+      "id": "wp-342",
+      "legacyUrls": [
+        "https://nurevolution.net/podcast/fracture-live_on_mega_93-3fm_mar_21_2002_part_1"
+      ],
+      "originalIdentity": {
+        "databaseGuid": "https://nurevolution.net/?p=342",
+        "feedGuid": "https://nurevolution.net/?p=342",
+        "feedGuidIsPermalink": false,
+        "feedGuidIsPermalinkSource": "false"
+      },
+      "publication": {
+        "databaseLocal": "2002-03-21 12:00:47",
+        "databaseUtc": "2002-03-21 18:00:47",
+        "feedRfc822": "Thu, 21 Mar 2002 18:00:47 +0000"
+      },
+      "sourceRecord": {
+        "id": 342,
+        "postType": "one_page_portfolio",
+        "table": "fnnehoc_posts"
+      },
+      "title": "Live on Mega 93.3FM (Mar. 21, 2002) Part 1",
+      "tracklist": {
+        "count": 0,
+        "source": "ACF repeater postmeta",
+        "timestampsAvailable": false,
+        "tracks": []
+      }
+    },
+    {
+      "artist": "Trey Turner",
+      "artworkAssetId": "asset-0aae6b03b5300a3f",
+      "artworkEvidence": {
+        "attachmentId": 485,
+        "derivativeAssetIds": [
+          "asset-57fe373471790156",
+          "asset-6a586afe89debeee",
+          "asset-866b604055b533ee",
+          "asset-89889748c8be755c",
+          "asset-899b1cee22a26802",
+          "asset-926078568518b099",
+          "asset-d8c109f5049b9aef"
+        ],
+        "feedArtworkUrl": null,
+        "relativePath": "2020/05/2020_05_09-Trey_Turner-Ruminate.png",
+        "storage": "file-backed"
+      },
+      "audioAssetId": "asset-5df28ae03c827b0f",
+      "databaseMedia": {
+        "byteLength": 145672454,
+        "duration": "1:00:10",
+        "feedDuration": "1:00:10",
+        "filename": "2020_05_09-Trey_Turner-Ruminate-320kbps.mp3",
+        "podPressByteLength": 145672454,
+        "podPressRepresentation": "PHP serialized _podPressMedia"
+      },
+      "descriptionHtml": "<p style=\"text-align: left;\">r u m i n a t e</p>",
+      "disposition": "migrate",
+      "enclosure": {
+        "byteLength": 145672454,
+        "type": "audio/mpeg",
+        "url": "https://podcast.nurevolution.net/2020_05_09-Trey_Turner-Ruminate-320kbps.mp3"
+      },
+      "exclusionReason": null,
+      "feedContentHtml": "<p style=\"text-align: left;\">r u m i n a t e</p>\n",
+      "feedDescriptionHtml": "r u m i n a t e",
+      "id": "wp-484",
+      "legacyUrls": [
+        "https://nurevolution.net/podcast/trey_turner-ruminate"
+      ],
+      "originalIdentity": {
+        "databaseGuid": "https://nurevolution.net/?post_type=one_page_portfolio&#038;p=484",
+        "feedGuid": "https://nurevolution.net/?post_type=one_page_portfolio&p=484",
+        "feedGuidIsPermalink": false,
+        "feedGuidIsPermalinkSource": "false"
+      },
+      "publication": {
+        "databaseLocal": "2020-05-09 00:02:57",
+        "databaseUtc": "2020-05-09 06:02:57",
+        "feedRfc822": "Sat, 09 May 2020 06:02:57 +0000"
+      },
+      "sourceRecord": {
+        "id": 484,
+        "postType": "one_page_portfolio",
+        "table": "fnnehoc_posts"
+      },
+      "title": "Ruminate",
+      "tracklist": {
+        "count": 20,
+        "source": "ACF repeater postmeta",
+        "timestampsAvailable": false,
+        "tracks": [
+          {
+            "artist": "Mat Zo",
+            "position": 1,
+            "startTime": null,
+            "title": "Troglodyte"
+          },
+          {
+            "artist": "Tsuruda",
+            "position": 2,
+            "startTime": null,
+            "title": "Pack Heat"
+          },
+          {
+            "artist": "Ivy Lab",
+            "position": 3,
+            "startTime": null,
+            "title": "Orange"
+          },
+          {
+            "artist": "QZB & Vorso",
+            "position": 4,
+            "startTime": null,
+            "title": "Needle (QZB)"
+          },
+          {
+            "artist": "Abstract Elements",
+            "position": 5,
+            "startTime": null,
+            "title": "Myriapoda"
+          },
+          {
+            "artist": "Bensley",
+            "position": 6,
+            "startTime": null,
+            "title": "Arpeggio Deluxe"
+          },
+          {
+            "artist": "Razat",
+            "position": 7,
+            "startTime": null,
+            "title": "Bit Crush"
+          },
+          {
+            "artist": "Jimme Pé",
+            "position": 8,
+            "startTime": null,
+            "title": "Falangaa"
+          },
+          {
+            "artist": "Subp Yao & DAYLE",
+            "position": 9,
+            "startTime": null,
+            "title": "Oxygen"
+          },
+          {
+            "artist": "no puls",
+            "position": 10,
+            "startTime": null,
+            "title": "Drama Scene"
+          },
+          {
+            "artist": "Balatron",
+            "position": 11,
+            "startTime": null,
+            "title": "Dat Buddah Shii"
+          },
+          {
+            "artist": "Great Dane",
+            "position": 12,
+            "startTime": null,
+            "title": "Break It"
+          },
+          {
+            "artist": "Hybris",
+            "position": 13,
+            "startTime": null,
+            "title": "Rubber Ducky"
+          },
+          {
+            "artist": "Noisia & The Upbeats",
+            "position": 14,
+            "startTime": null,
+            "title": "Halcyon"
+          },
+          {
+            "artist": "Mono/Poly",
+            "position": 15,
+            "startTime": null,
+            "title": "The Fuckin' Real"
+          },
+          {
+            "artist": "Sinic",
+            "position": 16,
+            "startTime": null,
+            "title": "Take It Or Leave It"
+          },
+          {
+            "artist": "Former",
+            "position": 17,
+            "startTime": null,
+            "title": "Fogweaver"
+          },
+          {
+            "artist": "Deadcrow",
+            "position": 18,
+            "startTime": null,
+            "title": "#VERYRARE"
+          },
+          {
+            "artist": "Posij",
+            "position": 19,
+            "startTime": null,
+            "title": "Pump Pump"
+          },
+          {
+            "artist": "Culprate",
+            "position": 20,
+            "startTime": null,
+            "title": "Inside"
+          }
+        ]
+      }
+    }
+  ],
+  "formatVersion": 1,
+  "purpose": "Sanitized public examples of observed source variations for importer and feed tests."
+}

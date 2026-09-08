@@ -1,0 +1,16 @@
+node_modules/
+.nuxt/
+.output/
+.data/
+.cache/
+.local/
+.env
+.env.*
+!.env.example
+coverage/
+playwright-report/
+test-results/
+*.tsbuildinfo
+__pycache__/
+*.py[cod]
+.DS_Store

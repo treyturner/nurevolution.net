@@ -1,0 +1,67 @@
+{
+  "formatVersion": 1,
+  "id": "m2-praxis-duration-2026-09-08",
+  "episodeId": "wp-417",
+  "sourceSnapshotId": "nurevolution-sources-2026-09-07",
+  "inventorySha256": "06b0de23c9a22959acf721c9fc9be82e49691a89ab8cc355fc808b7567aa42fe",
+  "trackTimingsSha256": "dd787d166708f4c5b727089a2c6f35aee5b113b7bfac40e907a1cc5f1a7aaed7",
+  "audioAsset": {
+    "id": "asset-cfd112ac1a267eb8",
+    "sourceRoot": "audio",
+    "relativePath": "2015_11_20-Trey_Turner-Praxis-v0.mp3",
+    "byteLength": 104560655,
+    "sha256": "03b4cb9a682b02711095cf7543b48a31a8f08e4155a4aa68b9632921c7e5f227"
+  },
+  "inspection": {
+    "date": "2026-09-08",
+    "reader": "mutagen 1.48.1 MPEGInfo",
+    "method": "Read MPEG/Xing/LAME stream metadata; matched the local file SHA-256 to M0. No full decode or playback audit was performed.",
+    "durationSeconds": 3396.349387755102,
+    "sampleRate": 44100,
+    "channels": 2,
+    "bitrateMode": "VBR",
+    "sketchy": false
+  },
+  "legacyDurationSeconds": 3416,
+  "preciseSplitDurationSeconds": 3396.349388,
+  "canonicalDurationSeconds": 3396.349388,
+  "timingEvidenceId": "track-timings-392f70d1e8ccc88c",
+  "screenshot": {
+    "attachmentFileName": "codex-clipboard-6b85028f-cfe6-4077-a72e-33da09827f23.png",
+    "sha256": "e75746fac357d2e5effb8ad867122b020b0b9c1c81ec3fc43bd4d575d1e1b3af",
+    "displayedDurations": [
+      "3:29",
+      "3:07",
+      "2:58",
+      "1:22",
+      "1:42",
+      "2:40",
+      "3:41",
+      "2:02",
+      "2:51",
+      "2:54",
+      "2:02",
+      "3:50",
+      "1:45",
+      "1:39",
+      "2:27",
+      "1:54",
+      "2:52",
+      "2:32",
+      "3:33",
+      "3:18",
+      "3:59"
+    ],
+    "displayedTotalSeconds": 3397,
+    "interpretation": "All 21 displayed durations match the existing precise split durations rounded to the nearest second. Use the precise split starts, not sums of the rounded display values."
+  },
+  "decision": {
+    "status": "planned-correction",
+    "applyInMilestone": "M2",
+    "replaceDurationMetadata": true,
+    "importPreciseStarts": true,
+    "trackCount": 21,
+    "preserveFrozenM0Artifacts": true,
+    "supersedesForCanonicalImport": "M0-TRACK-TIMING-417"
+  }
+}

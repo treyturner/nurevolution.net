@@ -1,0 +1,44 @@
+{
+  "name": "nurevolution",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@12.3.4",
+  "engines": {
+    "node": "22.23.2"
+  },
+  "scripts": {
+    "dev": "nuxt dev",
+    "prepare": "nuxt prepare",
+    "build": "nuxt build",
+    "build:fixture": "nuxt build test/fixtures/media-app",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "lint": "eslint .",
+    "typecheck": "nuxt typecheck && vue-tsc --noEmit -p tsconfig.test.json",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "test:migration": "python3 -m unittest discover -s tools/migration/tests -p 'test_*.py'",
+    "check:migration": "python3 tools/migration/audit.py check --inventory docs/migration/inventory.json --legacy-urls docs/migration/legacy-urls.json --track-timings docs/migration/track-timings.json",
+    "test:e2e": "pnpm build:fixture && playwright test",
+    "verify": "pnpm prepare && pnpm format:check && pnpm lint && pnpm typecheck && pnpm test:migration && pnpm check:migration && pnpm test:coverage && pnpm build && pnpm test:e2e"
+  },
+  "dependencies": {
+    "nuxt": "4.5.2",
+    "vue": "3.5.42",
+    "vue-router": "5.3.1"
+  },
+  "devDependencies": {
+    "@nuxt/eslint": "1.17.0",
+    "@nuxt/test-utils": "4.2.0",
+    "@playwright/test": "1.63.0",
+    "@types/node": "22.20.1",
+    "@vitest/coverage-v8": "4.1.11",
+    "@vue/test-utils": "2.5.0",
+    "eslint": "10.10.0",
+    "happy-dom": "20.14.0",
+    "prettier": "3.9.6",
+    "typescript": "6.0.3",
+    "vitest": "4.1.11",
+    "vue-tsc": "3.3.11"
+  }
+}

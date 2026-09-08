@@ -1,0 +1,58 @@
+:root {
+  color-scheme: dark;
+  font-family: system-ui, sans-serif;
+  background: #101216;
+  color: #f1f3f6;
+  font-size: 100%;
+  line-height: 1.6;
+  --focus-color: #a5c7ff;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+}
+
+.app-shell {
+  width: min(100% - 2rem, 72rem);
+  margin-inline: auto;
+}
+
+main {
+  padding-block: clamp(2rem, 8vw, 6rem);
+}
+
+h1 {
+  margin: 0;
+  font-size: clamp(2rem, 6vw, 4rem);
+  font-weight: 650;
+  letter-spacing: -0.04em;
+  line-height: 1.15;
+  overflow-wrap: anywhere;
+}
+
+a {
+  color: var(--focus-color);
+}
+
+:focus-visible {
+  outline: 3px solid var(--focus-color);
+  outline-offset: 5px;
+}
+
+.skip-link {
+  position: fixed;
+  inset-block-start: 0.75rem;
+  inset-inline-start: 1rem;
+  z-index: 1;
+  padding: 0.5rem 1rem;
+  background: #101216;
+  transform: translateY(-200%);
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+}

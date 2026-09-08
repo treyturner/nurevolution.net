@@ -1,0 +1,17 @@
+node_modules/
+**/.nuxt/
+**/.output/
+.data/
+.cache/
+.local/
+coverage/
+playwright-report/
+test-results/
+pnpm-lock.yaml
+# Preserve canonical audit output and exact media fixture bytes.
+docs/migration/
+test/fixtures/**/*.wav
+# Generated audit outputs retain the migration tool's canonical formatting.
+docs/migration/inventory.json
+docs/migration/legacy-urls.json
+docs/migration/MIGRATION-AUDIT.md
