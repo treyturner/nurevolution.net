@@ -1,0 +1,216 @@
+# M3 — Replacement podcast RSS
+
+Status: **Ready for implementation; planning complete.** Plan date: 2026-09-08. No blocking owner decisions remain. This document authorizes no production cutover or directory submission.
+
+Roadmap: [M3](../../ROADMAP.md#m3--replacement-podcast-rss). Prerequisites: [M2 content and completion evidence](M02-canonical-content.md), [M0 audit](../migration/MIGRATION-AUDIT.md), and [BOOTSTRAP.md](../BOOTSTRAP.md). Supplemental source evidence: [M03-feed-reference.json](evidence/M03-feed-reference.json).
+
+## Outcome and boundaries
+
+Deliver R1-FEED: the complete compatible podcast RSS at `/feed/podcast`, generated from the same canonical archive and publication predicate as the website. Supply the feed endpoint needed by R1-SUBSCRIBE and a repeatable compatibility check for M5/M6 cutover.
+
+Include verified channel metadata, a pure XML serializer, Nitro routing, conditional requests, complete-archive compatibility tests, and a public validation checklist. Preserve the existing podcast identity, domain, GUIDs, publication instants, enclosure URLs/types/byte lengths, and show-artwork references. This implements the feed without a WordPress, podPress, database, or live-network dependency.
+
+Episode pages, the player, and historical page redirects belong to M4. Production storage, media delivery, TLS, cache/proxy configuration, and rollback rehearsal belong to M5/M6. Draft tooling and scheduling remain M8; episode feed artwork, chapters, and other optional namespaces remain M9. Do not re-audit all media, modify the WordPress installation, change a directory listing, or deploy this milestone as part of implementation.
+
+## Readiness and baseline evidence
+
+- PR [#1](https://github.com/treyturner/nurevolution.net/pull/1) is squash merged. The checkout was switched to `main` and pulled to `422b52fb83789b1ae839291691a6b64ab65f9c0c`; it was clean before this planning work. The merged tree matches the final M2 branch, including its WebKit audio-test fix.
+- [GitHub Actions on the merged commit](https://github.com/treyturner/nurevolution.net/actions/runs/34268434890) passed. A fresh local `CI=1 pnpm verify` on that commit also passed: 111 Vitest tests, 12 Python migration tests, and 28 Playwright checks. Two redundant portability checks are intentionally skipped in Firefox/WebKit. Coverage: 98.32% statements, 98.17% lines, 98.55% functions, 96.16% branches.
+- M2 supplies 55 published episodes, 832 tracks, 338 known starts across 22 episodes, 156 assets, and 55 historical page mappings. All episode GUID flags are `false`. There is no permanent 55-item limit. Praxis retains its documented corrected duration, **3396.349388 seconds**.
+- The 2026-09-08 read-only feed capture is byte-identical to M0's frozen feed: 89,377 bytes, SHA-256 `98168181a068b9566dada12ecd4b98ea18cce2cac97df2f4ef0d6e8f9e2f5d6e`. All 55 GUIDs/flags, publication instants, enclosure tuples, and item links agree with M2. The supplemental evidence records channel fields and every item's title, author, and explicit flag; no new private export is required.
+- The existing channel language is `en-US`, category is `Music`, author is `nurevolution studios`, and channel plus all 55 items use legacy explicit value `no`. These are existing published labels, not a new content-rating assessment. The plan carries their meaning forward as `false`.
+- Local, hash-matched show artwork is JPEG: the standard image's actual frame is 144×144 and the iTunes image's frame is 1500×1500, each with three components. Both files have misleading Exif dimensions of 3000×3000; use frame dimensions. The iTunes image meets Apple's RSS size range. This was a metadata inspection, not a decode or production delivery test. [Apple show-cover specifications](https://podcasters.apple.com/support/5514-show-cover-template)
+
+M0's three recorded issues remain non-blocking historical evidence; its Praxis exception is already addressed by M2. No additional source dump, media copy, category choice, contact address, or release-scheduling decision blocks M3 planning.
+
+### Existing implementation seams
+
+| Existing target                                            | Reuse or extension                                                                                                                                |
+| ---------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `shared/content/schema.ts`                                 | Strict canonical schemas and inferred types. Add the channel RSS settings and optional episode explicit override described below.                 |
+| `shared/content/public.ts`                                 | `selectPublic`, `showPublic`, and `episodeDetail` remain the shared selection, ordering, and media-resolution functions.                          |
+| `server/content/validate.ts`                               | Continue complete catalog/reference/uniqueness checks. Add a separate assertion for the RSS metadata required by a runnable catalog.              |
+| `server/content/repository.ts`                             | Extend `publicArchive(asOf)` with the feed projection. Keep one catalog load and one call to `selectPublic` per archive request.                  |
+| `server/utils/content.ts`, `nuxt.config.ts`                | Reuse Nitro server-asset loading and the existing production catalog cache; do not read the checkout at runtime or fetch the app's own HTTP APIs. |
+| `tools/content/source.ts`, `tools/content/check.ts`        | Preserve the original M2 import candidate and report. The current-content gate must additionally reject missing/invalid RSS metadata.             |
+| `test/unit/content/`, `test/e2e/content.spec.ts`           | Retain historical/import/publication coverage and extend repository fixtures deliberately. Add focused feed suites.                               |
+| `package.json`, `vitest.config.ts`, `playwright.config.ts` | Use the pinned toolchain, existing production server, and canonical verification gate.                                                            |
+
+## Resolved implementation decisions
+
+These are implementation choices based on the existing roadmap and inspected evidence. They do not add owner requirements.
+
+### Canonical metadata and import compatibility
+
+Add a strict `rss` object to the maintained `content/show.json`:
+
+```json
+{
+  "language": "en-US",
+  "category": "Music",
+  "author": "nurevolution studios",
+  "explicit": false,
+  "subtitle": "Austin DJ/Producers Trey Turner & friends",
+  "copyright": "Copyright © nurevolution studios 2026",
+  "owner": {
+    "name": "nurevolution studios",
+    "email": "tturner@nurevolution.net"
+  }
+}
+```
+
+The existing show title, description, URLs, and asset IDs remain their sole canonical sources. `language`, `category`, `author`, and `explicit` are required within `rss`; `subtitle`, `copyright`, and the complete `owner` pair are optional. Use strict booleans and nonblank XML-safe strings. Validate the language and category against the supported values used by this show (`en-US` and `Music`); broad language/category authoring, subcategories, and serial-show configuration are unnecessary here. Retain the published owner address in RSS only; this adds no website contact feature. Copyright is authored text, trimmed once from the legacy value; never advance its year from the request clock. [Apple's supported categories](https://podcasters.apple.com/support/1691-apple-podcasts-categories)
+
+Add optional `explicit: boolean` to the episode schema. An absent value inherits `show.rss.explicit`; an explicit `false` must override a `true` default. All 55 existing records can remain byte-for-byte unchanged and inherit the verified `false` value. This is a metadata capability, not draft/scheduling tooling.
+
+The M2 importer is a frozen historical transformation. A required new field in its base schema would change its output or make its old candidate invalid. Handle the distinction explicitly:
+
+1. Keep `schemaVersion: 1` and make `show.rss` optional in the backward-compatible base schema. Do not add schema defaults that appear in parsed legacy output. Validate its complete strict shape whenever present.
+2. Add `requireRssMetadata(show)` (with a narrowed return type and `show.json: rss...` diagnostics). Call it from `readCatalog` before returning a runnable catalog. Consequently all normal repositories, `check:content`, and `build` require RSS settings. The serializer's projection also requires the narrowed settings; never silently invent them.
+3. Keep `createCandidate` using base `validateCatalog`, without the runnable-catalog assertion. Preserve the M0 input pins, Praxis correction, generated initial files, report bytes, and `protectHistory` rules.
+4. Separate historical candidate fixtures from runnable catalog fixtures in tests. Runtime fixtures explicitly add the verified RSS object; import reproducibility tests continue to exercise the unmodified M2 output.
+5. After this authored show change, `import:wordpress --check --output content` should report a `show.json` reconciliation conflict with exit code 2, while `check:content` passes. Document that expected result. An import into a fresh scratch directory remains a faithful M2 candidate; add reviewed RSS settings before treating it as a runnable M3 archive.
+
+The supplemental evidence is a test/planning reference, never a production content source. Do not import `docs/migration`, the evidence JSON, or the original import report into the feed renderer.
+
+### Feed projection and item links
+
+Extend `contentRepository.publicArchive(asOf)` to return its existing resolved show and episode detail fields plus:
+
+- `show.rss`: the required validated RSS settings, copied into the result.
+- Each episode's `rss`: `{ link: string, explicit: boolean }`, projected from canonical settings and mappings.
+
+Keep `/api/show`, `/api/episodes`, and `/api/episodes/<slug>` response shapes unchanged. Derive feed types from the projection; do not duplicate the archive schema. Returned nested values must not mutate the cached catalog. The feed takes one finite request instant and uses the existing published/nonfuture predicate and descending-date/ascending-ID order. It must not filter, paginate, or sort again in its serializer.
+
+For historical items, use the exact `content/legacy-urls.json` URL mapped to the episode. If future authoring supplies more than one mapping, select the first by deterministic code-unit URL order. For an episode without a mapping, resolve its saved `/episodes/<slug>` path against canonical `show.siteUrl`. Never derive URLs from request headers or editable titles. Existing feed item links therefore continue to work on the live WordPress site before M4; M4 must redirect those historical paths to the saved canonical episode pages. New episode links require M4's pages before release.
+
+### XML serialization contract
+
+Create a pure `serializePodcastRss(archive): string` in `server/rss/serialize.ts`, with small reusable XML primitives in `server/rss/xml.ts`. It receives an already-selected, validated projection. It performs no I/O, environment lookup, current-time calculation, media probing, or mutation.
+
+Use an explicit XML template and context-appropriate escaping, with no new runtime dependency. Emit UTF-8 XML 1.0 with one RSS 2.0 root, one channel, deterministic element/attribute ordering, and a final newline. Use these namespace bindings only: `itunes="http://www.itunes.com/dtds/podcast-1.0.dtd"`, `content="http://purl.org/rss/1.0/modules/content/"`, and `atom="http://www.w3.org/2005/Atom"`. RSS core elements have no default namespace.
+
+| Level / field                        | Exact M3 behavior                                                                                                                                                                                                                                                                                      |
+| ------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Channel title, link, description     | Use canonical show title, site URL, and plain description text.                                                                                                                                                                                                                                        |
+| Atom self link                       | `href=show.feedUrl`, `rel="self"`, `type="application/rss+xml"`; always the canonical feed URL, including requests through an alias or preview host.                                                                                                                                                   |
+| Language and category                | Emit verified `en-US`; emit RSS `category` and `itunes:category text="Music"`.                                                                                                                                                                                                                         |
+| Channel author and explicit          | `itunes:author` from RSS settings; `itunes:explicit` as lowercase `true` or `false`. Omit `itunes:type` to retain the existing episodic default.                                                                                                                                                       |
+| Existing supplemental channel fields | Emit optional `itunes:subtitle` and copyright if present. Derive `itunes:summary` from the canonical show description. If owner is present, emit its name/email and derive RSS `managingEditor` and `webMaster` as `email (name)`, matching the legacy values. Omit absent optional elements entirely. |
+| Show images                          | Retain both canonical asset URLs. RSS `image` uses show title, canonical site URL, width/height 144. `itunes:image` uses the 1500px artwork URL in `href`. Do not emit per-item artwork.                                                                                                               |
+| Refresh metadata                     | Emit RSS `ttl` of `1` minute. Omit `lastBuildDate`, channel `pubDate`, and WordPress syndication fields; no trustworthy canonical editorial-revision timestamp exists yet.                                                                                                                             |
+| Item title and author                | `<title>` is exactly `${artist} – ${title}` with U+2013 and surrounding spaces; `itunes:author` is canonical artist. Do not put an artist name in RSS `author`, whose format is an email address.                                                                                                      |
+| Item link                            | Use the projected exact historical URL or saved-slug fallback above.                                                                                                                                                                                                                                   |
+| Item GUID                            | Emit the exact opaque canonical string, with an explicit lowercase `isPermaLink` attribute on every item. XML escaping must round-trip to the same parsed value.                                                                                                                                       |
+| Item publication                     | Format the canonical UTC instant with `Date.toUTCString()` (e.g. `Sat, 09 May 2020 06:02:57 GMT`). Do not recalculate dates from slugs, filenames, local timezone, or request time.                                                                                                                    |
+| Item enclosure                       | Exactly one enclosure with the exact canonical URL, base-10 integer byte length, and media type. Do not URL-normalize, decode, re-encode, or infer file sizes.                                                                                                                                         |
+| Item description                     | Emit the full canonical safe `descriptionHtml` in both RSS `description` and `content:encoded`, wrapped in CDATA. This replaces WordPress's truncated excerpts without maintaining a second description.                                                                                               |
+| Item duration                        | Emit integer seconds as `String(Math.max(1, Math.round(durationSeconds)))`; omit when `null`. Praxis becomes `3396`. Preserve fractional canonical values for the player.                                                                                                                              |
+| Item explicit                        | Emit the projected boolean as lowercase `true` or `false`.                                                                                                                                                                                                                                             |
+
+The core RSS mapping follows the [RSS 2.0 specification](https://www.rssboard.org/rss-specification). Apple's tag guide supports the episode date/duration formats, show metadata, and HTML descriptions used here. [Apple RSS tag guide](https://help.apple.com/itc/podcasts_connect/en.lproj/itcb54353390.html)
+
+Escape text and attributes without decoding existing strings first. Preserve Unicode, including emoji and literal `<3`; reject XML 1.0-forbidden code points and unpaired surrogates with field diagnostics rather than silently deleting or replacing them. Allow legal tab/newline characters in descriptions. Preserve CDATA content by splitting every literal `]]>` across adjacent sections. Preserve carriage returns with numeric references outside CDATA, and attribute whitespace with numeric references, so XML whitespace normalization cannot alter the input. Parsing the generated description element must recover the canonical HTML string exactly, including its HTML entities; parsing that HTML then recovers the visible text. No DOCTYPE, external entities, dynamically chosen tag names, or CDATA around arbitrary attribute values.
+
+Validate these output constraints in the content/build gate as well as the serializer boundary, so malformed authoring cannot become a runtime-only feed failure. Reuse these checks; do not introduce a second sanitizer or trim/rewrite episode identity values.
+
+### Reviewed differences from the legacy feed
+
+Compatibility means retaining subscription identity and accurately projecting canonical content. The following differences are explicit and must be asserted in tests:
+
+- Five item titles use M2's straight apostrophe instead of WordPress's typographic apostrophe: `wp-208`, `wp-267`, `wp-293`, `wp-298`, and `wp-311`. `wp-344` uses canonical `93.3 FM` instead of `93.3FM`. The complete before/after strings are in the evidence JSON. Keep one editable canonical title instead of adding feed-only overrides.
+- `wp-196`'s feed author becomes canonical `EazyTom`; the legacy item used `nurevolution studios`. All other item authors already agree.
+- Descriptions use M2's full sanitized content, retaining its paragraph/link/emoji corrections. Duration formatting changes from colon-separated times to seconds; Praxis additionally carries M2's existing 20-second correction.
+- Channel and item explicit labels change from legacy `no` to current `false`. The copyright loses one trailing space; RSS image link changes from the installation path `/wp` to the canonical site URL.
+- Omit WordPress generator, comment URLs/counts, `dc:creator`, repeated keyword lists, ineffective `itunes:block=no`, and the redundant `itunes:new-feed-url` pointing to itself. Omit obsolete item subtitle/summary duplicates. Do not add `itunes:complete`, new-feed migration instructions, chapters, or episode numbers.
+- XML layout, equivalent date notation, feed freshness metadata, and the two alias redirects below change as specified. No GUID, GUID flag, enclosure tuple, publication instant, or historical item link changes.
+
+Test the full legacy metadata projection against the evidence, with these named exceptions. Keep a separate canonical-output assertion that allows later valid editorial changes; historical identity checks remain unconditional. Never treat all textual differences as either failures or implicitly acceptable.
+
+## HTTP routing, freshness, and failures
+
+Use `server/routes/feed/podcast.ts` for the canonical handler and a narrowly scoped `server/middleware/podcast-feed-alias.ts` for aliases. Keep request handling reusable in `server/rss/http.ts`, with injected archive reader and clock for tests. Reuse installed Nitro/H3 APIs and verify their actual behavior in the built Node server.
+
+| Request                                                    | Required result                                                                                                                                                                                                                                         |
+| ---------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `GET /feed/podcast`                                        | 200, full XML body, `Content-Type: application/rss+xml; charset=utf-8`, `X-Content-Type-Options: nosniff`. No browser challenge, authentication, cookies, HTML shell, or session variation.                                                             |
+| `HEAD /feed/podcast`                                       | Same representation headers/status as GET, with no response body.                                                                                                                                                                                       |
+| `/feed/podcast/`                                           | GET/HEAD: 301 with relative `Location: /feed/podcast`. This currently serves the same 55-item archive and is a verified compatibility alias.                                                                                                            |
+| `/?feed=podcast`                                           | GET/HEAD: the same 301. Recognize only the root path and exactly one `feed` parameter with value `podcast`; discard other query parameters on redirect. Preserve normal home/API/page handling for other paths, values, or duplicate `feed` parameters. |
+| `/wp/?feed=podcast`, `/wp/feed/podcast`                    | Read-only probes returned empty WordPress feeds, not this archive. Do not promote them to podcast aliases or redirect all `/wp` traffic. Record them as non-alias observations.                                                                         |
+| Other methods on the canonical route or recognized aliases | 405 with `Allow: GET, HEAD`, a short plain-text body (unless HEAD), and `Cache-Control: no-store`; no redirect for unsafe methods.                                                                                                                      |
+| Unknown routes / unrelated requests                        | Preserve existing routing and real 404 behavior. Do not intercept generic `feed`, uploads, or `/podcast/...` episode paths.                                                                                                                             |
+
+Canonical queries such as `/feed/podcast?tracking=value` cannot paginate or change the archive. The source evidence confirms that the two supported legacy aliases contain the same ordered 55 GUIDs; their old Atom self links varied with the request. The replacement uses one canonical self link.
+
+On successful canonical GET/HEAD and 304 responses, set `Cache-Control: public, max-age=60, must-revalidate`. Set the same 60-second cache policy on alias redirects. Produce a weak ETag `W/"<lowercase SHA-256 of UTF-8 XML bytes>"`; weak validation remains usable if a later proxy compresses the response. Do not use request time, build time, repository revision, media provenance, or unpublished records as the validator. Node's existing `node:crypto` is sufficient.
+
+Evaluate `If-None-Match` only after successful selection and serialization. Match `*` or any valid member of a quoted ETag list using weak comparison, including strong-client/weak-server equivalents. Handle whitespace and commas inside quoted opaque tags correctly; malformed headers must not produce a false 304. A match returns 304 without a body and retains ETag/cache headers. A stale/nonmatching header returns 200. Do not emit `Last-Modified`; ignore `If-Modified-Since` by itself and return the current representation. [HTTP validator semantics](https://www.rfc-editor.org/rfc/rfc9110.html#name-if-none-match)
+
+The existing production cache may retain the validated catalog, but public selection and response ETag must be recomputed per request. Avoid a permanently cached rendered feed or an unbounded stale-while-revalidate layer. The same visible content must have the same bytes and ETag across request times and restarts. An editorial change affecting rendered content or a newly visible episode changes the ETag. A draft-only or track-timestamp-only change does not. M8 must revisit the permitted 60-second freshness window and any intermediary cache before claiming scheduled publication precision.
+
+Catch repository/serialization failures at the feed boundary. Return 503, `text/plain; charset=utf-8`, `Cache-Control: no-store`, and `Feed temporarily unavailable.`; suppress the body for HEAD. Log the diagnostic server-side without sending stack traces or source paths. Never return 200 with partial items, an empty fallback archive, stale success headers, or a Nuxt HTML error page. Failure followed by recovery must work with the repository's existing rejected-cache reset.
+
+## Dependencies and implementation slices
+
+Retain Node 22.23.2, pnpm 12.3.4, Python 3.14.4, and the existing framework/test versions. Add only **`@xmldom/xmldom` 0.9.12** as an exact development dependency for independent namespace-aware XML parsing in Vitest/Playwright and the offline feed check. It includes its own types, declares Node >=14.6, and has no runtime dependencies. Use its parser with parse diagnostics promoted to test/check failures; do not use its serializer to generate production XML. Verify installation metadata and review the lockfile without changing peers or build-script policy. [Pinned package metadata](https://registry.npmjs.org/@xmldom%2fxmldom/0.9.12), [maintainer documentation](https://github.com/xmldom/xmldom)
+
+Implement in these bounded, reviewable slices:
+
+1. **Metadata and preserved import.** Extend `shared/content/schema.ts`, `server/content/validate.ts`, `server/content/repository.ts`, and `content/show.json`. Add the optional episode override without rewriting 55 files. Update `test/unit/content/fixtures.ts`, repository/domain/source tests, and the authoring guide. Prove the legacy candidate/report remains byte-identical, current RSS metadata is mandatory, and importer reconciliation differences are expected.
+2. **Projection and XML.** Extend `publicArchive` and add `server/rss/serialize.ts` and `server/rss/xml.ts`; keep projection/validation helpers under `server/content/` or `server/rss/` according to responsibility. Add `test/unit/rss/serialize.test.ts`, using the independent parser and existing complete archive fixtures. Cover full canonical output, all frozen identities, and every reviewed legacy difference before introducing HTTP routing.
+3. **Route and conditional requests.** Add `server/rss/http.ts`, `server/routes/feed/podcast.ts`, and the alias middleware. Add `test/unit/rss/http.test.ts` for injected times, header parsing, errors, and recovery. Test real handler execution using the same established approach as existing API tests; simple mocked registration alone is not sufficient evidence.
+4. **Independent compatibility command and built route.** Add `tools/content/check-feed.ts`, reusable parser/assertion helpers under `tools/content/feed/`, `test/unit/rss/check-feed.test.ts`, and `test/e2e/feed.spec.ts`. Add `pnpm check:feed`. Extend the existing production portability check to fetch the feed after copying only `.output` and launching outside the checkout. Reuse its server ownership and cleanup.
+5. **Gate and handoff.** Make `build` run `check:content` then `check:feed` before `nuxt build`. Preserve `verify` as the canonical sequence; it gains the feed gate through `build`, serializer/checker coverage through Vitest, and built-route checks through Playwright. Extend `tsconfig.content-tools.json` for any imported RSS modules, retaining explicit `.ts` imports and erasable Node-compatible TypeScript. Existing coverage globs already include `server/**`, `shared/**`, and `tools/content/**`; ensure new executable files remain covered. Add `docs/FEED-VALIDATION.md`; update `docs/CONTENT.md`, README, this plan's completion record, and the roadmap with actual results.
+
+`check:feed` is read-only and offline. It accepts `--output <content-directory>` consistently with `check:content` (default `content`), loads the current validated catalog, generates the full feed at one captured instant, parses it independently, and checks semantic fields and all protected historical identity tuples against the frozen M0 records. Print a compact success report with item count, oldest/newest IDs, XML byte count/hash, and historical comparisons; use nonzero exits and field/item diagnostics for invalid content/XML or mismatches. No current date or wall-clock expectation belongs in a stored snapshot. The original 55 identities remain protected while new valid episodes and intentional editorial changes remain allowed.
+
+Keep parser helpers independent of production escaping/date-formatting logic. Expected publication instants, GUIDs, and enclosure values must come from canonical/frozen inputs, not by calling the serializer's helpers again. Never download media, recapture the feed, or depend on credentials/private directories in this gate.
+
+## Acceptance tests and expected results
+
+| Scenario and input               | Expected result / layer                                                                                                                                                                                                                                                                                                                                                          |
+| -------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Complete current archive         | Independent DOM parsing finds RSS 2.0, exact namespace URIs, one channel and 55 items in shared public order; first `wp-484`, last `wp-337`. Compare every required channel/item field, all GUID flags, dates and enclosure attributes. Vitest and offline check.                                                                                                                |
+| Historical identity              | All 55 GUIDs match parsed M0 strings, including the 13 database entity variants; both Mega parts appear separately. No URL normalization for `%26`, `%27`, apostrophes, case, or synthetic Unicode. Legacy links remain exact.                                                                                                                                                   |
+| Legacy presentation              | Compare all 55 titles/authors/explicit labels from the supplemental evidence against the M2 baseline, allowing exactly the named changes. Confirm Praxis's generated duration is `3396`. Assert full canonical description HTML and both preserved hyperlinks/emoji; do not compare it to a truncated excerpt.                                                                   |
+| Added and edited content         | A valid 56th published episode appears without changing old identities; its link uses the saved slug. An editorial title/description correction changes output and ETag and passes the ordinary gate. A changed historical GUID/enclosure/date still fails.                                                                                                                      |
+| Publication boundaries and order | Inject time before/at/after an episode's instant. Drafts, null dates, and future records stay out; an exact-time publication appears in APIs and feed together. Equal dates sort by ID. No file-order dependence or mutation; zero visible items produces a valid empty RSS channel in a synthetic fixture. Future published authoring remains rejected by the M2 gate until M8. |
+| Optional metadata                | Omit absent subtitle/copyright/owner/duration completely; explicit overrides test both directions. False remains false. Missing required RSS settings, incomplete owner pairs, unsupported language/category, string booleans, or unknown keys fail with source-field diagnostics.                                                                                               |
+| XML boundaries                   | Round-trip `&`, `<`, `>`, single/double quotes, `]]>`, emoji, and HTML entities in text/attributes/descriptions. Reject NUL, forbidden controls and unpaired surrogates. Legal whitespace survives. Reject malformed XML, unexpected nesting/duplicates, wrong namespace bindings, and a DOCTYPE in the independent check.                                                       |
+| Invalid archive                  | Duplicate GUID/enclosure, invalid date, unsafe HTML/URL, missing/wrong-kind asset, invalid byte length, and wrong types fail before any public success response. Keep existing historical validation assertions.                                                                                                                                                                 |
+| Import preservation              | Unmodified source transformation is byte-identical in two scratch directories; original report hash stays fixed. Authored `show.rss` yields only the expected initial reconciliation difference. Missing RSS fails current-content/build validation, while generating the historical M2 candidate still succeeds.                                                                |
+| Real canonical GET and HEAD      | Against the built Node server, verify status, exact RSS content type/charset, full semantic archive, self URL, bodylessness of HEAD, content/cache headers, and absence of cookies/provenance. Run within all three existing Playwright projects. Do not fetch external media.                                                                                                   |
+| Aliases and exclusions           | Both verified aliases issue a single 301 to the canonical relative path; following yields the same archive and ETag. Test extra/duplicate/wrong-case query values, normal `/`, APIs, unknown paths, `/wp` paths, and episode paths. Unsupported feed methods return 405 and Allow; existing 404s remain intact.                                                                  |
+| Conditional requests             | GET/HEAD with identical, weak/strong-equivalent, list, wildcard, nonmatching, and malformed validators; check 304/200 and empty 304 bodies. Exercise quoted commas/whitespace. `If-Modified-Since` alone yields 200; ETag remains decisive when both headers are present.                                                                                                        |
+| Freshness                        | Fixed content at different injected times produces identical XML/hash. A publication boundary or rendered editorial change invalidates a prior ETag; hidden-only and non-rendered track changes do not. Headers declare the 60-second bound. Do not use real delays to simulate publication.                                                                                     |
+| Failure and recovery             | Inject read/validation/serialization failures for GET and HEAD: 503, no-store, generic non-HTML error, no success ETag. Restore input and get a valid 200; an old validator cannot turn a failed load into 304.                                                                                                                                                                  |
+| Deployment portability           | Copy only `.output`, run from another working directory, fetch and parse all 55 feed items. No checkout, private files, docs evidence, parser development package, or live WordPress request is required by the running server.                                                                                                                                                  |
+
+Browser accessibility/player tests remain in the existing gate; M3 adds no interactive controls requiring a new accessibility surface. Preserve the fixed real-media tests and existing coverage thresholds: 95% statements/lines/functions and 90% branches, with no threshold auto-update, exclusions, retry inflation, or new skips to accommodate failures.
+
+## Verification and public validation checklist
+
+During implementation, run focused metadata/serializer/HTTP tests after their respective slices, then `pnpm check:content`, `pnpm check:feed`, and **`CI=1 pnpm verify`**. Use the repository's declared pnpm setup. Capture the final commit, counts, coverage, built-route/portability results, source/report hashes, and any actual CI run. A planning baseline is not M3 completion evidence.
+
+`docs/FEED-VALIDATION.md` must distinguish these stages:
+
+1. **Automated local/CI:** independent XML/schema/identity comparisons, HTTP behavior, complete built archive, and portability. No external validator or directory account is required.
+2. **Public rehearsal in M5:** use a reachable rehearsal endpoint with production-equivalent routing, TLS, proxy and compression settings. Verify GET/HEAD, aliases, MIME types, conditional requests, absence of challenges, and feed retrieval without cookies. Check show artwork and representative/then complete enclosure delivery against the media plan, including byte lengths, HEAD and ranges, redirects, and unchanged historical URLs. Record URL, date, tool/client version, result, and remaining issues. [Apple feed-delivery requirements](https://podcasters.apple.com/support/823-podcast-requirements)
+3. **Cutover acceptance in M6:** repeat public checks against `https://nurevolution.net/feed/podcast`; use an external feed validator and actual podcast clients, including Apple Podcasts where available. Verify the existing subscription refreshes without duplicate/missing episodes, retains oldest/newest entries, and downloads/streams the existing media. Validate the current directory listing through the owner's existing access when available; do not create a second show or submit a staging feed as a new listing. Apple's technical validation and directory approval are separate results. [Apple validation guidance](https://podcasters.apple.com/support/829-validate-your-podcast)
+
+Public validator/client access and production media delivery are later-stage evidence, not missing decisions that prevent implementation. If such access is unavailable during M3, record those checks as pending M5/M6; never describe automated XML parsing as Apple acceptance.
+
+## Migration, rollback, and completion handoff
+
+The authored show extension is the only required canonical file edit. Existing episode and asset bytes, initial import report, M0 artifacts, and Praxis evidence remain untouched. The feed exposes public projections only; packaging must continue to keep raw content and provenance out of web-served assets.
+
+No feed URL or media migration is planned. Existing item page links must receive M4 redirects before WordPress retirement. M5 must preserve both show-artwork paths and all enclosure URLs, confirm compression/cache behavior with weak ETags, and keep feed/API responses out of any long-lived HTML cache. The current show artwork needs no redesign for M3's metadata requirement; reachability and delivery remain to be verified publicly.
+
+Before deployment, M5/M6 must retain a tested previous application/feed serving path and a rollback procedure that restores the same public feed URL and media paths. Reverting the application/schema/show change together is the code-level rollback; there are no database mutations. A deployment that emits wrong identities or fails feed retrieval must restore the known-good feed and invalidate affected caches under that procedure. M3 implementation itself performs no cutover.
+
+M3 is complete when the canonical metadata extension, serializer, route/aliases, offline feed check, and all specified automated tests are implemented and the final `pnpm verify` passes. Record results here and in the roadmap, link actual CI evidence when run, and retain a clear pending list for public M5/M6 checks. Handoff must name the historical link policy for M4, the 60-second freshness contract for M8, and omitted optional feed features for M9. M4 planning/implementation can proceed from the shared archive; integrated RSS acceptance uses this completed milestone.
+
+## Completion evidence
+
+Pending implementation. The readiness results above establish the M2 baseline only.

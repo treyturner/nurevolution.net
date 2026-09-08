@@ -1,0 +1,513 @@
+{
+  "schemaVersion": 1,
+  "purpose": "Supplemental public feed metadata and route evidence for M3 planning; original M0 artifacts remain unchanged",
+  "observedAt": "2026-09-08T19:27:18Z",
+  "aliasProbesAt": "2026-09-08T19:30:48Z",
+  "baselineCommit": "422b52fb83789b1ae839291691a6b64ab65f9c0c",
+  "sourceHashes": {
+    "docs/migration/inventory.json": "06b0de23c9a22959acf721c9fc9be82e49691a89ab8cc355fc808b7567aa42fe",
+    "docs/migration/legacy-urls.json": "0faa24917ba86aa6bbb76fee19698be2da2f05a208b0b47dfb269352f14fe49f",
+    "docs/migration/track-timings.json": "dd787d166708f4c5b727089a2c6f35aee5b113b7bfac40e907a1cc5f1a7aaed7",
+    "docs/milestones/evidence/M02-praxis-duration.json": "8b83af522374a834ae9354644edb2da9b10c78e3c9359bd9f43b312d0f65ec98",
+    "content/wordpress-import.json": "f3a69efe6183512c530a1bf796e513352608b9b550e7065390a655e1d8ad89dd"
+  },
+  "feed": {
+    "requestedUrl": "https://nurevolution.net/feed/podcast",
+    "finalUrl": "https://nurevolution.net/feed/podcast",
+    "status": 200,
+    "contentType": "application/rss+xml; charset=UTF-8",
+    "bodyByteLength": 89377,
+    "bodySha256": "98168181a068b9566dada12ecd4b98ea18cce2cac97df2f4ef0d6e8f9e2f5d6e",
+    "matchesFrozenM0FeedBody": true,
+    "itemCount": 55,
+    "identityChecks": {
+      "uniqueGuids": 55,
+      "guidValuesAndPermalinkFlagsAgree": true,
+      "enclosureTuplesAgree": true,
+      "publicationInstantsAgree": true,
+      "legacyItemLinksAgree": true
+    }
+  },
+  "channel": {
+    "title": "nurevolution studios",
+    "link": "https://nurevolution.net",
+    "description": "For more information, join us on the web at https://nurevolution.net",
+    "language": "en-US",
+    "copyright": "Copyright © nurevolution studios 2026 ",
+    "managingEditor": "tturner@nurevolution.net (nurevolution studios)",
+    "webMaster": "tturner@nurevolution.net (nurevolution studios)",
+    "category": "Music",
+    "ttl": "1440",
+    "lastBuildDate": "Mon, 26 Aug 2024 19:33:01 +0000",
+    "image": {
+      "url": "https://nurevolution.net/wp/wp-content/uploads/2013/03/07-06-16-144px.jpg",
+      "title": "nurevolution studios",
+      "link": "https://nurevolution.net/wp",
+      "width": "144",
+      "height": "144"
+    },
+    "itunes": {
+      "subtitle": "Austin DJ/Producers Trey Turner & friends",
+      "summary": "For more information, join us on the web at https://nurevolution.net",
+      "author": "nurevolution studios",
+      "owner": {
+        "name": "nurevolution studios",
+        "email": "tturner@nurevolution.net"
+      },
+      "categories": ["Music"],
+      "explicit": "no",
+      "block": "no",
+      "imageUrl": "https://nurevolution.net/wp/wp-content/uploads/2013/03/07-06-16.jpg",
+      "newFeedUrl": "https://nurevolution.net/feed/podcast",
+      "type": null
+    }
+  },
+  "episodeMetadata": [
+    {
+      "episodeId": "wp-484",
+      "title": "Trey Turner – Ruminate",
+      "author": "Trey Turner",
+      "explicit": "no"
+    },
+    {
+      "episodeId": "wp-473",
+      "title": "Trey Turner – The Dark Prophet",
+      "author": "Trey Turner",
+      "explicit": "no"
+    },
+    {
+      "episodeId": "wp-459",
+      "title": "Trey Turner – Impulse",
+      "author": "Trey Turner",
+      "explicit": "no"
+    },
+    {
+      "episodeId": "wp-454",
+      "title": "Trey Turner – Bass Face Space Race",
+      "author": "Trey Turner",
+      "explicit": "no"
+    },
+    {
+      "episodeId": "wp-444",
+      "title": "Trey Turner – Lost In Translation",
+      "author": "Trey Turner",
+      "explicit": "no"
+    },
+    {
+      "episodeId": "wp-435",
+      "title": "Trey Turner – Off The Cuff",
+      "author": "Trey Turner",
+      "explicit": "no"
+    },
+    {
+      "episodeId": "wp-431",
+      "title": "Trey Turner – Is This Thing On?",
+      "author": "Trey Turner",
+      "explicit": "no"
+    },
+    {
+      "episodeId": "wp-428",
+      "title": "Trey Turner & Cody Haynes – Archived Transmission",
+      "author": "Trey Turner & Cody Haynes",
+      "explicit": "no"
+    },
+    {
+      "episodeId": "wp-421",
+      "title": "Trey Turner – Carrier Detect",
+      "author": "Trey Turner",
+      "explicit": "no"
+    },
+    {
+      "episodeId": "wp-417",
+      "title": "Trey Turner – Praxis",
+      "author": "Trey Turner",
+      "explicit": "no"
+    },
+    {
+      "episodeId": "wp-399",
+      "title": "Trey Turner – MMXIV",
+      "author": "Trey Turner",
+      "explicit": "no"
+    },
+    {
+      "episodeId": "wp-402",
+      "title": "EazyT – 7 Weapons Mix",
+      "author": "EazyT",
+      "explicit": "no"
+    },
+    {
+      "episodeId": "wp-389",
+      "title": "Trey Turner – Phoning It In",
+      "author": "Trey Turner",
+      "explicit": "no"
+    },
+    {
+      "episodeId": "wp-208",
+      "title": "Trey Turner – You Don’t Know Me",
+      "author": "Trey Turner",
+      "explicit": "no"
+    },
+    {
+      "episodeId": "wp-199",
+      "title": "EazyTom – Bizarre NYE 2013",
+      "author": "EazyTom",
+      "explicit": "no"
+    },
+    {
+      "episodeId": "wp-198",
+      "title": "Trey Turner – Trapper Keeper Futura S2000",
+      "author": "Trey Turner",
+      "explicit": "no"
+    },
+    {
+      "episodeId": "wp-197",
+      "title": "Trey Turner – Radio Silenced",
+      "author": "Trey Turner",
+      "explicit": "no"
+    },
+    {
+      "episodeId": "wp-196",
+      "title": "EazyTom – Star Whores",
+      "author": "nurevolution studios",
+      "explicit": "no"
+    },
+    {
+      "episodeId": "wp-251",
+      "title": "Tonebreaker – Genisounds",
+      "author": "Tonebreaker",
+      "explicit": "no"
+    },
+    {
+      "episodeId": "wp-254",
+      "title": "Joseph Noctum – The Bad Boogie",
+      "author": "Joseph Noctum",
+      "explicit": "no"
+    },
+    {
+      "episodeId": "wp-256",
+      "title": "EazyTom – Live from The Pink Cybernetic Cabaret",
+      "author": "EazyTom",
+      "explicit": "no"
+    },
+    {
+      "episodeId": "wp-259",
+      "title": "DRRTYWULVZ – Live at Carpe Noctem 2011",
+      "author": "DRRTYWULVZ",
+      "explicit": "no"
+    },
+    {
+      "episodeId": "wp-262",
+      "title": "Trey Turner & Joseph Noctum – The New Sound",
+      "author": "Trey Turner & Joseph Noctum",
+      "explicit": "no"
+    },
+    {
+      "episodeId": "wp-265",
+      "title": "Joseph Noctum – In The Pink",
+      "author": "Joseph Noctum",
+      "explicit": "no"
+    },
+    {
+      "episodeId": "wp-267",
+      "title": "Libations & Oscillations – Professor Seaglitch’s Isle of Aural Decadence",
+      "author": "Libations & Oscillations",
+      "explicit": "no"
+    },
+    {
+      "episodeId": "wp-269",
+      "title": "Trey Turner – The Further Esoteric Adventures Of",
+      "author": "Trey Turner",
+      "explicit": "no"
+    },
+    {
+      "episodeId": "wp-271",
+      "title": "Tonebreaker – Glamour! Trash! Pop!",
+      "author": "Tonebreaker",
+      "explicit": "no"
+    },
+    {
+      "episodeId": "wp-273",
+      "title": "Trey Turner – Slow Your Roll",
+      "author": "Trey Turner",
+      "explicit": "no"
+    },
+    {
+      "episodeId": "wp-276",
+      "title": "Joseph Noctum – Peace Love Crunk",
+      "author": "Joseph Noctum",
+      "explicit": "no"
+    },
+    {
+      "episodeId": "wp-278",
+      "title": "Trey Turner – Dancefloor Oriented",
+      "author": "Trey Turner",
+      "explicit": "no"
+    },
+    {
+      "episodeId": "wp-281",
+      "title": "Joseph Noctum – African Red Bush",
+      "author": "Joseph Noctum",
+      "explicit": "no"
+    },
+    {
+      "episodeId": "wp-283",
+      "title": "Trey Turner – View From A Vignette",
+      "author": "Trey Turner",
+      "explicit": "no"
+    },
+    {
+      "episodeId": "wp-291",
+      "title": "EazyTom – Dub Noctem",
+      "author": "EazyTom",
+      "explicit": "no"
+    },
+    {
+      "episodeId": "wp-293",
+      "title": "Trey Turner – The Toad’s Mistress",
+      "author": "Trey Turner",
+      "explicit": "no"
+    },
+    {
+      "episodeId": "wp-298",
+      "title": "Tonebreaker – Rock’n Noctem",
+      "author": "Tonebreaker",
+      "explicit": "no"
+    },
+    {
+      "episodeId": "wp-301",
+      "title": "Trey Turner – Carpe Noctem 2010",
+      "author": "Trey Turner",
+      "explicit": "no"
+    },
+    {
+      "episodeId": "wp-306",
+      "title": "Trey Turner & Cody Haynes – Plush Session",
+      "author": "Trey Turner & Cody Haynes",
+      "explicit": "no"
+    },
+    {
+      "episodeId": "wp-308",
+      "title": "Trey Turner & Cody Haynes – Better Late Than Never",
+      "author": "Trey Turner & Cody Haynes",
+      "explicit": "no"
+    },
+    {
+      "episodeId": "wp-311",
+      "title": "EazyTom – Bouche d’Incendie Remix Finale",
+      "author": "EazyTom",
+      "explicit": "no"
+    },
+    {
+      "episodeId": "wp-286",
+      "title": "Cody Haynes – Live on KVRX 91.7FM (Apr. 12, 2007)",
+      "author": "Cody Haynes",
+      "explicit": "no"
+    },
+    {
+      "episodeId": "wp-340",
+      "title": "Cody Haynes – Live on KVRX 91.7FM (Sep. 26, 2006)",
+      "author": "Cody Haynes",
+      "explicit": "no"
+    },
+    {
+      "episodeId": "wp-315",
+      "title": "Trey Turner – BijouBreaks.com Breakthru 2",
+      "author": "Trey Turner",
+      "explicit": "no"
+    },
+    {
+      "episodeId": "wp-289",
+      "title": "Cody Haynes – Live on KVRX 91.7FM (Feb. 3, 2006)",
+      "author": "Cody Haynes",
+      "explicit": "no"
+    },
+    {
+      "episodeId": "wp-295",
+      "title": "Cody Haynes – Live on KVRX 91.7FM (Nov. 12, 2005)",
+      "author": "Cody Haynes",
+      "explicit": "no"
+    },
+    {
+      "episodeId": "wp-317",
+      "title": "Trey Turner – Stasis",
+      "author": "Trey Turner",
+      "explicit": "no"
+    },
+    {
+      "episodeId": "wp-320",
+      "title": "Trey Turner & Contrast – Where Do We Go From Here",
+      "author": "Trey Turner & Contrast",
+      "explicit": "no"
+    },
+    {
+      "episodeId": "wp-322",
+      "title": "Fracture & DJ^3 – Slipstream",
+      "author": "Fracture & DJ^3",
+      "explicit": "no"
+    },
+    {
+      "episodeId": "wp-324",
+      "title": "Trey Turner – Urban Breakbeat Uprising",
+      "author": "Trey Turner",
+      "explicit": "no"
+    },
+    {
+      "episodeId": "wp-344",
+      "title": "Fracture – Live on Mega 93.3FM (Mar. 21, 2002) Part 2",
+      "author": "Fracture",
+      "explicit": "no"
+    },
+    {
+      "episodeId": "wp-342",
+      "title": "Fracture – Live on Mega 93.3FM (Mar. 21, 2002) Part 1",
+      "author": "Fracture",
+      "explicit": "no"
+    },
+    {
+      "episodeId": "wp-328",
+      "title": "Trey Turner – g3 Mix Session",
+      "author": "Trey Turner",
+      "explicit": "no"
+    },
+    {
+      "episodeId": "wp-330",
+      "title": "Fracture – Movement",
+      "author": "Fracture",
+      "explicit": "no"
+    },
+    {
+      "episodeId": "wp-333",
+      "title": "Trey Turner – Aftershock",
+      "author": "Trey Turner",
+      "explicit": "no"
+    },
+    {
+      "episodeId": "wp-335",
+      "title": "Trey Turner – Tremor",
+      "author": "Trey Turner",
+      "explicit": "no"
+    },
+    {
+      "episodeId": "wp-337",
+      "title": "Fracture – Broken",
+      "author": "Fracture",
+      "explicit": "no"
+    }
+  ],
+  "canonicalPresentationDifferences": [
+    {
+      "episodeId": "wp-208",
+      "field": "title",
+      "legacy": "Trey Turner – You Don’t Know Me",
+      "canonicalDerived": "Trey Turner – You Don't Know Me"
+    },
+    {
+      "episodeId": "wp-196",
+      "field": "author",
+      "legacy": "nurevolution studios",
+      "canonicalDerived": "EazyTom"
+    },
+    {
+      "episodeId": "wp-267",
+      "field": "title",
+      "legacy": "Libations & Oscillations – Professor Seaglitch’s Isle of Aural Decadence",
+      "canonicalDerived": "Libations & Oscillations – Professor Seaglitch's Isle of Aural Decadence"
+    },
+    {
+      "episodeId": "wp-293",
+      "field": "title",
+      "legacy": "Trey Turner – The Toad’s Mistress",
+      "canonicalDerived": "Trey Turner – The Toad's Mistress"
+    },
+    {
+      "episodeId": "wp-298",
+      "field": "title",
+      "legacy": "Tonebreaker – Rock’n Noctem",
+      "canonicalDerived": "Tonebreaker – Rock'n Noctem"
+    },
+    {
+      "episodeId": "wp-311",
+      "field": "title",
+      "legacy": "EazyTom – Bouche d’Incendie Remix Finale",
+      "canonicalDerived": "EazyTom – Bouche d'Incendie Remix Finale"
+    },
+    {
+      "episodeId": "wp-344",
+      "field": "title",
+      "legacy": "Fracture – Live on Mega 93.3FM (Mar. 21, 2002) Part 2",
+      "canonicalDerived": "Fracture – Live on Mega 93.3 FM (Mar. 21, 2002) Part 2"
+    }
+  ],
+  "feedRouteProbes": [
+    {
+      "requestedUrl": "https://nurevolution.net/feed/podcast/",
+      "finalUrl": "https://nurevolution.net/feed/podcast/",
+      "status": 200,
+      "contentType": "application/rss+xml; charset=UTF-8",
+      "bodyByteLength": 89378,
+      "bodySha256": "1faf02a723465a850af20486e4a929f3f400878ff8f40b9dd8e15f35a1844867",
+      "itemCount": 55,
+      "sameGuidSequenceAsCanonical": true,
+      "atomSelfUrl": "https://nurevolution.net/feed/podcast/"
+    },
+    {
+      "requestedUrl": "https://nurevolution.net/?feed=podcast",
+      "finalUrl": "https://nurevolution.net/?feed=podcast",
+      "status": 200,
+      "contentType": "application/rss+xml; charset=UTF-8",
+      "bodyByteLength": 89378,
+      "bodySha256": "2e31a6b898c4ed70bdef76025b065540c57522b439d0c552f583bc3081593b1f",
+      "itemCount": 55,
+      "sameGuidSequenceAsCanonical": true,
+      "atomSelfUrl": "https://nurevolution.net/?feed=podcast"
+    },
+    {
+      "requestedUrl": "https://nurevolution.net/wp/?feed=podcast",
+      "finalUrl": "https://nurevolution.net/wp/?feed=podcast",
+      "status": 200,
+      "contentType": "application/rss+xml; charset=UTF-8",
+      "bodyByteLength": 2293,
+      "bodySha256": "7fba7024be49dd6c6db09d6ed356f5b1416f9c7d08501d448a56b18629831ae4",
+      "itemCount": 0,
+      "sameGuidSequenceAsCanonical": false,
+      "atomSelfUrl": "https://nurevolution.net/wp/?feed=podcast"
+    },
+    {
+      "requestedUrl": "https://nurevolution.net/wp/feed/podcast",
+      "finalUrl": "https://nurevolution.net/wp/feed/podcast",
+      "status": 200,
+      "contentType": "application/rss+xml; charset=UTF-8",
+      "bodyByteLength": 851,
+      "bodySha256": "0ea20ac1e45d44557326f3a9b39c1f9cb64f441051c921de3c6db9a2fb9f72d7",
+      "itemCount": 0,
+      "sameGuidSequenceAsCanonical": false,
+      "atomSelfUrl": "https://nurevolution.net/wp/feed/podcast"
+    }
+  ],
+  "showArtwork": [
+    {
+      "showField": "standardArtworkAssetId",
+      "assetId": "asset-4feaf8d7bbec690b",
+      "url": "https://nurevolution.net/wp/wp-content/uploads/2013/03/07-06-16-144px.jpg",
+      "sha256": "01cefd02df2af92abf4b57edcfe50c46002a8a8f74887d75534c4ba67a9a0258",
+      "byteLength": 31631,
+      "jpegFrameWidth": 144,
+      "jpegFrameHeight": 144,
+      "components": 3,
+      "method": "file utility JPEG frame inspection; Exif reports 3000x3000 for both files and is not the actual frame size",
+      "scope": "Local metadata inspection only; no decode, artwork redesign, or production delivery validation"
+    },
+    {
+      "showField": "itunesArtworkAssetId",
+      "assetId": "asset-c1b98cca750338f6",
+      "url": "https://nurevolution.net/wp/wp-content/uploads/2013/03/07-06-16.jpg",
+      "sha256": "6e17436fbad0ee2d7c388e75dd3e4545694f3a7bbb2b8206370c4a1460454440",
+      "byteLength": 1461673,
+      "jpegFrameWidth": 1500,
+      "jpegFrameHeight": 1500,
+      "components": 3,
+      "method": "file utility JPEG frame inspection; Exif reports 3000x3000 for both files and is not the actual frame size",
+      "scope": "Local metadata inspection only; no decode, artwork redesign, or production delivery validation"
+    }
+  ]
+}
