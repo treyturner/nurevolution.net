@@ -9,7 +9,12 @@ import {
   selectPublic,
   showPublic,
 } from '../../shared/content/public.ts'
-import { parseContentFile, validateCatalog } from './validate.ts'
+import {
+  parseContentFile,
+  requireRssMetadata,
+  validateCatalog,
+} from './validate.ts'
+import { publicFeedArchive } from './feed.ts'
 
 export interface DocumentReader {
   list(): Promise<string[]>
@@ -57,6 +62,7 @@ export async function readCatalog(
     { show, assets, legacyUrls, episodes },
     authoringAsOf,
   )
+  requireRssMetadata(catalog.show)
   return {
     catalog,
     report: parseContentFile(reportSchema, report, 'wordpress-import.json'),
@@ -92,13 +98,7 @@ export function createContentRepository(
       return episode ? episodeDetail(catalog, episode) : undefined
     },
     async publicArchive(asOf: number) {
-      const catalog = await load()
-      return {
-        show: showPublic(catalog),
-        episodes: selectPublic(catalog, asOf).map((e) =>
-          episodeDetail(catalog, e),
-        ),
-      }
+      return publicFeedArchive(await load(), asOf)
     },
   }
 }

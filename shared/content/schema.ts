@@ -1,14 +1,16 @@
 import { z } from 'zod'
+import { isXmlText } from './xml.ts'
+
+export const xmlStringSchema = z
+  .string()
+  .refine(isXmlText, 'Expected XML 1.0-compatible text')
 
 export const idSchema = z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/)
 export const hashSchema = z.string().regex(/^[a-f0-9]{64}$/)
-export const textSchema = z
-  .string()
-  .refine(
-    (value) =>
-      value.trim().length > 0 && !/\p{Cc}|<\/?[a-z][^>]*>/iu.test(value),
-    'Expected nonblank plain text without markup or control characters',
-  )
+export const textSchema = xmlStringSchema.refine(
+  (value) => value.trim().length > 0 && !/\p{Cc}|<\/?[a-z][^>]*>/iu.test(value),
+  'Expected nonblank plain text without markup or control characters',
+)
 export const instantSchema = z.iso
   .datetime({ precision: 3 })
   .refine(
@@ -17,7 +19,7 @@ export const instantSchema = z.iso
       new Date(value).toISOString() === value,
     'Expected a real UTC calendar instant with milliseconds',
   )
-export const urlSchema = z.string().refine((value) => {
+export const urlSchema = xmlStringSchema.refine((value) => {
   if (!/^https?:\/\//.test(value) || /[\s\\]|%(?![a-f\d]{2})/i.test(value))
     return false
   try {
@@ -53,11 +55,12 @@ export const episodeSchema = z
     publishedAt: instantSchema.nullable(),
     title: textSchema,
     artist: textSchema,
-    descriptionHtml: z.string(),
-    guid: z
-      .string()
-      .refine((value) => value.trim().length > 0 && !/\p{Cc}/u.test(value)),
+    descriptionHtml: xmlStringSchema,
+    guid: xmlStringSchema.refine(
+      (value) => value.trim().length > 0 && !/\p{Cc}/u.test(value),
+    ),
     guidIsPermalink: z.boolean(),
+    explicit: z.boolean().optional(),
     audioAssetId: idSchema,
     artworkAssetId: idSchema,
     durationSeconds: z.number().positive().nullable(),
@@ -114,6 +117,15 @@ export const assetSchema = z
         : asset.mediaType !== 'audio/mpeg' && asset.sourceRoot === 'uploads',
     'Asset kind, media type, and source root must agree',
   )
+export const rssSettingsSchema = z.strictObject({
+  language: z.literal('en-US'),
+  category: z.literal('Music'),
+  author: textSchema,
+  explicit: z.boolean(),
+  subtitle: textSchema.optional(),
+  copyright: textSchema.optional(),
+  owner: z.strictObject({ name: textSchema, email: z.email() }).optional(),
+})
 export const showSchema = z.strictObject({
   schemaVersion: z.literal(1),
   id: idSchema,
@@ -123,6 +135,8 @@ export const showSchema = z.strictObject({
   feedUrl: urlSchema,
   standardArtworkAssetId: idSchema,
   itunesArtworkAssetId: idSchema,
+  // Optional only for reproducing the frozen M2 import. Runnable catalogs require it.
+  rss: rssSettingsSchema.optional(),
 })
 export const assetsSchema = z.strictObject({
   schemaVersion: z.literal(1),
