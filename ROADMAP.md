@@ -1,6 +1,6 @@
 # Nurevolution roadmap
 
-Status: M0, M1, and M2 implemented and verified locally and in CI. M2 is merged to `main` through PR #1. M3 is planned and ready for implementation; M3–M9 implementation has not started.
+Status: M0–M3 implemented and locally verified. M0–M2 also passed CI; M2 is merged to `main` through PR #1. M3 is implemented on `feat/m3-podcast-rss`; its remote CI and public deployment checks are pending. M4–M9 implementation has not started.
 
 Updated: 2026-09-08.
 
@@ -141,9 +141,9 @@ Feed and media URLs must be usable by podcast clients without interactive browse
 
 ## 6. Milestone sequence
 
-M0, M1, and M2 are **implemented and verified locally and in CI**. M3 is **planned and ready for implementation**; M3–M9 implementation is **not started**. IDs are stable so later implementation plans can reference them.
+M0–M3 are **implemented and locally verified**; M0–M2 also passed CI. M3 is on `feat/m3-podcast-rss`; M4–M9 implementation is **not started**. IDs are stable so later implementation plans can reference them.
 
-Plans and completion evidence are available for [M0 — Migration audit](docs/milestones/M00-migration-audit.md) and [M1 — Foundation and verification](docs/milestones/M01-foundation-and-verification.md). The [M2 — Canonical content record](docs/milestones/M02-canonical-content.md) documents schemas, faithful import, protected edits, public data access, and completed acceptance checks. The [M3 — Replacement RSS plan](docs/milestones/M03-podcast-rss.md) specifies verified metadata, serialization, aliases, cache behavior, compatibility tests, and the public validation handoff. Owner instructions are in the [content authoring guide](docs/CONTENT.md).
+Plans and completion evidence are available for [M0 — Migration audit](docs/milestones/M00-migration-audit.md) and [M1 — Foundation and verification](docs/milestones/M01-foundation-and-verification.md). The [M2 — Canonical content record](docs/milestones/M02-canonical-content.md) documents schemas, faithful import, protected edits, public data access, and completed acceptance checks. The [M3 — Replacement RSS record](docs/milestones/M03-podcast-rss.md) documents implemented metadata, serialization, aliases, cache behavior, compatibility tests, and the public validation handoff. Owner instructions are in the [content authoring guide](docs/CONTENT.md) and [feed validation guide](docs/FEED-VALIDATION.md).
 
 | ID  | Outcome                                                          | Dependencies                                        | Release role                       |
 | --- | ---------------------------------------------------------------- | --------------------------------------------------- | ---------------------------------- |
@@ -218,7 +218,7 @@ M0 and M1 can progress independently. M3 and M4 share M2's model. Infrastructure
 
 ### M3 — Replacement podcast RSS
 
-**Ready for implementation on 2026-09-08:** [M03-podcast-rss.md](docs/milestones/M03-podcast-rss.md). PR #1 is squash merged at `422b52f`; [CI on that main commit](https://github.com/treyturner/nurevolution.net/actions/runs/34268434890) and a fresh local `pnpm verify` passed, including the M2 audio-test fix. Supplemental [feed evidence](docs/milestones/evidence/M03-feed-reference.json) matches the frozen M0 feed body exactly and resolves channel metadata and the two verified aliases. No owner decision blocks M3 planning or implementation. Public validator/client and media-delivery acceptance remain M5/M6 work.
+**Completed locally on 2026-09-08:** [M03-podcast-rss.md](docs/milestones/M03-podcast-rss.md#completion-evidence), implementation commit `5a244d4` on `feat/m3-podcast-rss`. The complete 55-item RSS, verified show settings, both legacy aliases, GET/HEAD/304 behavior, stable weak ETags, and independent offline feed gate are implemented. `CI=1 pnpm verify` passed with 187 application tests, 12 migration tests, and 37 browser checks; coverage exceeds all existing thresholds. Historical episode/media identities and frozen source/report hashes remain unchanged. M3 remote CI has not run. Public validator/client and media-delivery acceptance remain M5/M6 work; M4 can use the feed and must supply historical page redirects.
 
 **Outcome:** produce the complete compatible podcast feed without WordPress or podPress at runtime.
 
@@ -346,7 +346,7 @@ Directory submissions are a possible later owner task, not an automatic effect o
 
 ### Canonical local/CI gate
 
-Canonical command: **`pnpm verify`**, implemented and locally verified in M1. It covers formatting, lint, strict type checking, meaningful application unit/runtime tests with coverage, M0 tooling unit tests, production build, and deterministic Playwright checks. M2 adds canonical content validation, importer coverage, full-archive API checks, and production portability. M3 will add feed validation. CI uses the same gate rather than a divergent list of partial checks.
+Canonical command: **`pnpm verify`**, implemented and locally verified in M1. It covers formatting, lint, strict type checking, meaningful application unit/runtime tests with coverage, M0 tooling unit tests, production build, and deterministic Playwright checks. M2 adds canonical content validation, importer coverage, full-archive API checks, and production portability. M3 adds independent offline feed validation, serializer/HTTP tests, and built-feed/portability checks. CI uses the same gate rather than a divergent list of partial checks.
 
 Owner-confirmed initial coverage thresholds for meaningful executable application logic: 95% statements/lines/functions and 90% branches, enforced from M1. Include UI/composable behavior where meaningful, not only pure utilities. Narrow declarative-config exclusions require a rationale; never lower established thresholds simply to pass CI.
 
