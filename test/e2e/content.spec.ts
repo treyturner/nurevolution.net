@@ -11,6 +11,10 @@ import {
 } from '../../shared/content/schema.ts'
 import inventory from '../../docs/migration/inventory.json' with { type: 'json' }
 import timings from '../../docs/migration/track-timings.json' with { type: 'json' }
+import { readCatalog } from '../../server/content/repository.ts'
+import { publicFeedArchive } from '../../server/content/feed.ts'
+import { fileReader } from '../../tools/content/files.ts'
+import { assertPodcastFeed } from '../../tools/content/feed/assert.ts'
 
 const episodeFiles = (await readdir('content/episodes')).sort()
 const canonical = await Promise.all(
@@ -195,6 +199,15 @@ test('loads server assets from a portable production output without a checkout',
       const detail = await request.get('/api/episodes/trey-turner-praxis')
       expect(detail.status()).toBe(200)
       expect((await detail.json()).tracks).toHaveLength(21)
+      const feed = await request.get('/feed/podcast')
+      expect(feed.status()).toBe(200)
+      const { catalog } = await readCatalog(fileReader('content'))
+      expect(
+        assertPodcastFeed(
+          await feed.text(),
+          publicFeedArchive(catalog, Date.now()),
+        ).items,
+      ).toBe(55)
       expect(await readdir(root)).toEqual(['.output'])
       const publicFiles = await readdir(resolve(root, '.output/public'), {
         recursive: true,
