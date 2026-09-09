@@ -69,7 +69,7 @@ Every release record must include:
 
 ```text
 schemaVersion, sourceCommit, verifyRunUrl, imageDigest, imageId,
-configurationSha256, mediaManifestSha256, publishedAt
+configurationSha256, mediaManifestSha256, caddyBinarySha256, publishedAt
 ```
 
 The image digest, configuration bundle, and media manifest form a deployable release together. `latest` and mutable commit tags may aid discovery but are never deployment inputs. Record previous/current releases per site and environment. Validate inputs as data and reject arbitrary image repositories, shell fragments, unknown environments, and missing matching configuration.

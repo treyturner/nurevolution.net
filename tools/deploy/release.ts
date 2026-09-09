@@ -21,6 +21,7 @@ export const releaseSchema = z.strictObject({
   imageId: digest,
   caddyImageDigest: digest,
   caddyImageId: digest,
+  caddyBinarySha256: hashSchema,
   configurationSha256: hashSchema,
   mediaManifestSha256: hashSchema,
   publishedAt: instantSchema,

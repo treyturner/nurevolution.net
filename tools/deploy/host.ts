@@ -224,10 +224,27 @@ export async function deployOnHost(
             '{{.Image}}',
             paths.edgeContainer,
           ])
-          if (edgeId !== record.caddyImageId)
-            throw new Error(
-              'Shared edge differs from the verified Caddy image; reconcile separately',
+          if (edgeId !== record.caddyImageId) {
+            const policy = await run('docker', [
+              'inspect',
+              '--format',
+              '{{index .Config.Labels "net.nurevolution.caddy-policy"}}',
+              paths.edgeContainer,
+            ])
+            const binary = await run('docker', [
+              'exec',
+              paths.edgeContainer,
+              'sha256sum',
+              '/usr/bin/caddy',
+            ])
+            if (
+              policy !== configuration.caddyDockerfileSha256 ||
+              binary.split(/\s+/)[0] !== record.caddyBinarySha256
             )
+              throw new Error(
+                'Shared edge differs from the verified Caddy binary/build policy; reconcile separately',
+              )
+          }
         },
         async prepare() {
           await run('docker', ['pull', expectedImages(record).app])

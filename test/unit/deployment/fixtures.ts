@@ -27,6 +27,7 @@ export function releaseFixture() {
     imageId: 'sha256:' + 'e'.repeat(64),
     caddyImageDigest: 'sha256:' + 'f'.repeat(64),
     caddyImageId: 'sha256:' + '0'.repeat(64),
+    caddyBinarySha256: '3'.repeat(64),
     configurationSha256: sha256(serialize(configuration)),
     mediaManifestSha256: sha256(serialize(manifest)),
     publishedAt: '2026-09-09T00:00:00.000Z',

@@ -48,7 +48,7 @@ try {
   console.log(
     'Preparing the canonical delivery bundle and exact runtime images',
   )
-  const { manifest } = await prepareBundle(
+  const { manifest, configuration } = await prepareBundle(
     artifacts,
     commit,
     new Date().toISOString(),
@@ -68,6 +68,8 @@ try {
     '--provenance=false',
     '-f',
     'deploy/Caddy.Dockerfile',
+    '--build-arg',
+    'CADDY_POLICY_SHA256=' + configuration.caddyDockerfileSha256,
     '-t',
     caddyImage,
     'deploy',
@@ -455,6 +457,9 @@ try {
     '{{.Id}}',
     caddyImage,
   ])
+  const caddyBinarySha256 = (
+    await docker(['exec', edge, 'sha256sum', '/usr/bin/caddy'])
+  ).split(/\s+/)[0]!
   await fs.writeFile(
     resolve(artifacts, 'images.json'),
     serialize({
@@ -463,6 +468,7 @@ try {
       caddyTag: caddyImage,
       imageId,
       caddyImageId,
+      caddyBinarySha256,
     }),
   )
   await fs.writeFile(
@@ -471,6 +477,7 @@ try {
       sourceCommit: commit,
       imageId,
       caddyImageId,
+      caddyBinarySha256,
       episodePages: 55,
       browserEngines: 3,
       memoryLimitMiB: 384,

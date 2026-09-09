@@ -11,6 +11,7 @@ const imageSchema = z.strictObject({
   caddyTag: z.string().regex(/^nurevolution-delivery-[a-f0-9]{10}-caddy$/),
   imageId: z.string().regex(/^sha256:[a-f0-9]{64}$/),
   caddyImageId: z.string().regex(/^sha256:[a-f0-9]{64}$/),
+  caddyBinarySha256: z.string().regex(/^[a-f0-9]{64}$/),
 })
 
 export async function publishImages(
@@ -82,6 +83,7 @@ export async function publishImages(
     imageId: images.imageId,
     caddyImageDigest: digests[1],
     caddyImageId: images.caddyImageId,
+    caddyBinarySha256: images.caddyBinarySha256,
     configurationSha256: sha256(configuration),
     mediaManifestSha256: sha256(manifest),
     publishedAt: new Date().toISOString(),

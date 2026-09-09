@@ -29,7 +29,7 @@ Copy [profile.example.json](../deploy/profile.example.json) to `/srv/nurevolutio
 
 Create the dedicated `nurevolution-site` Docker network. An existing shared edge should join that network and receive the site's read-only media mount; add this site's route without replacing other sites. For a fresh host, [edge.compose.yaml](../deploy/edge.compose.yaml) and [initial.example.json](../deploy/caddy/initial.example.json) are starting points. The edge configuration lives in `/srv/edge/config/caddy.json`, with its `https` server and other routes retained by deployment. Mount the configuration **directory**, so atomic file replacement is visible inside Caddy. Persist `/srv/edge/data` and `/srv/edge/state`.
 
-Pin `CADDY_IMAGE` to the published Caddy digest from the release record. Configure the zone-scoped DNS token outside Git. Complete [TLS rehearsal](operations/tls.md) before exposing preview. The application helper never restarts or upgrades the shared edge; if its running image differs from the tested release, reconcile it as a separate operator action with the other sites accounted for.
+Pin `CADDY_IMAGE` to the published Caddy digest from the release record. Configure the zone-scoped DNS token outside Git. Complete [TLS rehearsal](operations/tls.md) before exposing preview. The application helper never restarts or upgrades the shared edge; an identical tested image is accepted directly, and independently rebuilt images are accepted only when both the binary SHA-256 and pinned build-policy label match the verified release. A changed binary/build policy requires separate operator reconciliation with the other sites accounted for.
 
 ## Media, promotion, and rollback
 

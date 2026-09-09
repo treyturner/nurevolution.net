@@ -48,6 +48,7 @@ it('publishes only tested loaded images from a trusted main event and records re
       caddyTag: 'nurevolution-delivery-1234567890-caddy',
       imageId: f.release.imageId,
       caddyImageId: f.release.caddyImageId,
+      caddyBinarySha256: f.release.caddyBinarySha256,
     }),
   )
   await fs.writeFile(

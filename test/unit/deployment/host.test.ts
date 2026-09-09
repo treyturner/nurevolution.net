@@ -191,3 +191,21 @@ it('restores the prior edge/app when HTTPS acceptance or startup fails', async (
     deployOnHost(f.bundle, f.paths, f.run, f.request),
   ).rejects.toThrow('restored')
 })
+
+it('keeps an independently rebuilt edge when its tested binary and pinned build policy match', async () => {
+  const f = await fixture(),
+    original = f.run.getMockImplementation()!
+  let hash = f.record.release.caddyBinarySha256
+  f.run.mockImplementation(async (cmd, args, env) => {
+    if (args.includes('{{.Image}}')) return 'independently-built-image'
+    if (args.some((arg) => arg.includes('net.nurevolution.caddy-policy')))
+      return f.record.configuration.caddyDockerfileSha256
+    if (args.includes('sha256sum')) return hash + '  /usr/bin/caddy'
+    return original(cmd, args, env)
+  })
+  await deployOnHost(f.bundle, f.paths, f.run, f.request)
+  hash = 'wrong'
+  await expect(
+    deployOnHost(f.bundle, f.paths, f.run, f.request),
+  ).rejects.toThrow('binary/build policy')
+})
