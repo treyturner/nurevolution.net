@@ -155,6 +155,78 @@ describe('persistent episode controller', () => {
     media.emit('loadedmetadata')
     expect(changed).toHaveBeenLastCalledWith('paused')
   })
+  it('stops continuation after an error even when the browser still reports active playback', async () => {
+    const { media, changed, player } = setup()
+    player.select(a)
+    media.ready()
+    await media.play()
+    media.error = { code: 3 } as MediaError
+    media.emit('error')
+    expect(changed).toHaveBeenLastCalledWith('error')
+    expect(media.paused).toBe(true)
+    player.select(b)
+    media.ready()
+    expect(media.play).toHaveBeenCalledOnce()
+    expect(changed).toHaveBeenLastCalledWith('paused')
+    await media.play()
+    // Selection can precede delivery of the native error event.
+    media.error = { code: 2 } as MediaError
+    player.select(c)
+    media.ready()
+    expect(media.play).toHaveBeenCalledTimes(2)
+    expect(changed).toHaveBeenLastCalledWith('paused')
+  })
+
+  it.each(['before', 'after'])(
+    'preserves blocked continuation when the source-reset pause arrives %s rejection',
+    async (order) => {
+      const { media, changed, player } = setup()
+      player.select(a)
+      media.ready()
+      await media.play()
+      let reject!: (reason: Error) => void
+      media.play.mockImplementationOnce(
+        () =>
+          new Promise((_resolve, no) => {
+            reject = no
+          }),
+      )
+      player.select(b)
+      expect(media.paused).toBe(true)
+      if (order === 'before') media.emit('pause')
+      reject(new DOMException('Autoplay is blocked', 'NotAllowedError'))
+      await Promise.resolve()
+      if (order === 'after') media.emit('pause')
+      media.ready()
+      expect(changed).toHaveBeenLastCalledWith('blocked')
+      await media.play()
+      media.emit('playing')
+      expect(changed).toHaveBeenLastCalledWith('playing')
+    },
+  )
+
+  it('keeps an actual user pause paused when the pending continuation rejects with AbortError', async () => {
+    const { media, changed, player } = setup()
+    player.select(a)
+    media.ready()
+    await media.play()
+    let reject!: (reason: Error) => void
+    media.play.mockImplementationOnce(() => {
+      media.paused = false
+      return new Promise((_resolve, no) => {
+        reject = no
+      })
+    })
+    player.select(b)
+    media.emit('pause') // Old source reset while the new play request is active.
+    media.pause()
+    reject(new DOMException('The user paused playback', 'AbortError'))
+    await Promise.resolve()
+    media.ready()
+    expect(changed).toHaveBeenLastCalledWith('paused')
+    player.select(c)
+    expect(media.play).toHaveBeenCalledTimes(2)
+  })
   it('keeps a failed continuation recoverable when its play promise also rejects', async () => {
     const { media, changed, player } = setup()
     player.select(a)

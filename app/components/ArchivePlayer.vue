@@ -59,6 +59,7 @@ const messages = {
         ref="element"
         controls
         preload="metadata"
+        aria-describedby="playback-status"
         :aria-label="
           episode
             ? `Listen to ${episode.artist} — ${episode.title}`
@@ -66,7 +67,7 @@ const messages = {
         "
       />
       <div class="player-actions">
-        <p class="media-status" role="status">{{ messages[status] }}</p>
+        <p id="playback-status" class="media-status">{{ messages[status] }}</p>
         <button v-if="status === 'error'" type="button" @click="retry">
           Retry audio
         </button>
