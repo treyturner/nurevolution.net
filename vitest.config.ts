@@ -26,6 +26,7 @@ export default defineConfig({
         'shared/**/*.ts',
         'server/**/*.ts',
         'tools/content/**/*.ts',
+        'tools/deploy/**/*.ts',
       ],
       exclude: ['**/*.d.ts'],
       reporter: ['text', 'html', 'lcov'],

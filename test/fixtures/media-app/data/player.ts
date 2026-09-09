@@ -2,7 +2,7 @@ import type { EpisodeDetail } from '../../../../shared/content/public'
 import praxis from '../../../../content/episodes/wp-417.json'
 
 export function playerEpisodes(origin: string): EpisodeDetail[] {
-  return ['first', 'second'].map((slug, index) => ({
+  return ['first', 'second', 'third'].map((slug, index) => ({
     id: slug,
     slug,
     path: `/episodes/${slug}`,
@@ -18,7 +18,11 @@ export function playerEpisodes(origin: string): EpisodeDetail[] {
       url: `${origin}/media/sample.mp3?episode=${slug}`,
       mediaType: 'audio/mpeg',
       byteLength: 16509,
-      downloadFilename: index ? "bouche_d'incendie.mp3" : 'test-tone.mp3',
+      downloadFilename: [
+        'test-tone.mp3',
+        "bouche_d'incendie.mp3",
+        'musique-étoile.mp3',
+      ][index]!,
     },
     tracks: praxis.tracks,
   }))

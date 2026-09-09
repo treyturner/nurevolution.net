@@ -52,7 +52,7 @@ export function safeAsset(asset: Asset) {
   // Caddy path matchers and placeholders must never interpret catalog text.
   if (
     url.search ||
-    /[{}*?\[\]\\\p{Cc}]/u.test(path + asset.relativePath) ||
+    /[{}*?[\]\\\p{Cc}]/u.test(path + asset.relativePath) ||
     path.split('/').some((part) => part === '..' || part === '.') ||
     path.includes('//')
   )

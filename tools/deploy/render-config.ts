@@ -102,6 +102,9 @@ export function renderSite(manifest: MediaManifest, profile: Profile) {
         route(
           { host: mediaHosts, path: [path], method: ['GET', 'HEAD'] },
           serve({
+            // WebKit treats redirected audio/mpeg as playable media despite
+            // Content-Disposition. This endpoint exists only for saving bytes.
+            'Content-Type': ['application/octet-stream'],
             'Content-Disposition': [download.disposition],
             'Cache-Control': ['no-store'],
           }),

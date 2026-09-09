@@ -14,7 +14,7 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "lint": "eslint .",
-    "typecheck": "nuxt typecheck && vue-tsc --noEmit -p tsconfig.test.json && tsc --noEmit -p tsconfig.content-tools.json",
+    "typecheck": "nuxt typecheck && vue-tsc --noEmit -p tsconfig.test.json && tsc --noEmit -p tsconfig.content-tools.json && tsc --noEmit -p tsconfig.deploy-tools.json",
     "import:wordpress": "node tools/content/import-wordpress.ts",
     "check:content": "node tools/content/check.ts",
     "check:feed": "node tools/content/check-feed.ts",
@@ -23,7 +23,9 @@
     "test:migration": "python3 -m unittest discover -s tools/migration/tests -p 'test_*.py'",
     "check:migration": "python3 tools/migration/audit.py check --inventory docs/migration/inventory.json --legacy-urls docs/migration/legacy-urls.json --track-timings docs/migration/track-timings.json",
     "test:e2e": "pnpm build:fixture && playwright test",
-    "verify": "pnpm prepare && pnpm format:check && pnpm lint && pnpm typecheck && pnpm test:migration && pnpm check:migration && pnpm test:coverage && pnpm build && pnpm test:e2e"
+    "verify": "pnpm prepare && pnpm format:check && pnpm lint && pnpm typecheck && pnpm test:migration && pnpm check:migration && pnpm test:coverage && pnpm build && pnpm test:e2e && pnpm test:delivery",
+    "build:deploy": "esbuild tools/deploy/cli.ts --bundle --platform=node --target=node22 --format=esm --outfile=.local/delivery/artifacts/deploy.mjs",
+    "test:delivery": "node test/delivery/run.ts"
   },
   "dependencies": {
     "nuxt": "4.5.2",
@@ -46,6 +48,7 @@
     "prettier": "3.9.6",
     "typescript": "6.0.3",
     "vitest": "4.1.11",
-    "vue-tsc": "3.3.11"
+    "vue-tsc": "3.3.11",
+    "esbuild": "0.28.2"
   }
 }
