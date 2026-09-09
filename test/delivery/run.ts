@@ -95,6 +95,71 @@ try {
       CLOUDFLARE_API_TOKEN: 'synthetic-validation-only',
     },
   )
+  // Exercise the initial configuration before any application routes exist.
+  // Validation uses a synthetic account token; issuance uses only a local CA.
+  const bootstrapConfig = JSON.parse(
+    await fs.readFile('deploy/caddy/initial.example.json', 'utf8'),
+  )
+  await docker([
+    'run',
+    '--rm',
+    '--network',
+    'none',
+    '--read-only',
+    '--tmpfs',
+    '/tmp',
+    '--tmpfs',
+    '/data',
+    '--tmpfs',
+    '/config',
+    '-e',
+    'CLOUDFLARE_API_TOKEN=cfat_' + 'A'.repeat(64),
+    '-e',
+    'BOOTSTRAP_JSON=' + serialize(bootstrapConfig),
+    caddyImage,
+    'sh',
+    '-c',
+    'printf %s "$BOOTSTRAP_JSON" > /tmp/bootstrap.json; exec caddy validate --config /tmp/bootstrap.json',
+  ])
+  for (const policy of bootstrapConfig.apps.tls.automation.policies)
+    policy.issuers = [{ module: 'internal' }]
+  const bootstrap = await create(prefix + '-bootstrap', [
+    '--network',
+    'none',
+    '--read-only',
+    '--tmpfs',
+    '/tmp',
+    '--tmpfs',
+    '/data',
+    '--tmpfs',
+    '/config',
+    '-e',
+    'BOOTSTRAP_JSON=' + serialize(bootstrapConfig),
+    caddyImage,
+    'sh',
+    '-c',
+    'printf %s "$BOOTSTRAP_JSON" > /tmp/bootstrap.json; exec caddy run --config /tmp/bootstrap.json',
+  ])
+  await start(bootstrap)
+  await waitReady(async () => {
+    for (const host of [
+      'nurevolution.net',
+      'podcast.nurevolution.net',
+      'preview.nurevolution.net',
+      'podcast-preview.nurevolution.net',
+    ])
+      await docker([
+        'exec',
+        bootstrap,
+        'test',
+        '-s',
+        `/data/caddy/certificates/local/${host}/${host}.crt`,
+      ])
+  }, 30)
+  await docker(['stop', bootstrap])
+  console.log(
+    'Initial edge: account token format and issuance for all four hosts before routes passed (offline local CA)',
+  )
   await docker(['network', 'create', network])
   madeNetwork = true
   await docker(['volume', 'create', volume])

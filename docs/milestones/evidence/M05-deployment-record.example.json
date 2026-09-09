@@ -23,7 +23,7 @@
   "publicMediaAudit": null,
   "fullTransferResume": null,
   "backup": {
-    "destination": "owner-hosted MinIO; bucket/policy pending",
+    "destination": "owner-hosted MinIO; nurevolution-backups bucket, nurevolution-backup identity",
     "frequency": "after content changes and weekly",
     "weeklyRetention": 4,
     "monthlyRetention": 3,

@@ -51,6 +51,8 @@ Open the local URL printed by Nuxt. Vue and CSS edits update through HMR; change
 
 The canonical local and CI gate is **`pnpm verify`**, including the Docker delivery checks. A working Docker daemon is required; see [local and separate-daemon setup](docs/DEPLOYMENT.md#release-and-host-contracts). It prepares its generated prerequisites and builds both applications without a hand-started server. It does not install dependencies, rewrite maintained files, accept snapshots, or contact the legacy site.
 
+`pnpm test:operations`, also included in that gate, checks the Python host credential helpers and Discord notifier without cloud credentials or network access. The Docker delivery checks validate the Cloudflare account-token format and certificate automation before application routes exist, using an offline local CA.
+
 For focused work:
 
 ```sh

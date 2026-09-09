@@ -11,6 +11,14 @@
       }
     },
     "tls": {
+      "certificates": {
+        "automate": [
+          "nurevolution.net",
+          "podcast.nurevolution.net",
+          "preview.nurevolution.net",
+          "podcast-preview.nurevolution.net"
+        ]
+      },
       "automation": {
         "policies": [
           {
