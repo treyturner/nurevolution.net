@@ -7,6 +7,13 @@ export default defineNuxtPlugin((nuxt) => {
   const state = useEpisodePage()
   const navigation = createEpisodeNavigation(state.value, (path, slug) =>
     nuxt.runWithContext(async () => {
+      // H3 decodes escaped delimiters before routing; inspect the original SSR path.
+      const requestedPath = import.meta.server ? useRequestURL().pathname : path
+      if (/%(?:23|3f)/i.test(requestedPath))
+        throw createError({
+          statusCode: 404,
+          statusMessage: 'Episode not found',
+        })
       const task = useAsyncData(
         `episode-page:${path}`,
         () =>
@@ -14,7 +21,8 @@ export default defineNuxtPlugin((nuxt) => {
             {
               show: () => $fetch('/api/show'),
               list: () => $fetch('/api/episodes'),
-              detail: (savedSlug) => $fetch(`/api/episodes/${savedSlug}`),
+              detail: (savedSlug) =>
+                $fetch(`/api/episodes/${encodeURIComponent(savedSlug)}`),
             },
             slug,
           ),

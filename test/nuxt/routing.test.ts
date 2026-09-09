@@ -26,6 +26,30 @@ it('announces accepted navigation without remounting the player', async () => {
   wrapper.unmount()
 })
 
+it('rejects encoded delimiters during navigation while preserving the current player', async () => {
+  const path = '/episodes/trey-turner-praxis'
+  const wrapper = await mountSuspended(App, { route: '/' })
+  const nuxt = useNuxtApp(),
+    audio = wrapper.get('audio').element
+  await nuxt.$router.push(path)
+  for (const slug of [
+    '%23foo',
+    '%3Ffoo',
+    'trey-turner-praxis%23foo',
+    'trey-turner-praxis%3Ffoo',
+  ]) {
+    await nuxt.$router.push(`/episodes/${slug}`)
+    expect(nuxt.$router.currentRoute.value.path).toBe(path)
+    expect(wrapper.get('h1').text()).toBe('Praxis')
+    expect(wrapper.get('audio').element).toBe(audio)
+    expect(wrapper.get('[role="alert"]').text()).toContain('Could not load')
+    expect(wrapper.get('[role="alert"] a').attributes('href')).toBe(
+      `/episodes/${slug}`,
+    )
+  }
+  wrapper.unmount()
+})
+
 it('reuses hydration data, aborts superseded navigation, and distinguishes initial errors from selection failures', async () => {
   const nuxt = useNuxtApp(),
     state = await nuxt.runWithContext(useEpisodePage)

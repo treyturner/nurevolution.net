@@ -79,6 +79,51 @@ test('every canonical page renders its exact archive content and all historical 
     expect((await request.get(path)).status()).toBe(404)
 })
 
+test('encoded URL delimiters in episode slugs return a real 404', async ({
+  request,
+}) => {
+  for (const slug of [
+    '%23foo',
+    '%3Ffoo',
+    'trey-turner-praxis%23foo',
+    'trey-turner-praxis%3Ffoo',
+  ]) {
+    const response = await request.get(`/episodes/${slug}`)
+    expect.soft(response.status(), slug).toBe(404)
+    expect.soft(await response.text(), slug).toContain('Episode not found')
+  }
+})
+
+test('trailing-slash episode URLs retain the saved canonical through hydration and history', async ({
+  request,
+  page,
+}) => {
+  const path = '/episodes/trey-turner-praxis'
+  const alternate = `${path}/?from=bookmark`
+  const canonical = `https://nurevolution.net${path}`
+  const response = await request.get(alternate)
+  expect(response.status()).toBe(200)
+  expect(await response.text()).toContain(
+    `<link rel="canonical" href="${canonical}">`,
+  )
+  await stubArchiveMedia(page)
+  await page.goto(alternate)
+  await hydrated(page)
+  await expect(page.locator('h1')).toHaveText('Praxis')
+  await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
+    'href',
+    canonical,
+  )
+  await page.locator('a[href="/episodes/trey-turner-ruminate"]').click()
+  await expect(page.locator('h1')).toHaveText('Ruminate')
+  await page.goBack()
+  await expect(page.locator('h1')).toHaveText('Praxis')
+  await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
+    'href',
+    canonical,
+  )
+})
+
 test('mobile tabs keep both lists accessible, retain focus, and reflow with large text', async ({
   page,
 }) => {
