@@ -1,10 +1,10 @@
 # Nurevolution roadmap
 
-Status: M0–M3 are implemented, merged, and covered by passing main CI. M4 is implemented and locally verified on `feat/m4-archive-player`, including the owner's chosen mobile tabs; its remote CI and public deployment checks remain pending. M5–M9 implementation has not started.
+Status: M0–M4 are implemented, merged, and covered by passing main CI. M5 is planned on `feat/m5-production-delivery`; operational decisions in D08 remain open before dependent live configuration and rehearsal. M5–M9 implementation has not started. Public delivery and release checks remain pending.
 
 Updated: 2026-09-09.
 
-Inputs: [project bootstrap](docs/BOOTSTRAP.md), the owner's product answers dated 2026-09-06, M0/M1 decisions and audit dated 2026-09-07, M2/M3 implementation and M4 planning evidence dated 2026-09-08, and M4 implementation/mobile acceptance dated 2026-09-09.
+Inputs: [project bootstrap](docs/BOOTSTRAP.md), the owner's product answers dated 2026-09-06, M0/M1 decisions and audit dated 2026-09-07, M2/M3 implementation and M4 planning evidence dated 2026-09-08, and M4 implementation/mobile acceptance, merged review fixes, and M5 planning dated 2026-09-09.
 
 This document defines outcomes, dependencies, and acceptance evidence from which to write implementation-grade milestone plans. M0 has audited the archive and frozen production feed; production infrastructure remains unaudited. Newer owner decisions recorded here take precedence over conflicting defaults in the bootstrap.
 
@@ -98,10 +98,10 @@ Only block work that depends on an unresolved answer. Foundational and migration
 | D05 | Completed: source intake and M0 content mapping                           | M0 reconciled episodes, identities, enclosures, dates, tracklists, artwork, and legacy paths. Use its frozen public artifacts plus the documented M2 Praxis correction; preserve the separately supplied source files.                                                        | M0 intake; M2 full import and M3 compatibility signoff |
 | D06 | Confirmed: mobile information layout                                      | Owner chose Episodes/Tracklist tabs on 2026-09-09 after working alternatives were provided. Desktop retains adjacent regions; the shared player remains mounted.                                                                                                              | M4 layout acceptance                                   |
 | D07 | Automated baseline verified; physical-device/accessibility review pending | Chromium, Firefox, and WebKit from M1; 95% statement/line/function and 90% branch coverage. M4 keyboard/focus/reflow checks passed. Physical Android Chrome, iPhone Safari, and screen-reader observations remain preview/release checks; no complete WCAG conformance claim. | M4 interface checks; physical-device review before M6  |
-| D08 | Discovery: operational ownership and sizing                               | Owner supplies account access and infrastructure constraints; record monthly budget, droplet size/region, domains, deployment trigger, traffic estimate, backup policy, and cutover owner in M5.                                                                              | Provisioning/deployment and M6 cutover                 |
+| D08 | Size/base cost selected; remaining operations in discovery                | Owner plans a new $8/month Basic Premium Intel droplet: 1 vCPU, 1 GB RAM, 35 GB storage, 1 TB transfer. Record region/OS, other workloads, total budget, account access, domains, deployment trigger, traffic estimate, backup policy, and cutover owner in M5.               | Provisioning/deployment and M6 cutover                 |
 | D09 | Publishing design: scheduling tolerance                                   | Proposed: timestamp with explicit UTC offset; server evaluates visibility; public cache delay bounded to at most 60 seconds.                                                                                                                                                  | M8 scheduling plan                                     |
 
-D01-D04 were confirmed by the owner on 2026-09-06. On 2026-09-07 the owner confirmed complete local source intake for M0 and the full automated browser/coverage baseline for M1. Remaining discovery and design details are resolved at the specified milestones. A specific monthly budget or droplet size has not been selected; the launch storage approach is settled.
+D01-D04 were confirmed by the owner on 2026-09-06. On 2026-09-07 the owner confirmed complete local source intake for M0 and the full automated browser/coverage baseline for M1. On 2026-09-09 the owner selected the planned $8/month Basic Premium Intel tier in D08. Region, OS, shared workloads, and total cost including backups remain open; provisioning is unconfirmed. Remaining discovery and design details are resolved at the specified milestones.
 
 ## 5. Technical direction and boundaries
 
@@ -133,7 +133,7 @@ Media delivery across releases:
 | R1, confirmed           | Media served directly by the droplet's web server from persistent disk.           | Budget outbound traffic, disk, backups, and shared-site capacity. Proposed: an unproxied media hostname with its own valid TLS certificate. Map legacy enclosure URLs deliberately; a cache-bypass rule alone does not remove traffic from Cloudflare's proxy. Account for public origin exposure. |
 | After release, optional | Evaluate DigitalOcean Spaces if storage/transfer or operational needs justify it. | Compare actual cost and usage first. If chosen, migrate with checksums and validate range requests, downloads, caching, custom hostname, and old enclosure URLs. Keep provider-specific code out of the player.                                                                                    |
 
-Pricing reference checked 2026-09-06: DigitalOcean lists a basic 2 GiB/1-vCPU/50 GiB droplet at $12/month with 2,000 GiB transfer, before extras; this is a sizing candidate, not a budget commitment. Outbound transfer above included allowance is currently $0.01/GiB. Measure runtime needs and reserve capacity for the other sites before selecting a plan. [Droplet pricing](https://www.digitalocean.com/pricing/droplets), [bandwidth billing](https://docs.digitalocean.com/platform/billing/bandwidth/)
+Owner-selected planning baseline on 2026-09-09: Basic Premium Intel at $8/month, 1 vCPU, 1 GB RAM, 35 GB storage, and 1 TB transfer; this supersedes the earlier $12/2 GiB candidate. Confirm the regional SKU and actual resources when provisioning. M5 must measure runtime needs within that shared 1 GB budget, reserve capacity for other sites, and retain disk headroom beyond the 6.34 GiB archive. Builds run in CI; one app instance is the default, with a brief measured replacement interval and the previous image retained for rollback. Outbound transfer above included allowance is currently $0.01/GiB; backups and other extras are outside the stated base price. [Droplet pricing](https://www.digitalocean.com/pricing/droplets), [bandwidth billing](https://docs.digitalocean.com/platform/billing/bandwidth/)
 
 DigitalOcean Spaces is an object-storage service with an optional integrated CDN. It is a later evaluation, not a launch dependency or a reason to build a storage abstraction now. [DigitalOcean Spaces documentation](https://docs.digitalocean.com/products/spaces/)
 
@@ -238,7 +238,7 @@ Run `pnpm verify`. External validator/client results are provisional until repea
 
 ### M4 — Initial archive player and responsive dark design
 
-**Completed locally on 2026-09-09:** [M04-archive-player.md](docs/milestones/M04-archive-player.md#completion-evidence), verified implementation `3175e4b` on `feat/m4-archive-player`. The shared persistent native player, canonical SSR episode URLs, owner-selected mobile tabs, complete static tracklists, streaming attachment downloads, RSS link, and historical redirects are implemented. `CI=1 pnpm verify` passed with 225 application tests, 12 migration tests, and 64 browser checks; all coverage thresholds remain satisfied. All canonical/source hashes are unchanged. M4 remote CI has not run; real-device/screen-reader observations and public delivery acceptance remain M5/M6 checks. See the [player guide](docs/PLAYER.md).
+**Merged on 2026-09-09:** [PR #3](https://github.com/treyturner/nurevolution.net/pull/3), rebased main commit `77448fd`, with [passing main CI](https://github.com/treyturner/nurevolution.net/actions/runs/34308879714). The shared persistent native player, canonical SSR episode URLs, owner-selected mobile tabs, complete static tracklists, streaming attachment downloads, RSS link, and historical redirects are implemented. Review fixes cover encoded URLs, canonical paths, media error/continuation behavior, one live announcement, and byte-range-capable test media. Verification passed with 231 application tests, 12 migration tests, and 76 browser checks; thresholds and the two existing portability skips are unchanged. Canonical/source hashes still match. See [merged evidence](docs/milestones/M04-archive-player.md#merged-review-and-ci-evidence) and the [player guide](docs/PLAYER.md). Real-device/screen-reader observations and public delivery acceptance remain M5/M6 checks.
 
 **Outcome:** satisfy R1's website requirements with the imported archive.
 
@@ -260,13 +260,15 @@ Run `pnpm verify`. External validator/client results are provisional until repea
 
 ### M5 — Production delivery and operational rehearsal
 
+**Plan written on 2026-09-09:** [M05-production-delivery.md](docs/milestones/M05-production-delivery.md) on `feat/m5-production-delivery`. It specifies packaging, manifests, file serving, CI publication/promotion, preview fidelity, rollback/restore, and acceptance evidence using the owner's selected $8/1 GB Premium Intel baseline. D08 region/OS/workload/access/backup choices, total cost, and the final Cloudflare/download topology remain owner inputs before dependent live work; infrastructure implementation has not started.
+
 **Outcome:** a deployable, recoverable release on the chosen infrastructure, with media and HTTPS working independently of the home WordPress stack.
 
 **Deliverables:** documented D04/D08 decisions and cost estimate; container/reverse-proxy configuration; media upload/verification process; GitHub Actions image publication and deployment workflow; preview environment; backup/restore, certificate, deployment, rollback, and incident runbooks.
 
 **Scope:**
 
-- Size the shared droplet for the application plus other planned sites. Build in CI rather than depending on spare production memory for compilation.
+- Validate the selected 1 GB shared droplet's capacity for the application plus other planned sites. Build in CI, measure startup/runtime/maintenance peaks, reserve host headroom, and default to one app instance with a tested stop/start rollback procedure. Permit overlapping instances only if measured capacity supports them.
 - Separate per-site configuration, resources, application networks, secrets, and release state. Sharing a droplet must not make a Nurevolution deploy restart other sites.
 - Configure persistent droplet media storage, its hostname, and legacy enclosure routing. Copy assets with checksums; test correct types/lengths, HEAD, range responses, resume, and download headers for every mapped object. Serve original enclosure paths unchanged where possible; otherwise record and test the shortest compatible redirect to the unproxied media host, preserving GUIDs.
 - Move certificate issuance/renewal for this site off pfSense. Persist ACME state; rehearse challenge issuance with a test environment and verify production renewal configuration and restart persistence.

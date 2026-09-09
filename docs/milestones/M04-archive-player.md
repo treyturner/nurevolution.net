@@ -1,6 +1,6 @@
 # M4 — Initial archive player and responsive dark design
 
-Status: **Implemented and locally verified** on 2026-09-09, on `feat/m4-archive-player`. The original plan is retained below; actual results are recorded in [completion evidence](#completion-evidence). The owner chose mobile tabs during implementation. Public deployment, real-device/screen-reader observations, and directory/client checks remain explicit M5/M6 work.
+Status: **Implemented, rebased and merged, with passing main CI** on 2026-09-09, at `77448fd`. The original plan and local completion record are retained below; subsequent review fixes and CI results are recorded in [merged evidence](#merged-review-and-ci-evidence). The owner chose mobile tabs during implementation. Public deployment, real-device/screen-reader observations, and directory/client checks remain explicit M5/M6 work.
 
 Roadmap: [M4](../../ROADMAP.md#m4--initial-archive-player-and-responsive-dark-design). Prerequisites: [M2 canonical content](M02-canonical-content.md), [M3 RSS](M03-podcast-rss.md), and [BOOTSTRAP.md](../BOOTSTRAP.md), subject to the roadmap's newer owner decisions. Supplemental baseline and public media observations: [M04-planning-reference.json](evidence/M04-planning-reference.json).
 
@@ -248,3 +248,13 @@ The download connection handler uses Node's `Readable.fromWeb` and `pipeline`; i
 Interface observations include direct visual inspection of desktop/mobile previews and the owner's mobile choice; keyboard, focus, reflow, tab semantics, and browser-media observations are covered by the checks above. **Physical Android Chrome, physical iPhone Safari, and screen-reader observations were not performed** and remain named preview/release checks before M6. No complete WCAG conformance claim is made.
 
 The [player guide](../PLAYER.md) records behavior, implementation boundaries, fixtures, and delivery contracts. M5/M6 must still verify public media/artwork/TLS, full transfers and ranges/resume, real devices, external feed/client behavior, and operational rollback before WordPress retirement. M7 can extend the existing controller for rich controls and restoration; M8 must review scheduled visibility and caching on every public surface.
+
+### Merged review and CI evidence
+
+PR [#3](https://github.com/treyturner/nurevolution.net/pull/3) was rebased and merged on 2026-09-09, ending at main commit **`77448fd2d3997b96fdfef1d29e1c6083d0498120`**. The earlier local record describes the original implementation before review. Subsequent changes fixed encoded-slug requests and saved canonical paths; stopped continuation after native media errors; preserved the blocked-play message across queued source-reset pauses; and reduced episode selection to one live region with playback text associated with the audio control.
+
+The original WebKit loop failure exposed missing byte-range support in the tiny media fixture's static server. The fixture now serves WAV/MP3 through explicit range-capable routes, tests exact partial bytes/headers, and exposes native media error diagnostics. No production MP3s or canonical content were changed.
+
+[Final branch CI](https://github.com/treyturner/nurevolution.net/actions/runs/34306066396) and [rebased main CI](https://github.com/treyturner/nurevolution.net/actions/runs/34308879714) passed. The merged tree matches the locally verified final branch: **231 application tests, 12 migration tests, 76 browser checks**, and the same two duplicate portability skips. Local coverage was 98.46% statements, 98.91% lines, 98.46% functions, and 96.62% branches. The 59 canonical and five frozen source/report hashes were checked again during M5 planning and still match. All five PR review threads were addressed and resolved before merge.
+
+M5's [delivery plan](M05-production-delivery.md) starts from this merged baseline. Passing main CI completes the application prerequisite; it does not establish live deployment, original-media transfer, TLS/restore, physical-device, or external-client acceptance.
