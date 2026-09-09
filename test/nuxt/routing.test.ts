@@ -15,6 +15,11 @@ it('announces accepted navigation without remounting the player', async () => {
   await nuxt.$router.push('/episodes/trey-turner-praxis')
   expect(wrapper.get('h1').text()).toBe('Praxis')
   expect(wrapper.get('.sr-only').text()).toBe('Selected Trey Turner — Praxis')
+  expect(wrapper.findAll('[role="status"], [aria-live]')).toHaveLength(1)
+  expect(wrapper.get('audio').attributes('aria-describedby')).toBe(
+    'playback-status',
+  )
+  expect(wrapper.get('#playback-status').attributes('role')).toBeUndefined()
   expect(wrapper.get('audio').element).toBe(audio)
   const state = await nuxt.runWithContext(useEpisodePage)
   state.value.failedPath = '/episodes/unknown'

@@ -39,7 +39,9 @@ export function createPlayer(
     const snapshot = current()
     if (!snapshot) return
     if (snapshot.error) {
+      generation++
       set('error')
+      if (!snapshot.paused) audio.pause()
       return
     }
     if (snapshot.ended) {
@@ -47,8 +49,8 @@ export function createPlayer(
       return
     }
     if (event === 'pause' && snapshot.paused) {
-      generation++ // A user's pause also invalidates a pending play promise.
-      set('paused')
+      // A queued source-reset pause must not erase an autoplay rejection.
+      if (status !== 'blocked') set('paused')
     } else if (
       (event === 'play' || event === 'playing' || event === 'waiting') &&
       !snapshot.paused
@@ -85,9 +87,20 @@ export function createPlayer(
     audio.load(next.url)
     if (continuePlaying) {
       // Call immediately: native controls can then cancel the pending play request.
-      void audio.play().catch(() => {
+      void audio.play().catch((error: unknown) => {
         if (disposed || own !== generation) return
-        set(current()?.error ? 'error' : 'blocked')
+        const snapshot = current()
+        if (!snapshot) return
+        if (snapshot.error) observe('error')
+        else if (snapshot.paused) {
+          // Native pause cancels a pending play with AbortError. A reset pause
+          // alone does not determine the outcome of the new play request.
+          set(
+            error instanceof Error && error.name === 'AbortError'
+              ? 'paused'
+              : 'blocked',
+          )
+        }
       })
     }
   }
@@ -102,7 +115,12 @@ export function createPlayer(
         return
       }
       const snapshot = audio.snapshot()
-      load(next, Boolean(source && !snapshot.ended && !snapshot.paused))
+      load(
+        next,
+        Boolean(
+          source && !snapshot.error && !snapshot.ended && !snapshot.paused,
+        ),
+      )
     },
     retry() {
       if (disposed || !source) return
