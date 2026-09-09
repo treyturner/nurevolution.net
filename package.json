@@ -21,9 +21,10 @@
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
     "test:migration": "python3 -m unittest discover -s tools/migration/tests -p 'test_*.py'",
+    "test:operations": "python3 -m unittest discover -s deploy/tests -p 'test_*.py'",
     "check:migration": "python3 tools/migration/audit.py check --inventory docs/migration/inventory.json --legacy-urls docs/migration/legacy-urls.json --track-timings docs/migration/track-timings.json",
     "test:e2e": "pnpm build:fixture && playwright test",
-    "verify": "pnpm prepare && pnpm format:check && pnpm lint && pnpm typecheck && pnpm test:migration && pnpm check:migration && pnpm test:coverage && pnpm build && pnpm test:e2e && pnpm test:delivery",
+    "verify": "pnpm prepare && pnpm format:check && pnpm lint && pnpm typecheck && pnpm test:migration && pnpm test:operations && pnpm check:migration && pnpm test:coverage && pnpm build && pnpm test:e2e && pnpm test:delivery",
     "build:deploy": "esbuild tools/deploy/cli.ts --bundle --platform=node --target=node22 --format=esm --outfile=.local/delivery/artifacts/deploy.mjs",
     "test:delivery": "node test/delivery/run.ts"
   },

@@ -1,0 +1,19 @@
+[Unit]
+Description=Nurevolution backup failure notification to Discord
+After=network-online.target
+Wants=network-online.target
+StartLimitIntervalSec=5min
+StartLimitBurst=3
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/nurevolution-backup-alert failure
+Restart=on-failure
+RestartSec=30s
+TimeoutStartSec=30s
+MemoryMax=64M
+TasksMax=16
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true

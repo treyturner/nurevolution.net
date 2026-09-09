@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 1,
+  "at": "2026-09-09T19:49:21.846412+00:00",
+  "scope": "Small original fixture rehearsal from the actual Ubuntu 26.04 droplet to owner-hosted MinIO; not the full archive or application recovery",
+  "resticVersion": "0.19.1",
+  "repositoryId": "69377ca84149a38b6a7f22a92a4b9f83cabd4e83dc561d2a787635168e094a86",
+  "repositoryVersion": 2,
+  "snapshotId": "a1db7708a4658079cf7109ceac52176a7aabc936fa272c57e0b28805c387f915",
+  "files": [
+    {
+      "path": "artwork-fixture.bin",
+      "bytes": 262144,
+      "sha256": "33b1ef018ee5c64a55a8b4c2bd8c9f510516f39b1653330f98d018a5e2c09c28"
+    },
+    {
+      "path": "binary.bin",
+      "bytes": 4194304,
+      "sha256": "44166bc2b1f7d60acc27af5b1bdb4a794d0f12b90ac2b23cda8f38d60749101d"
+    },
+    {
+      "path": "empty",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "metadata.json",
+      "bytes": 54,
+      "sha256": "cdfeb178c7a51553f7a9afc86bfb92b797f7e2a076de6e52e6cfec48e582602c"
+    },
+    {
+      "path": "nested/unicode \u2014 file.txt",
+      "bytes": 49,
+      "sha256": "5c820b72da835a3c5cf456ec6642b5c7cf9fee12d432d0a598f6114c7ea14561"
+    }
+  ],
+  "totalBytes": 4456551,
+  "signedBucketListing": "passed",
+  "anonymousBucketListing": "403 AccessDenied",
+  "outsideBucketListing": "403 AccessDenied for a fresh probe bucket name outside the allowed resource",
+  "bucketEnumeration": "limited to dedicated bucket",
+  "repositoryReadDataCheck": "passed",
+  "restoreAndHashes": "passed",
+  "testSnapshotAndDataCleanup": "passed",
+  "remainingSnapshots": 0,
+  "restoreSeconds": 2.951,
+  "totalSeconds": 17.531,
+  "cgroupPeakBytes": 63774720,
+  "maximumChildRssKiB": 63992,
+  "memoryLimitMiB": 192,
+  "scheduledBackupsEnabled": false
+}
