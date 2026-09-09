@@ -7,6 +7,11 @@ import {
 
 class ControlledAudio extends EventTarget implements AudioPort {
   src = ''
+  currentSrc = ''
+  currentTime = 0
+  ended = false
+  readyState = 0
+  error = null
   paused = true
   load = vi.fn(() => {
     this.paused = true
@@ -108,6 +113,7 @@ describe('audio adapter', () => {
     const audio = createAudioAdapter(element)
     audio.dispose()
     for (const operation of [
+      () => audio.snapshot(),
       () => audio.load('/another.mp3'),
       () => audio.play(),
       () => audio.pause(),

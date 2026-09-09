@@ -1,8 +1,26 @@
-export type AudioEvent = 'loadedmetadata' | 'play' | 'pause' | 'ended' | 'error'
+export type AudioEvent =
+  | 'loadedmetadata'
+  | 'play'
+  | 'playing'
+  | 'waiting'
+  | 'pause'
+  | 'ended'
+  | 'error'
 
 export type AudioPort = Pick<
   HTMLAudioElement,
-  'src' | 'load' | 'play' | 'pause' | 'addEventListener' | 'removeEventListener'
+  | 'src'
+  | 'currentSrc'
+  | 'currentTime'
+  | 'paused'
+  | 'ended'
+  | 'readyState'
+  | 'error'
+  | 'load'
+  | 'play'
+  | 'pause'
+  | 'addEventListener'
+  | 'removeEventListener'
 >
 
 export function createAudioAdapter(element: AudioPort) {
@@ -14,6 +32,18 @@ export function createAudioAdapter(element: AudioPort) {
   }
 
   return {
+    snapshot() {
+      assertActive()
+      return {
+        src: element.src,
+        currentSrc: element.currentSrc,
+        currentTime: element.currentTime,
+        paused: element.paused,
+        ended: element.ended,
+        readyState: element.readyState,
+        error: element.error,
+      }
+    },
     load(sourceUrl: string) {
       assertActive()
       element.src = sourceUrl
@@ -47,3 +77,5 @@ export function createAudioAdapter(element: AudioPort) {
     },
   }
 }
+
+export type AudioAdapter = ReturnType<typeof createAudioAdapter>

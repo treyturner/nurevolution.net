@@ -7,7 +7,8 @@ export default defineNuxtRouteMiddleware(async (to) => {
   try {
     const accepted = await nuxt.$episodeNavigation.prepare(to.path, slug)
     if (!accepted) return abortNavigation()
-    if (import.meta.server) nuxt.$episodeNavigation.complete(to.path)
+    to.meta.episodeNavigationToken = accepted
+    if (import.meta.server) nuxt.$episodeNavigation.complete(to.path, accepted)
   } catch (error) {
     if (state.value.model) return abortNavigation()
     throw createError({

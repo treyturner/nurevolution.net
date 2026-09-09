@@ -20,7 +20,11 @@ defineProps<{ error: NuxtError }>()
       }}
     </p>
     <a href="/">Back to the archive</a>
-    <button v-if="error.statusCode !== 404" type="button" @click="clearError()">
+    <button
+      v-if="error.statusCode !== 404"
+      type="button"
+      @click="reloadNuxtApp({ force: true })"
+    >
       Try again
     </button>
   </AppShell>

@@ -1,6 +1,6 @@
 # M4 — Initial archive player and responsive dark design
 
-Status: **Planned and ready for implementation** on 2026-09-08, from merged `main` at `fc0f26111d0632b5ff90f3656c1ed65e6464508a`. No implementation is claimed. D06 requires the owner to try working mobile alternatives before layout acceptance; it does not block starting M4.
+Status: **Planned and ready for implementation** on 2026-09-08, from merged `main` at `fc0f26111d0632b5ff90f3656c1ed65e6464508a`. No implementation is claimed. D06 was resolved during implementation on 2026-09-09: the owner chose Episodes/Tracklist tabs on mobile after receiving both working alternatives. Desktop retains adjacent regions. Implementation and final verification are in progress.
 
 Roadmap: [M4](../../ROADMAP.md#m4--initial-archive-player-and-responsive-dark-design). Prerequisites: [M2 canonical content](M02-canonical-content.md), [M3 RSS](M03-podcast-rss.md), and [BOOTSTRAP.md](../BOOTSTRAP.md), subject to the roadmap's newer owner decisions. Supplemental baseline and public media observations: [M04-planning-reference.json](evidence/M04-planning-reference.json).
 
@@ -226,4 +226,4 @@ M4 implementation is complete when the R1 website behaviors, SSR/history contrac
 
 ### Completion evidence
 
-Pending implementation. Record actual results here; the merged-main baseline and HEAD samples above are readiness evidence only.
+Implementation in progress. On 2026-09-09 the owner chose **Tabs** for D06 after working stacked and tabbed previews were provided with Praxis and the full archive. The temporary comparison switch is removed from the implementation; the chosen mobile tabs share the same player as the desktop layout. Final automated and manual evidence is still pending; the merged-main baseline and HEAD samples above are readiness evidence only.
