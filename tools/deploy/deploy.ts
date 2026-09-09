@@ -3,12 +3,18 @@ import { dirname, resolve } from 'node:path'
 import { assertRollbackCompatible, serialize } from './manifest.ts'
 import type { DeploymentRecord } from './release.ts'
 
-export async function atomicWrite(path: string, bytes: string) {
+export async function atomicWrite(
+  path: string,
+  bytes: string,
+  mode: 0o600 | 0o644 = 0o600,
+) {
   const temp = path + '.pending'
   const file = await fs.open(temp, 'wx', 0o600)
   try {
     try {
       await file.writeFile(bytes)
+      // Set final permissions explicitly, including under an operator's 0077 umask.
+      await file.chmod(mode)
       await file.sync()
     } finally {
       await file.close()

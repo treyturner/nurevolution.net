@@ -265,3 +265,11 @@ The backup command now bounds every repository operation to two S3 connections, 
 The backup record also takes its snapshot ID directly from the completed backup's JSON summary. A latest-snapshot query could return a separate rehearsal path/tag group; the regression check distinguishes that unrelated snapshot and rejects a missing completion ID.
 
 The full local `CI=1 pnpm verify` gate passed again after both backup fixes, including all 265 application/tooling tests and the unchanged migration, operator, browser, and Docker delivery checks. A fresh encrypted local fixture backup/check/restore also passed all four file hashes using the revised command. The owner confirmed receipt of the Discord setup message; automatic failure-to-notifier wiring remains a live acceptance check.
+
+### PR review cycle 5
+
+The final requested review cycle of `2ddc3ab` found that operator-owned proxy configurations inherited the private deployment-journal permissions. Caddy runs as container root with only `NET_BIND_SERVICE`, so it cannot bypass another UID's mode-0600 files. Candidate, activation, and rollback proxy configurations now receive mode 0644 explicitly before their atomic replacement; journals retain mode 0600. Applying the final mode before the file flush also handles a restrictive operator umask.
+
+The regression checks exercise a real 0077 umask and the actual Caddy image with production capability restrictions. A UID-1000-owned private control file fails with permission denied, while generated readable configurations validate and reload successfully. The dedicated-operator setup does not require additional container capabilities.
+
+The full local `CI=1 pnpm verify` gate passed: 266 application/tooling tests, 12 migration tests, 10 operator tests, 76 browser checks with two unchanged portability skips, and the three-browser Docker delivery checks. Coverage is 98.55% statements, 96.99% branches, 98.28% functions, and 98.84% lines.

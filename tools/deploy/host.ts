@@ -211,7 +211,7 @@ export async function deployOnHost(
       const edgeCommand = (args: string[]) =>
         run('docker', ['exec', paths.edgeContainer, 'caddy', ...args])
       const activate = async (bytes: string) => {
-        await atomicWrite(edgePath, bytes)
+        await atomicWrite(edgePath, bytes, 0o644)
         await edgeCommand(['reload', '--config', '/etc/caddy/caddy.json'])
       }
       const driver: DeploymentDriver = {
@@ -299,6 +299,7 @@ export async function deployOnHost(
           await atomicWrite(
             resolve(paths.edgeDirectory, 'candidate.json'),
             serialize(rendered),
+            0o644,
           )
           await edgeCommand([
             'validate',

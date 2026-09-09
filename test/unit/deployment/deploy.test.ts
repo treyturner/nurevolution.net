@@ -1,4 +1,5 @@
 import * as fs from 'node:fs/promises'
+import { execFileSync } from 'node:child_process'
 import { tmpdir } from 'node:os'
 import { resolve } from 'node:path'
 import { afterEach, expect, it, vi } from 'vitest'
@@ -52,6 +53,10 @@ it('serializes deployments and preserves a crash marker instead of guessing lock
   await atomicWrite(output, 'one')
   await atomicWrite(output, 'two')
   expect(await fs.readFile(output, 'utf8')).toBe('two')
+  expect((await fs.stat(output)).mode & 0o777).toBe(0o600)
+  const edgeConfig = resolve(f.directory, 'caddy.json')
+  await atomicWrite(edgeConfig, '{}', 0o644)
+  expect((await fs.stat(edgeConfig)).mode & 0o777).toBe(0o644)
   await fs.mkdir(resolve(f.directory, 'directory'))
   await expect(
     atomicWrite(resolve(f.directory, 'directory'), 'invalid'),
@@ -96,6 +101,22 @@ it('preflights before interruption, persists release state, and restores a faile
     deployRelease(f.directory, record, record, f.driver),
   ).rejects.toThrow('headroom')
   expect(vi.mocked(f.driver.stop).mock.calls.length).toBe(stops)
+})
+
+it('keeps proxy configuration readable under a private operator umask while protecting journals', async () => {
+  const f = await fixture()
+  const edge = resolve(f.directory, 'caddy.json')
+  const journal = resolve(f.directory, 'pending.json')
+  execFileSync(process.execPath, [
+    '--input-type=module',
+    '-e',
+    'const {atomicWrite}=await import(process.argv[1]); process.umask(0o077); await atomicWrite(process.argv[2], "{}", 0o644); await atomicWrite(process.argv[3], "{}")',
+    new URL('../../../tools/deploy/deploy.ts', import.meta.url).href,
+    edge,
+    journal,
+  ])
+  expect((await fs.stat(edge)).mode & 0o777).toBe(0o644)
+  expect((await fs.stat(journal)).mode & 0o777).toBe(0o600)
 })
 
 it('handles first-deploy failures, post-activation failures, and failed recovery explicitly', async () => {

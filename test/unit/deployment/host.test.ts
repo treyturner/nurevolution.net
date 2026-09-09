@@ -151,6 +151,13 @@ it('runs bounded commands and waits through transient readiness failures', async
 it('validates/pulls the exact image and deploys only the owned app and site route', async () => {
   const f = await fixture()
   await deployOnHost(f.bundle, f.paths, f.run, f.request)
+  for (const name of ['candidate.json', 'caddy.json'])
+    expect(
+      (await fs.stat(resolve(f.paths.edgeDirectory, name))).mode & 0o777,
+    ).toBe(0o644)
+  expect(
+    (await fs.stat(resolve(f.root, 'state/preview/current.json'))).mode & 0o777,
+  ).toBe(0o600)
   expect(
     f.run.mock.calls.some(
       ([, args]) =>

@@ -3,6 +3,7 @@ import * as fs from 'node:fs/promises'
 import { resolve } from 'node:path'
 import { randomBytes } from 'node:crypto'
 import { execute, waitReady } from '../../tools/deploy/host.ts'
+import { atomicWrite } from '../../tools/deploy/deploy.ts'
 import { prepareBundle } from '../../tools/deploy/build.ts'
 import { serialize } from '../../tools/deploy/manifest.ts'
 import { renderSite, profileSchema } from '../../tools/deploy/render-config.ts'
@@ -243,6 +244,12 @@ try {
   ])
   await start(fixtureApp)
   const edge = await create(prefix + '-edge', [
+    '--cap-drop',
+    'ALL',
+    '--cap-add',
+    'NET_BIND_SERVICE',
+    '--security-opt',
+    'no-new-privileges:true',
     '--network',
     network,
     '--read-only',
@@ -290,12 +297,73 @@ try {
       },
     },
   }
-  await fs.writeFile(
+  await atomicWrite(
     resolve(fixtureDirectory, '.edge/caddy.json'),
+    serialize(config),
+    0o644,
+  )
+  await atomicWrite(
+    resolve(fixtureDirectory, '.edge/private-control.json'),
     serialize(config),
   )
   await docker(['cp', fixtureDirectory + '/.', copier + ':/files'])
+  await docker([
+    'exec',
+    '--user',
+    '0',
+    copier,
+    'chown',
+    '1000:1000',
+    '/files/.edge/caddy.json',
+    '/files/.edge/private-control.json',
+  ])
   await start(edge)
+  await assert.rejects(
+    docker([
+      'exec',
+      edge,
+      'caddy',
+      'validate',
+      '--config',
+      '/media/.edge/private-control.json',
+    ]),
+    /permission denied/,
+  )
+  await docker([
+    'exec',
+    edge,
+    'caddy',
+    'validate',
+    '--config',
+    '/media/.edge/caddy.json',
+  ])
+  async function stageEdgeConfig(value: unknown) {
+    const path = resolve(fixtureDirectory, '.edge/caddy.json')
+    await atomicWrite(path, serialize(value), 0o644)
+    await docker(['cp', path, copier + ':/files/.edge/caddy.json'])
+    await docker([
+      'exec',
+      '--user',
+      '0',
+      copier,
+      'chown',
+      '1000:1000',
+      '/files/.edge/caddy.json',
+    ])
+    assert.equal(
+      await docker([
+        'exec',
+        '--user',
+        '0',
+        copier,
+        'stat',
+        '-c',
+        '%a:%u',
+        '/files/.edge/caddy.json',
+      ]),
+      '644:1000',
+    )
+  }
   const edgePort = await port(edge, '8080/tcp')
   const webOrigin = 'http://' + address + ':' + edgePort,
     mediaOrigin = 'http://' + address + ':' + (await port(edge, '8081/tcp'))
@@ -338,15 +406,7 @@ try {
   }
   config.apps.http.servers.https.routes = [sentinel, localSite('localhost')]
   config.apps.http.servers.media.routes = [localSite('127.0.0.1')]
-  await fs.writeFile(
-    resolve(fixtureDirectory, '.edge/caddy.json'),
-    serialize(config),
-  )
-  await docker([
-    'cp',
-    resolve(fixtureDirectory, '.edge/caddy.json'),
-    copier + ':/files/.edge/caddy.json',
-  ])
+  await stageEdgeConfig(config)
   await docker([
     'exec',
     edge,
@@ -472,15 +532,7 @@ try {
     sentinel,
     localSite('localhost', canonicalSite),
   ]
-  await fs.writeFile(
-    resolve(fixtureDirectory, '.edge/caddy.json'),
-    serialize(config),
-  )
-  await docker([
-    'cp',
-    resolve(fixtureDirectory, '.edge/caddy.json'),
-    copier + ':/files/.edge/caddy.json',
-  ])
+  await stageEdgeConfig(config)
   await docker([
     'exec',
     edge,
