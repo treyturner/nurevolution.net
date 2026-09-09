@@ -41,10 +41,13 @@ The current repository is initialized. A [small live fixture rehearsal](../miles
 
 Initialize the repository explicitly after checking its endpoint and bucket. Install [backup.service](../../deploy/backup.service) and [backup.timer](../../deploy/backup.timer) as `nurevolution-backup.service` and `nurevolution-backup.timer`. Create `/var/cache/nurevolution-restic`, ensure the paths in the service are present, and test the service before enabling its timer. The backup command takes site/edge locks, uses one read worker and bounded Go memory/CPU, backs up media/release state/profile/tooling and edge config/ACME data, checks repository structure, then applies retention. It records the snapshot ID only after success. Restic encryption and content hashing apply to uploads; `check` alone is not a full-data restore test.
 
+All repository operations use two S3 connections, an 8 MiB target pack size, `GOMAXPROCS=1`, and `GOMEMLIMIT=96MiB`. Keep these bounds when running restore/check commands manually on this droplet. The full-archive rehearsal hit the service's 192 MiB cgroup limit with restic's default five connections and 16 MiB packs; the Go heap limit alone did not bound the complete process. [Restic's tuning guide](https://restic.readthedocs.io/en/stable/047_tuning_parameters.html) explains the additional buffer cost of connections and pack size. The revised limits still require full archive and running-application acceptance; the earlier small fixture result does not establish that capacity. The success record uses the snapshot ID returned by this backup's JSON summary, so a separate rehearsal snapshot cannot be mistaken for the new application backup.
+
 Preview retention selection before enabling automatic removal:
 
 ```sh
-restic forget --tag nurevolution --host nurevolution --group-by host,tags \
+GOMAXPROCS=1 GOMEMLIMIT=96MiB restic -o s3.connections=2 --pack-size 8 \
+  forget --tag nurevolution --host nurevolution --group-by host,tags \
   --keep-weekly 4 --keep-monthly 3 --dry-run
 ```
 

@@ -253,3 +253,15 @@ The review of `0b4f448` identified cross-environment rollback state, missing med
 Deployment acceptance now probes a representative enclosure's HEAD/range responses, its website redirect and media attachment metadata, and artwork before recording success. First-deployment and update regressions cover missing media, broken ranges/attachments, and media TLS errors. Release configuration also binds the complete bundled `deploy.mjs`; publication, release verification, and the installed/executing host tool check its actual bytes. Regression checks reject changed host logic even when the renderer fingerprint matches.
 
 The full local `CI=1 pnpm verify` gate passed: 265 application/tooling tests, 12 migration tests, 10 operator-helper tests, 76 browser checks with two unchanged portability skips, and the three-browser Docker delivery checks. Coverage is 98.55% statements, 96.99% branches, 98.27% functions, and 98.83% lines. Public deployment and operational acceptance remain separate pending work.
+
+### PR review cycle 4 and full-archive resource correction
+
+Revision `d27c352` passed [remote CI](https://github.com/treyturner/nurevolution.net/actions/runs/34406748533) and the fourth full automatic review completed without findings. All earlier threads were resolved; no explicit review requests were sent.
+
+The subsequent full-archive rehearsal exposed a resource issue absent from the small fixture: restic's five default S3 connections hit the 192 MiB service memory limit after 21.652 seconds, despite its 128 MiB Go heap target. The failed process left no completed snapshot. Its single stale lock was inspected, matched to the terminated process, and removed before retrying; existing archive files and repository data were preserved.
+
+The backup command now bounds every repository operation to two S3 connections, 8 MiB target packs, and a 96 MiB Go heap target. The revised live rehearsal includes the Node subprocess wrapper inside the same 192 MiB cgroup. Full archive backup, data verification, restoration, and operation alongside the running application remain required before enabling the weekly timer.
+
+The backup record also takes its snapshot ID directly from the completed backup's JSON summary. A latest-snapshot query could return a separate rehearsal path/tag group; the regression check distinguishes that unrelated snapshot and rejects a missing completion ID.
+
+The full local `CI=1 pnpm verify` gate passed again after both backup fixes, including all 265 application/tooling tests and the unchanged migration, operator, browser, and Docker delivery checks. A fresh encrypted local fixture backup/check/restore also passed all four file hashes using the revised command. The owner confirmed receipt of the Discord setup message; automatic failure-to-notifier wiring remains a live acceptance check.

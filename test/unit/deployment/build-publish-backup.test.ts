@@ -122,9 +122,11 @@ it('backs up under deployment locks, verifies the repository, and applies only t
   const run = vi.fn<Execute>(async (_cmd, args) =>
     args[0] === 'version'
       ? 'restic 0.19.1 compiled with go'
-      : args[0] === 'snapshots'
-        ? '[{"id":"snapshot"}]'
-        : '',
+      : args[0] === 'backup'
+        ? '{"message_type":"status"}\n{"message_type":"summary","snapshot_id":"snapshot"}\n'
+        : args[0] === 'snapshots'
+          ? '[{"id":"unrelated-rehearsal"}]'
+          : '',
   )
   expect((await backup(dir, edge, run)).snapshotId).toBe('snapshot')
   expect(run.mock.calls.map(([, args]) => args[0])).toEqual([
@@ -132,16 +134,23 @@ it('backs up under deployment locks, verifies the repository, and applies only t
     'backup',
     'check',
     'forget',
-    'snapshots',
   ])
   expect(run.mock.calls.find(([, args]) => args[0] === 'forget')![1]).toContain(
     '--keep-weekly',
   )
+  for (const [, args, env] of run.mock.calls.slice(1)) {
+    expect(args).toEqual(
+      expect.arrayContaining(['-o', 's3.connections=2', '--pack-size', '8']),
+    )
+    expect(env).toMatchObject({ GOMAXPROCS: '1', GOMEMLIMIT: '96MiB' })
+  }
   run.mockResolvedValueOnce('restic 0.18')
   await expect(backup(dir, edge, run)).rejects.toThrow('pinned')
   const original = run.getMockImplementation()!
   run.mockImplementation(async (cmd, args, env) =>
-    args[0] === 'snapshots' ? '[]' : original(cmd, args, env),
+    args[0] === 'backup'
+      ? '{"message_type":"summary"}'
+      : original(cmd, args, env),
   )
   await expect(backup(dir, edge, run)).rejects.toThrow('snapshot')
 })

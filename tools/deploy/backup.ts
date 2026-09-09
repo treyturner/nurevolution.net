@@ -12,15 +12,19 @@ export async function backup(
     withLock(resolve(edgeDirectory, 'deploy.lock'), async () => {
       if (!(await run('restic', ['version'])).startsWith('restic 0.19.1 '))
         throw new Error('Expected pinned restic 0.19.1')
-      // Fixed resource bounds leave room for the running site on a 1 GB host.
+      // The full archive exceeded the 192 MiB service cap at five S3 connections.
+      // Bound upload buffers as well as the Go heap on the 1 GB host.
       const env = {
         GOMAXPROCS: '1',
-        GOMEMLIMIT: '128MiB',
+        GOMEMLIMIT: '96MiB',
       }
-      await run(
+      const limits = ['-o', 's3.connections=2', '--pack-size', '8']
+      const output = await run(
         'restic',
         [
           'backup',
+          ...limits,
+          '--json',
           '--compression',
           'off',
           '--tag',
@@ -42,12 +46,24 @@ export async function backup(
         env,
         90 * 60 * 1000,
       )
-      await run('restic', ['check'], env)
+      // A latest-snapshot query can include other path/tag groups (e.g. rehearsal).
+      const summary = output
+        .split('\n')
+        .filter(Boolean)
+        .map(
+          (line) =>
+            JSON.parse(line) as { message_type?: string; snapshot_id?: string },
+        )
+        .findLast((entry) => entry.message_type === 'summary')
+      if (!summary?.snapshot_id)
+        throw new Error('No recoverable snapshot recorded')
+      await run('restic', ['check', ...limits], env)
       // Preview the retention result in the runbook before enabling the timer.
       await run(
         'restic',
         [
           'forget',
+          ...limits,
           '--tag',
           'nurevolution',
           '--host',
@@ -61,22 +77,9 @@ export async function backup(
         ],
         env,
       )
-      const snapshots = JSON.parse(
-        await run('restic', [
-          'snapshots',
-          '--tag',
-          'nurevolution',
-          '--host',
-          'nurevolution',
-          '--latest',
-          '1',
-          '--json',
-        ]),
-      ) as { id: string }[]
-      if (!snapshots[0]?.id) throw new Error('No recoverable snapshot recorded')
       const result = {
         at: new Date().toISOString(),
-        snapshotId: snapshots[0].id,
+        snapshotId: summary.snapshot_id,
         repositoryCheck: 'passed',
       }
       await atomicWrite(resolve(root, 'state/backup.json'), serialize(result))
