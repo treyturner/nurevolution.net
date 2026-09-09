@@ -1,0 +1,26 @@
+# Initial host setup only. Merge into an existing edge instead of replacing it.
+services:
+  edge:
+    image: ${CADDY_IMAGE:?verified Caddy digest required}
+    restart: unless-stopped
+    ports: ['80:80', '443:443', '443:443/udp']
+    read_only: true
+    cap_drop: [ALL]
+    cap_add: [NET_BIND_SERVICE]
+    security_opt: [no-new-privileges:true]
+    environment:
+      CLOUDFLARE_API_TOKEN: ${CLOUDFLARE_API_TOKEN:?zone-scoped DNS token required}
+    command: [caddy, run, --config, /etc/caddy/caddy.json]
+    volumes:
+      - /srv/edge/config:/etc/caddy:ro
+      - /srv/edge/data:/data
+      - /srv/edge/state:/config
+      - /srv/nurevolution/media:/media:ro
+    networks: [site]
+    logging:
+      driver: local
+      options: { max-size: 5m, max-file: '3' }
+networks:
+  site:
+    external: true
+    name: nurevolution-site
