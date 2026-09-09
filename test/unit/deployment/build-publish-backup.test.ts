@@ -5,8 +5,8 @@ import { afterEach, expect, it, vi } from 'vitest'
 import { prepareBundle } from '../../../tools/deploy/build.ts'
 import { publishImages } from '../../../tools/deploy/publish.ts'
 import { backup } from '../../../tools/deploy/backup.ts'
-import { serialize } from '../../../tools/deploy/manifest.ts'
-import { releaseFixture } from './fixtures.ts'
+import { serialize, sha256 } from '../../../tools/deploy/manifest.ts'
+import { releaseFixture, fixtureTooling } from './fixtures.ts'
 import type { Execute } from '../../../tools/deploy/host.ts'
 
 const directories: string[] = []
@@ -22,12 +22,14 @@ async function directory() {
 
 it('packages all audited assets and hashes the exact delivery configuration', async () => {
   const dir = await directory()
+  await fs.writeFile(resolve(dir, 'deploy.mjs'), fixtureTooling)
   const { manifest, configuration } = await prepareBundle(
     dir,
     'a'.repeat(40),
     '2026-09-09T00:00:00.000Z',
   )
   expect(manifest.assets).toHaveLength(156)
+  expect(configuration.toolingSha256).toBe(sha256(fixtureTooling))
   expect(manifest.assets.every((e) => e.public)).toBe(true)
   expect(await fs.readFile(resolve(dir, 'renderer.sha256'), 'utf8')).toBe(
     configuration.rendererSha256 + '\n',
@@ -40,6 +42,7 @@ it('packages all audited assets and hashes the exact delivery configuration', as
 it('publishes only tested loaded images from a trusted main event and records registry digests', async () => {
   const dir = await directory(),
     f = releaseFixture()
+  await fs.writeFile(resolve(dir, 'deploy.mjs'), fixtureTooling)
   await fs.writeFile(
     resolve(dir, 'images.json'),
     serialize({
@@ -76,6 +79,16 @@ it('publishes only tested loaded images from a trusted main event and records re
   const release = await publishImages(dir, '123', context, run)
   expect(release.imageId).toBe(f.release.imageId)
   expect(run.mock.calls.some(([, args]) => args.includes('build'))).toBe(false)
+  await fs.appendFile(
+    resolve(dir, 'deploy.mjs'),
+    '// changed deployment behavior',
+  )
+  run.mockClear()
+  await expect(publishImages(dir, '123', context, run)).rejects.toThrow(
+    'tooling checksum',
+  )
+  expect(run).not.toHaveBeenCalled()
+  await fs.writeFile(resolve(dir, 'deploy.mjs'), fixtureTooling)
   for (const patch of [
     { repository: 'fork/repo' },
     { ref: 'refs/pull/4/merge' },

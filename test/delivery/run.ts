@@ -48,12 +48,12 @@ try {
   console.log(
     'Preparing the canonical delivery bundle and exact runtime images',
   )
+  await execute('pnpm', ['build:deploy'])
   const { manifest, configuration } = await prepareBundle(
     artifacts,
     commit,
     new Date().toISOString(),
   )
-  await execute('pnpm', ['build:deploy'])
   await docker([
     'build',
     '--provenance=false',

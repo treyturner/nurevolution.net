@@ -6,9 +6,10 @@ import { validateManifest, serialize } from './manifest.ts'
 import { stageAssets, checkAssets } from './stage-assets.ts'
 import { scanSources, checkMediaHttp } from './check-media.ts'
 import { deployOnHost, execute } from './host.ts'
-import { readRelease, assertTrustedRun } from './release.ts'
+import { readRelease, assertTrustedRun, verifyTooling } from './release.ts'
 import { publishImages } from './publish.ts'
 import { backup } from './backup.ts'
+import { profileSchema } from './render-config.ts'
 
 export async function deploymentCli(
   args: string[],
@@ -70,8 +71,14 @@ export async function deploymentCli(
     )
   } else if (command === 'rollback') {
     const root = get('root')
+    const profile = profileSchema.parse(
+      JSON.parse(await fs.readFile(resolve(root, 'profile.json'), 'utf8')),
+    )
     const previous = JSON.parse(
-      await fs.readFile(resolve(root, 'state/previous.json'), 'utf8'),
+      await fs.readFile(
+        resolve(root, 'state', profile.environment, 'previous.json'),
+        'utf8',
+      ),
     ) as { release: unknown; manifest: unknown; configuration: unknown }
     const bundle = await fs.mkdtemp(resolve(root, 'rollback-'))
     try {
@@ -95,10 +102,14 @@ export async function deploymentCli(
     }
   } else if (command === 'verify-release') {
     const bundle = get('bundle')
-    const { record } = readRelease(
+    const { record, configuration } = readRelease(
       JSON.parse(await fs.readFile(resolve(bundle, 'release.json'), 'utf8')),
       await fs.readFile(resolve(bundle, 'manifest.json'), 'utf8'),
       await fs.readFile(resolve(bundle, 'configuration.json'), 'utf8'),
+    )
+    await verifyTooling(
+      resolve(bundle, 'deploy.mjs'),
+      configuration.toolingSha256,
     )
     const runId = get('run')
     if (

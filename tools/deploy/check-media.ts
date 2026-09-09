@@ -125,6 +125,7 @@ export async function checkMediaHttp(
       })
       if (
         attachment.status !== 200 ||
+        attachment.headers.get('content-type') !== 'application/octet-stream' ||
         attachment.headers.get('content-disposition') !==
           download.disposition ||
         Number(attachment.headers.get('content-length')) !== a.byteLength

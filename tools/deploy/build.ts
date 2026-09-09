@@ -21,6 +21,7 @@ export async function prepareBundle(
     sourceCommit: commit,
     compose: await fs.readFile('deploy/compose.yaml', 'utf8'),
     rendererSha256: rendererHash,
+    toolingSha256: sha256(await fs.readFile(resolve(output, 'deploy.mjs'))),
     caddyDockerfileSha256: sha256(await fs.readFile('deploy/Caddy.Dockerfile')),
   }
   await fs.mkdir(output, { recursive: true })

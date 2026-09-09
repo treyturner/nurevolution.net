@@ -1,9 +1,11 @@
 import { z } from 'zod'
+import * as fs from 'node:fs/promises'
 import { hashSchema, instantSchema } from '../../shared/content/schema.ts'
 import {
   commitSchema,
   validateManifest,
   verifyHash,
+  sha256,
   type MediaManifest,
 } from './manifest.ts'
 
@@ -32,8 +34,16 @@ export const configurationSchema = z.strictObject({
   sourceCommit: commitSchema,
   compose: z.string().min(1),
   rendererSha256: hashSchema,
+  toolingSha256: hashSchema,
   caddyDockerfileSha256: hashSchema,
 })
+
+export async function verifyTooling(file: string, expected: string) {
+  if (sha256(await fs.readFile(file)) !== expected)
+    throw new Error(
+      'Deployment tooling checksum mismatch; install the exact verified deploy.mjs',
+    )
+}
 
 export function readRelease(
   release: unknown,

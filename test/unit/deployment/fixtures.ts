@@ -5,6 +5,8 @@ import {
 } from '../../../tools/deploy/manifest.ts'
 import { runnableCatalog } from '../content/fixtures.ts'
 
+export const fixtureTooling = 'synthetic verified deployment executable\n'
+
 export function releaseFixture() {
   const manifest = createManifest(
     runnableCatalog(),
@@ -16,6 +18,7 @@ export function releaseFixture() {
     sourceCommit: manifest.sourceCommit,
     compose: 'services: {}',
     rendererSha256: 'b'.repeat(64),
+    toolingSha256: sha256(fixtureTooling),
     caddyDockerfileSha256: 'c'.repeat(64),
   }
   const release = {

@@ -81,8 +81,10 @@ it('audits every public URL, exact ranges, attachment redirects, and optional fu
       'content-length': '5',
       'content-type': entry.asset.mediaType,
     }
-    if (url.includes('/downloads/'))
+    if (url.includes('/downloads/')) {
       headers['content-disposition'] = entry.downloads[0]!.disposition
+      headers['content-type'] = 'application/octet-stream'
+    }
     if (init?.method === 'HEAD') return new Response(null, { headers })
     if (new Headers(init?.headers).has('Range'))
       return new Response('bytes', {

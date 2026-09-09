@@ -3,7 +3,13 @@ import { resolve } from 'node:path'
 import { z } from 'zod'
 import { commitSchema, serialize, sha256 } from './manifest.ts'
 import { execute, type Execute } from './host.ts'
-import { registry, readRelease, releaseSchema } from './release.ts'
+import {
+  registry,
+  readRelease,
+  releaseSchema,
+  configurationSchema,
+  verifyTooling,
+} from './release.ts'
 
 const imageSchema = z.strictObject({
   sourceCommit: commitSchema,
@@ -40,6 +46,10 @@ export async function publishImages(
   const configuration = await fs.readFile(
     resolve(bundle, 'configuration.json'),
     'utf8',
+  )
+  await verifyTooling(
+    resolve(bundle, 'deploy.mjs'),
+    configurationSchema.parse(JSON.parse(configuration)).toolingSha256,
   )
   const digests: string[] = []
   for (const [file, tag, id, repository] of [

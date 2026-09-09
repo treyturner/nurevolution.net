@@ -1,10 +1,12 @@
 import * as fs from 'node:fs/promises'
 import { resolve } from 'node:path'
+import { fileURLToPath } from 'node:url'
 import { execFile } from 'node:child_process'
 import { promisify } from 'node:util'
 import { setTimeout as delay } from 'node:timers/promises'
 import { assertNoSymlinks } from '../content/files.ts'
 import { checkAssets } from './stage-assets.ts'
+import { checkMediaHttp } from './check-media.ts'
 import {
   atomicWrite,
   deployRelease,
@@ -14,6 +16,7 @@ import {
 import {
   expectedImages,
   readRelease,
+  verifyTooling,
   type DeploymentRecord,
 } from './release.ts'
 import {
@@ -94,21 +97,42 @@ export async function deployOnHost(
   await assertNoSymlinks(paths.root)
   await assertNoSymlinks(paths.edgeDirectory)
   await assertNoSymlinks(bundle)
-  const state = resolve(paths.root, 'state')
-  await fs.mkdir(state, { recursive: true })
-  return withLock(resolve(state, 'deploy.lock'), () =>
+  const stateRoot = resolve(paths.root, 'state')
+  await fs.mkdir(stateRoot, { recursive: true })
+  return withLock(resolve(stateRoot, 'deploy.lock'), () =>
     withLock(resolve(paths.edgeDirectory, 'deploy.lock'), async () => {
-      try {
-        await fs.access(resolve(state, 'pending.json'))
-        throw new Error('Unrecovered deployment journal')
-      } catch (error) {
-        if (!(
-          error instanceof Error &&
-          'code' in error &&
-          error.code === 'ENOENT'
-        ))
-          throw error
+      for (const directory of [
+        stateRoot,
+        resolve(stateRoot, 'preview'),
+        resolve(stateRoot, 'production'),
+      ]) {
+        try {
+          await fs.access(resolve(directory, 'pending.json'))
+          throw new Error('Unrecovered deployment journal')
+        } catch (error) {
+          if (!(
+            error instanceof Error &&
+            'code' in error &&
+            error.code === 'ENOENT'
+          ))
+            throw error
+        }
       }
+      const legacyState = await fs.readdir(stateRoot)
+      if (
+        legacyState.includes('current.json') ||
+        legacyState.includes('previous.json')
+      )
+        throw new Error(
+          'Unscoped deployment state; reconcile its environment before promotion',
+        )
+      const profileBytes = await fs.readFile(
+        resolve(paths.root, 'profile.json'),
+        'utf8',
+      )
+      const profile = profileSchema.parse(JSON.parse(profileBytes))
+      const state = resolve(stateRoot, profile.environment)
+      await fs.mkdir(state, { recursive: true })
       const manifestBytes = await fs.readFile(
         resolve(bundle, 'manifest.json'),
         'utf8',
@@ -122,19 +146,22 @@ export async function deployOnHost(
         manifestBytes,
         configBytes,
       )
-      // An installed renderer must match the verified release, not silently
-      // interpret a newer policy with an older host tool.
+      // Bind both the installed file and the executing bundle to the tested
+      // executable; a renderer-only hash cannot identify host/recovery changes.
+      await verifyTooling(
+        resolve(paths.root, 'tooling/deploy.mjs'),
+        configuration.toolingSha256,
+      )
+      await verifyTooling(
+        fileURLToPath(import.meta.url),
+        configuration.toolingSha256,
+      )
       const renderer = await fs.readFile(
         resolve(paths.root, 'tooling/renderer.sha256'),
         'utf8',
       )
       if (renderer.trim() !== configuration.rendererSha256)
         throw new Error('Install the verified release tooling before promotion')
-      const profileBytes = await fs.readFile(
-        resolve(paths.root, 'profile.json'),
-        'utf8',
-      )
-      const profile = profileSchema.parse(JSON.parse(profileBytes))
       const edgePath = resolve(paths.edgeDirectory, 'caddy.json')
       const edgeBytes = await fs.readFile(edgePath, 'utf8')
       const edge = JSON.parse(edgeBytes) as JsonObject
@@ -323,6 +350,38 @@ export async function deployOnHost(
                 throw new Error('HTTPS release identity mismatch')
             } else await response.arrayBuffer()
           }
+          const audio = r.manifest.assets.find(
+            (entry) =>
+              entry.public &&
+              entry.asset.kind === 'audio' &&
+              entry.downloads.length > 0,
+          )
+          if (!audio)
+            throw new Error(
+              'No public audio available for deployment acceptance',
+            )
+          const slugs = new Set(
+            audio.downloads.map((download) => download.slug),
+          )
+          await checkMediaHttp(
+            {
+              ...r.manifest,
+              assets: [
+                audio,
+                ...r.manifest.assets
+                  .filter(
+                    (entry) => entry.public && entry.asset.kind === 'artwork',
+                  )
+                  .slice(0, 1),
+              ],
+              episodes: r.manifest.episodes.filter((episode) =>
+                slugs.has(episode.slug),
+              ),
+            },
+            { web: profile.webOrigin, media: profile.mediaOrigin },
+            false,
+            request,
+          )
         },
         async restoreEdge() {
           await activate(edgeBytes)

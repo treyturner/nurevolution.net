@@ -4,7 +4,8 @@ import { tmpdir } from 'node:os'
 import { afterEach, expect, it, vi } from 'vitest'
 import { deploymentCli } from '../../../tools/deploy/cli.ts'
 import { serialize } from '../../../tools/deploy/manifest.ts'
-import { releaseFixture } from './fixtures.ts'
+import { releaseFixture, fixtureTooling } from './fixtures.ts'
+import profile from '../../../deploy/profile.example.json'
 
 const calls = vi.hoisted(() => ({
   deploy: vi.fn(async () => ({})),
@@ -52,10 +53,12 @@ it('requires explicit valid commands/options and routes each operation to its ch
   const dir = await fs.mkdtemp(resolve(tmpdir(), 'nurevolution-cli-'))
   dirs.push(dir)
   const f = releaseFixture()
-  await fs.mkdir(resolve(dir, 'state'))
+  await fs.writeFile(resolve(dir, 'deploy.mjs'), fixtureTooling)
+  await fs.mkdir(resolve(dir, 'state/preview'), { recursive: true })
+  await fs.writeFile(resolve(dir, 'profile.json'), serialize(profile))
   for (const key of ['release', 'manifest', 'configuration'] as const)
     await fs.writeFile(resolve(dir, key + '.json'), serialize(f[key]))
-  await fs.writeFile(resolve(dir, 'state/previous.json'), serialize(f))
+  await fs.writeFile(resolve(dir, 'state/preview/previous.json'), serialize(f))
   const print = vi.fn(),
     manifest = ['--manifest', resolve(dir, 'manifest.json')],
     roots = ['--audio', 'audio', '--uploads', 'uploads']
