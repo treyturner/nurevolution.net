@@ -50,7 +50,7 @@ export function createEpisodeNavigation(
         const model = await load(path, slug)
         if (own !== generation) return false
         staged = { path, model }
-        return true
+        return own
       } catch (error) {
         if (own !== generation) return false
         state.pendingPath = null
@@ -58,8 +58,8 @@ export function createEpisodeNavigation(
         throw error
       }
     },
-    complete(path: string, failed = false) {
-      if (staged?.path !== path) return
+    complete(path: string, token: number | undefined, failed = false) {
+      if (staged?.path !== path || token !== generation) return
       if (!failed) {
         state.model = staged.model
         state.path = path

@@ -69,11 +69,11 @@ describe('episode page loading and navigation', () => {
     const first = nav.prepare('/a'),
       second = nav.prepare('/b')
     b.resolve(model)
-    expect(await second).toBe(true)
+    expect(await second).toBe(2)
     expect(s.model).toBeNull()
-    nav.complete('/a')
+    nav.complete('/a', 1)
     expect(s.model).toBeNull()
-    nav.complete('/b')
+    nav.complete('/b', 2)
     expect(s.model).toEqual(model)
     a.resolve(model)
     expect(await first).toBe(false)
@@ -91,7 +91,7 @@ describe('episode page loading and navigation', () => {
     const nav = createEpisodeNavigation(s, load)
     const old = nav.prepare('/old')
     await nav.prepare('/new')
-    nav.complete('/new', true)
+    nav.complete('/new', 2, true)
     a.reject(new Error('old'))
     expect(await old).toBe(false)
     await expect(nav.prepare('/failed')).rejects.toThrow('unavailable')
@@ -102,6 +102,19 @@ describe('episode page loading and navigation', () => {
       failedPath: '/failed',
     })
   })
+
+  it('does not let an obsolete failed route clear a newer stage for the same URL', async () => {
+    const s = state()
+    const nav = createEpisodeNavigation(s, async () => model)
+    await nav.prepare('/same')
+    await nav.prepare('/same')
+    nav.complete('/same', 1, true)
+    expect(s.pendingPath).toBe('/same')
+    nav.complete('/same', 2)
+    expect(s.path).toBe('/same')
+    expect(s.model).toEqual(model)
+  })
+
   it('derives canonical metadata from the configured origin and escaped bindings', () => {
     expect(episodeHead(model, '/')).toMatchObject({
       title: 'Nurevolution — Podcast archive',

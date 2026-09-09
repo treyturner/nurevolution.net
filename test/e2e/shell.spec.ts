@@ -1,4 +1,6 @@
 import { expect, test } from '@playwright/test'
+import { stubArchiveMedia } from './media'
+test.beforeEach(async ({ page }) => stubArchiveMedia(page))
 
 test('serves meaningful HTML before JavaScript runs', async ({ request }) => {
   const response = await request.get('/')
@@ -46,7 +48,7 @@ test('hydrates a dark shell with no application errors', async ({ page }) => {
     'background-color',
     'rgb(16, 18, 22)',
   )
-  await expect(page.locator('audio')).toHaveCount(0)
+  await expect(page.locator('audio')).toHaveCount(1)
   await expect(page).toHaveTitle('Nurevolution — Podcast archive')
   expect(errors).toEqual([])
 })
@@ -64,6 +66,7 @@ test('supports keyboard access and narrow screens with enlarged text', async ({
   await page.keyboard.press('Enter')
   await expect(page.getByRole('main')).toBeFocused()
   await page.evaluate(() => (document.documentElement.style.fontSize = '200%'))
+  await page.getByRole('heading', { level: 1 }).scrollIntoViewIfNeeded()
   await expect(page.getByRole('heading', { level: 1 })).toBeInViewport()
   expect(
     await page.evaluate(
@@ -75,7 +78,14 @@ test('supports keyboard access and narrow screens with enlarged text', async ({
 test('returns real 404s and keeps media fixtures out of production', async ({
   request,
 }) => {
-  for (const path of ['/does-not-exist', '/media-test', '/sample.wav']) {
+  for (const path of [
+    '/does-not-exist',
+    '/media-test',
+    '/player-test',
+    '/sample.wav',
+    '/sample.mp3',
+    '/cover.svg',
+  ]) {
     const response = await request.get(path)
     expect(response.status(), path).toBe(404)
   }

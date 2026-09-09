@@ -7,7 +7,7 @@ export default defineNuxtPlugin((nuxt) => {
   const state = useEpisodePage()
   const navigation = createEpisodeNavigation(state.value, (path, slug) =>
     nuxt.runWithContext(async () => {
-      const { data, error } = await useAsyncData(
+      const task = useAsyncData(
         `episode-page:${path}`,
         () =>
           loadEpisodePage(
@@ -18,14 +18,21 @@ export default defineNuxtPlugin((nuxt) => {
             },
             slug,
           ),
-        { deep: false },
+        { deep: false, immediate: false, getCachedData: () => undefined },
       )
-      if (error.value) throw error.value
-      return data.value!
+      await task.execute({ dedupe: 'cancel' })
+      if (task.error.value) throw task.error.value
+      return task.data.value!
     }),
   )
   nuxt.$router.afterEach((to, _from, failure) =>
-    navigation.complete(to.path, Boolean(failure)),
+    navigation.complete(
+      to.path,
+      typeof to.meta.episodeNavigationToken === 'number'
+        ? to.meta.episodeNavigationToken
+        : undefined,
+      Boolean(failure),
+    ),
   )
   return { provide: { episodeNavigation: navigation } }
 })
