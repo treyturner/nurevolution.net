@@ -74,6 +74,27 @@ try {
     caddyImage,
     'deploy',
   ])
+  const compose = JSON.parse(
+    await execute(
+      'docker',
+      ['compose', '-f', 'deploy/compose.yaml', 'config', '--format', 'json'],
+      {
+        APP_IMAGE: appImage,
+        APP_MEMORY_MIB: '384',
+        DEPLOY_ENVIRONMENT: 'preview',
+      },
+    ),
+  ) as { services: { app: { tmpfs: string[]; read_only: boolean } } }
+  assert.deepEqual(compose.services.app.tmpfs, ['/tmp:size=16m,mode=1777'])
+  assert.equal(compose.services.app.read_only, true)
+  await execute(
+    'docker',
+    ['compose', '-f', 'deploy/edge.compose.yaml', 'config', '--quiet'],
+    {
+      CADDY_IMAGE: caddyImage,
+      CLOUDFLARE_API_TOKEN: 'synthetic-validation-only',
+    },
+  )
   await docker(['network', 'create', network])
   madeNetwork = true
   await docker(['volume', 'create', volume])

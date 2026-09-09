@@ -215,3 +215,11 @@ Confirmed planning input: the owner's $8/month Basic Premium Intel tier, 1 vCPU 
 `CI=1 pnpm verify` passed with 257 application/tooling tests, 12 migration tests, 76 existing browser checks, and three additional browser delivery checks. The two existing portability skips remain unchanged. Coverage was 98.58% statements, 97.03% branches, 98.24% functions, and 98.87% lines. Subsequent focused deployment tests, strict types, and the delivery gate passed after adding the longer initial-backup timeout and explicit packaged-feed/conditional-request/invalid-edge checks. Actionlint 1.7.12 and all 58 checked local documentation links/anchors passed.
 
 The [source media audit](evidence/M05-source-audit.json) records all 156 assets passing byte-length/SHA-256 verification and all 55 MP3s passing FFmpeg decoding. No original or canonical content was rewritten. The host-dependent acceptance fields remain empty in [the live record template](evidence/M05-deployment-record.example.json). Remote PR CI/review and the actual DigitalOcean/MinIO rehearsal are separate evidence to record as they occur.
+
+### PR review cycle 1
+
+[PR #4](https://github.com/treyturner/nurevolution.net/pull/4) is live. Its initial revision `e3d25ef` passed [remote verification](https://github.com/treyturner/nurevolution.net/actions/runs/34315259983); publication was correctly skipped for the PR. The first review identified an unquoted tmpfs mount and missing journal flushes. The mount is now one quoted scalar, both Compose files are validated by the Docker delivery gate, and journal writes flush the temporary file and parent directory before app replacement.
+
+Independent testing also found that rebuilds can change Caddy image IDs while preserving the exact binary. Releases now record the binary hash; a running edge with a different image ID is accepted only when that hash and its pinned build-policy label match. Targeted coverage/types/format/lint and delivery checks passed, including the new Compose checks.
+
+An [encrypted restic fixture restore](evidence/M05-local-restore.json) passed using the actual pinned binary, backup command, repository data check, and four restored file hashes. This uses a disposable local repository and synthetic content; the MinIO/full-archive/host restore remains pending.
