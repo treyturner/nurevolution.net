@@ -17,6 +17,8 @@ export async function backup(
       const env = {
         GOMAXPROCS: '1',
         GOMEMLIMIT: '96MiB',
+        // JSON progress defaults to ten updates/second, overflowing captured output.
+        RESTIC_PROGRESS_FPS: '0.016666',
       }
       const limits = ['-o', 's3.connections=2', '--pack-size', '8']
       const output = await run(

@@ -43,6 +43,8 @@ Initialize the repository explicitly after checking its endpoint and bucket. Ins
 
 All repository operations use two S3 connections, an 8 MiB target pack size, `GOMAXPROCS=1`, and `GOMEMLIMIT=96MiB`. Keep these bounds when running restore/check commands manually on this droplet. The full-archive rehearsal hit the service's 192 MiB cgroup limit with restic's default five connections and 16 MiB packs; the Go heap limit alone did not bound the complete process. [Restic's tuning guide](https://restic.readthedocs.io/en/stable/047_tuning_parameters.html) explains the additional buffer cost of connections and pack size. The revised limits still require full archive and running-application acceptance; the earlier small fixture result does not establish that capacity. The success record uses the snapshot ID returned by this backup's JSON summary, so a separate rehearsal snapshot cannot be mistaken for the new application backup.
 
+The command also fixes `RESTIC_PROGRESS_FPS=0.016666` (about one progress update per minute). Default JSON progress can emit ten updates per second even through a pipe; collecting that output for a long archive upload can exceed the subprocess output limit. Completion summaries and command failures are still checked.
+
 Preview retention selection before enabling automatic removal:
 
 ```sh

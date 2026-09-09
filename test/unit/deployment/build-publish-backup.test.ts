@@ -142,7 +142,11 @@ it('backs up under deployment locks, verifies the repository, and applies only t
     expect(args).toEqual(
       expect.arrayContaining(['-o', 's3.connections=2', '--pack-size', '8']),
     )
-    expect(env).toMatchObject({ GOMAXPROCS: '1', GOMEMLIMIT: '96MiB' })
+    expect(env).toMatchObject({
+      GOMAXPROCS: '1',
+      GOMEMLIMIT: '96MiB',
+      RESTIC_PROGRESS_FPS: '0.016666',
+    })
   }
   run.mockResolvedValueOnce('restic 0.18')
   await expect(backup(dir, edge, run)).rejects.toThrow('pinned')
