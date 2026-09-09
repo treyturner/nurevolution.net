@@ -97,6 +97,19 @@ export function createContentRepository(
       const episode = selectPublic(catalog, asOf).find((e) => e.slug === slug)
       return episode ? episodeDetail(catalog, episode) : undefined
     },
+    async legacyPath(path: string, asOf: number) {
+      const catalog = await load()
+      const normalized = path.endsWith('/') ? path.slice(0, -1) : path
+      const mapping = catalog.legacyUrls.find(
+        (entry) => new URL(entry.url).pathname === normalized,
+      )
+      const episode =
+        mapping &&
+        selectPublic(catalog, asOf).find(
+          (value) => value.id === mapping.episodeId,
+        )
+      return episode ? episodeSummary(catalog, episode).path : undefined
+    },
     async publicArchive(asOf: number) {
       return publicFeedArchive(await load(), asOf)
     },
