@@ -114,19 +114,32 @@ class Discord(unittest.TestCase):
 
     def test_sends_bounded_request_without_mentions_or_secret_in_message(self):
         opener = MagicMock()
-        opener.open.return_value.__enter__.return_value.status = 204
+        response = opener.open.return_value.__enter__.return_value
+        response.status = 200
+        response.read.return_value = '{"id":"123456789"}'
         with patch.object(alert, "read_url", return_value=self.url), \
                 patch.object(alert.urllib.request, "build_opener", return_value=opener), \
                 patch("builtins.print"):
             alert.send("failure")
         request = opener.open.call_args.args[0]
         self.assertEqual(request.method, "POST")
-        self.assertEqual(request.full_url, self.url)
+        self.assertEqual(request.full_url, self.url + "?wait=true")
         self.assertEqual(opener.open.call_args.kwargs["timeout"], 15)
         payload = json.loads(request.data)
         self.assertIn("FAILED", payload["content"])
         self.assertEqual(payload["allowed_mentions"], {"parse": []})
         self.assertNotIn("dummy-webhook-token", payload["content"])
+
+    def test_requires_confirmation_that_discord_saved_the_message(self):
+        opener = MagicMock()
+        response = opener.open.return_value.__enter__.return_value
+        for status, body in ((204, ""), (200, "{}"), (200, "null"), (200, '{"id":""}')):
+            response.status = status
+            response.read.return_value = body
+            with patch.object(alert, "read_url", return_value=self.url), \
+                    patch.object(alert.urllib.request, "build_opener", return_value=opener):
+                with self.assertRaises(ValueError):
+                    alert.send("failure")
 
     def test_network_errors_do_not_expose_webhook_url(self):
         opener = MagicMock()

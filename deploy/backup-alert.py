@@ -92,7 +92,7 @@ def send(event):
         )
     payload = {"content": content, "allowed_mentions": {"parse": []}}
     req = urllib.request.Request(
-        url,
+        url + "?wait=true",
         data=json.dumps(payload).encode(),
         method="POST",
         headers={"Content-Type": "application/json", "User-Agent": "Nurevolution-Backup/1.0"},
@@ -100,8 +100,15 @@ def send(event):
     opener = urllib.request.build_opener(NoRedirect())
     try:
         with opener.open(req, timeout=15) as response:
-            if response.status not in (200, 204):
+            if response.status != 200:
                 raise ValueError("Unexpected Discord response status")
+            message = json.load(response)
+            if (
+                not isinstance(message, dict)
+                or not isinstance(message.get("id"), str)
+                or not re.fullmatch(r"[0-9]{1,32}", message["id"])
+            ):
+                raise ValueError("Discord did not confirm a saved alert message")
     except urllib.error.HTTPError as error:
         raise ValueError(f"Discord rejected the alert (HTTP {error.code})") from None
     except (urllib.error.URLError, TimeoutError):
