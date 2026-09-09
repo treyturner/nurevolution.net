@@ -1,5 +1,6 @@
 import { cp, mkdtemp, readFile, readdir, rm } from 'node:fs/promises'
 import { spawn } from 'node:child_process'
+import { createServer } from 'node:net'
 import { once } from 'node:events'
 import { tmpdir } from 'node:os'
 import { resolve } from 'node:path'
@@ -162,9 +163,27 @@ test('loads server assets from a portable production output without a checkout',
   )
   const root = await mkdtemp(resolve(tmpdir(), 'nurevolution-output-'))
   await cp('.output', resolve(root, '.output'), { recursive: true })
+  // Nitro treats PORT=0 as its default (3000), rather than asking the OS for a port.
+  const reservation = createServer()
+  reservation.listen(0, '127.0.0.1')
+  await once(reservation, 'listening')
+  const address = reservation.address()
+  if (!address || typeof address === 'string')
+    throw new Error('Expected a TCP port')
+  const port = String(address.port)
+  await new Promise<void>((done, reject) =>
+    reservation.close((error) => (error ? reject(error) : done())),
+  )
   const child = spawn(process.execPath, ['.output/server/index.mjs'], {
     cwd: root,
-    env: { ...process.env, HOST: '127.0.0.1', PORT: '0' },
+    env: {
+      ...process.env,
+      HOST: '127.0.0.1',
+      NITRO_HOST: '127.0.0.1',
+      PORT: port,
+      NITRO_PORT: port,
+      NITRO_UNIX_SOCKET: undefined,
+    },
     stdio: ['ignore', 'pipe', 'pipe'],
   })
   try {
@@ -173,7 +192,11 @@ test('loads server assets from a portable production output without a checkout',
         () => reject(new Error('Portable server did not listen')),
         15_000,
       )
-      let output = ''
+      let output = '',
+        errors = ''
+      child.stderr.on('data', (chunk: Buffer) => {
+        errors += chunk.toString()
+      })
       child.stdout.on('data', (chunk: Buffer) => {
         output += chunk.toString()
         const match = output.match(/http:\/\/127\.0\.0\.1:\d+/)
@@ -188,7 +211,9 @@ test('loads server assets from a portable production output without a checkout',
       })
       child.once('exit', (code) => {
         clearTimeout(timer)
-        reject(new Error(`Portable server exited: ${code}`))
+        reject(
+          new Error(`Portable server exited: ${code}\n${output}\n${errors}`),
+        )
       })
     })
     const request = await playwright.request.newContext({ baseURL })
