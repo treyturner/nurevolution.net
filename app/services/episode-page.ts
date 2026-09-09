@@ -86,7 +86,13 @@ export function episodeHead(model: EpisodePage, path: string) {
       },
     ],
     link: [
-      { rel: 'canonical', href: new URL(path, model.show.siteUrl).href },
+      {
+        rel: 'canonical',
+        href: new URL(
+          path === '/' || !episode ? path : episode.path,
+          model.show.siteUrl,
+        ).href,
+      },
       {
         rel: 'alternate',
         type: 'application/rss+xml',

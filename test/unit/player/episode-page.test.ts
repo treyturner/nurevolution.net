@@ -130,6 +130,18 @@ describe('episode page loading and navigation', () => {
       episodeHead({ ...model, selected: null }, '/').meta[0]!.content,
     ).toBe(model.show.descriptionText)
   })
+  it('uses the saved episode path for alternate spellings and keeps the archive canonical', () => {
+    const canonical = `https://nurevolution.net${model.selected.path}`
+    for (const path of [model.selected.path, `${model.selected.path}/`])
+      expect(episodeHead(model, path).link[0]).toEqual({
+        rel: 'canonical',
+        href: canonical,
+      })
+    expect(episodeHead({ ...model, selected: null }, '/').link[0]).toEqual({
+      rel: 'canonical',
+      href: 'https://nurevolution.net/',
+    })
+  })
   it('formats UTC dates and optional exact timestamps consistently', () => {
     expect(formatDate('2020-05-09T06:02:57.000Z')).toBe('May 9, 2020')
     expect(formatDate(null)).toBe('')
