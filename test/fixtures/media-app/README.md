@@ -6,6 +6,8 @@ This Nuxt application imports the production audio adapter and exercises it in r
 
 Pause/resume and disposal tests enable native looping on their own audio element so browser interaction delays cannot let the short clip finish first. The pause test waits for an actual loop boundary before clicking Pause. A separate test leaves looping disabled and checks natural completion. These controls use real browser media events; no playback or button actionability is mocked.
 
+Playback uses `/media/sample.wav` and `/media/sample.mp3`. The fixture bundles the original bytes as server assets and serves GET/HEAD with byte ranges (206 and 416), including the `bytes=44-` seek WebKit makes when looping the WAV. Nitro's default static handler returns full 200 responses to range requests. Exact response bytes and headers are checked separately from browser playback. The fixture displays native media error codes/messages and state; failed adapter browser tests also attach a media-state JSON report.
+
 Tests cover browser audio capability and adapter integration; this WAV does not establish production MP3 compatibility or historical media integrity.
 
 M4 adds `public/sample.mp3`, an original two-second 440 Hz test tone encoded as mono MPEG audio at 64 kbps. It contains **16,509 bytes**, SHA-256 `cd3bd01539b90056bdd20a3e079e640799e926ec5bfce84a0386759efa3256ab`. `python3 tools/generate-mp3-fixture.py` regenerates it with the system libmp3lame encoder (3.100 at creation); the encoder is needed only for regeneration, not installation, builds, tests, or CI. The small SVG cover is also original fixture artwork. Both are freely reusable project test data.
