@@ -79,12 +79,13 @@ const messages = {
         >
       </div>
       <!-- The server validates and sanitizes canonical descriptions before this projection. -->
-      <!-- eslint-disable-next-line vue/no-v-html -->
+      <!-- eslint-disable vue/no-v-html -->
       <div
         v-if="episode"
         class="description"
         v-html="episode.descriptionHtml"
       />
+      <!-- eslint-enable vue/no-v-html -->
     </div>
   </section>
 </template>

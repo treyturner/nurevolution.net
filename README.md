@@ -1,8 +1,8 @@
 # Nurevolution
 
-A podcast website being rebuilt from WordPress. M1 supplies the minimal dark Nuxt shell and browser-audio boundary. M2 adds the validated 55-episode archive, a repeatable importer, and read-only content APIs. M3 serves the complete podcast RSS with compatibility checks. The full player, branding, and deployment follow in later milestones.
+A podcast website being rebuilt from WordPress. M1 supplies the minimal dark Nuxt shell and browser-audio boundary. M2 adds the validated 55-episode archive, a repeatable importer, and read-only content APIs. M3 serves the complete podcast RSS with compatibility checks. M4 adds the shared archive player, canonical episode URLs, mobile tabs, attachment downloads, and historical page redirects. Production deployment follows in M5/M6.
 
-See the [roadmap](ROADMAP.md), [M0 audit plan and evidence](docs/milestones/M00-migration-audit.md), [M1 completion record](docs/milestones/M01-foundation-and-verification.md), [M2 implementation and evidence](docs/milestones/M02-canonical-content.md), [M3 replacement RSS record](docs/milestones/M03-podcast-rss.md), [M4 archive/player plan](docs/milestones/M04-archive-player.md), [content authoring guide](docs/CONTENT.md), and [feed validation guide](docs/FEED-VALIDATION.md).
+See the [roadmap](ROADMAP.md), [M0 audit plan and evidence](docs/milestones/M00-migration-audit.md), [M1 completion record](docs/milestones/M01-foundation-and-verification.md), [M2 implementation and evidence](docs/milestones/M02-canonical-content.md), [M3 replacement RSS record](docs/milestones/M03-podcast-rss.md), [M4 archive/player plan](docs/milestones/M04-archive-player.md), [player behavior and delivery guide](docs/PLAYER.md), [content authoring guide](docs/CONTENT.md), and [feed validation guide](docs/FEED-VALIDATION.md).
 
 ## Setup
 
@@ -27,7 +27,7 @@ The version marker in `.nuxtrc` records the completed Nuxt test-utils setup so v
 pnpm dev
 ```
 
-Open the local URL printed by Nuxt. Vue and CSS edits update through HMR; changes to project configuration may restart the development server. Stop it with Ctrl-C. This shell intentionally contains only the site heading and keyboard skip link until the content and design milestones.
+Open the local URL printed by Nuxt. Vue and CSS edits update through HMR; changes to project configuration may restart the development server. Stop it with Ctrl-C. The archive selects the latest episode paused; direct episode URLs select their episode in the same shared player. Mobile uses Episodes/Tracklist tabs.
 
 | Command                 | Behavior                                                                                                                                                                   |
 | ----------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -65,7 +65,7 @@ Run the normal production build locally with `node .output/server/index.mjs`. Th
 
 ## Application and test boundaries
 
-- `app/` contains the SSR shell, semantic home page, CSS, and production audio adapter.
+- `app/` contains the SSR archive, request-scoped navigation model, persistent native player, mobile tabs, and audio adapter/controller.
 - `content/` holds 55 episode records, 156 assets, show metadata, legacy URL mappings, and deterministic import provenance. See [editing and reconciliation](docs/CONTENT.md).
 - `shared/content/` defines strict schemas and pure public selection/projections. `server/content/` validates and loads the catalog; `server/api/` exposes show, episode summaries, and detail. Nitro packages the archive as server assets, independent of the production working directory.
 - `tools/content/` imports only frozen public M0 inputs plus the Praxis evidence. The default import is a dry run; explicit writes create missing files without overwriting existing ones. Ordinary validation permits later editorial changes and protects historical subscriber identity.
@@ -73,11 +73,11 @@ Run the normal production build locally with `node .output/server/index.mjs`. Th
 - `test/unit/` tests adapter behavior in Node with controlled media events and promises.
 - `test/nuxt/` mounts the real application and shell through Nuxt test utilities and happy-dom.
 - `test/e2e/` checks production SSR/hydration, unknown-route status, keyboard focus, narrow-screen text scaling, fixture isolation, and real browser media behavior.
-- `test/fixtures/media-app/` is a separate Nuxt app importing the production adapter. Its `/media-test` route and `/sample.wav` asset must return 404 in the normal production app.
+- `test/fixtures/media-app/` is a separate Nuxt app importing the production adapter, player/list components, and download handler. Its routes and media fixtures must return 404 in the normal production app.
 
-`createAudioAdapter(element)` accepts an existing `HTMLAudioElement` or the narrow `AudioPort` interface. `load(url)` sets and loads a source without invoking play. `play()` returns the native promise, including rejection; `pause()` pauses. `subscribe()` returns an unsubscribe function. Disposal pauses and removes only the adapter's listeners, and is idempotent. Operations after disposal throw synchronously; create a new adapter to start a new lifecycle. Imports and construction never create browser globals or playback state. Seeking and player sequencing belong to later milestones.
+`createAudioAdapter(element)` accepts an existing `HTMLAudioElement` or the narrow `AudioPort` interface. `load(url)` sets and loads a source without invoking play. `play()` returns the native promise, including rejection; `pause()` pauses. `subscribe()` returns an unsubscribe function. Disposal pauses and removes only the adapter's listeners, and is idempotent. Operations after disposal throw synchronously; create a new adapter to start a new lifecycle. Imports and construction never create browser globals or playback state. The adapter also exposes the native media snapshot needed by the player controller. Custom seeking controls and sequencing remain M7; M4 uses native controls. See the [player guide](docs/PLAYER.md) for selection, retry, and download behavior.
 
-The committed audio fixture is an original, deterministic two-second, mono, 22,050 Hz, 16-bit PCM WAV containing a quiet 440 Hz tone, generated with `node tools/generate-audio-fixture.mjs`. No recording or third-party licensed asset is used. The fixture is muted in browser tests. Its provenance is also recorded [alongside the fixture](test/fixtures/media-app/README.md). These tests establish browser integration, not historical MP3 integrity, final player behavior, or physical-device compatibility.
+The committed audio fixture is an original, deterministic two-second, mono, 22,050 Hz, 16-bit PCM WAV containing a quiet 440 Hz tone, generated with `node tools/generate-audio-fixture.mjs`. No recording or third-party licensed asset is used. The fixture is muted in browser tests. Its provenance is also recorded [alongside the fixture](test/fixtures/media-app/README.md). M4 adds a small original MP3 fixture for the production player and attachment-download tests. These tests establish application/browser integration, not historical MP3 delivery or physical-device compatibility.
 
 ## Coverage and browser execution
 
