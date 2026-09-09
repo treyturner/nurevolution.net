@@ -1,13 +1,25 @@
 import * as fs from 'node:fs/promises'
-import { resolve } from 'node:path'
+import { dirname, resolve } from 'node:path'
 import { assertRollbackCompatible, serialize } from './manifest.ts'
 import type { DeploymentRecord } from './release.ts'
 
 export async function atomicWrite(path: string, bytes: string) {
   const temp = path + '.pending'
-  await fs.writeFile(temp, bytes, { flag: 'wx', mode: 0o600 })
+  const file = await fs.open(temp, 'wx', 0o600)
   try {
+    try {
+      await file.writeFile(bytes)
+      await file.sync()
+    } finally {
+      await file.close()
+    }
     await fs.rename(temp, path)
+    const directory = await fs.open(dirname(path), 'r')
+    try {
+      await directory.sync()
+    } finally {
+      await directory.close()
+    }
   } finally {
     await fs.rm(temp, { force: true })
   }
