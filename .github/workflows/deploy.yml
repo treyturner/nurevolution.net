@@ -1,0 +1,92 @@
+name: Deploy verified release
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        type: choice
+        options: [preview, production]
+        default: preview
+        required: true
+      verify_run_id:
+        description: Successful main Verify run containing the release bundle
+        required: true
+      source_commit:
+        description: Full verified main commit SHA
+        required: true
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: nurevolution-deploy
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    environment: ${{ inputs.environment }}
+    steps:
+      - name: Validate promotion inputs and environment readiness
+        env:
+          RELEASE_COMMIT: ${{ inputs.source_commit }}
+          VERIFY_RUN_ID: ${{ inputs.verify_run_id }}
+          TARGET_ENVIRONMENT: ${{ inputs.environment }}
+          DEPLOYMENT_ENABLED: ${{ vars.DEPLOYMENT_ENABLED }}
+          CUTOVER_ENABLED: ${{ vars.CUTOVER_ENABLED }}
+        run: |
+          [[ "$RELEASE_COMMIT" =~ ^[a-f0-9]{40}$ ]]
+          [[ "$VERIFY_RUN_ID" =~ ^[1-9][0-9]*$ ]]
+          [[ "$TARGET_ENVIRONMENT" == preview || "$TARGET_ENVIRONMENT" == production ]]
+          [[ "$DEPLOYMENT_ENABLED" == true ]]
+          [[ "$TARGET_ENVIRONMENT" != production || "$CUTOVER_ENABLED" == true ]]
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version-file: .node-version
+      - name: Verify the source run before downloading executable artifacts
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERIFY_RUN_ID: ${{ inputs.verify_run_id }}
+          RELEASE_COMMIT: ${{ inputs.source_commit }}
+        run: |
+          gh api "repos/treyturner/nurevolution.net/actions/runs/$VERIFY_RUN_ID" > run.json
+          jq -e --arg sha "$RELEASE_COMMIT" '.event == "push" and .conclusion == "success" and .head_branch == "main" and .head_sha == $sha and .path == ".github/workflows/verify.yml" and .repository.full_name == "treyturner/nurevolution.net"' run.json
+      - uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6
+        with:
+          name: release-${{ inputs.source_commit }}
+          path: release
+          run-id: ${{ inputs.verify_run_id }}
+          github-token: ${{ github.token }}
+      - name: Validate release hashes and source identity
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERIFY_RUN_ID: ${{ inputs.verify_run_id }}
+        run: node release/deploy.mjs verify-release --bundle release --run "$VERIFY_RUN_ID"
+      - name: Transfer the release and invoke the installed host helper
+        env:
+          DEPLOY_HOST: ${{ vars.DEPLOY_HOST }}
+          DEPLOY_USER: ${{ vars.DEPLOY_USER }}
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SSH_KNOWN_HOSTS: ${{ secrets.SSH_KNOWN_HOSTS }}
+          TRANSFER_ID: ${{ github.run_id }}
+          TARGET_ENVIRONMENT: ${{ inputs.environment }}
+        run: |
+          [[ "$DEPLOY_HOST" =~ ^[a-zA-Z0-9][a-zA-Z0-9.-]+$ ]]
+          [[ "$DEPLOY_USER" =~ ^[a-z_][a-z0-9_-]*$ ]]
+          test -n "$SSH_PRIVATE_KEY"
+          test -n "$SSH_KNOWN_HOSTS"
+          umask 077
+          mkdir -p "$RUNNER_TEMP/ssh"
+          printf '%s\n' "$SSH_PRIVATE_KEY" > "$RUNNER_TEMP/ssh/key"
+          printf '%s\n' "$SSH_KNOWN_HOSTS" > "$RUNNER_TEMP/ssh/known_hosts"
+          ssh_args=(-i "$RUNNER_TEMP/ssh/key" -o BatchMode=yes -o StrictHostKeyChecking=yes -o "UserKnownHostsFile=$RUNNER_TEMP/ssh/known_hosts" -o ConnectTimeout=15)
+          ssh "${ssh_args[@]}" "$DEPLOY_USER@$DEPLOY_HOST" "mkdir -m 700 /srv/nurevolution/incoming/$TRANSFER_ID"
+          scp "${ssh_args[@]}" release/release.json release/manifest.json release/configuration.json "$DEPLOY_USER@$DEPLOY_HOST:/srv/nurevolution/incoming/$TRANSFER_ID/"
+          ssh "${ssh_args[@]}" "$DEPLOY_USER@$DEPLOY_HOST" "nurevolution-deploy $TARGET_ENVIRONMENT $TRANSFER_ID"
+      - name: Remove temporary SSH credentials
+        if: always()
+        run: rm -rf "$RUNNER_TEMP/ssh"

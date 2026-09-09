@@ -1,0 +1,48 @@
+# Production delivery
+
+M5 supplies a verified Node image, Caddy file-serving configuration, delivery tests, release publication/promotion, and recovery tooling. **Live acceptance is pending:** the owner has not yet supplied a provisioned host; the MinIO bucket/policy will be created at the milestone handoff. Do not mark M5 complete or start M6 cutover from local container results.
+
+## Confirmed operating choices
+
+- Planned new DigitalOcean Basic Premium Intel droplet: $8/month, 1 vCPU, 1 GB RAM, 35 GB storage, 1 TB transfer. Region and other initial workloads remain owner inputs; Ubuntu 24.04 LTS is the proposed OS. Actual available resources and total costs must be recorded after provisioning.
+- Cloudflare proxies the website with Full (strict) TLS; `podcast.nurevolution.net` is DNS-only. Website download links redirect to the media hostname. Preview names are `preview.nurevolution.net` and `podcast-preview.nurevolution.net`.
+- Successful main verification publishes exact tested application and Caddy images to GHCR. An owner-triggered GitHub Actions workflow promotes a selected verified release. Production requires the separate M6 cutover gate.
+- MinIO is the chosen off-droplet backup destination. Back up after content changes and weekly; retain four weekly and three monthly snapshots. Verify a new-content backup before treating publication as complete. Bucket, endpoint, credentials, notification destination, and a timed restore remain pending. The earlier daily/7-4-6 proposal is superseded; the four-hour recovery target remains proposed.
+
+## Release and host contracts
+
+`pnpm verify` now ends with `pnpm test:delivery`. A Docker daemon is required. The gate builds the application image from the already tested `.output`, builds Caddy 2.11.4 with the pinned Cloudflare module, exercises them with tiny original fixtures, and exports the exact images plus metadata in `.local/delivery/artifacts/`. It does not contact cloud accounts or legacy media. Runtime containers are non-root, read-only, and bounded to 384 MiB in the local check; that is an initial application limit to measure on the shared 1 GB host, not proof of host capacity.
+
+The delivery runner copies fixtures through isolated Docker volumes, so the daemon need not share workspace paths. It binds ephemeral ports to `127.0.0.1` by default. For a separate Docker service, set `NUREVOLUTION_DOCKER_ADDRESS` to its reachable IPv4 interface; in this workspace it is `172.18.0.2`. Do not use the public droplet as an ordinary CI Docker daemon.
+
+The release bundle contains `release.json`, `manifest.json`, `configuration.json`, `deploy.mjs`, `renderer.sha256`, and delivery evidence. Release records bind the source SHA, successful verification URL, both image IDs/digests, and exact manifest/configuration hashes. Configuration binds the Compose template and renderer/Caddy build fingerprints. The operator-owned profile and rendered edge configuration get separate hashes in the host deployment record, because hostnames and measured resource limits belong to the environment.
+
+PR jobs have no cloud secrets or publication privileges. The publisher runs only after a successful trusted main push, loads the tested archives, verifies image IDs, and pushes without rebuilding. Release artifacts are retained for 90 days. Keep current/previous bundles on the host and in the independent backup before artifacts expire; retain their GHCR images. Missing/expired artifacts require a new verified main publication before workflow promotion, rather than bypassing provenance checks.
+
+## Initial host preparation
+
+Inventory region, OS, existing containers, proxy ports, DNS A/AAAA/proxy settings, disk/inodes, free memory, firewall, SSH transport, and other workloads before installing anything. Capture these in [the evidence template](milestones/evidence/M05-deployment-record.example.json). Follow [Docker's supported Ubuntu installation](https://docs.docker.com/engine/install/ubuntu/) and account for published-port firewall behavior. Install Node 22.23.2 for the bundled operator CLI; no pnpm, application build dependencies, or compilation is needed on the host.
+
+Create an operator-owned `/srv/nurevolution` with `incoming/`, `tooling/`, `releases/`, `state/`, and `media/`. Keep it outside every web root. Install the reviewed `deploy.mjs` and `renderer.sha256` from the same trusted release in `tooling/`; the host rejects a renderer fingerprint mismatch. Install [the host helper](../deploy/nurevolution-deploy) as `/usr/local/bin/nurevolution-deploy`, executable and operator-owned. Record the actual shared Caddy container name in `/srv/nurevolution/edge-container`.
+
+Copy [profile.example.json](../deploy/profile.example.json) to `/srv/nurevolution/profile.json` and measure its resource settings. The host preflight accounts for reclaimable memory from the current app when replacing it; keep room for OS/Docker/Caddy, other sites, uploads, and backups. Measure concurrent SSR/feed requests and media transfers, startup, and backup peaks. The baseline runs one app instance and retains the prior image on disk. At M6 remove the initial preview app before starting production on the same small host unless measured headroom supports both.
+
+Create the dedicated `nurevolution-site` Docker network. An existing shared edge should join that network and receive the site's read-only media mount; add this site's route without replacing other sites. For a fresh host, [edge.compose.yaml](../deploy/edge.compose.yaml) and [initial.example.json](../deploy/caddy/initial.example.json) are starting points. The edge configuration lives in `/srv/edge/config/caddy.json`, with its `https` server and other routes retained by deployment. Mount the configuration **directory**, so atomic file replacement is visible inside Caddy. Persist `/srv/edge/data` and `/srv/edge/state`.
+
+Pin `CADDY_IMAGE` to the published Caddy digest from the release record. Configure the zone-scoped DNS token outside Git. Complete [TLS rehearsal](operations/tls.md) before exposing preview. The application helper never restarts or upgrades the shared edge; if its running image differs from the tested release, reconcile it as a separate operator action with the other sites accounted for.
+
+## Media, promotion, and rollback
+
+Use [the media procedure](operations/media.md) to audit, stage, upload, and verify all 156 assets. Application images contain no MP3s or private WordPress source. Keep draft-only assets out of public mappings. Future-dated published episodes are rejected until M8 can coordinate the static maps with scheduled visibility.
+
+Configure GitHub environments `preview` and `production`. Each needs variables `DEPLOY_HOST`, `DEPLOY_USER`, and `DEPLOYMENT_ENABLED=true`, plus secrets `SSH_PRIVATE_KEY` and independently verified `SSH_KNOWN_HOSTS`. The current workflow uses SSH port 22. Restrict deployment key forwarding and use a dedicated operator account with only the needed host access. Docker access is privileged host access; the helper's validated arguments do not turn an unrestricted Docker account into a security sandbox. Resolve runner access before opening firewall ports.
+
+Keep production's `CUTOVER_ENABLED` unset and `/srv/nurevolution/production-enabled` absent until M6. In the manual workflow, select preview, the successful main Verify run ID, and its full source SHA. The workflow validates the source run before downloading executable artifacts, verifies release hashes, transfers only release data to a fresh incoming directory, and invokes the installed helper. It does not install replacement host tooling from an uploaded executable. A helper/profile environment mismatch fails before deployment.
+
+Deployment acquires the site and shared-edge locks, audits media and capacity, pulls by digest, checks image identity, and validates the complete candidate proxy configuration before interrupting the app. It journals the candidate/prior records, replaces only the app, checks readiness, reloads site routes, and checks HTTPS health/SSR/API/feed. Failures restore a compatible prior image/configuration; first-deployment failure leaves no app selected. App pages/feed can be briefly unavailable; the edge, media, and other sites remain running. Follow [rollback and interrupted-deployment recovery](operations/rollback.md).
+
+Both deployment and rollback protect the already public episode/GUID/enclosure set. Until M8 supplies a content-preserving fallback strategy, the automatic transaction requires matching subscriber identities in current/candidate releases. Initial deployment is supported; an image that adds/removes published episodes requires a reconciled fallback procedure, not bypassing the check.
+
+## Acceptance still required on the droplet
+
+Record actual cost, measured resources/interruption, verified image/config/profile/media hashes, trusted TLS persistence, all-asset HTTP audit, representative full transfer/resume, rollback, MinIO restore, and preview feed/client observations. Canonical enclosures in preview still point at production DNS until M6: use a controlled resolver or explicit host override to demonstrate candidate delivery. Record physical Android Chrome, iPhone Safari, and screen-reader observations separately. [Incidents and monitoring](operations/incidents.md) lists the operational checks. Local tests and green PR CI do not establish these live results.

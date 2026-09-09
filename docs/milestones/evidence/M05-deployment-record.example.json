@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "status": "awaiting-live-rehearsal",
+  "droplet": {
+    "plannedTier": "Basic Premium Intel",
+    "baseMonthlyUsd": 8,
+    "vCpu": 1,
+    "memoryGb": 1,
+    "storageGb": 35,
+    "transferTb": 1,
+    "region": null,
+    "os": null,
+    "otherWorkloads": null,
+    "measuredResources": null
+  },
+  "release": null,
+  "profileSha256": null,
+  "renderedEdgeSha256": null,
+  "mediaManifestSha256": null,
+  "previewDeployment": null,
+  "rollback": null,
+  "tlsPersistence": null,
+  "publicMediaAudit": null,
+  "fullTransferResume": null,
+  "backup": {
+    "destination": "owner-hosted MinIO; bucket/policy pending",
+    "frequency": "after content changes and weekly",
+    "weeklyRetention": 4,
+    "monthlyRetention": 3,
+    "snapshotId": null,
+    "restore": null
+  },
+  "feedClientValidation": null,
+  "physicalDevices": null,
+  "operatorAndAlerts": null,
+  "actualMonthlyCostUsd": null,
+  "productionCutover": "M6; not performed"
+}

@@ -1,6 +1,6 @@
 # Nurevolution
 
-A podcast website being rebuilt from WordPress. M1 supplies the minimal dark Nuxt shell and browser-audio boundary. M2 adds the validated 55-episode archive, a repeatable importer, and read-only content APIs. M3 serves the complete podcast RSS with compatibility checks. M4 adds the shared archive player, canonical episode URLs, mobile tabs, attachment downloads, and historical page redirects. Production deployment follows in M5/M6.
+A podcast website being rebuilt from WordPress. M1 supplies the minimal dark Nuxt shell and browser-audio boundary. M2 adds the validated 55-episode archive, a repeatable importer, and read-only content APIs. M3 serves the complete podcast RSS with compatibility checks. M4 adds the shared archive player, canonical episode URLs, mobile tabs, attachment downloads, and historical page redirects. M5 adds verified application/Caddy images, media delivery, and deployment/recovery tooling; live rehearsal and M6 cutover remain pending. See [deployment operations](docs/DEPLOYMENT.md).
 
 See the [roadmap](ROADMAP.md), [M0 audit plan and evidence](docs/milestones/M00-migration-audit.md), [M1 completion record](docs/milestones/M01-foundation-and-verification.md), [M2 implementation and evidence](docs/milestones/M02-canonical-content.md), [M3 replacement RSS record](docs/milestones/M03-podcast-rss.md), [M4 archive/player plan](docs/milestones/M04-archive-player.md), [player behavior and delivery guide](docs/PLAYER.md), [content authoring guide](docs/CONTENT.md), and [feed validation guide](docs/FEED-VALIDATION.md).
 
@@ -49,7 +49,7 @@ Open the local URL printed by Nuxt. Vue and CSS edits update through HMR; change
 | `pnpm test:e2e`         | Build the media fixture and run all browser projects; requires a current normal production build.                                                                          |
 | `pnpm verify`           | Prepare, formatting, lint, types, migration checks, application/content/feed coverage, content/feed validation, production builds, and browser tests, stopping on failure. |
 
-The canonical local and CI gate is **`pnpm verify`**. It prepares its generated prerequisites and builds both applications without a hand-started server. It does not install dependencies, rewrite maintained files, accept snapshots, or contact the legacy site.
+The canonical local and CI gate is **`pnpm verify`**, including the Docker delivery checks. A working Docker daemon is required; see [local and separate-daemon setup](docs/DEPLOYMENT.md#release-and-host-contracts). It prepares its generated prerequisites and builds both applications without a hand-started server. It does not install dependencies, rewrite maintained files, accept snapshots, or contact the legacy site.
 
 For focused work:
 
@@ -81,7 +81,7 @@ The committed audio fixture is an original, deterministic two-second, mono, 22,0
 
 ## Coverage and browser execution
 
-Vitest includes every executable `app/**/*.{ts,vue}`, `shared/**/*.ts`, `server/**/*.ts`, and `tools/content/**/*.ts` file, including unimported files. Only declaration files are excluded within those source patterns. Tests, generated output, dependencies, and declarative project configuration are outside the production-source patterns. No application subsystem is excluded. Python migration tooling is tested by `test:migration` separately from V8 application coverage. Generated migration reports/manifests retain the audit tool’s canonical formatting and are excluded from Prettier; maintained documentation remains checked.
+Vitest includes every executable `app/**/*.{ts,vue}`, `shared/**/*.ts`, `server/**/*.ts`, and `tools/content/**/*.ts`, and `tools/deploy/**/*.ts` file, including unimported files. Only declaration files are excluded within those source patterns. Tests, generated output, dependencies, and declarative project configuration are outside the production-source patterns. No application subsystem is excluded. Python migration tooling is tested by `test:migration` separately from V8 application coverage. Generated migration reports/manifests retain the audit tool’s canonical formatting and are excluded from Prettier; maintained documentation remains checked.
 
 Coverage thresholds are **95% statements, lines, and functions; 90% branches**, with automatic threshold updates disabled. Reports appear in `coverage/index.html` and `coverage/lcov.info` as well as the terminal. Add meaningful behavioral tests as code grows; do not lower thresholds to make a gate pass.
 
@@ -95,4 +95,4 @@ The pinned Nuxt 4.5.2, Vue 3.5.42, and Vue Router 5.3.1 set uses standard SSR an
 
 `pnpm-workspace.yaml` allows only the version-specific `esbuild@0.28.2` and `unrs-resolver@1.12.2` installation scripts to prepare their platform binaries. It supplies `cac@6.7.14` through `@nuxt/cli@3.37.0` to `@bomb.sh/tab@0.0.19`, whose optional peer requires `^6.7.14`; other tooling requires cac 7. This preserves the declared peer range without changing unrelated consumers or ignoring conflicts. Reassess this narrow extension when upgrading that package.
 
-GitHub Actions checks pull requests and pushes to `main` on Ubuntu 24.04 using the declared Node/Python runtimes, a frozen installation, all three browsers, and exactly `pnpm verify`. Actions are pinned to verified commit SHAs, repository permissions are read-only, and available coverage/browser artifacts are retained for 14 days. The workflow requires no deployment secrets and performs no publication. A local successful run is separate evidence from an actual remote Actions run; the M1 completion record states both statuses.
+GitHub Actions checks pull requests and pushes to `main` on Ubuntu 24.04 using the declared Node/Python runtimes, a frozen installation, all three browsers, and exactly `pnpm verify`. Actions are pinned to verified commit SHAs, repository permissions are read-only, and available coverage/browser artifacts are retained for 14 days. PR verification needs no deployment secrets. After successful main verification, a separate job publishes the exact tested application/Caddy images; manual promotion uses environment-scoped credentials and stays disabled until the host is configured. A local successful run is separate evidence from an actual remote Actions run; the M1 completion record states both statuses.

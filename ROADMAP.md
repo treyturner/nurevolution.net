@@ -1,6 +1,6 @@
 # Nurevolution roadmap
 
-Status: M0–M4 are implemented, merged, and covered by passing main CI. M5 is planned on `feat/m5-production-delivery`; operational decisions in D08 remain open before dependent live configuration and rehearsal. M5–M9 implementation has not started. Public delivery and release checks remain pending.
+Status: M0–M4 are implemented, merged, and covered by passing main CI. M5 repository delivery is implemented on `feat/m5-production-delivery`; host access and live deployment/restore evidence remain pending. M6–M9 implementation has not started. Public delivery and release checks remain pending.
 
 Updated: 2026-09-09.
 
@@ -260,7 +260,7 @@ Run `pnpm verify`. External validator/client results are provisional until repea
 
 ### M5 — Production delivery and operational rehearsal
 
-**Plan written on 2026-09-09:** [M05-production-delivery.md](docs/milestones/M05-production-delivery.md) on `feat/m5-production-delivery`. It specifies packaging, manifests, file serving, CI publication/promotion, preview fidelity, rollback/restore, and acceptance evidence using the owner's selected $8/1 GB Premium Intel baseline. D08 region/OS/workload/access/backup choices, total cost, and the final Cloudflare/download topology remain owner inputs before dependent live work; infrastructure implementation has not started.
+**Plan written on 2026-09-09:** [M05-production-delivery.md](docs/milestones/M05-production-delivery.md) on `feat/m5-production-delivery`. It specifies packaging, manifests, file serving, CI publication/promotion, preview fidelity, rollback/restore, and acceptance evidence using the owner's selected $8/1 GB Premium Intel baseline. The owner confirmed Cloudflare-proxied website / DNS-only media routing, preview names, manual promotion, and MinIO backups after content changes and weekly with four weekly/three monthly retention. The droplet is not created and MinIO bucket/policy creation is deferred to handoff. Region/OS/workload/access, total cost, alerts, and live deployment/restore evidence remain pending. See [deployment operations](docs/DEPLOYMENT.md).
 
 **Outcome:** a deployable, recoverable release on the chosen infrastructure, with media and HTTPS working independently of the home WordPress stack.
 
