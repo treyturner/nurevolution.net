@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "startedAt": "2026-09-09T21:50:28.108002+00:00",
+  "scope": "Live installed backup OnFailure triggers installed Discord notifier with labelled test payload",
+  "ownerApprovedAdditionalTestMessage": true,
+  "messageAttemptsAllowed": 1,
+  "discordConfirmedSavedTestMessage": true,
+  "backupFailedAsExpected": true,
+  "status": "passed",
+  "normalServiceConfigurationsRestored": true,
+  "weeklyTimerEnabled": false,
+  "completedAt": "2026-09-09T21:50:30.017044+00:00",
+  "helperSha256": "da0279de23c90b271d97ebb2183dacff2fd2643bffca6768e63c9bbca355d213"
+}
