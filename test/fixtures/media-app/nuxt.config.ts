@@ -8,6 +8,14 @@ export default defineNuxtConfig({
     fileURLToPath(new URL('../../../app/assets/main.css', import.meta.url)),
   ],
   devtools: { enabled: false },
-  nitro: { preset: 'node-server' },
+  nitro: {
+    preset: 'node-server',
+    serverAssets: [
+      {
+        baseName: 'media',
+        dir: fileURLToPath(new URL('./public', import.meta.url)),
+      },
+    ],
+  },
   app: { head: { title: 'Audio fixture', htmlAttrs: { lang: 'en' } } },
 })

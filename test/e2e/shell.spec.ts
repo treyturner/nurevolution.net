@@ -84,6 +84,8 @@ test('returns real 404s and keeps media fixtures out of production', async ({
     '/player-test',
     '/sample.wav',
     '/sample.mp3',
+    '/media/sample.wav',
+    '/media/sample.mp3',
     '/cover.svg',
   ]) {
     const response = await request.get(path)

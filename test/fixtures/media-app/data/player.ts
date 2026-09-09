@@ -15,7 +15,7 @@ export function playerEpisodes(origin: string): EpisodeDetail[] {
     guid: slug,
     guidIsPermalink: false,
     audio: {
-      url: `${origin}/sample.mp3?episode=${slug}`,
+      url: `${origin}/media/sample.mp3?episode=${slug}`,
       mediaType: 'audio/mpeg',
       byteLength: 16509,
       downloadFilename: index ? "bouche_d'incendie.mp3" : 'test-tone.mp3',

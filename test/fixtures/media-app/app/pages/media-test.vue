@@ -14,8 +14,19 @@ onMounted(() => {
   adapter.subscribe('play', () => (status.value = 'Playing'))
   adapter.subscribe('pause', () => (status.value = 'Paused'))
   adapter.subscribe('ended', () => (status.value = 'Ended'))
-  adapter.subscribe('error', () => (failure.value = 'Unable to load audio'))
-  adapter.load('/sample.wav')
+  adapter.subscribe('error', () => {
+    status.value = 'Error'
+    const media = element.value!
+    failure.value = `Unable to load audio: ${JSON.stringify({
+      code: media.error?.code,
+      message: media.error?.message,
+      src: media.currentSrc,
+      currentTime: media.currentTime,
+      readyState: media.readyState,
+      networkState: media.networkState,
+    })}`
+  })
+  adapter.load('/media/sample.wav')
 })
 
 onBeforeUnmount(() => adapter?.dispose())
@@ -23,8 +34,8 @@ onBeforeUnmount(() => adapter?.dispose())
 async function play() {
   try {
     await adapter!.play()
-  } catch {
-    failure.value = 'Playback failed'
+  } catch (error) {
+    failure.value = `Playback failed: ${String(error)}`
   }
 }
 

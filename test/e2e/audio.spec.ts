@@ -3,6 +3,34 @@ import { mediaBaseURL } from '../../playwright.config'
 
 test.use({ baseURL: mediaBaseURL })
 
+test.afterEach(async ({ page }, testInfo) => {
+  if (testInfo.status === testInfo.expectedStatus) return
+  const state = await page
+    .evaluate(() => {
+      const audio = document.querySelector('audio')
+      return (
+        audio && {
+          error: audio.error && {
+            code: audio.error.code,
+            message: audio.error.message,
+          },
+          src: audio.currentSrc,
+          currentTime: audio.currentTime,
+          readyState: audio.readyState,
+          networkState: audio.networkState,
+          paused: audio.paused,
+          ended: audio.ended,
+          loop: audio.loop,
+        }
+      )
+    })
+    .catch((error: unknown) => ({ diagnosticError: String(error) }))
+  await testInfo.attach('native-media-state', {
+    body: JSON.stringify(state, null, 2),
+    contentType: 'application/json',
+  })
+})
+
 test('loads paused and supports user play, pause, and resume across a loop', async ({
   page,
 }) => {
