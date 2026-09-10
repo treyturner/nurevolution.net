@@ -170,7 +170,8 @@ export async function deployOnHost(
         release: record,
         manifest,
         configuration,
-        profileSha256: sha256(profileBytes),
+        profile,
+        profileSha256: sha256(serialize(profile)),
         edgeSha256: sha256(serialize(rendered)),
         deployedAt: new Date().toISOString(),
       }
@@ -187,12 +188,22 @@ export async function deployOnHost(
         ))
           throw error
       }
-      if (previous)
+      if (previous) {
         readRelease(
           previous.release,
           serialize(previous.manifest),
           serialize(previous.configuration),
         )
+        const savedProfile = profileSchema.safeParse(previous.profile)
+        if (
+          !savedProfile.success ||
+          sha256(serialize(savedProfile.data)) !== previous.profileSha256 ||
+          savedProfile.data.environment !== profile.environment
+        )
+          throw new Error(
+            'Previous deployment profile missing or inconsistent; reconcile saved state before promotion',
+          )
+      }
       const project = `nurevolution-${profile.environment}`
       const composePath = resolve(state, 'compose.yaml')
       const environment = (r: DeploymentRecord) => ({
@@ -338,7 +349,7 @@ export async function deployOnHost(
             '/api/episodes',
             '/feed/podcast',
           ]) {
-            const response = await request(profile.webOrigin + path, {
+            const response = await request(r.profile.webOrigin + path, {
               signal: AbortSignal.timeout(10_000),
               redirect: 'error',
               cache: 'no-store',
@@ -379,7 +390,7 @@ export async function deployOnHost(
                 slugs.has(episode.slug),
               ),
             },
-            { web: profile.webOrigin, media: profile.mediaOrigin },
+            { web: r.profile.webOrigin, media: r.profile.mediaOrigin },
             false,
             request,
           )

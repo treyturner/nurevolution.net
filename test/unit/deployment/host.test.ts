@@ -10,6 +10,7 @@ import {
   type Execute,
 } from '../../../tools/deploy/host.ts'
 import { serialize, sha256 } from '../../../tools/deploy/manifest.ts'
+import type { Profile } from '../../../tools/deploy/render-config.ts'
 import { releaseFixture } from './fixtures.ts'
 import profile from '../../../deploy/profile.example.json'
 import edge from '../../../deploy/caddy/initial.example.json'
@@ -62,11 +63,18 @@ async function fixture() {
     if (args[0] === 'stats') return '128MiB / 384MiB'
     return ''
   })
-  const request = vi.fn<typeof fetch>(async (input, init) => {
+  const respond = async (
+    input: Parameters<typeof fetch>[0],
+    init: Parameters<typeof fetch>[1],
+    currentProfile: Pick<Profile, 'webOrigin' | 'mediaOrigin'>,
+  ) => {
     const url = new URL(String(input))
-    const currentProfile = JSON.parse(
-      await fs.readFile(resolve(root, 'profile.json'), 'utf8'),
+    if (
+      ![currentProfile.webOrigin, currentProfile.mediaOrigin].includes(
+        url.origin,
+      )
     )
+      return new Response(null, { status: 404 })
     if (
       url.origin === currentProfile.webOrigin &&
       url.pathname.startsWith('/downloads/')
@@ -109,9 +117,16 @@ async function fixture() {
         ? JSON.stringify({ release: record.release.sourceCommit })
         : 'ok',
     )
-  })
+  }
+  const request = vi.fn<typeof fetch>(async (input, init) =>
+    respond(
+      input,
+      init,
+      JSON.parse(await fs.readFile(resolve(root, 'profile.json'), 'utf8')),
+    ),
+  )
   const paths = { root, edgeDirectory, edgeContainer: 'shared-edge' }
-  return { root, paths, bundle, run, request, record }
+  return { root, paths, bundle, run, request, respond, record }
 }
 
 it('runs bounded commands and waits through transient readiness failures', async () => {
@@ -244,6 +259,94 @@ it('restores the prior edge/app when HTTPS acceptance or startup fails', async (
     deployOnHost(f.bundle, f.paths, f.run, f.request),
   ).rejects.toThrow('restored')
 })
+
+it.each(['webOrigin', 'mediaOrigin'] as const)(
+  'accepts restored routes at their saved addresses after a %s change fails',
+  async (origin) => {
+    const f = await fixture()
+    await deployOnHost(f.bundle, f.paths, f.run, f.request)
+    const state = resolve(f.root, 'state/preview')
+    const accepted = await fs.readFile(resolve(state, 'current.json'), 'utf8')
+    const edgePath = resolve(f.paths.edgeDirectory, 'caddy.json')
+    const acceptedEdge = await fs.readFile(edgePath, 'utf8')
+    const changedProfile = {
+      ...profile,
+      [origin]: 'https://changed-preview.nurevolution.net',
+      appMemoryMiB: 256,
+    }
+    // Different whitespace is allowed; the saved hash covers canonical profile data.
+    await fs.writeFile(
+      resolve(f.root, 'profile.json'),
+      JSON.stringify(changedProfile),
+    )
+    f.request.mockClear()
+    f.request.mockImplementation(async (input, init) => {
+      const restored = (await fs.readFile(edgePath, 'utf8')) === acceptedEdge
+      if (!restored && new URL(String(input)).pathname === '/feed/podcast')
+        return new Response(null, { status: 503 })
+      // Responses follow the active routes, independently of the edited profile file.
+      return f.respond(input, init, restored ? profile : changedProfile)
+    })
+    await expect(
+      deployOnHost(f.bundle, f.paths, f.run, f.request),
+    ).rejects.toThrow('restored')
+    expect(await fs.readFile(edgePath, 'utf8')).toBe(acceptedEdge)
+    expect(await fs.readFile(resolve(state, 'current.json'), 'utf8')).toBe(
+      accepted,
+    )
+    expect(
+      JSON.parse(
+        await fs.readFile(resolve(state, 'last-attempt.json'), 'utf8'),
+      ),
+    ).toMatchObject({ outcome: 'restored' })
+    await expect(fs.access(resolve(state, 'pending.json'))).rejects.toThrow()
+    expect(
+      f.request.mock.calls.some(([input]) =>
+        String(input).startsWith(profile.mediaOrigin),
+      ),
+    ).toBe(true)
+    // A subsequent healthy attempt can still adopt the new origins and resource settings.
+    f.request.mockImplementation((input, init) =>
+      f.respond(input, init, changedProfile),
+    )
+    const deployed = await deployOnHost(f.bundle, f.paths, f.run, f.request)
+    expect(deployed.profile).toEqual(changedProfile)
+    expect(deployed.profileSha256).toBe(sha256(serialize(changedProfile)))
+    expect(
+      f.run.mock.calls.filter(([, args]) => args.includes('up')).at(-1)?.[2],
+    ).toMatchObject({ APP_MEMORY_MIB: '256' })
+  },
+)
+
+it.each(['missing', 'checksum', 'environment'])(
+  'refuses %s saved profile data before changing the running deployment',
+  async (failure) => {
+    const f = await fixture()
+    await deployOnHost(f.bundle, f.paths, f.run, f.request)
+    const current = resolve(f.root, 'state/preview/current.json')
+    const saved = JSON.parse(await fs.readFile(current, 'utf8'))
+    if (failure === 'missing') delete saved.profile
+    else if (failure === 'checksum')
+      saved.profile.webOrigin = 'https://wrong.nurevolution.net'
+    else {
+      saved.profile.environment = 'production'
+      saved.profileSha256 = sha256(serialize(saved.profile))
+    }
+    const bytes = serialize(saved)
+    await fs.writeFile(current, bytes)
+    const edgePath = resolve(f.paths.edgeDirectory, 'caddy.json')
+    const acceptedEdge = await fs.readFile(edgePath, 'utf8')
+    f.run.mockClear()
+    f.request.mockClear()
+    await expect(
+      deployOnHost(f.bundle, f.paths, f.run, f.request),
+    ).rejects.toThrow('Previous deployment profile missing or inconsistent')
+    expect(f.run).not.toHaveBeenCalled()
+    expect(f.request).not.toHaveBeenCalled()
+    expect(await fs.readFile(current, 'utf8')).toBe(bytes)
+    expect(await fs.readFile(edgePath, 'utf8')).toBe(acceptedEdge)
+  },
+)
 
 it('keeps an independently rebuilt edge when its tested binary and pinned build policy match', async () => {
   const f = await fixture(),

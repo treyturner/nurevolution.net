@@ -1,5 +1,6 @@
 import { z } from 'zod'
 import * as fs from 'node:fs/promises'
+import type { Profile } from './render-config.ts'
 import { hashSchema, instantSchema } from '../../shared/content/schema.ts'
 import {
   commitSchema,
@@ -101,6 +102,7 @@ export interface DeploymentRecord {
   release: Release
   manifest: MediaManifest
   configuration: z.infer<typeof configurationSchema>
+  profile: Profile
   profileSha256: string
   edgeSha256: string
   deployedAt: string

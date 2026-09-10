@@ -4,10 +4,13 @@ import {
   sha256,
 } from '../../../tools/deploy/manifest.ts'
 import { runnableCatalog } from '../content/fixtures.ts'
+import { profileSchema } from '../../../tools/deploy/render-config.ts'
+import exampleProfile from '../../../deploy/profile.example.json'
 
 export const fixtureTooling = 'synthetic verified deployment executable\n'
 
 export function releaseFixture() {
+  const profile = profileSchema.parse(exampleProfile)
   const manifest = createManifest(
     runnableCatalog(),
     'a'.repeat(40),
@@ -39,7 +42,8 @@ export function releaseFixture() {
     release,
     manifest,
     configuration,
-    profileSha256: '1'.repeat(64),
+    profile,
+    profileSha256: sha256(serialize(profile)),
     edgeSha256: '2'.repeat(64),
     deployedAt: release.publishedAt,
   }
