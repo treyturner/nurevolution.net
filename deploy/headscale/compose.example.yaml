@@ -1,5 +1,5 @@
 # Merge this service into the existing services Compose project on Unraid.
-# Reuse its services network; pfSense routes directly to the container address.
+# Use a dedicated subnet already routed through Unraid by pfSense.
 services:
   headscale:
     # Headscale 0.29.3, pinned to the published image digest.
@@ -15,7 +15,17 @@ services:
     tmpfs:
       - /var/run/headscale:uid=99,gid=100,mode=0700,size=16m
       - /tmp:uid=99,gid=100,mode=0700,size=16m
-    networks: [services]
+    networks:
+      headscale:
+        ipv4_address: 172.26.0.2
+    # Routed-mode allow rules only: no host IP/port is bound.
+    ports:
+      - target: 8080
+        host_ip: 0.0.0.0
+        protocol: tcp
+      - target: 3478
+        host_ip: 0.0.0.0
+        protocol: udp
     volumes:
       - type: bind
         source: /mnt/cache/appdata/headscale/config
@@ -40,8 +50,15 @@ services:
         max-size: 10m
         max-file: '3'
 
-# Keep the existing definition when merging into the services project.
+# Add this alongside the existing network definitions; leave services unchanged.
 networks:
-  services:
-    external: true
-    name: services
+  headscale:
+    name: headscale
+    driver: bridge
+    enable_ipv6: false
+    driver_opts:
+      com.docker.network.bridge.gateway_mode_ipv4: routed
+    ipam:
+      config:
+        - subnet: 172.26.0.0/16
+          gateway: 172.26.0.1
