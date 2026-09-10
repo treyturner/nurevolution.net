@@ -1,0 +1,47 @@
+# Merge this service into the existing services Compose project on Unraid.
+# Reuse its services network; pfSense routes directly to the container address.
+services:
+  headscale:
+    # Headscale 0.29.3, pinned to the published image digest.
+    image: ghcr.io/juanfont/headscale@sha256:0e7f1c6e4ce6c2a2a001103ecd3fa645a045adf30ac8a5234fe037b43000cd72
+    command: serve
+    user: '99:100'
+    restart: unless-stopped
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    mem_limit: 256m
+    pids_limit: 128
+    tmpfs:
+      - /var/run/headscale:uid=99,gid=100,mode=0700,size=16m
+      - /tmp:uid=99,gid=100,mode=0700,size=16m
+    networks: [services]
+    volumes:
+      - type: bind
+        source: /mnt/cache/appdata/headscale/config
+        target: /etc/headscale
+        read_only: true
+        bind:
+          create_host_path: false
+      - type: bind
+        source: /mnt/cache/appdata/headscale/data
+        target: /var/lib/headscale
+        bind:
+          create_host_path: false
+    healthcheck:
+      test: [CMD, headscale, health]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+    logging:
+      driver: local
+      options:
+        max-size: 10m
+        max-file: '3'
+
+# Keep the existing definition when merging into the services project.
+networks:
+  services:
+    external: true
+    name: services

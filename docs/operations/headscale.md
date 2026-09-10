@@ -1,6 +1,6 @@
 # Private deployment access with Headscale
 
-Status: **Owner selected Headscale on 2026-09-10; setup and live verification pending.** This extends [M5](../milestones/M05-production-delivery.md). The owner selected the existing Unraid Docker host behind pfSense/HAProxy, its `services` Compose project, `headscale.treyturner.info`, and Headscale's embedded relay. LAN addresses and the existing TLS setup still need confirmation before live configuration. No Headscale service or client has been installed, and no SSH firewall rule has changed.
+Status: **Owner selected Headscale on 2026-09-10; setup and live verification pending.** This extends [M5](../milestones/M05-production-delivery.md). The owner selected the existing Unraid Docker host behind pfSense/HAProxy, its `services` Compose project, `headscale.treyturner.info`, and Headscale's embedded relay. Unraid is `192.168.1.85` (`vault.local`); pfSense is `192.168.1.1` (`router.local.lan`) and already has the wildcard certificate. The [Unraid setup files and instructions](../../deploy/headscale/README.md) are prepared; the owner will add the service and its routes. No live Headscale service or client has been installed, and no SSH firewall rule has changed.
 
 ## Purpose and boundaries
 
@@ -13,13 +13,13 @@ Website, feed, and podcast traffic continue directly through the existing Digita
 ## Minimal topology
 
 - Run one Headscale instance with SQLite and persistent configuration, database, and server keys. Administer it locally through its CLI. Additional dashboards, identity providers, and a separate database service are unnecessary for initial deployment access.
-- Add Headscale to the owner's existing `services` Docker Compose project on Unraid behind pfSense/HAProxy, using `headscale.treyturner.info`. Confirm LAN addresses, the persistent-data path, available backend port, and the existing certificate before producing exact host-specific commands.
+- Add Headscale to the owner's existing `services` Docker Compose project on Unraid behind pfSense/HAProxy, using `headscale.treyturner.info`. Use `/mnt/cache/appdata/headscale/config` and `/mnt/cache/appdata/headscale/data`. Attach to the existing `services` network without publishing ports; pfSense routes to the container directly. HAProxy uses the existing wildcard certificate, and the owner assigns the stable container address.
 - Keep the Headscale server separate from the droplet joining this network. Headscale documents running its server on a machine also participating in the tailnet as [unsupported](https://headscale.net/stable/about/faq/#can-i-use-headscale-and-tailscale-on-the-same-machine). This also avoids adding its server workload to the 1 GB application host.
 - Use Cloudflare DNS-only for the Headscale hostname. Headscale's [proxy documentation](https://headscale.net/stable/ref/integration/reverse-proxy/#cloudflare) says Cloudflare Proxy and Tunnel do not support its control protocol. The existing HAProxy must forward the protocol's HTTP upgrades and long-lived connections; check its version and configuration before writing an exact rule. Apply any bot/user-agent exceptions only to this hostname.
 - Serve the control endpoint over trusted HTTPS on TCP 443. Keep metrics and remote administration ports private. The public control endpoint must work before a client joins the network.
 - The owner selected Headscale's embedded relay with client verification, exposing UDP 3478 for STUN as well as HTTPS. This uses the same Headscale service; disable the default external relay map so fallback remains self-hosted. Test the relay path before declaring connectivity reliable. See [Headscale's relay configuration](https://headscale.net/stable/ref/derp/).
 
-The initial version candidate is [Headscale 0.29.3](https://github.com/juanfont/headscale/releases/tag/v0.29.3), inspected on 2026-09-10. Pin the selected binary checksum or container digest, and use the example configuration from the same release. Select and pin a compatible Tailscale client after an enrollment/connectivity rehearsal; do not silently track `latest`.
+The prepared service uses [Headscale 0.29.3](https://github.com/juanfont/headscale/releases/tag/v0.29.3), inspected on 2026-09-10. Its published container digest is pinned, and the configuration follows that release's example. Configuration/policy validation, service health, tagged registration-key creation/revocation, and database/key persistence across restart passed in a disposable container. Select and pin a compatible Tailscale client after an enrollment/connectivity rehearsal; do not silently track `latest`.
 
 ## Access and enrollment
 
@@ -33,8 +33,8 @@ Each deployment attempt gets its own temporary node name. Log out on completion 
 
 ## Implementation sequence
 
-1. Confirm the remaining LAN addresses, TLS/proxy arrangement, persistent paths, and how the operator will execute installation steps. Inspect existing services and names before creating anything.
-2. Prepare a version-pinned Headscale service with SQLite, an explicit access policy, persistent storage, and the selected relay configuration. Validate configuration and document backup/restore commands. Keep reusable Headscale server administration distinct from this site's release helper.
+1. Preparation completed: a version-pinned Headscale service with SQLite, an explicit access policy, persistent storage, and the embedded relay configuration. Configuration validation and basic container checks passed; the setup guide documents backup requirements. Keep reusable Headscale server administration distinct from this site's release helper.
+2. The owner adds the prepared service to the existing Unraid Compose project and assigns its container address. Inspect existing services and names before creating anything.
 3. Publish the confirmed DNS-only hostname, configure trusted TLS and the required proxy/firewall rules, then validate public control-protocol connectivity. A successful `/health` response alone does not verify enrollment or an HTTP upgrade through HAProxy.
 4. Enroll the droplet and a disposable client. Verify SSH identity, allowed TCP 22, a denied port, direct/relay behavior, reconnection, and ephemeral cleanup. Measure the droplet client's memory alongside the application and backup workload before accepting the 1 GB profile.
 5. Update `.github/workflows/deploy.yml` to require the configured Headscale URL and deployment registration secret, join after source/release validation, verify connectivity, and use the droplet's private deployment address. Pin the action and client. Keep network credentials out of PR verification. Preserve source/run validation and both preview/production gates.
