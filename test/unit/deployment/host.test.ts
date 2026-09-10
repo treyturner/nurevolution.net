@@ -441,6 +441,45 @@ it('keeps preview rollback state separate when the first production deployment f
   ).rejects.toThrow()
 })
 
+it.each(['cutover marker', 'accepted production'])(
+  'blocks preview from replacing the shared slot after %s',
+  async (cutover) => {
+    const f = await fixture()
+    await deployOnHost(f.bundle, f.paths, f.run, f.request)
+    const previewPath = resolve(f.root, 'state/preview/current.json')
+    const previewBytes = await fs.readFile(previewPath, 'utf8')
+    if (cutover === 'cutover marker') {
+      await fs.writeFile(resolve(f.root, 'production-enabled'), '')
+    } else {
+      await fs.writeFile(
+        resolve(f.root, 'profile.json'),
+        serialize({
+          ...profile,
+          environment: 'production',
+          webOrigin: 'https://nurevolution.net',
+          mediaOrigin: 'https://podcast.nurevolution.net',
+        }),
+      )
+      await deployOnHost(f.bundle, f.paths, f.run, f.request)
+    }
+    const edgePath = resolve(f.paths.edgeDirectory, 'caddy.json')
+    const acceptedEdge = await fs.readFile(edgePath, 'utf8')
+    await fs.writeFile(resolve(f.root, 'profile.json'), serialize(profile))
+    f.run.mockClear()
+    f.request.mockClear()
+    await expect(
+      deployOnHost(f.bundle, f.paths, f.run, f.request),
+    ).rejects.toThrow('Preview deployment is disabled')
+    expect(f.run).not.toHaveBeenCalled()
+    expect(f.request).not.toHaveBeenCalled()
+    expect(await fs.readFile(edgePath, 'utf8')).toBe(acceptedEdge)
+    expect(await fs.readFile(previewPath, 'utf8')).toBe(previewBytes)
+    await expect(
+      fs.access(resolve(f.root, 'state/preview/pending.json')),
+    ).rejects.toThrow()
+  },
+)
+
 it('blocks a different environment while an interrupted journal or unscoped state remains', async () => {
   const f = await fixture()
   await fs.mkdir(resolve(f.root, 'state/production'), { recursive: true })
