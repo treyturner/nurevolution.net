@@ -6,7 +6,12 @@ import { prepareBundle } from '../../../tools/deploy/build.ts'
 import { publishImages } from '../../../tools/deploy/publish.ts'
 import { backup } from '../../../tools/deploy/backup.ts'
 import { serialize, sha256 } from '../../../tools/deploy/manifest.ts'
-import { releaseFixture, fixtureTooling } from './fixtures.ts'
+import {
+  releaseFixture,
+  fixtureTooling,
+  imageConfiguration,
+  imageArchiveCommands,
+} from './fixtures.ts'
 import type { Execute } from '../../../tools/deploy/host.ts'
 
 const directories: string[] = []
@@ -59,11 +64,12 @@ it('publishes only tested loaded images from a trusted main event and records re
     serialize(f.configuration),
   )
   await fs.writeFile(resolve(dir, 'manifest.json'), serialize(f.manifest))
-  const run = vi.fn<Execute>(async (_cmd, args) => {
-    if (args.includes('{{.Id}}'))
-      return args.at(-1)!.endsWith('-app')
-        ? f.release.imageId
-        : f.release.caddyImageId
+  const archive = imageArchiveCommands((image) =>
+    imageConfiguration(image.endsWith('-app') ? 'app' : 'caddy'),
+  )
+  const run = vi.fn<Execute>(async (cmd, args) => {
+    const output = archive(cmd, args)
+    if (output !== undefined) return output
     if (args.includes('{{json .RepoDigests}}'))
       return JSON.stringify([
         args.at(-1)!.split(':')[0] + '@' + f.release.imageDigest,
@@ -100,8 +106,10 @@ it('publishes only tested loaded images from a trusted main event and records re
     ).rejects.toThrow('trusted main')
   await expect(publishImages(dir, 'invalid', context, run)).rejects.toThrow()
   const original = run.getMockImplementation()!
-  run.mockImplementation(async (cmd, args, env) =>
-    args.includes('{{.Id}}') ? 'wrong' : original(cmd, args, env),
+  const wrongArchive = imageArchiveCommands(() => imageConfiguration('wrong'))
+  run.mockImplementation(
+    async (cmd, args, env) =>
+      wrongArchive(cmd, args) ?? original(cmd, args, env),
   )
   await expect(publishImages(dir, '123', context, run)).rejects.toThrow(
     'differs',

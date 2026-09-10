@@ -9,6 +9,7 @@ import { prepareBundle } from '../../tools/deploy/build.ts'
 import { serialize } from '../../tools/deploy/manifest.ts'
 import { renderSite, profileSchema } from '../../tools/deploy/render-config.ts'
 import { deliveryFixture } from './fixture.ts'
+import { archiveConfigDigest } from '../../tools/deploy/image-identity.ts'
 
 const root = resolve('.local/delivery'),
   artifacts = resolve(root, 'artifacts')
@@ -603,22 +604,30 @@ try {
   )
   assert.equal(await (await get(webOrigin + '/sentinel')).text(), 'other site')
   assert.equal((await get(webOrigin + '/api/health')).status, 200)
-  await docker(['save', '-o', resolve(artifacts, 'runtime.tar'), appImage])
-  await docker(['save', '-o', resolve(artifacts, 'caddy.tar'), caddyImage])
-  const imageId = await docker([
-    'image',
-    'inspect',
-    '--format',
-    '{{.Id}}',
+  await docker([
+    'save',
+    '--platform',
+    'linux/amd64',
+    '-o',
+    resolve(artifacts, 'runtime.tar'),
     appImage,
   ])
-  const caddyImageId = await docker([
-    'image',
-    'inspect',
-    '--format',
-    '{{.Id}}',
+  await docker([
+    'save',
+    '--platform',
+    'linux/amd64',
+    '-o',
+    resolve(artifacts, 'caddy.tar'),
     caddyImage,
   ])
+  const imageId = await archiveConfigDigest(
+    resolve(artifacts, 'runtime.tar'),
+    execute,
+  )
+  const caddyImageId = await archiveConfigDigest(
+    resolve(artifacts, 'caddy.tar'),
+    execute,
+  )
   const caddyBinarySha256 = (
     await docker(['exec', edge, 'sha256sum', '/usr/bin/caddy'])
   ).split(/\s+/)[0]!

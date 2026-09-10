@@ -3,6 +3,7 @@ import { resolve } from 'node:path'
 import { z } from 'zod'
 import { commitSchema, serialize, sha256 } from './manifest.ts'
 import { execute, type Execute } from './host.ts'
+import { imageConfigDigest } from './image-identity.ts'
 import {
   registry,
   readRelease,
@@ -57,15 +58,7 @@ export async function publishImages(
     ['caddy.tar', images.caddyTag, images.caddyImageId, registry + '-caddy'],
   ]) {
     await run('docker', ['load', '-i', resolve(bundle, file!)])
-    if (
-      (await run('docker', [
-        'image',
-        'inspect',
-        '--format',
-        '{{.Id}}',
-        tag!,
-      ])) !== id
-    )
+    if ((await imageConfigDigest(tag!, run)) !== id)
       throw new Error('Loaded image differs from verified image')
     const target = repository + ':' + images.sourceCommit
     await run('docker', ['tag', tag!, target])
