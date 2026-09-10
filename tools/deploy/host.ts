@@ -7,6 +7,7 @@ import { setTimeout as delay } from 'node:timers/promises'
 import { assertNoSymlinks } from '../content/files.ts'
 import { checkAssets } from './stage-assets.ts'
 import { checkMediaHttp } from './check-media.ts'
+import { imageConfigDigest } from './image-identity.ts'
 import {
   atomicWrite,
   deployRelease,
@@ -33,6 +34,7 @@ export type Execute = (
   args: string[],
   env?: Record<string, string>,
   timeoutMs?: number,
+  trimOutput?: boolean,
 ) => Promise<string>
 const exec = promisify(execFile)
 export const execute: Execute = async (
@@ -40,14 +42,15 @@ export const execute: Execute = async (
   args,
   env,
   timeoutMs = 300_000,
-) =>
-  (
-    await exec(command, args, {
-      env: { ...process.env, ...env },
-      timeout: timeoutMs,
-      maxBuffer: 2 * 1024 * 1024,
-    })
-  ).stdout.trim()
+  trimOutput = true,
+) => {
+  const { stdout } = await exec(command, args, {
+    env: { ...process.env, ...env },
+    timeout: timeoutMs,
+    maxBuffer: 2 * 1024 * 1024,
+  })
+  return trimOutput ? stdout.trim() : stdout
+}
 
 export async function waitReady(
   check: () => Promise<void>,
@@ -298,7 +301,10 @@ export async function deployOnHost(
             '{{.Image}}',
             paths.edgeContainer,
           ])
-          if (edgeId !== record.caddyImageId) {
+          if (
+            (await imageConfigDigest(edgeId, run, paths.root)) !==
+            record.caddyImageId
+          ) {
             const policy = await run('docker', [
               'inspect',
               '--format',
@@ -328,11 +334,19 @@ export async function deployOnHost(
               'inspect',
               expectedImages(record).app,
             ]),
-          ) as { Id: string; Config: { Labels: Record<string, string> } }[]
+          ) as {
+            RepoDigests?: string[]
+            Config?: { Labels?: Record<string, string> }
+          }[]
           if (
-            image[0]?.Id !== record.imageId ||
-            image[0]?.Config.Labels['org.opencontainers.image.revision'] !==
-              record.sourceCommit
+            !image[0]?.RepoDigests?.includes(expectedImages(record).app) ||
+            image[0]?.Config?.Labels?.['org.opencontainers.image.revision'] !==
+              record.sourceCommit ||
+            (await imageConfigDigest(
+              expectedImages(record).app,
+              run,
+              paths.root,
+            )) !== record.imageId
           )
             throw new Error('Image identity mismatch')
           if (previous)

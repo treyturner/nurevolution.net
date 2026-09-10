@@ -1,0 +1,31 @@
+{
+  "checkedAt": "2026-09-10T04:32:56.034Z",
+  "dockerVersion": "29.8.0",
+  "storage": "[[driver-type io.containerd.snapshotter.v1]]",
+  "sourceCommit": "dc9ead956feadaa5329ed922b876fc120061b721",
+  "images": [
+    {
+      "image": "ghcr.io/treyturner/nurevolution.net@sha256:4cd36d4a3c204d4c79abbff561810c4153031f616cc78f653bcf208e89d54d8f",
+      "displayId": "sha256:4cd36d4a3c204d4c79abbff561810c4153031f616cc78f653bcf208e89d54d8f",
+      "configurationDigest": "sha256:ba5b286f89d3d3bd48472bbaa6008d7be29ad8ad1d725e1b99a5d38da22393f4",
+      "expectedConfigurationDigest": "sha256:ba5b286f89d3d3bd48472bbaa6008d7be29ad8ad1d725e1b99a5d38da22393f4",
+      "seconds": 2.082436165,
+      "valid": true
+    },
+    {
+      "image": "ghcr.io/treyturner/nurevolution.net-caddy@sha256:505c8be31591b7b924425e6358d0ba1a2da1597e242b67a3305b222a9ff8728d",
+      "displayId": "sha256:505c8be31591b7b924425e6358d0ba1a2da1597e242b67a3305b222a9ff8728d",
+      "configurationDigest": "sha256:6c75f7b5fff9aa02a3783df1f16144724f0ccbd0ce8df24fe269b510112a4281",
+      "expectedConfigurationDigest": "sha256:6c75f7b5fff9aa02a3783df1f16144724f0ccbd0ce8df24fe269b510112a4281",
+      "seconds": 1.1386924370000002,
+      "valid": true
+    }
+  ],
+  "scope": "Read-only candidate validation against the already published M5 images; replacement deployment tooling is not installed or accepted.",
+  "classicWorkaroundRemoved": true,
+  "containerdExplicitlyEnabled": true,
+  "trustedCertificatesPreserved": true,
+  "previewDeployment": "paused pending merged verification fix and a new trusted main publication",
+  "productionDnsChanged": false,
+  "exportDirectory": "/srv/nurevolution (disk-backed /dev/vda1; excludes the RAM-backed /tmp mount)"
+}

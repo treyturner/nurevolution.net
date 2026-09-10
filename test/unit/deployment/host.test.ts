@@ -11,7 +11,11 @@ import {
 } from '../../../tools/deploy/host.ts'
 import { serialize, sha256 } from '../../../tools/deploy/manifest.ts'
 import type { Profile } from '../../../tools/deploy/render-config.ts'
-import { releaseFixture } from './fixtures.ts'
+import {
+  releaseFixture,
+  imageConfiguration,
+  imageArchiveCommands,
+} from './fixtures.ts'
 import profile from '../../../deploy/profile.example.json'
 import edge from '../../../deploy/caddy/initial.example.json'
 
@@ -46,12 +50,26 @@ async function fixture() {
     record.configuration.rendererSha256,
   )
   await fs.writeFile(resolve(edgeDirectory, 'caddy.json'), serialize(edge))
-  const run = vi.fn<Execute>(async (_command, args) => {
+  const archive = imageArchiveCommands((image) =>
+    imageConfiguration(
+      image === record.release.caddyImageId
+        ? 'caddy'
+        : image.startsWith('ghcr.io/')
+          ? 'app'
+          : 'other',
+    ),
+  )
+  const run = vi.fn<Execute>(async (command, args) => {
+    const output = archive(command, args)
+    if (output !== undefined) return output
     if (args[0] === 'inspect') return record.release.caddyImageId
     if (args[0] === 'image')
       return JSON.stringify([
         {
           Id: record.release.imageId,
+          RepoDigests: [
+            'ghcr.io/treyturner/nurevolution.net@' + record.release.imageDigest,
+          ],
           Config: {
             Labels: {
               'org.opencontainers.image.revision': record.release.sourceCommit,
@@ -197,6 +215,71 @@ it('validates/pulls the exact image and deploys only the owned app and site rout
   ).toContain(f.record.release.imageDigest)
 })
 
+it('accepts registry-pulled containerd images whose display IDs are manifest digests', async () => {
+  const f = await fixture(),
+    original = f.run.getMockImplementation()!
+  const archive = imageArchiveCommands((ref) =>
+    imageConfiguration(
+      ref === f.record.release.caddyImageDigest ? 'caddy' : 'app',
+    ),
+  )
+  f.run.mockImplementation(async (command, args, env, timeout, trim) => {
+    const output = archive(command, args)
+    if (output !== undefined) return output
+    if (args.includes('{{.Image}}')) return f.record.release.caddyImageDigest
+    const result = await original(command, args, env, timeout, trim)
+    if (args[0] === 'image' && args[1] === 'inspect') {
+      const [image] = JSON.parse(result)
+      return JSON.stringify([{ ...image, Id: f.record.release.imageDigest }])
+    }
+    return result
+  })
+  await deployOnHost(f.bundle, f.paths, f.run, f.request)
+  expect(f.run.mock.calls.some(([, args]) => args.includes('sha256sum'))).toBe(
+    false,
+  )
+  expect(
+    await fs.readFile(resolve(f.root, 'state/preview/current.json'), 'utf8'),
+  ).toContain(f.record.release.imageId)
+})
+
+it.each(['configuration', 'registry', 'revision'])(
+  'rejects mismatched %s identity before stopping the app',
+  async (kind) => {
+    const f = await fixture(),
+      original = f.run.getMockImplementation()!
+    const archive = imageArchiveCommands((ref) =>
+      imageConfiguration(ref.startsWith('ghcr.io/') ? 'wrong' : 'caddy'),
+    )
+    f.run.mockImplementation(async (command, args, env, timeout, trim) => {
+      if (kind === 'configuration') {
+        const output = archive(command, args)
+        if (output !== undefined) return output
+      }
+      const result = await original(command, args, env, timeout, trim)
+      if (args[0] === 'image' && args[1] === 'inspect') {
+        const [image] = JSON.parse(result)
+        if (kind === 'registry')
+          image.RepoDigests = [
+            'ghcr.io/other/app@' + f.record.release.imageDigest,
+          ]
+        if (kind === 'revision')
+          image.Config.Labels['org.opencontainers.image.revision'] = 'b'.repeat(
+            40,
+          )
+        return JSON.stringify([image])
+      }
+      return result
+    })
+    await expect(
+      deployOnHost(f.bundle, f.paths, f.run, f.request),
+    ).rejects.toThrow('Image identity mismatch')
+    expect(f.run.mock.calls.some(([, args]) => args.includes('stop'))).toBe(
+      false,
+    )
+  },
+)
+
 it('refuses missing/invalid host configuration, stale journals, and mismatched images before stop', async () => {
   const f = await fixture()
   await expect(
@@ -228,7 +311,9 @@ it('refuses missing/invalid host configuration, stale journals, and mismatched i
     deployOnHost(f.bundle, f.paths, f.run, f.request),
   ).rejects.toThrow('Shared edge')
   f.run.mockImplementation(async (cmd, args, env) =>
-    args[0] === 'image' ? '[{"Id":"wrong"}]' : original(cmd, args, env),
+    args[0] === 'image' && args[1] === 'inspect'
+      ? '[{"Id":"wrong"}]'
+      : original(cmd, args, env),
   )
   await expect(
     deployOnHost(f.bundle, f.paths, f.run, f.request),

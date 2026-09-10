@@ -26,7 +26,8 @@
     "test:e2e": "pnpm build:fixture && playwright test",
     "verify": "pnpm prepare && pnpm format:check && pnpm lint && pnpm typecheck && pnpm test:migration && pnpm test:operations && pnpm check:migration && pnpm test:coverage && pnpm build && pnpm test:e2e && pnpm test:delivery",
     "build:deploy": "esbuild tools/deploy/cli.ts --bundle --platform=node --target=node22 --format=esm --outfile=.local/delivery/artifacts/deploy.mjs",
-    "test:delivery": "node test/delivery/run.ts"
+    "test:delivery": "node test/delivery/run.ts",
+    "test:image-identity": "node test/delivery/image-identity.ts"
   },
   "dependencies": {
     "nuxt": "4.5.2",

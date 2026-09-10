@@ -21,6 +21,8 @@ export const releaseSchema = z.strictObject({
       /^https:\/\/github\.com\/treyturner\/nurevolution\.net\/actions\/runs\/[1-9][0-9]*$/,
     ),
   imageDigest: digest,
+  // Canonical SHA-256 of the original linux/amd64 image configuration bytes;
+  // never Docker's storage-dependent image inspect Id field.
   imageId: digest,
   caddyImageDigest: digest,
   caddyImageId: digest,
