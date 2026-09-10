@@ -1,8 +1,17 @@
 # M5 — Production delivery and operational rehearsal
 
-Status: **Repository delivery implemented; live rehearsal pending on `feat/m5-production-delivery`, 2026-09-09.** M4 is merged and main CI passed. Repository preparation can proceed from this plan; the owner inputs in the decision table must be resolved before implementing the dependent live configuration. The NYC1 droplet is provisioned, SSH access is verified, and the full archive restore plus Discord failure-alert rehearsal have passed. Application/media deployment and full operational rehearsal remain pending. A deployment kit alone does not complete M5.
+Status: **Repository delivery merged; live rehearsal pending, 2026-09-10.** PRs #4 and #5 are squash merged; the current main release is verified and published. Matching host tooling, the verified Caddy image, active media, preview DNS, and trusted certificates are prepared. GitHub deployment cannot reach SSH under the owner's public source restriction. The owner selected self-hosted Headscale; its [deployment access plan](../operations/headscale.md) is being prepared on `feat/m5-headscale-deploy`, targeting the owner's existing Unraid Compose host behind pfSense/HAProxy, with final LAN/TLS details pending. Application deployment and full operational rehearsal remain outstanding. A deployment kit alone does not complete M5.
 
 Roadmap: [M5](../../ROADMAP.md#m5--production-delivery-and-operational-rehearsal). Dependencies: [M4](M04-archive-player.md#merged-review-and-ci-evidence), [player delivery contract](../PLAYER.md), [feed validation](../FEED-VALIDATION.md), and the roadmap's D04/D08 decisions. Newer owner decisions take precedence over proposed defaults below.
+
+## Latest live progress — 2026-09-10
+
+- Main commit `0ee2fed9fdf1ca4d01ecc75a9e7e77397d0df4aa` passed [Verify 34438252545](https://github.com/treyturner/nurevolution.net/actions/runs/34438252545), including both Docker image-store checks, and published the verified release. Its matching deployment tools and Caddy image are installed. Docker retains its containerd image store; the rejected storage-mode workaround is removed.
+- All 156 active media files passed this release's checksum audit. Preview website DNS is proxied; preview media DNS is DNS-only. All four trusted site/media certificates survived edge recreation. Production DNS is unchanged, and no application is deployed yet.
+- A normal backup of the prepared media, releases, profile, tooling, edge configuration, and certificates completed at `2026-09-10T04:58:29.502Z`, snapshot `b07a3e35cd3564e88e3d6f8a9462b2b784e15e50383c0f648b50db1926e616ed`, with repository structure verification passed. It took 52.115 seconds with a 192 MiB memory peak, reusing existing archive data. This does not establish running-application capacity or full application/certificate restore acceptance. The weekly timer remains disabled.
+- The DigitalOcean cloud firewall allows SSH only from `136.49.253.125/32`. Two attempts of [Deploy 34438849292](https://github.com/treyturner/nurevolution.net/actions/runs/34438849292) timed out before transfer. The owner chose Headscale to preserve that restriction and support future private-network uses. Headscale will run in the owner's existing Unraid `services` Compose project behind pfSense/HAProxy at `headscale.treyturner.info`, with its embedded relay. Live setup waits for LAN addresses and the existing TLS arrangement; unrelated service provisioning remains outside M5.
+
+The original planning and historical evidence below remain useful, but this progress record and later owner decisions supersede earlier pending/absent descriptions.
 
 ## Outcome and scope
 

@@ -1,0 +1,50 @@
+# Private deployment access with Headscale
+
+Status: **Owner selected Headscale on 2026-09-10; setup and live verification pending.** This extends [M5](../milestones/M05-production-delivery.md). The owner selected the existing Unraid Docker host behind pfSense/HAProxy, its `services` Compose project, `headscale.treyturner.info`, and Headscale's embedded relay. LAN addresses and the existing TLS setup still need confirmation before live configuration. No Headscale service or client has been installed, and no SSH firewall rule has changed.
+
+## Purpose and boundaries
+
+GitHub-hosted deployment runners cannot reach the droplet's public SSH address because its DigitalOcean cloud firewall permits TCP 22 only from `136.49.253.125/32`. Deployment run [34438849292](https://github.com/treyturner/nurevolution.net/actions/runs/34438849292) failed before transferring a release, including its second attempt. The workspace can still administer the droplet through the existing allowed address.
+
+Use self-hosted Headscale to enroll the droplet and temporary GitHub deployment runners into a private network. Keep OpenSSH key authentication and the independently pinned host identity. Headscale provides network access; the existing release verification, manual promotion, dedicated operator, and production cutover gates still apply.
+
+Website, feed, and podcast traffic continue directly through the existing DigitalOcean/Caddy paths. A Headscale outage can prevent new deployments, but it must not interrupt the running application or require routing listener traffic through the home network. Existing public SSH access remains available for recovery.
+
+## Minimal topology
+
+- Run one Headscale instance with SQLite and persistent configuration, database, and server keys. Administer it locally through its CLI. Additional dashboards, identity providers, and a separate database service are unnecessary for initial deployment access.
+- Add Headscale to the owner's existing `services` Docker Compose project on Unraid behind pfSense/HAProxy, using `headscale.treyturner.info`. Confirm LAN addresses, the persistent-data path, available backend port, and the existing certificate before producing exact host-specific commands.
+- Keep the Headscale server separate from the droplet joining this network. Headscale documents running its server on a machine also participating in the tailnet as [unsupported](https://headscale.net/stable/about/faq/#can-i-use-headscale-and-tailscale-on-the-same-machine). This also avoids adding its server workload to the 1 GB application host.
+- Use Cloudflare DNS-only for the Headscale hostname. Headscale's [proxy documentation](https://headscale.net/stable/ref/integration/reverse-proxy/#cloudflare) says Cloudflare Proxy and Tunnel do not support its control protocol. The existing HAProxy must forward the protocol's HTTP upgrades and long-lived connections; check its version and configuration before writing an exact rule. Apply any bot/user-agent exceptions only to this hostname.
+- Serve the control endpoint over trusted HTTPS on TCP 443. Keep metrics and remote administration ports private. The public control endpoint must work before a client joins the network.
+- The owner selected Headscale's embedded relay with client verification, exposing UDP 3478 for STUN as well as HTTPS. This uses the same Headscale service; disable the default external relay map so fallback remains self-hosted. Test the relay path before declaring connectivity reliable. See [Headscale's relay configuration](https://headscale.net/stable/ref/derp/).
+
+The initial version candidate is [Headscale 0.29.3](https://github.com/juanfont/headscale/releases/tag/v0.29.3), inspected on 2026-09-10. Pin the selected binary checksum or container digest, and use the example configuration from the same release. Select and pin a compatible Tailscale client after an enrollment/connectivity rehearsal; do not silently track `latest`.
+
+## Access and enrollment
+
+Create a dedicated droplet tag and a separate deployment-runner tag. Begin with an explicit policy permitting only deployment-runner traffic to the droplet on TCP 22. Do not inherit a default allow-all policy. Test both the permitted connection and a denied port. Future devices and services receive separate rules when they are added.
+
+Enroll the droplet once using a short-lived, single-use tagged registration key, with persistent client state. Keep its current resolver configuration and avoid subnet routes, exit-node routing, and replacement of OpenSSH by Tailscale SSH. Record its private IP and compare the SSH host key against the existing owner-confirmed fingerprint before GitHub uses the new address. Pin that same identity for the private address; do not replace host verification with a blind network scan.
+
+For GitHub, use a dedicated tagged, reusable, expiring registration key that creates ephemeral nodes. Store it only in the selected deployment environment's secrets. Its tag grants access only to the droplet's SSH port; GitHub does not need a Headscale administrator API key. Record its expiry and rotation procedure. Expiring a registration key prevents new enrollment; deleting or expiring already enrolled nodes is a separate recovery action.
+
+Each deployment attempt gets its own temporary node name. Log out on completion and verify server-side removal of disconnected ephemeral nodes, including interrupted runs. Do not persist runner client state in caches or artifacts. The official [Tailscale action](https://github.com/tailscale/github-action) supports a custom login server through its additional arguments and an auth-key input; validate that behavior against the selected Headscale version before using it in the live workflow.
+
+## Implementation sequence
+
+1. Confirm the remaining LAN addresses, TLS/proxy arrangement, persistent paths, and how the operator will execute installation steps. Inspect existing services and names before creating anything.
+2. Prepare a version-pinned Headscale service with SQLite, an explicit access policy, persistent storage, and the selected relay configuration. Validate configuration and document backup/restore commands. Keep reusable Headscale server administration distinct from this site's release helper.
+3. Publish the confirmed DNS-only hostname, configure trusted TLS and the required proxy/firewall rules, then validate public control-protocol connectivity. A successful `/health` response alone does not verify enrollment or an HTTP upgrade through HAProxy.
+4. Enroll the droplet and a disposable client. Verify SSH identity, allowed TCP 22, a denied port, direct/relay behavior, reconnection, and ephemeral cleanup. Measure the droplet client's memory alongside the application and backup workload before accepting the 1 GB profile.
+5. Update `.github/workflows/deploy.yml` to require the configured Headscale URL and deployment registration secret, join after source/release validation, verify connectivity, and use the droplet's private deployment address. Pin the action and client. Keep network credentials out of PR verification. Preserve source/run validation and both preview/production gates.
+6. Validate the workflow with actionlint and the repository's canonical verification gate. Exercise real enrollment/cleanup against the prepared server, then promote a verified main release through the normal preview workflow. Record the successful run and check the public website/media endpoints.
+7. Finish M5 application/certificate restore, rollback, resource, and client acceptance. Record recovery for Headscale separately from the existing site backup, then enable scheduled backups only for the services whose backup and restore procedures have passed.
+
+## Recovery and acceptance
+
+The Headscale host needs an independent backup of its configuration, access policy, database, and private server/relay keys. Use a consistent SQLite backup or a brief service stop; do not assume copying a live database file alone captures WAL state. Protect the backup as a credential-bearing artifact. The Nurevolution restic job on DigitalOcean does not cover a separate home Headscale host.
+
+Restore into an isolated location and verify the server identity and enrollment state before replacing a running instance. Document how to revoke the runner registration key and enrolled runner nodes, how to rotate the key in GitHub, and how the operator reaches each host if Headscale is unavailable. No new automation service is required to mint a fresh registration key for every deployment.
+
+Acceptance requires successful GitHub deployment with the existing public SSH restriction unchanged, denied access outside the intended rule, automatic temporary-node cleanup, trusted endpoint and SSH identities, measured droplet capacity, and a recoverable Headscale state backup. Hosting files, a health response, or an enrolled client alone do not complete this work.
