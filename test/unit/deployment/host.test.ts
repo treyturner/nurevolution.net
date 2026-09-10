@@ -318,6 +318,36 @@ it.each(['webOrigin', 'mediaOrigin'] as const)(
   },
 )
 
+it('restarts the prior release with its accepted memory limit after a reduced limit fails', async () => {
+  const f = await fixture()
+  await deployOnHost(f.bundle, f.paths, f.run, f.request)
+  const current = resolve(f.root, 'state/preview/current.json')
+  const accepted = await fs.readFile(current, 'utf8')
+  await fs.writeFile(
+    resolve(f.root, 'profile.json'),
+    serialize({ ...profile, appMemoryMiB: 128 }),
+  )
+  const original = f.run.getMockImplementation()!
+  f.run.mockClear()
+  f.run.mockImplementation(async (command, args, env, timeout) => {
+    if (args.includes('up') && env?.APP_MEMORY_MIB === '128')
+      throw new Error('Candidate OOM: insufficient memory limit')
+    return original(command, args, env, timeout)
+  })
+  await expect(
+    deployOnHost(f.bundle, f.paths, f.run, f.request),
+  ).rejects.toThrow('restored')
+  expect(
+    f.run.mock.calls
+      .filter(([, args]) => args.includes('up'))
+      .map(([, , env]) => env?.APP_MEMORY_MIB),
+  ).toEqual(['128', String(profile.appMemoryMiB)])
+  expect(await fs.readFile(current, 'utf8')).toBe(accepted)
+  await expect(
+    fs.access(resolve(f.root, 'state/preview/pending.json')),
+  ).rejects.toThrow()
+})
+
 it.each(['missing', 'checksum', 'environment'])(
   'refuses %s saved profile data before changing the running deployment',
   async (failure) => {

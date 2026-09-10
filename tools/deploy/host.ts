@@ -208,8 +208,8 @@ export async function deployOnHost(
       const composePath = resolve(state, 'compose.yaml')
       const environment = (r: DeploymentRecord) => ({
         APP_IMAGE: expectedImages(r.release).app,
-        APP_MEMORY_MIB: String(profile.appMemoryMiB),
-        DEPLOY_ENVIRONMENT: profile.environment,
+        APP_MEMORY_MIB: String(r.profile.appMemoryMiB),
+        DEPLOY_ENVIRONMENT: r.profile.environment,
       })
       const compose = (r: DeploymentRecord, args: string[]) =>
         run(
@@ -245,7 +245,13 @@ export async function deployOnHost(
           if (
             !(
               availableMiB + reclaimableMiB >=
-              profile.reserveMemoryMiB + profile.appMemoryMiB
+              Math.max(
+                profile.reserveMemoryMiB + profile.appMemoryMiB,
+                previous
+                  ? previous.profile.reserveMemoryMiB +
+                      previous.profile.appMemoryMiB
+                  : 0,
+              )
             )
           )
             throw new Error(
@@ -337,7 +343,7 @@ export async function deployOnHost(
               '-e',
               `const r=await fetch('http://127.0.0.1:3000/api/health',{signal:AbortSignal.timeout(4000)});const b=await r.json();if(!r.ok||b.release!==${JSON.stringify(r.release.sourceCommit)})process.exit(1)`,
             ])
-          }, profile.readinessSeconds)
+          }, r.profile.readinessSeconds)
         },
         async activate() {
           await activate(serialize(rendered))
