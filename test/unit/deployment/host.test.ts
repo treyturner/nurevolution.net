@@ -260,6 +260,69 @@ it('restores the prior edge/app when HTTPS acceptance or startup fails', async (
   ).rejects.toThrow('restored')
 })
 
+it.each([false, true])(
+  'keeps active Compose intact when host validation rejects a candidate (existing deployment: %s)',
+  async (existing) => {
+    const f = await fixture()
+    if (existing) await deployOnHost(f.bundle, f.paths, f.run, f.request)
+    const state = resolve(f.root, 'state/preview')
+    const composePath = resolve(state, 'compose.yaml')
+    const acceptedCompose = existing
+      ? await fs.readFile(composePath, 'utf8')
+      : undefined
+    const acceptedRecord = existing
+      ? await fs.readFile(resolve(state, 'current.json'), 'utf8')
+      : undefined
+    const edgePath = resolve(f.paths.edgeDirectory, 'caddy.json')
+    const acceptedEdge = await fs.readFile(edgePath, 'utf8')
+    const validCompose = f.record.configuration.compose
+    const setCompose = async (value: string) => {
+      f.record.configuration.compose = value
+      f.record.release.configurationSha256 = sha256(
+        serialize(f.record.configuration),
+      )
+      for (const key of ['release', 'configuration'] as const)
+        await fs.writeFile(
+          resolve(f.bundle, key + '.json'),
+          serialize(f.record[key]),
+        )
+    }
+    const original = f.run.getMockImplementation()!
+    f.run.mockClear()
+    f.run.mockImplementation(async (command, args, env, timeout) => {
+      if (args[0] === 'compose') {
+        const file = args[args.indexOf('-f') + 1]!
+        if ((await fs.readFile(file, 'utf8')) === 'host-incompatible compose')
+          throw new Error('Host rejected candidate Compose')
+        if (args.includes('stop') || args.includes('up'))
+          await fs.access(resolve(state, 'pending.json'))
+      }
+      return original(command, args, env, timeout)
+    })
+    await setCompose('host-incompatible compose')
+    await expect(
+      deployOnHost(f.bundle, f.paths, f.run, f.request),
+    ).rejects.toThrow('Host rejected candidate Compose')
+    if (existing) {
+      expect(await fs.readFile(composePath, 'utf8')).toBe(acceptedCompose)
+      expect(await fs.readFile(resolve(state, 'current.json'), 'utf8')).toBe(
+        acceptedRecord,
+      )
+    } else {
+      await expect(fs.access(composePath)).rejects.toThrow()
+      await expect(fs.access(resolve(state, 'current.json'))).rejects.toThrow()
+    }
+    expect(await fs.readFile(edgePath, 'utf8')).toBe(acceptedEdge)
+    expect(f.run.mock.calls.some(([, args]) => args.includes('stop'))).toBe(
+      false,
+    )
+    await expect(fs.access(resolve(state, 'pending.json'))).rejects.toThrow()
+    await setCompose(validCompose)
+    await deployOnHost(f.bundle, f.paths, f.run, f.request)
+    expect(await fs.readFile(composePath, 'utf8')).toBe(validCompose)
+  },
+)
+
 it.each(['webOrigin', 'mediaOrigin'] as const)(
   'accepts restored routes at their saved addresses after a %s change fails',
   async (origin) => {

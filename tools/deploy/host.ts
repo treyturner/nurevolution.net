@@ -228,15 +228,20 @@ export async function deployOnHost(
       }
       const project = `nurevolution-${profile.environment}`
       const composePath = resolve(state, 'compose.yaml')
+      const candidateComposePath = resolve(state, 'candidate.compose.yaml')
       const environment = (r: DeploymentRecord) => ({
         APP_IMAGE: expectedImages(r.release).app,
         APP_MEMORY_MIB: String(r.profile.appMemoryMiB),
         DEPLOY_ENVIRONMENT: r.profile.environment,
       })
-      const compose = (r: DeploymentRecord, args: string[]) =>
+      const compose = (
+        r: DeploymentRecord,
+        args: string[],
+        file = composePath,
+      ) =>
         run(
           'docker',
-          ['compose', '-p', project, '-f', composePath, ...args],
+          ['compose', '-p', project, '-f', file, ...args],
           environment(r),
         )
       const appId = async () =>
@@ -333,8 +338,8 @@ export async function deployOnHost(
               'inspect',
               expectedImages(previous.release).app,
             ])
-          await atomicWrite(composePath, configuration.compose)
-          await compose(candidate, ['config', '--quiet'])
+          await atomicWrite(candidateComposePath, configuration.compose)
+          await compose(candidate, ['config', '--quiet'], candidateComposePath)
           await atomicWrite(
             resolve(paths.edgeDirectory, 'candidate.json'),
             serialize(rendered),
@@ -347,8 +352,8 @@ export async function deployOnHost(
           ])
         },
         async stop() {
-          await compose(candidate, ['stop', 'app'])
-          await compose(candidate, ['rm', '-f', 'app'])
+          await compose(candidate, ['stop', 'app'], candidateComposePath)
+          await compose(candidate, ['rm', '-f', 'app'], candidateComposePath)
         },
         async start(r) {
           await atomicWrite(composePath, r.configuration.compose)
