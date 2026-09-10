@@ -21,6 +21,9 @@ function play() {
       <button type="button" @click="selected = episodes[1]!">
         Select second
       </button>
+      <button type="button" @click="selected = episodes[2]!">
+        Select third
+      </button>
       <button type="button" @click="mounted = !mounted">Toggle player</button>
     </nav>
     <ArchivePlayer v-if="mounted" :episode="selected" />

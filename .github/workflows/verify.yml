@@ -15,7 +15,7 @@ concurrency:
 jobs:
   verify:
     runs-on: ubuntu-24.04
-    timeout-minutes: 20
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
       - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
@@ -32,14 +32,68 @@ jobs:
         run: pnpm exec playwright install --with-deps chromium firefox webkit
       - name: Verify
         run: pnpm verify
+      - name: Retain the exact verified runtime and delivery bundle
+        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5
+        with:
+          name: verified-runtime
+          path: .local/delivery/artifacts/
+          include-hidden-files: true
+          if-no-files-found: error
+          retention-days: 14
       - name: Retain verification reports
         if: always()
         uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5
         with:
           name: verification-reports
+          include-hidden-files: true
           path: |
             coverage/
             playwright-report/
             test-results/
+            .local/delivery/report/
+            .local/delivery/results/
           if-no-files-found: ignore
           retention-days: 14
+
+  publish:
+    needs: verify
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main' && github.repository == 'treyturner/nurevolution.net'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version-file: .node-version
+      - uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6
+        with:
+          name: verified-runtime
+          path: verified
+      - name: Authenticate the publisher to GHCR
+        env:
+          GHCR_TOKEN: ${{ github.token }}
+          GHCR_USER: ${{ github.actor }}
+        run: printf '%s' "$GHCR_TOKEN" | docker login ghcr.io --username "$GHCR_USER" --password-stdin
+      - name: Publish the verified images without rebuilding
+        env:
+          VERIFY_RUN_ID: ${{ github.run_id }}
+        run: node verified/deploy.mjs publish --bundle verified --run "$VERIFY_RUN_ID"
+      - name: Retain the digest-bound release bundle
+        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5
+        with:
+          name: release-${{ github.sha }}
+          path: |
+            verified/release.json
+            verified/manifest.json
+            verified/configuration.json
+            verified/deploy.mjs
+            verified/renderer.sha256
+            verified/delivery-evidence.json
+          if-no-files-found: error
+          retention-days: 90
+      - name: Remove registry credentials
+        if: always()
+        run: docker logout ghcr.io

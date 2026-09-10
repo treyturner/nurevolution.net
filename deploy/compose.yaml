@@ -1,0 +1,26 @@
+# Only the application belongs to this project. Never put the shared edge here.
+services:
+  app:
+    image: ${APP_IMAGE:?verified image digest required}
+    init: true
+    read_only: true
+    restart: unless-stopped
+    mem_limit: ${APP_MEMORY_MIB:?measured memory limit required}m
+    memswap_limit: ${APP_MEMORY_MIB:?measured memory limit required}m
+    pids_limit: 64
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    tmpfs: ['/tmp:size=16m,mode=1777']
+    stop_grace_period: 10s
+    networks:
+      site:
+        aliases: ['nurevolution-${DEPLOY_ENVIRONMENT:?environment required}']
+    logging:
+      driver: local
+      options:
+        max-size: 5m
+        max-file: '3'
+networks:
+  site:
+    external: true
+    name: nurevolution-site

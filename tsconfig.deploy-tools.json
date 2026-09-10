@@ -1,0 +1,4 @@
+{
+  "extends": "./tsconfig.content-tools.json",
+  "include": ["tools/deploy/**/*.ts", "server/downloads/filename.ts"]
+}

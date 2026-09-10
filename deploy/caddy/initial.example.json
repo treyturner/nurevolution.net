@@ -1,0 +1,50 @@
+{
+  "admin": { "listen": "localhost:2019" },
+  "apps": {
+    "http": {
+      "servers": {
+        "https": {
+          "listen": [":443"],
+          "tls_connection_policies": [{}],
+          "routes": []
+        }
+      }
+    },
+    "tls": {
+      "certificates": {
+        "automate": [
+          "nurevolution.net",
+          "podcast.nurevolution.net",
+          "preview.nurevolution.net",
+          "podcast-preview.nurevolution.net"
+        ]
+      },
+      "automation": {
+        "policies": [
+          {
+            "subjects": [
+              "nurevolution.net",
+              "podcast.nurevolution.net",
+              "preview.nurevolution.net",
+              "podcast-preview.nurevolution.net"
+            ],
+            "issuers": [
+              {
+                "module": "acme",
+                "ca": "https://acme-staging-v02.api.letsencrypt.org/directory",
+                "challenges": {
+                  "dns": {
+                    "provider": {
+                      "name": "cloudflare",
+                      "api_token": "{env.CLOUDFLARE_API_TOKEN}"
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    }
+  }
+}

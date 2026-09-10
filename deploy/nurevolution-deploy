@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+set -euo pipefail
+[[ $# == 2 ]]
+[[ "$1" == preview || "$1" == production ]]
+[[ "$2" =~ ^[1-9][0-9]*-[1-9][0-9]*$ ]]
+if [[ "$1" == production ]]; then test -f /srv/nurevolution/production-enabled; fi
+test "$(node -p 'JSON.parse(require("fs").readFileSync("/srv/nurevolution/profile.json")).environment')" = "$1"
+exec node /srv/nurevolution/tooling/deploy.mjs deploy \
+  --bundle "/srv/nurevolution/incoming/$2" \
+  --root /srv/nurevolution --edge-directory /srv/edge/config \
+  --edge-container "$(cat /srv/nurevolution/edge-container)"

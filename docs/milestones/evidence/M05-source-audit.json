@@ -1,0 +1,633 @@
+{
+  "at": "2026-09-09T05:22:36.767Z",
+  "files": 156,
+  "decoded": 55,
+  "records": [
+    {
+      "assetId": "asset-0212eb6f43f84ce6",
+      "decoded": false
+    },
+    {
+      "assetId": "asset-062d8df6c29e6650",
+      "decoded": false
+    },
+    {
+      "assetId": "asset-0aae6b03b5300a3f",
+      "decoded": false
+    },
+    {
+      "assetId": "asset-10be1117a35208e7",
+      "decoded": true
+    },
+    {
+      "assetId": "asset-133e20b72a933482",
+      "decoded": false
+    },
+    {
+      "assetId": "asset-15c4a645aa42c211",
+      "decoded": false
+    },
+    {
+      "assetId": "asset-161f24d30919d412",
+      "decoded": false
+    },
+    {
+      "assetId": "asset-18714043747ff923",
+      "decoded": false
+    },
+    {
+      "assetId": "asset-192ba9e6e4d8bc7c",
+      "decoded": true
+    },
+    {
+      "assetId": "asset-194069d8ed9a1c81",
+      "decoded": false
+    },
+    {
+      "assetId": "asset-1a8119c7140491ec",
+      "decoded": false
+    },
+    {
+      "assetId": "asset-1c41163f56bcae97",
+      "decoded": false
+    },
+    {
+      "assetId": "asset-1dcc7065d3daf2ac",
+      "decoded": false
+    },
+    {
+      "assetId": "asset-20c29632c840c485",
+      "decoded": true
+    },
+    {
+      "assetId": "asset-22e61b6a576f3ecf",
+      "decoded": true
+    },
+    {
+      "assetId": "asset-23a9caf6027c11f3",
+      "decoded": false
+    },
+    {
+      "assetId": "asset-23c08f74623ccbae",
+      "decoded": false
+    },
+    {
+      "assetId": "asset-267a5855fb201d22",
+      "decoded": false
+    },
+    {
+      "assetId": "asset-27367d811456ecc6",
+      "decoded": false
+    },
+    {
+      "assetId": "asset-27f168df9ffe8484",
+      "decoded": true
+    },
+    {
+      "assetId": "asset-2a7d87d1472c9f8d",
+      "decoded": true
+    },
+    {
+      "assetId": "asset-2a98e5e36daa0f0d",
+      "decoded": true
+    },
+    {
+      "assetId": "asset-2d938ca4211a912e",
+      "decoded": true
+    },
+    {
+      "assetId": "asset-2e7c79fcf44d6c67",
+      "decoded": true
+    },
+    {
+      "assetId": "asset-30d12a72b047a3d3",
+      "decoded": true
+    },
+    {
+      "assetId": "asset-37787c9351c33879",
+      "decoded": true
+    },
+    {
+      "assetId": "asset-38bc99302587f8b8",
+      "decoded": false
+    },
+    {
+      "assetId": "asset-3978a9c06bde01e2",
+      "decoded": false
+    },
+    {
+      "assetId": "asset-3d44e5acb6efdc05",
+      "decoded": false
+    },
+    {
+      "assetId": "asset-3f015739e8dce548",
+      "decoded": false
+    },
+    {
+      "assetId": "asset-3f430484c0c8acb0",
+      "decoded": true
+    },
+    {
+      "assetId": "asset-3f7f2190d5a93b50",
+      "decoded": false
+    },
+    {
+      "assetId": "asset-42edca19915d1e1b",
+      "decoded": false
+    },
+    {
+      "assetId": "asset-450a528e2fedc035",
+      "decoded": true
+    },
+    {
+      "assetId": "asset-4528e80f69f5822a",
+      "decoded": true
+    },
+    {
+      "assetId": "asset-45cd83269a1f5472",
+      "decoded": false
+    },
+    {
+      "assetId": "asset-45d62250e6619caf",
+      "decoded": true
+    },
+    {
+      "assetId": "asset-46f23dd6c7e52d10",
+      "decoded": true
+    },
+    {
+      "assetId": "asset-48228cdc82a08b46",
+      "decoded": true
+    },
+    {
+      "assetId": "asset-486937c569bbbf76",
+      "decoded": true
+    },
+    {
+      "assetId": "asset-4ba2bbb4d4a07c50",
+      "decoded": false
+    },
+    {
+      "assetId": "asset-4d1ddf13eda772f7",
+      "decoded": true
+    },
+    {
+      "assetId": "asset-4ef42d93a381d98c",
+      "decoded": false
+    },
+    {
+      "assetId": "asset-4f28530d0509b084",
+      "decoded": false
+    },
+    {
+      "assetId": "asset-4feaf8d7bbec690b",
+      "decoded": false
+    },
+    {
+      "assetId": "asset-510b0c2b5034c89d",
+      "decoded": false
+    },
+    {
+      "assetId": "asset-5168fb158a1eec64",
+      "decoded": false
+    },
+    {
+      "assetId": "asset-522fa4c70df7943a",
+      "decoded": false
+    },
+    {
+      "assetId": "asset-53645f107ecc3374",
+      "decoded": true
+    },
+    {
+      "assetId": "asset-5653f296481726c2",
+      "decoded": true
+    },
+    {
+      "assetId": "asset-569dc869b9011485",
+      "decoded": false
+    },
+    {
+      "assetId": "asset-57fe373471790156",
+      "decoded": false
+    },
+    {
+      "assetId": "asset-58818eef16928111",
+      "decoded": true
+    },
+    {
+      "assetId": "asset-5a017a042ed0d2fe",
+      "decoded": true
+    },
+    {
+      "assetId": "asset-5df28ae03c827b0f",
+      "decoded": true
+    },
+    {
+      "assetId": "asset-6070ba3fd2fbcbe0",
+      "decoded": false
+    },
+    {
+      "assetId": "asset-611f6cbae600362e",
+      "decoded": true
+    },
+    {
+      "assetId": "asset-6170d96c277c6620",
+      "decoded": false
+    },
+    {
+      "assetId": "asset-63dade2ffce61f81",
+      "decoded": false
+    },
+    {
+      "assetId": "asset-64aad6f047990931",
+      "decoded": true
+    },
+    {
+      "assetId": "asset-65db4c3e4ea878a2",
+      "decoded": true
+    },
+    {
+      "assetId": "asset-65dfc086b8f371d3",
+      "decoded": false
+    },
+    {
+      "assetId": "asset-680468b64164c966",
+      "decoded": false
+    },
+    {
+      "assetId": "asset-68690678f31c4a41",
+      "decoded": false
+    },
+    {
+      "assetId": "asset-68e35f1c63c59030",
+      "decoded": false
+    },
+    {
+      "assetId": "asset-690d10fab2a837e4",
+      "decoded": false
+    },
+    {
+      "assetId": "asset-693aadab8770ee0e",
+      "decoded": false
+    },
+    {
+      "assetId": "asset-6a586afe89debeee",
+      "decoded": false
+    },
+    {
+      "assetId": "asset-6b1ea0e20c5d1824",
+      "decoded": true
+    },
+    {
+      "assetId": "asset-6b34c82e53c12fab",
+      "decoded": false
+    },
+    {
+      "assetId": "asset-6b3735a30cc66e15",
+      "decoded": false
+    },
+    {
+      "assetId": "asset-6ba4f7b2a2d0be86",
+      "decoded": false
+    },
+    {
+      "assetId": "asset-6c2d1686c644b906",
+      "decoded": true
+    },
+    {
+      "assetId": "asset-6da3935c1b78f01d",
+      "decoded": false
+    },
+    {
+      "assetId": "asset-72b4fd53c6f0a410",
+      "decoded": true
+    },
+    {
+      "assetId": "asset-7544d06c1a6d0e33",
+      "decoded": false
+    },
+    {
+      "assetId": "asset-766efa297d3c341c",
+      "decoded": true
+    },
+    {
+      "assetId": "asset-768f527072c3ca87",
+      "decoded": false
+    },
+    {
+      "assetId": "asset-76cad5add22590a0",
+      "decoded": false
+    },
+    {
+      "assetId": "asset-76e7493aa6a8caa1",
+      "decoded": true
+    },
+    {
+      "assetId": "asset-7a07eed886d30eab",
+      "decoded": false
+    },
+    {
+      "assetId": "asset-7ada051307c78688",
+      "decoded": true
+    },
+    {
+      "assetId": "asset-7b174c8f2ef58543",
+      "decoded": false
+    },
+    {
+      "assetId": "asset-7db05c016409aca7",
+      "decoded": false
+    },
+    {
+      "assetId": "asset-7fb535a7f31c7171",
+      "decoded": false
+    },
+    {
+      "assetId": "asset-855c7a48155a1447",
+      "decoded": false
+    },
+    {
+      "assetId": "asset-866b604055b533ee",
+      "decoded": false
+    },
+    {
+      "assetId": "asset-8673504511618907",
+      "decoded": false
+    },
+    {
+      "assetId": "asset-87bae38e8c0cb873",
+      "decoded": false
+    },
+    {
+      "assetId": "asset-8852f319e6e2c322",
+      "decoded": false
+    },
+    {
+      "assetId": "asset-88953e1233201c8b",
+      "decoded": false
+    },
+    {
+      "assetId": "asset-89889748c8be755c",
+      "decoded": false
+    },
+    {
+      "assetId": "asset-899b1cee22a26802",
+      "decoded": false
+    },
+    {
+      "assetId": "asset-8ae53574f84681bc",
+      "decoded": true
+    },
+    {
+      "assetId": "asset-926078568518b099",
+      "decoded": false
+    },
+    {
+      "assetId": "asset-927fcd4097acf9d6",
+      "decoded": false
+    },
+    {
+      "assetId": "asset-9344649bc27ef8ce",
+      "decoded": true
+    },
+    {
+      "assetId": "asset-93f74e575ad4da50",
+      "decoded": false
+    },
+    {
+      "assetId": "asset-9516b8c25ea9409e",
+      "decoded": false
+    },
+    {
+      "assetId": "asset-9612f3ffa603b37f",
+      "decoded": false
+    },
+    {
+      "assetId": "asset-9c9a6aa865a8d23d",
+      "decoded": true
+    },
+    {
+      "assetId": "asset-9f9dd8d7c8e6bf9e",
+      "decoded": false
+    },
+    {
+      "assetId": "asset-a0d008d21eb87c9a",
+      "decoded": false
+    },
+    {
+      "assetId": "asset-a15970fdb539a7e3",
+      "decoded": false
+    },
+    {
+      "assetId": "asset-a40ca4eb77e6c513",
+      "decoded": false
+    },
+    {
+      "assetId": "asset-a5aa9e8a9dcdbfd0",
+      "decoded": false
+    },
+    {
+      "assetId": "asset-a5aeea1ceb662069",
+      "decoded": false
+    },
+    {
+      "assetId": "asset-a73fe4f80b864589",
+      "decoded": true
+    },
+    {
+      "assetId": "asset-a7b9ed1524bfa423",
+      "decoded": false
+    },
+    {
+      "assetId": "asset-a8bdef3a4271db43",
+      "decoded": true
+    },
+    {
+      "assetId": "asset-ab67e577010fc1dc",
+      "decoded": false
+    },
+    {
+      "assetId": "asset-b24b3080fa709966",
+      "decoded": false
+    },
+    {
+      "assetId": "asset-b7f477175bd4b06f",
+      "decoded": true
+    },
+    {
+      "assetId": "asset-b9389e6ad1d01c92",
+      "decoded": false
+    },
+    {
+      "assetId": "asset-ba4a562c6fb310c4",
+      "decoded": false
+    },
+    {
+      "assetId": "asset-be4e37f201b9c6e4",
+      "decoded": false
+    },
+    {
+      "assetId": "asset-bf1a8baa054023da",
+      "decoded": false
+    },
+    {
+      "assetId": "asset-c1941d585fb2d88c",
+      "decoded": true
+    },
+    {
+      "assetId": "asset-c1b98cca750338f6",
+      "decoded": false
+    },
+    {
+      "assetId": "asset-c3e98cbaf6335958",
+      "decoded": false
+    },
+    {
+      "assetId": "asset-c495a02dc94d23d4",
+      "decoded": true
+    },
+    {
+      "assetId": "asset-c4f7f3a89ffb9459",
+      "decoded": false
+    },
+    {
+      "assetId": "asset-c57974e04aade227",
+      "decoded": true
+    },
+    {
+      "assetId": "asset-c828f22321a3b059",
+      "decoded": true
+    },
+    {
+      "assetId": "asset-caedae2863e8adae",
+      "decoded": false
+    },
+    {
+      "assetId": "asset-cb30481ecf597f7d",
+      "decoded": true
+    },
+    {
+      "assetId": "asset-cb94afa0b1e276fd",
+      "decoded": false
+    },
+    {
+      "assetId": "asset-cba5664e28f3f302",
+      "decoded": false
+    },
+    {
+      "assetId": "asset-cc24465084ed8fbc",
+      "decoded": false
+    },
+    {
+      "assetId": "asset-cc8b3eb5d0ea3f25",
+      "decoded": false
+    },
+    {
+      "assetId": "asset-cf2e97ad88f166bc",
+      "decoded": true
+    },
+    {
+      "assetId": "asset-cfd112ac1a267eb8",
+      "decoded": true
+    },
+    {
+      "assetId": "asset-d44ce6f4fdb2f717",
+      "decoded": false
+    },
+    {
+      "assetId": "asset-d8c109f5049b9aef",
+      "decoded": false
+    },
+    {
+      "assetId": "asset-d9a94023800184bf",
+      "decoded": false
+    },
+    {
+      "assetId": "asset-dadfafd8c89162fa",
+      "decoded": false
+    },
+    {
+      "assetId": "asset-dca66617f48c45c2",
+      "decoded": false
+    },
+    {
+      "assetId": "asset-dcab5033daf569de",
+      "decoded": false
+    },
+    {
+      "assetId": "asset-dce91fd43f6fea8e",
+      "decoded": false
+    },
+    {
+      "assetId": "asset-de3638daf5f15cf9",
+      "decoded": false
+    },
+    {
+      "assetId": "asset-e0110499f74fda69",
+      "decoded": false
+    },
+    {
+      "assetId": "asset-e09ee0651ac26b3a",
+      "decoded": true
+    },
+    {
+      "assetId": "asset-e3ae0e57cae4eef4",
+      "decoded": true
+    },
+    {
+      "assetId": "asset-e48b7cae2a462fe7",
+      "decoded": true
+    },
+    {
+      "assetId": "asset-eaed7daa06c44a2c",
+      "decoded": false
+    },
+    {
+      "assetId": "asset-ec66a266ab6606bd",
+      "decoded": true
+    },
+    {
+      "assetId": "asset-ed214e146163878c",
+      "decoded": true
+    },
+    {
+      "assetId": "asset-ed7cf593c99a59a8",
+      "decoded": false
+    },
+    {
+      "assetId": "asset-eece95f342027745",
+      "decoded": false
+    },
+    {
+      "assetId": "asset-f066b52dbbab369e",
+      "decoded": true
+    },
+    {
+      "assetId": "asset-f31631059a7297d6",
+      "decoded": false
+    },
+    {
+      "assetId": "asset-f47b47e3fbf09500",
+      "decoded": true
+    },
+    {
+      "assetId": "asset-f72dfc422712dcb0",
+      "decoded": true
+    },
+    {
+      "assetId": "asset-f735ed235fe3eba7",
+      "decoded": false
+    },
+    {
+      "assetId": "asset-f861b34eac38c3bb",
+      "decoded": true
+    },
+    {
+      "assetId": "asset-fe3ffea4e2c932c4",
+      "decoded": false
+    }
+  ],
+  "assetCatalogSha256": "07269c1e501c91a864a6d7070fa72aaadeee2b74e6ef8eff90ac7e40db9e61f4",
+  "method": "SHA-256 and byte-length audit of all canonical assets; FFmpeg decode with -xerror for all audio; originals unchanged"
+}

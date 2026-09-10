@@ -1,0 +1,9 @@
+{
+  "environment": "preview",
+  "webOrigin": "https://preview.nurevolution.net",
+  "mediaOrigin": "https://podcast-preview.nurevolution.net",
+  "appMemoryMiB": 384,
+  "reserveMemoryMiB": 256,
+  "minimumFreeDiskMiB": 2048,
+  "readinessSeconds": 60
+}

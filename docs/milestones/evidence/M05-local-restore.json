@@ -1,0 +1,8 @@
+{
+  "restic": "0.19.1",
+  "snapshotId": "478ae22e45f2743593623bda5737691a30192f6cc7186b7622c4991db9856bbd",
+  "filesVerified": 4,
+  "encryptedFixtureRestore": "passed",
+  "minioRestore": "pending owner bucket/policy",
+  "at": "2026-09-09T05:43:25.769Z"
+}

@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "verifiedAt": "2026-09-09T20:43:11.002406+00:00",
+  "destination": "droplet non-served upload staging",
+  "files": 156,
+  "bytes": 6808089382,
+  "allSizesAndSha256Match": true,
+  "unexpectedFiles": 0,
+  "manifestSha256": "b144a007db9ad02678a443bad8d21828ee697f0bfd8f693c66cc15f2b9fc6436",
+  "manifestSourceCommit": "3990b82dffe0d704b27127cf17d857e27dd21f02",
+  "elapsedSeconds": 26.822,
+  "publiclyServed": false,
+  "releaseManifestRecheck": "required when verified main release is published"
+}

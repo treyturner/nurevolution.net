@@ -1,0 +1,22 @@
+[Unit]
+Description=Nurevolution encrypted MinIO backup
+After=network-online.target
+Wants=network-online.target
+OnFailure=nurevolution-backup-alert.service
+
+[Service]
+Type=oneshot
+EnvironmentFile=/etc/nurevolution/backup.env
+ExecStart=/usr/local/bin/node /srv/nurevolution/tooling/deploy.mjs backup --root /srv/nurevolution --edge-directory /srv/edge/config
+Nice=10
+IOSchedulingClass=idle
+MemoryMax=192M
+TasksMax=64
+TimeoutStartSec=2h
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ReadWritePaths=/srv/nurevolution/state /srv/edge/config /var/cache/nurevolution-restic
+
+[Install]
+WantedBy=multi-user.target

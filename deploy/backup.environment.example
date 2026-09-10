@@ -1,0 +1,7 @@
+# Install as /etc/nurevolution/backup.env with owner-only permissions.
+RESTIC_REPOSITORY=s3:https://MINIO_ENDPOINT/DEDICATED_BUCKET
+AWS_ACCESS_KEY_ID=CONFIGURE_ON_HOST
+AWS_SECRET_ACCESS_KEY=CONFIGURE_ON_HOST
+RESTIC_PASSWORD_FILE=/etc/nurevolution/restic-password
+RESTIC_CACHE_DIR=/var/cache/nurevolution-restic
+AWS_DEFAULT_REGION=us-east-1
