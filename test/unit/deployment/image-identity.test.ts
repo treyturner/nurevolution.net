@@ -114,6 +114,7 @@ it.each([false, true])(
           'registry.example/app@sha256:' + 'a'.repeat(64),
         )
         temporary = args[5]!
+        expect(resolve(temporary, '../..')).toBe(f.directory)
         expect((await fs.stat(resolve(temporary, '..'))).mode & 0o777).toBe(
           0o700,
         )
@@ -126,6 +127,7 @@ it.each([false, true])(
     const result = imageConfigDigest(
       'registry.example/app@sha256:' + 'a'.repeat(64),
       run,
+      f.directory,
     )
     if (fail) await expect(result).rejects.toThrow('Export interrupted')
     else expect(await result).toBe('sha256:' + sha256(f.bytes))

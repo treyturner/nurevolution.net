@@ -58,7 +58,7 @@ export async function publishImages(
     ['caddy.tar', images.caddyTag, images.caddyImageId, registry + '-caddy'],
   ]) {
     await run('docker', ['load', '-i', resolve(bundle, file!)])
-    if ((await imageConfigDigest(tag!, run)) !== id)
+    if ((await imageConfigDigest(tag!, run, bundle)) !== id)
       throw new Error('Loaded image differs from verified image')
     const target = repository + ':' + images.sourceCommit
     await run('docker', ['tag', tag!, target])

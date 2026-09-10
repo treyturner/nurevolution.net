@@ -39,13 +39,13 @@ try {
     directory,
   ])
   references.push(image)
-  const expected = await imageConfigDigest(image, execute)
+  const expected = await imageConfigDigest(image, execute, directory)
   const archive = resolve(directory, 'fixture.tar')
   await docker(['save', '--platform', 'linux/amd64', '-o', archive, image])
   assert.equal(await archiveConfigDigest(archive, execute), expected)
   await docker(['image', 'rm', image])
   await docker(['load', '-i', archive])
-  assert.equal(await imageConfigDigest(image, execute), expected)
+  assert.equal(await imageConfigDigest(image, execute, directory), expected)
 
   await docker([
     'create',
@@ -95,7 +95,7 @@ try {
   await docker(['image', 'rm', tag, image])
   await docker(['pull', reference])
   references.push(reference)
-  assert.equal(await imageConfigDigest(reference, execute), expected)
+  assert.equal(await imageConfigDigest(reference, execute, directory), expected)
   const displayId = await docker([
     'image',
     'inspect',

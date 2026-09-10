@@ -1,5 +1,4 @@
 import * as fs from 'node:fs/promises'
-import { tmpdir } from 'node:os'
 import { resolve } from 'node:path'
 import { z } from 'zod'
 import type { Execute } from './host.ts'
@@ -37,8 +36,14 @@ export async function archiveConfigDigest(archive: string, run: Execute) {
   return 'sha256:' + digest
 }
 
-export async function imageConfigDigest(image: string, run: Execute) {
-  const directory = await fs.mkdtemp(resolve(tmpdir(), 'nurevolution-image-'))
+export async function imageConfigDigest(
+  image: string,
+  run: Execute,
+  scratchRoot: string,
+) {
+  // The caller selects the release/site filesystem: /tmp can be a RAM-backed
+  // mount on the 1 GB host, so os.tmpdir() is unsuitable for image exports.
+  const directory = await fs.mkdtemp(resolve(scratchRoot, 'image-export-'))
   try {
     const archive = resolve(directory, 'image.tar')
     // The CLI streams the archive to disk, including with a remote daemon.

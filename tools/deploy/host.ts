@@ -301,7 +301,10 @@ export async function deployOnHost(
             '{{.Image}}',
             paths.edgeContainer,
           ])
-          if ((await imageConfigDigest(edgeId, run)) !== record.caddyImageId) {
+          if (
+            (await imageConfigDigest(edgeId, run, paths.root)) !==
+            record.caddyImageId
+          ) {
             const policy = await run('docker', [
               'inspect',
               '--format',
@@ -339,8 +342,11 @@ export async function deployOnHost(
             !image[0]?.RepoDigests?.includes(expectedImages(record).app) ||
             image[0]?.Config?.Labels?.['org.opencontainers.image.revision'] !==
               record.sourceCommit ||
-            (await imageConfigDigest(expectedImages(record).app, run)) !==
-              record.imageId
+            (await imageConfigDigest(
+              expectedImages(record).app,
+              run,
+              paths.root,
+            )) !== record.imageId
           )
             throw new Error('Image identity mismatch')
           if (previous)
