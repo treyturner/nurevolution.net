@@ -3,6 +3,20 @@ import { dirname, resolve } from 'node:path'
 import { assertRollbackCompatible, serialize } from './manifest.ts'
 import type { DeploymentRecord } from './release.ts'
 
+export async function syncDirectory(path: string) {
+  const directory = await fs.open(path, 'r')
+  try {
+    await directory.sync()
+  } finally {
+    await directory.close()
+  }
+}
+
+async function removeFile(path: string) {
+  await fs.rm(path, { force: true })
+  await syncDirectory(dirname(path))
+}
+
 export async function atomicWrite(
   path: string,
   bytes: string,
@@ -20,14 +34,9 @@ export async function atomicWrite(
       await file.close()
     }
     await fs.rename(temp, path)
-    const directory = await fs.open(dirname(path), 'r')
-    try {
-      await directory.sync()
-    } finally {
-      await directory.close()
-    }
+    await syncDirectory(dirname(path))
   } finally {
-    await fs.rm(temp, { force: true })
+    await removeFile(temp)
   }
 }
 
@@ -40,9 +49,11 @@ export async function withLock<T>(path: string, operation: () => Promise<T>) {
     )
   }
   try {
+    await syncDirectory(dirname(path))
     return await operation()
   } finally {
     await fs.rmdir(path)
+    await syncDirectory(dirname(path))
   }
 }
 
@@ -108,7 +119,7 @@ export async function deployRelease(
           serialize(previous),
         )
         outcome = 'restored'
-      } else await fs.rm(resolve(directory, 'current.json'), { force: true })
+      } else await removeFile(resolve(directory, 'current.json'))
       completed = true
     } catch (recovery) {
       outcome = 'recovery-failed'
@@ -129,7 +140,6 @@ export async function deployRelease(
         at: new Date().toISOString(),
       }),
     )
-    if (completed)
-      await fs.rm(resolve(directory, 'pending.json'), { force: true })
+    if (completed) await removeFile(resolve(directory, 'pending.json'))
   }
 }

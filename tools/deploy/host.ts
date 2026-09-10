@@ -10,6 +10,7 @@ import { checkMediaHttp } from './check-media.ts'
 import {
   atomicWrite,
   deployRelease,
+  syncDirectory,
   withLock,
   type DeploymentDriver,
 } from './deploy.ts'
@@ -99,6 +100,7 @@ export async function deployOnHost(
   await assertNoSymlinks(bundle)
   const stateRoot = resolve(paths.root, 'state')
   await fs.mkdir(stateRoot, { recursive: true })
+  await syncDirectory(paths.root)
   return withLock(resolve(stateRoot, 'deploy.lock'), () =>
     withLock(resolve(paths.edgeDirectory, 'deploy.lock'), async () => {
       for (const directory of [
@@ -155,6 +157,7 @@ export async function deployOnHost(
       }
       const state = resolve(stateRoot, profile.environment)
       await fs.mkdir(state, { recursive: true })
+      await syncDirectory(stateRoot)
       const manifestBytes = await fs.readFile(
         resolve(bundle, 'manifest.json'),
         'utf8',
