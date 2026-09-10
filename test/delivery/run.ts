@@ -4,6 +4,7 @@ import { resolve } from 'node:path'
 import { randomBytes } from 'node:crypto'
 import { execute, waitReady } from '../../tools/deploy/host.ts'
 import { atomicWrite } from '../../tools/deploy/deploy.ts'
+import { stageAssets } from '../../tools/deploy/stage-assets.ts'
 import { prepareBundle } from '../../tools/deploy/build.ts'
 import { serialize } from '../../tools/deploy/manifest.ts'
 import { renderSite, profileSchema } from '../../tools/deploy/render-config.ts'
@@ -218,7 +219,25 @@ try {
     'Exact runtime: all 55 episode URLs, feed, health, fixture isolation and memory limit passed',
   )
 
-  const fixture = await deliveryFixture(fixtureDirectory, commit)
+  const fixtureSources = resolve(local, 'source-files')
+  const fixture = await deliveryFixture(fixtureSources, commit)
+  const operatorUmask = process.umask(0o077)
+  try {
+    await stageAssets(
+      fixture.manifest,
+      {
+        audio: resolve(fixtureSources, 'audio'),
+        uploads: resolve(fixtureSources, 'uploads'),
+      },
+      fixtureDirectory,
+    )
+  } finally {
+    process.umask(operatorUmask)
+  }
+  await fs.copyFile(
+    resolve(fixtureSources, 'private.json'),
+    resolve(fixtureDirectory, 'private.json'),
+  )
   const context = resolve(local, 'fixture-context')
   await fs.mkdir(context, { recursive: true })
   await fs.cp('test/fixtures/media-app/.output', resolve(context, '.output'), {
@@ -313,10 +332,15 @@ try {
     '0',
     copier,
     'chown',
+    '-R',
     '1000:1000',
-    '/files/.edge/caddy.json',
-    '/files/.edge/private-control.json',
+    '/files',
   ])
+  for (const directory of ['/files', '/files/audio', '/files/uploads'])
+    assert.equal(
+      await docker(['exec', copier, 'stat', '-c', '%a:%u', directory]),
+      '755:1000',
+    )
   await start(edge)
   await assert.rejects(
     docker([

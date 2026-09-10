@@ -56,15 +56,26 @@ export async function stageAssets(
       asset,
     )
   await fs.mkdir(destination, { recursive: true })
+  await fs.chmod(destination, 0o755)
   const staging = await fs.mkdtemp(resolve(destination, '.stage-'))
   let copied = 0
   try {
     for (const { asset } of manifest.assets) {
       const target = assetPath(destination, asset)
       await assertNoSymlinks(target)
+      await fs.mkdir(dirname(target), { recursive: true })
+      // Only normalize directories inside the media mount, never its host parents.
+      // Explicit chmod also repairs existing directories and bypasses umask 0077.
+      for (
+        let directory = dirname(target);
+        directory !== destination;
+        directory = dirname(directory)
+      )
+        await fs.chmod(directory, 0o755)
       try {
         await fs.lstat(target)
         await checkAsset(target, asset)
+        await fs.chmod(target, 0o444)
         continue
       } catch (error) {
         if (!(
@@ -82,7 +93,6 @@ export async function stageAssets(
       )
       await checkAsset(staged, asset)
       await fs.chmod(staged, 0o444)
-      await fs.mkdir(dirname(target), { recursive: true })
       await assertNoSymlinks(target)
       // A hard link creates exclusively; concurrent uploads never overwrite bytes.
       await fs.link(staged, target)

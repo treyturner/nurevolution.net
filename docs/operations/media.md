@@ -14,7 +14,7 @@ node tools/deploy/cli.ts stage --manifest .local/delivery/artifacts/manifest.jso
   --destination .local/media-stage
 ```
 
-`scan --decode` requires FFmpeg on the source workstation. It hashes every file and decodes all audio with explicit failure reporting; do not run the decode pass on the 1 GB droplet. A checksum-only scan omits `--decode`. The stage command checks all sources before copying, streams hashing, rejects symlinks and overlapping roots, verifies staged bytes, and creates destination files exclusively. It resumes identical files and refuses conflicting destination bytes. No sync deletes old assets.
+`scan --decode` requires FFmpeg on the source workstation. It hashes every file and decodes all audio with explicit failure reporting; do not run the decode pass on the 1 GB droplet. A checksum-only scan omits `--decode`. The stage command checks all sources before copying, streams hashing, rejects symlinks and overlapping roots, verifies staged bytes, and creates destination files exclusively. It resumes identical files and refuses conflicting destination bytes. Staging explicitly sets the destination root and asset directories to mode 0755 and verified files to mode 0444, including on a resumed copy under umask 0077. Host directories above the destination and temporary staging directories keep their private permissions; Caddy only needs to traverse the tree mounted at `/media`. No sync deletes old assets.
 
 Transfer the staged `audio/` and `uploads/` directories to a **non-served** host staging directory using the operator's pinned SSH connection, then run:
 

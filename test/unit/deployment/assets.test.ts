@@ -1,6 +1,8 @@
 import * as fs from 'node:fs/promises'
 import { tmpdir } from 'node:os'
-import { resolve } from 'node:path'
+import { dirname, resolve } from 'node:path'
+import { execFile } from 'node:child_process'
+import { promisify } from 'node:util'
 import { afterEach, expect, it } from 'vitest'
 import {
   checkAsset,
@@ -93,4 +95,52 @@ it('rejects changed/missing sources, symlinks, nonfiles, and overlapping roots w
   await expect(checkAsset(file, a)).rejects.toThrow('Symlink')
   await expect(checkAsset(f.dir, a)).rejects.toThrow('size')
   await expect(fs.stat(f.destination)).rejects.toThrow()
+})
+
+it('stages and repairs readable media trees under umask 0077 without changing host parents', async () => {
+  const f = await fixture()
+  const stage = () =>
+    promisify(execFile)(process.execPath, [
+      '--input-type=module',
+      '-e',
+      'const {stageAssets}=await import(process.argv[1]); process.umask(0o077); await stageAssets(JSON.parse(process.argv[2]), JSON.parse(process.argv[3]), process.argv[4])',
+      new URL('../../../tools/deploy/stage-assets.ts', import.meta.url).href,
+      JSON.stringify(f.manifest),
+      JSON.stringify(f.roots),
+      f.destination,
+    ])
+  await fs.chmod(f.dir, 0o700)
+  await stage()
+  const directories = new Set([f.destination])
+  for (const { asset } of f.manifest.assets) {
+    const target = resolve(f.destination, asset.sourceRoot, asset.relativePath)
+    for (
+      let directory = dirname(target);
+      directory !== f.destination;
+      directory = dirname(directory)
+    )
+      directories.add(directory)
+    expect((await fs.stat(target)).mode & 0o777).toBe(0o444)
+    await fs.chmod(target, 0o600)
+  }
+  for (const directory of directories) {
+    expect((await fs.stat(directory)).mode & 0o777).toBe(0o755)
+    await fs.chmod(directory, 0o700)
+  }
+  await stage()
+  for (const directory of directories)
+    expect((await fs.stat(directory)).mode & 0o777).toBe(0o755)
+  for (const { asset } of f.manifest.assets)
+    expect(
+      (
+        await fs.stat(
+          resolve(f.destination, asset.sourceRoot, asset.relativePath),
+        )
+      ).mode & 0o777,
+    ).toBe(0o444)
+  expect((await fs.stat(f.dir)).mode & 0o777).toBe(0o700)
+  expect(await checkAssets(f.manifest, f.destination)).toEqual({
+    files: 2,
+    bytes: 10,
+  })
 })
