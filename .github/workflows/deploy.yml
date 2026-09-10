@@ -72,11 +72,12 @@ jobs:
           DEPLOY_USER: ${{ vars.DEPLOY_USER }}
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
           SSH_KNOWN_HOSTS: ${{ secrets.SSH_KNOWN_HOSTS }}
-          TRANSFER_ID: ${{ github.run_id }}
+          TRANSFER_ID: ${{ github.run_id }}-${{ github.run_attempt }}
           TARGET_ENVIRONMENT: ${{ inputs.environment }}
         run: |
           [[ "$DEPLOY_HOST" =~ ^[a-zA-Z0-9][a-zA-Z0-9.-]+$ ]]
           [[ "$DEPLOY_USER" =~ ^[a-z_][a-z0-9_-]*$ ]]
+          [[ "$TRANSFER_ID" =~ ^[1-9][0-9]*-[1-9][0-9]*$ ]]
           test -n "$SSH_PRIVATE_KEY"
           test -n "$SSH_KNOWN_HOSTS"
           umask 077
