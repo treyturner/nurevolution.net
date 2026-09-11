@@ -84,17 +84,11 @@ jobs:
           mkdir -p "$RUNNER_TEMP/headscale"
           printf '%s' "$HEADSCALE_AUTH_KEY" > "$RUNNER_TEMP/headscale/auth.key"
       - name: Join the private deployment network
-        uses: tailscale/github-action@306e68a486fd2350f2bfc3b19fcd143891a4a2d8 # v4
-        with:
-          authkey: file:${{ runner.temp }}/headscale/auth.key
-          version: '1.98.10'
-          sha256sum: 52490ce0832b245857e2afef7426d6ae5a4b49fb391412833cc95729bd23f7de
-          hostname: nurevolution-${{ github.run_id }}-${{ github.run_attempt }}
-          args: --login-server=${{ vars.HEADSCALE_URL }} --accept-dns=false --accept-routes=false --ssh=false --timeout=45s
-          tailscaled-args: --no-logs-no-support
-          timeout: 60s
-          retry: '1'
-          use-cache: 'false'
+        id: headscale
+        env:
+          HEADSCALE_URL: ${{ vars.HEADSCALE_URL }}
+          HEADSCALE_HOSTNAME: nurevolution-${{ github.run_id }}-${{ github.run_attempt }}
+        run: python3 deploy/headscale/runner.py start
       - name: Remove the consumed enrollment credential
         if: always()
         run: rm -f "$RUNNER_TEMP/headscale/auth.key"
@@ -106,21 +100,28 @@ jobs:
           SSH_KNOWN_HOSTS: ${{ secrets.SSH_KNOWN_HOSTS }}
           TRANSFER_ID: ${{ github.run_id }}-${{ github.run_attempt }}
           TARGET_ENVIRONMENT: ${{ inputs.environment }}
+          HEADSCALE_PROXY_COMMAND: ${{ steps.headscale.outputs.proxy_command }}
         run: |
           [[ "$DEPLOY_HOST" =~ ^[a-zA-Z0-9][a-zA-Z0-9.-]+$ ]]
           [[ "$DEPLOY_USER" =~ ^[a-z_][a-z0-9_-]*$ ]]
           [[ "$TRANSFER_ID" =~ ^[1-9][0-9]*-[1-9][0-9]*$ ]]
           test -n "$SSH_PRIVATE_KEY"
           test -n "$SSH_KNOWN_HOSTS"
+          test -n "$HEADSCALE_PROXY_COMMAND"
           umask 077
           mkdir -p "$RUNNER_TEMP/ssh"
           printf '%s\n' "$SSH_PRIVATE_KEY" > "$RUNNER_TEMP/ssh/key"
           printf '%s\n' "$SSH_KNOWN_HOSTS" > "$RUNNER_TEMP/ssh/known_hosts"
-          ssh_args=(-i "$RUNNER_TEMP/ssh/key" -o IdentitiesOnly=yes -o BatchMode=yes -o StrictHostKeyChecking=yes -o "UserKnownHostsFile=$RUNNER_TEMP/ssh/known_hosts" -o ConnectTimeout=15)
+          ssh_args=(-i "$RUNNER_TEMP/ssh/key" -o IdentitiesOnly=yes -o BatchMode=yes -o StrictHostKeyChecking=yes -o "UserKnownHostsFile=$RUNNER_TEMP/ssh/known_hosts" -o "ProxyCommand=$HEADSCALE_PROXY_COMMAND" -o ConnectTimeout=15)
           test "$(ssh "${ssh_args[@]}" "$DEPLOY_USER@$DEPLOY_HOST" 'id -un')" = "$DEPLOY_USER"
           ssh "${ssh_args[@]}" "$DEPLOY_USER@$DEPLOY_HOST" "mkdir -m 700 /srv/nurevolution/incoming/$TRANSFER_ID"
           scp "${ssh_args[@]}" release/release.json release/manifest.json release/configuration.json "$DEPLOY_USER@$DEPLOY_HOST:/srv/nurevolution/incoming/$TRANSFER_ID/"
           ssh "${ssh_args[@]}" "$DEPLOY_USER@$DEPLOY_HOST" "nurevolution-deploy $TARGET_ENVIRONMENT $TRANSFER_ID"
       - name: Remove temporary deployment credentials
         if: always()
-        run: rm -rf "$RUNNER_TEMP/ssh" "$RUNNER_TEMP/headscale"
+        run: |
+          rm -rf "$RUNNER_TEMP/ssh"
+          if [[ -f deploy/headscale/runner.py ]]; then
+            python3 deploy/headscale/runner.py stop
+          fi
+          rm -rf "$RUNNER_TEMP/headscale"

@@ -93,7 +93,7 @@
     "ownerApplied": true
   },
   "remaining": [
-    "Review/merge workflow and promote verified main release through normal preview workflow",
+    "Merge/verify runner repair and promote verified main release through normal preview workflow",
     "Verify Unraid boot persistence at the next owner-managed reboot",
     "Verify independent Headscale backup/restore",
     "Finish M5 application deployment and operational acceptance"
@@ -135,7 +135,7 @@
   "verification": {
     "localFullGate": "pnpm verify passed after workflow change: 298 application, 12 migration, 17 operations, 76 browser checks plus two existing skips, Docker delivery",
     "workflowTargeted": "17 operations tests and actionlint 1.7.12 passed",
-    "actualGitHubRun": "pending merge and verified-main promotion"
+    "actualGitHubRun": "PR #6 merged; main Verify/publication 34631352296 passed; deployment 34632240790 failed before enrollment due to duplicated action flag. See M05-headscale-workflow.json for repair evidence."
   },
   "githubPreview": {
     "configuredAt": "2026-09-11T17:51:35.529863+00:00",
@@ -152,7 +152,7 @@
     "knownHosts": "original verified public key mapped to 100.64.0.1",
     "temporaryEnrollmentKeys": "both droplet and runner files removed after successful consumption",
     "productionChanges": "none",
-    "actualDeployment": "pending merged workflow and verified main release"
+    "actualDeployment": "First merged workflow failed before enrollment or transfer; successful preview promotion awaits the runner repair on verified main."
   },
   "serverRecreation": {
     "source": "Owner recreated Headscale with saved restart policy; droplet independently checked afterward",
