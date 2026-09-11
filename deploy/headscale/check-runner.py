@@ -29,7 +29,7 @@ def docker(*args, **kwargs):
     return run('docker', *args, **kwargs)
 
 
-def execute(name, *args, user='1000', input=None, check=True, timeout=120):
+def execute(name, *args, user='2000', input=None, check=True, timeout=120):
     return docker('exec', '-i', '--user', user,
                   '-e', 'RUNNER_TEMP=/tmp/job', '-e', 'GITHUB_OUTPUT=/tmp/job/output',
                   '-e', 'HEADSCALE_URL=https://control',
@@ -110,6 +110,10 @@ Subsystem sftp internal-sftp
             restrictions = ['--cap-drop=ALL'] if name == runner else []
             docker('run', '-d', '--name', name, '--network', NAME, *restrictions, IMAGE)
             docker('cp', str(fixture), name + ':/fixture')
+            if name == target:
+                # Docker copy can retain the invoking host UID. The SSH fixture
+                # uses UID 2000 so common host UIDs cannot mask wrong ownership.
+                execute(name, 'chown', '-R', '0:0', '/fixture', user='0')
             execute(name, 'sh', '-ec', '''
 cp /fixture/tls.crt /usr/local/share/ca-certificates/fixture.crt
 update-ca-certificates >/dev/null 2>&1
@@ -159,9 +163,22 @@ chmod 600 /tmp/job/identity
         execute(runner, 'scp', *ssh_args, '/fixture/payload', 'fixture@' + address + ':/tmp/payload')
         assert execute(target, 'cat', '/tmp/payload').stdout == (fixture / 'payload').read_text()
         # A live HTTP listener is reachable locally but denied over the private policy.
-        docker('exec', '-d', target, 'python3', '-m', 'http.server', '443')
-        execute(target, 'python3', '-c',
-                'import urllib.request; assert urllib.request.urlopen("http://127.0.0.1:443").status == 200')
+        # Deliberately bind late so this test exercises listener readiness.
+        docker('exec', '-d', target, 'sh', '-c', 'sleep 1; exec python3 -m http.server 443')
+        execute(target, 'python3', '-c', '''
+import time, urllib.request
+deadline = time.monotonic() + 10
+while time.monotonic() < deadline:
+    try:
+        with urllib.request.urlopen("http://127.0.0.1:443", timeout=1) as response:
+            if response.status == 200:
+                break
+    except OSError:
+        pass
+    time.sleep(0.1)
+else:
+    raise SystemExit("Fixture HTTP listener did not become ready within 10 seconds")
+''')
         try:
             client(runner, 'nc', address, '443', timeout=5)
         except subprocess.TimeoutExpired:

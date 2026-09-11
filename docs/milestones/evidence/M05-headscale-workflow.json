@@ -40,16 +40,24 @@
       "SCP transferred and independently compared a real file",
       "Listening TCP 443 positively reachable locally, denied through the private policy",
       "Normal logout removed both ephemeral nodes; repeated cleanup succeeded",
-      "Expired registration key rejected without exposing it; credential removed; daemon/directory cleanup succeeded"
+      "Expired registration key rejected without exposing it; credential removed; daemon/directory cleanup succeeded",
+      "A deliberately delayed HTTP listener becomes ready within a bounded probe before checking private-policy denial"
     ],
     "isolation": "Task-owned containers/network/image only; no published ports, privileged containers, host network/PID/mounts, or shared-host firewall changes",
     "cleanup": "Task-owned containers, network and image removed",
     "permissionRegression": {
       "initialCiRun": 34634432277,
-      "initialFailure": "Fixture SSH authentication failed before SCP; group-writable AuthorizedKeysFile parent under umask 0002.",
-      "localReproduction": "Same public-key rejection reproduced with umask 0002.",
-      "repair": "Explicit mode 0755 fixture directory; StrictModes remains enabled. CI explicitly runs the integration with umask 0002.",
-      "retest": "Complete integration passed with umask 0002, including SSH identity rejection, SCP, policy, logout and expired-key failure cleanup."
+      "localModeReproduction": "Group-writable fixture directory under umask 0002 caused the same public-key rejection locally; explicit mode 0755 fixed that local case.",
+      "ciOwnershipDiagnosis": {
+        "run": 34635168078,
+        "fixtureDirectory": "0755, uid 1001, gid 1001",
+        "authorizedKey": "0644, uid 1001, gid 1001",
+        "sshAccountUid": 1000,
+        "sshdDiagnostic": "Authentication refused: bad ownership or modes for file /fixture/identity.pub",
+        "cause": "Docker copy retained the GitHub host UID; the local workspace UID happened to match the original fixture user."
+      },
+      "repair": "Root owns the copied SSH fixture. The fixture account uses UID 2000 to avoid masking wrong ownership through common host UIDs. Explicit directory/key modes and OpenSSH StrictModes are retained.",
+      "localRetest": "Complete integration passed under umask 0002 with fixture UID 2000, root-owned fixture, and deliberately delayed HTTP binding."
     }
   },
   "unitAndWorkflowChecks": {
