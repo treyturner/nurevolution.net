@@ -94,8 +94,16 @@ jobs:
       - name: Verify image identity through save, load, push, and pull
         run: pnpm test:image-identity
 
+  headscale-runner:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - name: Verify real deployment client enrollment, SSH, transfer, and cleanup
+        run: python3 deploy/headscale/check-runner.py
+
   publish:
-    needs: [verify, image-identity]
+    needs: [verify, image-identity, headscale-runner]
     if: github.event_name == 'push' && github.ref == 'refs/heads/main' && github.repository == 'treyturner/nurevolution.net'
     runs-on: ubuntu-24.04
     timeout-minutes: 15
