@@ -43,7 +43,14 @@
       "Expired registration key rejected without exposing it; credential removed; daemon/directory cleanup succeeded"
     ],
     "isolation": "Task-owned containers/network/image only; no published ports, privileged containers, host network/PID/mounts, or shared-host firewall changes",
-    "cleanup": "Task-owned containers, network and image removed"
+    "cleanup": "Task-owned containers, network and image removed",
+    "permissionRegression": {
+      "initialCiRun": 34634432277,
+      "initialFailure": "Fixture SSH authentication failed before SCP; group-writable AuthorizedKeysFile parent under umask 0002.",
+      "localReproduction": "Same public-key rejection reproduced with umask 0002.",
+      "repair": "Explicit mode 0755 fixture directory; StrictModes remains enabled. CI explicitly runs the integration with umask 0002.",
+      "retest": "Complete integration passed with umask 0002, including SSH identity rejection, SCP, policy, logout and expired-key failure cleanup."
+    }
   },
   "unitAndWorkflowChecks": {
     "operationsTests": 21,

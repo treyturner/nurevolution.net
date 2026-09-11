@@ -52,7 +52,9 @@ def main():
         config = temp / 'config'
         config.mkdir()
         fixture = temp / 'fixture'
-        fixture.mkdir()
+        # OpenSSH rejects group-writable parents of AuthorizedKeysFile. GitHub's
+        # umask may be 0002; do not let it choose this fixture's trust boundary.
+        fixture.mkdir(mode=0o755)
         for name in ('runner.py', 'tailscale-client.json'):
             shutil.copyfile(ROOT / name, fixture / name)
         run('openssl', 'req', '-x509', '-newkey', 'rsa:2048', '-nodes', '-days', '1',
