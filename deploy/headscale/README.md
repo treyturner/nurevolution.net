@@ -4,6 +4,49 @@ These files add Headscale 0.29.3 to the existing `services` Compose project on `
 
 The public name is `headscale.treyturner.info`, using the existing `*.treyturner.info` certificate in HAProxy. The embedded relay is enabled, with external relay maps disabled. The service uses SQLite and local CLI administration.
 
+## 0. Install the host firewall before stack startup
+
+Headscale stays managed by the existing Compose stack, with `restart: unless-stopped`. The host firewall loads synchronously from `/boot/config/go` before `emhttp`. It needs neither a running Docker daemon nor `DOCKER-USER`, a Compose profile, a separate service-start hook, or a polling loop. The owner has already verified the running container and firewall; boot persistence and public routing remain to be confirmed.
+
+Save [firewall.sh](firewall.sh) as the User Scripts file `/boot/config/plugins/user.scripts/scripts/isolate_headscale_network/script`. Use **LF line endings**. The owner encountered CRLF (`0d 0a`), which makes direct Bash execution reject `set -euo pipefail`, even when the editor does not display `^M`. Normalize and run the stored file directly as root:
+
+```sh
+hs_script=/boot/config/plugins/user.scripts/scripts/isolate_headscale_network/script
+sed -i 's/\r$//' "$hs_script"
+bash -n "$hs_script" && bash "$hs_script"
+```
+
+Expect `Headscale firewall installed.` The [User Scripts launcher](https://github.com/Squidly271/user.scripts/blob/master/source/user.scripts/usr/local/emhttp/plugins/user.scripts/startSchedule.php) strips carriage returns from a temporary copy; running successfully through that plugin does not establish that the stored file is suitable for direct Bash execution. Check again after editing if its editor saves CRLF.
+
+Keep the other contents of `/boot/config/go` and replace its final `emhttp` section with the [boot fragment](go.example.sh):
+
+```sh
+# Load Headscale firewall before emhttp can start Docker.
+if ! /bin/bash /boot/config/plugins/user.scripts/scripts/isolate_headscale_network/script; then
+  logger -t headscale 'Early Headscale firewall setup failed.'
+fi
+
+# Start the Management Utility
+/usr/local/sbin/emhttp
+```
+
+Set this User Script's schedule to **Disabled**; the foreground call in `go` supplies startup ordering. Unraid's [boot script](https://github.com/unraid/webgui/blob/master/etc/rc.d/rc.local) invokes `go` before the management utility starts. The selected fragment logs firewall installation failure and continues boot, so it does **not** guarantee isolation if installation fails. Confirm successful installation before enabling normal stack autostart. No reboot has yet verified this ordering on the owner's host.
+
+The earlier `docker_started` hook and Compose profile proposal is superseded. If applied, remove only its block from `go`, its generated `/usr/local/emhttp/plugins/nurevolution.headscale/event/docker_started` file, and the proposed `headscale` profile exclusion. Once the stored script and boot call are checked, restore `restart: unless-stopped` if it was temporarily set to `no`, and manage the service through the normal stack.
+
+The firewall applies to IPv4 packets entering Unraid from `172.26.0.0/16`, in `mangle PREROUTING`. It allows replies to incoming connections and new TCP/UDP DNS traffic to pfSense at `192.168.1.1:53`; it drops other connections initiated by Headscale, including to Unraid, other containers, the LAN, and public destinations. Incoming HAProxy and STUN requests retain their reply paths. Other containers' LAN access is unaffected. Docker bridge IPv6 is disabled; this script does not implement IPv6 filtering. Enabling it or adding outbound integrations requires revisiting the policy.
+
+The script populates its own chain before attaching it, does not flush unrelated rules, and can be run repeatedly. It does not continuously repair a subsequently removed rule. After a reboot, Docker restart, or firewall change, verify the hook and repeat the health and blocked-connection checks:
+
+```sh
+iptables -w 5 -t mangle -C PREROUTING -s 172.26.0.0/16 -j NUREV-HS-EGRESS
+iptables -w 5 -t mangle -nvxL NUREV-HS-EGRESS
+curl --noproxy '*' --connect-timeout 5 -sS -o /dev/null \
+  -w 'Headscale HTTP status: %{http_code}\n' http://172.26.0.2:8080/health
+```
+
+The previous `NUREV-HS-OUT` hooks in filter `DOCKER-USER` and `INPUT` were removed after the owner verified the mangle policy. They are not part of the final installation. See [firewall evidence](../../docs/milestones/evidence/M05-headscale-firewall.json) for the positive controls and blocked targets used on Unraid.
+
 ## 1. Place the files and add the service
 
 First check that `/mnt/cache/appdata/headscale` is unused and the Compose project has no existing `headscale` service. Preserve and inspect anything already there before proceeding. For a fresh directory, run as root on Unraid:
@@ -27,7 +70,7 @@ Copy the `headscale` service from [compose.example.yaml](compose.example.yaml) i
 
 The network uses Docker's `routed` gateway mode. Its two `ports` entries allow direct routing to container TCP 8080 and UDP 3478; they have no `published` host-port value. **Keep those entries:** routed mode otherwise filters the ports even though pfSense has a route. Unlike the existing `services` network's `nat-unprotected` mode, undeclared ports are filtered. See [Docker's gateway modes](https://docs.docker.com/engine/network/port-publishing/#gateway-modes).
 
-The owner prefers containers reachable from the LAN and has not requested additional Unraid firewall rules. This setup preserves that model. The dedicated network separates addressing and configuration; it is not a source-address firewall or a complete LAN security boundary. The local test confirmed that Headscale can still reach a peer's listening ports on a separate `nat-unprotected` network. HAProxy's public hostname rules do not filter traffic between containers on Unraid. Stronger separation would require additional host/network firewall rules, which this setup does not install. Headscale clients receive no LAN/subnet routes from this configuration.
+The dedicated network alone does not isolate Headscale from other networks. The host firewall above blocks connections initiated by its container while preserving incoming HAProxy/STUN replies and other containers' LAN access. Headscale clients receive no LAN/subnet routes from this configuration; their permitted overlay traffic is controlled separately by the access policy.
 
 The pinned container runs as Unraid's `99:100` user/group with a read-only root filesystem. Its configuration mount is read-only; its database and private keys live in the writable `data` mount. The 256 MiB cap is an initial bound for this home service, separate from the DigitalOcean application's memory profile.
 
@@ -95,6 +138,10 @@ Keep an encrypted independent copy of that backup and test a restore into a sepa
 
 The pinned Linux/amd64 image passed configuration validation, policy validation, health checks, tagged reusable/ephemeral key creation and revocation, and database/server-key persistence across restart. This used UID/GID `99:100`, a read-only root, removed capabilities, and the same writable-path/resource settings. Compose syntax validation and the repository's full `pnpm verify` gate passed, including after the routed-network revision.
 
-A separate [disposable network check](../../docs/milestones/evidence/M05-headscale-network.json) uses the prepared Compose network and port declarations with fixture listeners. It verifies that the declared TCP/UDP ports are reachable from another bridge, undeclared listening ports are filtered, and Docker allocates no host ports. It also records that connections toward a separate `nat-unprotected` peer remain possible; the configuration does not claim otherwise. This is separate from the later Headscale client policy test.
+The earlier [disposable network check](../../docs/milestones/evidence/M05-headscale-network.json) verified declared TCP/UDP ports and absence of host bindings. It also demonstrated outbound access to a separate `nat-unprotected` peer **before** the host firewall was added.
 
-These checks used disposable local Docker volumes. Live Unraid network routing, HAProxy upgrades/TLS, client enrollment, allowed/denied network traffic, relay connectivity, restore, and GitHub deployment still need testing.
+The reproducible [firewall check](check-firewall.py) installs the actual script inside a disposable privileged container's own network namespace. It checks both legacy and nft-backed iptables frontends without `DOCKER-USER`, repeated application, incoming TCP/UDP replies, TCP/UDP DNS, blocked outbound targets, and unaffected unrelated traffic. Run it from the repository with `python3 deploy/headscale/check-firewall.py`. It requires Docker, downloads test utilities inside the disposable container, and never uses host networking, host mounts, or the host PID namespace. It does not run against the public droplet or change the Docker host's firewall.
+
+The owner verified the live Unraid container as healthy with HTTP 200. Connections from Headscale to Unraid SSH, pfSense HTTPS, and a listening services container were blocked; the same targets were reachable from Unraid. The mangle DROP counter recorded nine packets, and health remained 200 after removing the old hooks. These results and remaining limits are recorded in [firewall evidence](../../docs/milestones/evidence/M05-headscale-firewall.json).
+
+The stored script's successful direct execution after CRLF conversion and boot persistence remain unconfirmed. On 2026-09-11, `headscale.treyturner.info` did not resolve from the workspace. Public HAProxy upgrades/TLS, client enrollment, overlay allowed/denied traffic, actual relay connectivity, restore, and GitHub deployment still need testing.

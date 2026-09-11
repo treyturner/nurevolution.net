@@ -1,5 +1,6 @@
 # Merge this service into the existing services Compose project on Unraid.
 # Use a dedicated subnet already routed through Unraid by pfSense.
+# Load firewall.sh from /boot/config/go before emhttp; see README.md.
 services:
   headscale:
     # Headscale 0.29.3, pinned to the published image digest.
