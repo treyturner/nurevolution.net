@@ -73,6 +73,8 @@ def main():
         shutil.copyfile(ROOT / 'policy.example.json', config / 'policy.json')
         for name in ('host', 'identity'):
             run('ssh-keygen', '-q', '-t', 'ed25519', '-N', '', '-f', str(fixture / name))
+            (fixture / name).chmod(0o600)
+            (fixture / (name + '.pub')).chmod(0o644)
         (fixture / 'sshd_config').write_text('''
 Port 22
 HostKey /fixture/host
@@ -80,6 +82,7 @@ AuthorizedKeysFile /fixture/identity.pub
 PasswordAuthentication no
 KbdInteractiveAuthentication no
 AllowUsers fixture
+LogLevel VERBOSE
 Subsystem sftp internal-sftp
 ''')
         (fixture / 'payload').write_text('verified release transfer fixture\n')
@@ -130,7 +133,7 @@ update-ca-certificates >/dev/null 2>&1
         # Reproduce the original parser failure using the very same pinned binary.
         duplicate = client(runner, 'up', '--accept-routes', '--accept-routes=false', '--help', check=False)
         assert duplicate.returncode != 0 and 'flag provided multiple times' in duplicate.stderr
-        execute(target, '/usr/sbin/sshd', '-f', '/fixture/sshd_config', user='0')
+        execute(target, '/usr/sbin/sshd', '-f', '/fixture/sshd_config', '-E', '/tmp/sshd.log', user='0')
         address = json.loads(client(target, 'status', '--json').stdout)['TailscaleIPs'][0]
         known_host = address + ' ' + (fixture / 'host.pub').read_text()
         execute(runner, 'sh', '-ec', '''
@@ -201,6 +204,14 @@ except subprocess.CalledProcessError as error:
     if 'preauthkeys' not in error.cmd:
         print(error.stdout)
         print(error.stderr)
+    for name in containers:
+        if name.endswith('-target'):
+            # Fixture-only SSH diagnostics contain public fingerprints, never
+            # enrollment credentials or private key bytes.
+            diagnostics = execute(name, 'sh', '-c',
+                'stat -c "%a %u:%g %n" / /fixture /fixture/identity.pub /home/fixture; '
+                'cat /tmp/sshd.log', user='0', check=False)
+            print(diagnostics.stdout)
     raise SystemExit('Runner integration failed') from None
 finally:
     for name in reversed(containers):
