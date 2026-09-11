@@ -23,7 +23,7 @@ watch(artworkUrl, () => {
 const messages = {
   idle: 'Choose an episode to listen.',
   loading: 'Loading audio…',
-  paused: 'Ready when you are.',
+  paused: 'Press Play to listen.',
   playing: 'Playing',
   buffering: 'Buffering…',
   ended: 'Episode finished.',

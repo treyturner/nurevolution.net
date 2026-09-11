@@ -49,6 +49,26 @@ function setup() {
 }
 
 describe('persistent episode controller', () => {
+  it('offers Play while paused even when metadata never arrives, then reports actual buffering', async () => {
+    const { media, changed, player } = setup()
+    player.select(a)
+    expect(media.readyState).toBe(0)
+    expect(changed).toHaveBeenLastCalledWith('paused')
+    media.emit('suspend')
+    player.select(b)
+    expect(changed).toHaveBeenLastCalledWith('paused')
+    expect(media.play).not.toHaveBeenCalled()
+    await media.play()
+    expect(changed).toHaveBeenLastCalledWith('buffering')
+    media.ready()
+    media.emit('playing')
+    expect(changed).toHaveBeenLastCalledWith('playing')
+    player.retry()
+    expect(media.readyState).toBe(0)
+    expect(changed).toHaveBeenLastCalledWith('paused')
+    expect(media.play).toHaveBeenCalledOnce()
+    player.dispose()
+  })
   it('starts paused, preserves the same episode, and changes paused sources at zero', () => {
     const { media, changed, player } = setup()
     player.select(a)
@@ -143,7 +163,7 @@ describe('persistent episode controller', () => {
     media.currentSrc = b.url
     media.error = { code: 2 } as MediaError
     media.emit('error')
-    expect(changed).toHaveBeenLastCalledWith('loading')
+    expect(changed).toHaveBeenLastCalledWith('paused')
     media.currentSrc = a.url
     media.emit('error')
     expect(changed).toHaveBeenLastCalledWith('error')

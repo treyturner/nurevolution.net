@@ -83,7 +83,8 @@ export function createPlayer(
   function load(next: PlayerSource, continuePlaying: boolean) {
     const own = ++generation
     source = next
-    set('loading')
+    // Browsers may defer metadata preloading until the listener presses Play.
+    set(continuePlaying ? 'loading' : 'paused')
     audio.load(next.url)
     if (continuePlaying) {
       // Call immediately: native controls can then cancel the pending play request.

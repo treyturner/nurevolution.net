@@ -4,6 +4,45 @@ import { mediaBaseURL } from '../../playwright.config'
 
 test.beforeEach(async ({ page }) => stubArchiveMedia(page))
 
+test('offers Play before delayed metadata arrives and reports buffering only after playback starts', async ({
+  page,
+}) => {
+  let release!: () => void
+  const gate = new Promise<void>((resolve) => {
+    release = resolve
+  })
+  await page.route('https://podcast.nurevolution.net/**', async (route) => {
+    await gate
+    await route.fallback()
+  })
+  try {
+    await page.goto('/episodes/trey-turner-lost-in-translation', {
+      waitUntil: 'domcontentloaded',
+    })
+    await hydrated(page)
+    const audio = page.locator('audio')
+    await expect(audio).toHaveJSProperty('readyState', 0)
+    await expect(audio).toHaveJSProperty('paused', true)
+    await expect(page.locator('.media-status')).toHaveText(
+      'Press Play to listen.',
+    )
+    await audio.evaluate((a: HTMLAudioElement) => {
+      a.muted = true
+      a.loop = true
+      void a.play()
+    })
+    await expect(page.locator('.media-status')).toHaveText('Buffering…')
+    release()
+    await expect(page.locator('.media-status')).toHaveText('Playing')
+    await audio.evaluate((a: HTMLAudioElement) => a.pause())
+    await expect(page.locator('.media-status')).toHaveText(
+      'Press Play to listen.',
+    )
+  } finally {
+    release()
+  }
+})
+
 test('fresh root, deep links and refresh load once and never initiate playback', async ({
   page,
 }) => {
