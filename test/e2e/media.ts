@@ -6,11 +6,17 @@ export const mp3 = await readFile(
 const cover = await readFile(
   new URL('../fixtures/media-app/public/cover.svg', import.meta.url),
 )
-export async function stubArchiveMedia(page: Page) {
-  await page.route('https://podcast.nurevolution.net/**', (route) =>
+export async function stubArchiveMedia(
+  page: Page,
+  origins = {
+    web: 'https://nurevolution.net',
+    media: 'https://podcast.nurevolution.net',
+  },
+) {
+  await page.route(origins.media + '/**', (route) =>
     route.fulfill({ body: mp3, contentType: 'audio/mpeg' }),
   )
-  await page.route('https://nurevolution.net/wp/**', (route) =>
+  await page.route(origins.web + '/wp/**', (route) =>
     route.fulfill({ body: cover, contentType: 'image/svg+xml' }),
   )
 }

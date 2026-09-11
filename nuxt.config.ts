@@ -4,6 +4,9 @@ export default defineNuxtConfig({
   compatibilityDate: '2026-09-07',
   ssr: true,
   devtools: { enabled: false },
+  runtimeConfig: {
+    public: { webOrigin: '', mediaOrigin: '' },
+  },
   modules: ['@nuxt/eslint'],
   css: ['~/assets/main.css'],
   app: {

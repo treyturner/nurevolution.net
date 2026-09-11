@@ -453,6 +453,12 @@ it.each(['webOrigin', 'mediaOrigin'] as const)(
         String(input).startsWith(profile.mediaOrigin),
       ),
     ).toBe(true)
+    expect(
+      f.run.mock.calls.filter(([, args]) => args.includes('up')).at(-1)?.[2],
+    ).toMatchObject({
+      WEB_ORIGIN: profile.webOrigin,
+      MEDIA_ORIGIN: profile.mediaOrigin,
+    })
     // A subsequent healthy attempt can still adopt the new origins and resource settings.
     f.request.mockImplementation((input, init) =>
       f.respond(input, init, changedProfile),
@@ -462,7 +468,11 @@ it.each(['webOrigin', 'mediaOrigin'] as const)(
     expect(deployed.profileSha256).toBe(sha256(serialize(changedProfile)))
     expect(
       f.run.mock.calls.filter(([, args]) => args.includes('up')).at(-1)?.[2],
-    ).toMatchObject({ APP_MEMORY_MIB: '256' })
+    ).toMatchObject({
+      APP_MEMORY_MIB: '256',
+      WEB_ORIGIN: changedProfile.webOrigin,
+      MEDIA_ORIGIN: changedProfile.mediaOrigin,
+    })
   },
 )
 

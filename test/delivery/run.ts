@@ -85,11 +85,29 @@ try {
         APP_IMAGE: appImage,
         APP_MEMORY_MIB: '384',
         DEPLOY_ENVIRONMENT: 'preview',
+        WEB_ORIGIN: 'https://preview.nurevolution.net',
+        MEDIA_ORIGIN: 'https://podcast-preview.nurevolution.net',
       },
     ),
-  ) as { services: { app: { tmpfs: string[]; read_only: boolean } } }
+  ) as {
+    services: {
+      app: {
+        tmpfs: string[]
+        read_only: boolean
+        environment: Record<string, string>
+      }
+    }
+  }
   assert.deepEqual(compose.services.app.tmpfs, ['/tmp:size=16m,mode=1777'])
   assert.equal(compose.services.app.read_only, true)
+  assert.equal(
+    compose.services.app.environment.NUXT_PUBLIC_WEB_ORIGIN,
+    'https://preview.nurevolution.net',
+  )
+  assert.equal(
+    compose.services.app.environment.NUXT_PUBLIC_MEDIA_ORIGIN,
+    'https://podcast-preview.nurevolution.net',
+  )
   await execute(
     'docker',
     ['compose', '-f', 'deploy/edge.compose.yaml', 'config', '--quiet'],

@@ -2,8 +2,12 @@ import { defineConfig, devices } from '@playwright/test'
 
 const appPort = process.env.NUREVOLUTION_TEST_PORT ?? '3100'
 const mediaPort = process.env.NUREVOLUTION_MEDIA_TEST_PORT ?? '3101'
+const previewPort = process.env.NUREVOLUTION_PREVIEW_TEST_PORT ?? '3102'
 
 export const mediaBaseURL = `http://127.0.0.1:${mediaPort}`
+export const previewBaseURL = `http://127.0.0.1:${previewPort}`
+export const previewWebOrigin = 'https://preview-web.example.test'
+export const previewMediaOrigin = 'https://preview-media.example.test'
 
 export default defineConfig({
   testDir: './test/e2e',
@@ -23,6 +27,18 @@ export default defineConfig({
     { name: 'webkit', use: { ...devices['Desktop Safari'] } },
   ],
   webServer: [
+    {
+      command: 'node .output/server/index.mjs',
+      url: previewBaseURL,
+      env: {
+        HOST: '127.0.0.1',
+        PORT: previewPort,
+        NUXT_PUBLIC_WEB_ORIGIN: previewWebOrigin,
+        NUXT_PUBLIC_MEDIA_ORIGIN: previewMediaOrigin,
+      },
+      reuseExistingServer: false,
+      gracefulShutdown: { signal: 'SIGTERM', timeout: 5_000 },
+    },
     {
       command: 'node .output/server/index.mjs',
       url: `http://127.0.0.1:${appPort}`,

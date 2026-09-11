@@ -239,6 +239,8 @@ export async function deployOnHost(
         APP_IMAGE: expectedImages(r.release).app,
         APP_MEMORY_MIB: String(r.profile.appMemoryMiB),
         DEPLOY_ENVIRONMENT: r.profile.environment,
+        WEB_ORIGIN: r.profile.webOrigin,
+        MEDIA_ORIGIN: r.profile.mediaOrigin,
       })
       const compose = (
         r: DeploymentRecord,
