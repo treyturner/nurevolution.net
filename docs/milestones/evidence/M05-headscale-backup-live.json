@@ -53,11 +53,40 @@
         "snapshots": 0,
         "retention": 0
       },
-      "correctedHelper": "Piped JSON reports implemented; owner confirmation pending.",
+      "correctedHelper": "Owner confirmed snapshot and retention JSON reports displayed successfully.",
       "firstCorrection": {
         "commit": "1360a204c63fe101e83608ed7f80ffeb60aac58e",
         "localTerminalRegression": "passed",
         "ownerInstallation": "checksum verified; reports remained silent"
+      },
+      "acceptedReport": {
+        "recordedAt": "2026-09-11T20:14:24.388245+00:00",
+        "helperCommit": "db838590f068e8ed173274657c7f2ac463aa9a04",
+        "helperSha256": "1f0ae5a761f04227f91ff7046d05aa38fb1ce8161ba0fc8fa88f3a2e539c7aa5",
+        "snapshotList": [
+          {
+            "id": "85bfee4396d9317649ee65e133448fcaed7f66368e6d0896701d27d812d316b2",
+            "hostname": "vault",
+            "tags": ["headscale"],
+            "time": "2026-09-11T14:36:16.304716588-05:00"
+          }
+        ],
+        "retention": {
+          "dryRun": true,
+          "policy": {
+            "keepWeekly": 4,
+            "keepMonthly": 3
+          },
+          "keep": [
+            {
+              "id": "85bfee4396d9317649ee65e133448fcaed7f66368e6d0896701d27d812d316b2",
+              "hostname": "vault",
+              "tags": ["headscale"],
+              "time": "2026-09-11T14:36:16.304716588-05:00"
+            }
+          ],
+          "remove": []
+        }
       }
     }
   },

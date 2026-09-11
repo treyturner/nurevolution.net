@@ -364,7 +364,6 @@
     "Owner-managed Unraid reboot/firewall persistence check.",
     "Physical iOS/Android playback/download and real podcast-client candidate check; repeat on canonical production hosts at M6.",
     "Traffic forecast, total budget including extras, and final whole-host recovery target/owner acceptance.",
-    "Confirm Headscale JSON reports on Unraid; backup, restore, retention marker, and weekly User Script are confirmed.",
     "PR CI/review for the new Headscale backup helpers and this evidence."
   ],
   "localVerification": {

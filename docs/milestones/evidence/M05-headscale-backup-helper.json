@@ -39,6 +39,7 @@
     "test": "Real PTY and pipe reports must match the accepted snapshot ID, host, tag, time, retention policy, and keep/remove selections even when the restic wrapper suppresses TTY reports.",
     "passed": true,
     "firstCorrection": "Scoping progress throttling passed locally but the owner confirmed reports remained silent after a checksum-verified update.",
-    "at": "2026-09-11T20:12:02.796187+00:00"
+    "at": "2026-09-11T20:12:02.796187+00:00",
+    "liveConfirmation": "Owner confirmed both JSON reports with the actual Google Drive snapshot and retention selection."
   }
 }
