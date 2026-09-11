@@ -8,7 +8,7 @@ import {
   imageConfigDigest,
 } from '../../tools/deploy/image-identity.ts'
 
-// Small real registry roundtrip, run on both Engine storage backends in CI.
+// Small real registry roundtrip on the production containerd image store.
 // No cloud credentials or application/media build is needed.
 const prefix = 'nurevolution-identity-' + randomBytes(5).toString('hex')
 const directory = resolve('.local', prefix)
@@ -17,6 +17,11 @@ const baseImage =
   'registry:3.1.1@sha256:1be55279f18a2fe1a74edf2664cac61c1bea305b7b4642dab412e7affdcb3e33'
 const image = prefix + '-fixture'
 const docker = (args: string[]) => execute('docker', args)
+const storage = await docker(['info', '--format', '{{.DriverStatus}}'])
+assert.ok(
+  storage.includes('io.containerd.snapshotter.v1'),
+  'Image identity regression requires the containerd image store',
+)
 const references: string[] = []
 let createdRegistry = false
 await fs.mkdir(directory, { recursive: true })
@@ -103,9 +108,7 @@ try {
     '{{.Id}}',
     reference,
   ])
-  const storage = await docker(['info', '--format', '{{.DriverStatus}}'])
-  if (storage.includes('io.containerd.snapshotter.v1'))
-    assert.notEqual(displayId, expected)
+  assert.notEqual(displayId, expected)
   console.log(
     JSON.stringify({
       storage,

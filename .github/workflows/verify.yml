@@ -58,10 +58,6 @@ jobs:
   image-identity:
     runs-on: ubuntu-24.04
     timeout-minutes: 10
-    strategy:
-      fail-fast: false
-      matrix:
-        storage: [overlay2, containerd]
     steps:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
       - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
@@ -71,26 +67,20 @@ jobs:
         run: |
           corepack enable
           pnpm install --frozen-lockfile
-      - name: Select the disposable runner's image store
-        env:
-          STORAGE_MODE: ${{ matrix.storage }}
+      - name: Configure the disposable runner's containerd image store
         run: |
           node --input-type=module <<'NODE'
           import fs from 'node:fs'
           const path = '/etc/docker/daemon.json'
           const config = fs.existsSync(path) ? JSON.parse(fs.readFileSync(path, 'utf8')) : {}
-          config.features = { ...config.features, 'containerd-snapshotter': process.env.STORAGE_MODE === 'containerd' }
+          config.features = { ...config.features, 'containerd-snapshotter': true }
           delete config['storage-driver']
           fs.writeFileSync('daemon.json', JSON.stringify(config))
           NODE
           sudo dockerd --validate --config-file daemon.json
           sudo install -m 644 daemon.json /etc/docker/daemon.json
           sudo systemctl restart docker
-          if [[ "$STORAGE_MODE" == containerd ]]; then
-            docker info --format '{{json .DriverStatus}}' | grep -q io.containerd.snapshotter.v1
-          else
-            test "$(docker info --format '{{.Driver}}')" = overlay2
-          fi
+          docker info --format '{{json .DriverStatus}}' | grep -q io.containerd.snapshotter.v1
       - name: Verify image identity through save, load, push, and pull
         run: pnpm test:image-identity
 
