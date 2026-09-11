@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { EpisodeSummary } from '../../shared/content/public'
+import DownloadIcon from './DownloadIcon.vue'
 defineProps<{
   episodes: EpisodeSummary[]
   selectedId?: string
@@ -27,9 +28,10 @@ defineProps<{
         class="row-download"
         :href="`/downloads/${episode.slug}`"
         download
+        title="Download MP3"
         :aria-label="`Download ${episode.artist} — ${episode.title}`"
-        ><span aria-hidden="true">↓</span></a
-      >
+        ><DownloadIcon
+      /></a>
     </li>
   </ol>
 </template>

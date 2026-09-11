@@ -3,6 +3,7 @@ import type { EpisodeDetail } from '../../shared/content/public'
 import { formatDate, formatTime } from '../services/episode-page'
 import { usePodcastPlayer } from '../composables/usePodcastPlayer'
 import { deliveryAssetUrl } from '../services/delivery-assets'
+import DownloadIcon from './DownloadIcon.vue'
 const props = defineProps<{ episode: EpisodeDetail | null }>()
 const config = useRuntimeConfig()
 const artworkUrl = computed(() =>
@@ -84,8 +85,8 @@ const messages = {
           class="download-link"
           :href="`/downloads/${episode.slug}`"
           :download="episode.audio.downloadFilename"
-          >Download MP3 <span aria-hidden="true">↓</span></a
-        >
+          >Download MP3 <DownloadIcon
+        /></a>
       </div>
       <!-- The server validates and sanitizes canonical descriptions before this projection. -->
       <!-- eslint-disable vue/no-v-html -->
