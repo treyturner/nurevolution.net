@@ -2,15 +2,23 @@
 import type { EpisodeDetail } from '../../shared/content/public'
 import { formatDate, formatTime } from '../services/episode-page'
 import { usePodcastPlayer } from '../composables/usePodcastPlayer'
+import { deliveryAssetUrl } from '../services/delivery-assets'
 const props = defineProps<{ episode: EpisodeDetail | null }>()
+const config = useRuntimeConfig()
+const artworkUrl = computed(() =>
+  props.episode
+    ? deliveryAssetUrl(
+        props.episode.artworkUrl,
+        'artwork',
+        config.public.webOrigin,
+      )
+    : '',
+)
 const { element, status, retry } = usePodcastPlayer(() => props.episode)
 const failedArtwork = ref(false)
-watch(
-  () => props.episode?.artworkUrl,
-  () => {
-    failedArtwork.value = false
-  },
-)
+watch(artworkUrl, () => {
+  failedArtwork.value = false
+})
 const messages = {
   idle: 'Choose an episode to listen.',
   loading: 'Loading audio…',
@@ -28,7 +36,7 @@ const messages = {
     <div v-if="episode" class="artwork">
       <img
         v-if="!failedArtwork"
-        :src="episode.artworkUrl"
+        :src="artworkUrl"
         :alt="`${episode.artist} — ${episode.title} cover art`"
         width="480"
         height="480"

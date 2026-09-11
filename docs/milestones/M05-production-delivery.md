@@ -18,6 +18,10 @@ Roadmap: [M5](../../ROADMAP.md#m5--production-delivery-and-operational-rehearsal
 
 The original planning and historical evidence below remain useful, but this progress record and later owner decisions supersede earlier pending/absent descriptions.
 
+## Preview browser delivery correction
+
+The owner’s normal preview visit exposed a remaining dependency on production artwork/audio URLs: local DNS resolves those hosts to the home pfSense address, causing Chrome’s local-network permission prompt and blocked artwork. Earlier candidate browser checks used an explicit resolver proxy and did not establish independent delivery for an ordinary preview visit. Browser asset URLs now use the deployment profile’s public preview hosts while canonical records and RSS identities remain unchanged. A new three-browser regression blocks both production hosts, checks SSR artwork plus hydrated playback sources through navigation/reload, and verifies unchanged canonical metadata/feed URLs. This correction still requires merge, trusted main publication, matching host-tool installation, preview promotion, and a normal browser recheck.
+
 ## Outcome and scope
 
 Produce a reproducible application image and delivery configuration, then rehearse deployment, media delivery, certificate persistence, backup restoration, and rollback on DigitalOcean. Preserve the existing archive and podcast identity. The candidate must operate independently of WordPress and pfSense before it is eligible for M6 cutover.

@@ -8,6 +8,7 @@ export default defineNuxtConfig({
     fileURLToPath(new URL('../../../app/assets/main.css', import.meta.url)),
   ],
   devtools: { enabled: false },
+  runtimeConfig: { public: { webOrigin: '', mediaOrigin: '' } },
   nitro: {
     preset: 'node-server',
     serverAssets: [

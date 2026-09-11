@@ -2,6 +2,9 @@
 services:
   app:
     image: ${APP_IMAGE:?verified image digest required}
+    environment:
+      NUXT_PUBLIC_WEB_ORIGIN: ${WEB_ORIGIN:?website origin required}
+      NUXT_PUBLIC_MEDIA_ORIGIN: ${MEDIA_ORIGIN:?media origin required}
     init: true
     read_only: true
     restart: unless-stopped
