@@ -1,5 +1,5 @@
 {
-  "recordedAt": "2026-09-11T16:57:58.972821+00:00",
+  "recordedAt": "2026-09-11T17:55:47.128333+00:00",
   "script": "deploy/headscale/firewall.sh",
   "scriptSha256": "15a2973b8bebb91d95a7d7674c672fba2f439bd0a642f34a00d07833631185f9",
   "policy": {
@@ -56,16 +56,17 @@
   "startupDecision": {
     "hook": "Foreground Bash invocation of stored User Script in /boot/config/go before emhttp",
     "serviceManagement": "Existing Compose stack; restart unless-stopped; no custom docker_started hook or profile",
-    "userScriptsSchedule": "Disabled once foreground go call is installed",
+    "userScriptsSchedule": "Owner confirmed Disabled",
     "failurePolicy": "Log and continue boot, per selected owner fragment; not fail-closed on firewall installation failure",
     "liveBootVerification": "pending",
-    "temporaryRestartPolicyRestoration": "pending owner confirmation",
+    "temporaryRestartPolicyRestoration": "Owner saved restart: unless-stopped, recreated only Headscale, and ran its health check; external health/client connection passed afterward",
     "oldHookAndProfile": "Owner confirmed neither the custom docker_started hook nor Compose profile was installed; no removal needed.",
-    "goCallSaved": "Not yet explicitly confirmed; owner was asked separately from successful manual execution."
+    "goCallSaved": "Owner confirmed foreground call before emhttp on 2026-09-11",
+    "unraidWarning": "Docker reported no kernel swap-limit capability; RAM limit remains configured"
   },
   "publicEndpoint": {
     "hostname": "headscale.treyturner.info",
-    "tlsAndControlUpgrade": "Trusted TLS passed in follow-up; actual control-protocol upgrade and enrollment remain pending.",
+    "tlsAndControlUpgrade": "Trusted TLS and actual droplet/runner control-protocol enrollment passed after owner applied bot exception and optional-:443 Host ACL",
     "followUp": {
       "checkedAt": "2026-09-11T17:09:59.046137+00:00",
       "publicDns": "Google and Cloudflare public resolvers both return CNAME wan.treyturner.info -> 136.49.253.125. The earlier lookup failure is specific to the workspace resolver.",
@@ -91,14 +92,18 @@
       },
       "remaining": "Exempt the exact Headscale hostname from the HAProxy machine-user-agent rejection, verify real enrollment/control upgrade and authenticated DERP relay."
     },
-    "initialObservation": "Did not resolve from workspace on 2026-09-11; curl exit 6, HTTP 000"
+    "initialObservation": "Did not resolve from workspace on 2026-09-11; curl exit 6, HTTP 000",
+    "clientFollowUp": {
+      "checkedAt": "2026-09-11T17:52:49.206075+00:00",
+      "evidence": "docs/milestones/evidence/M05-headscale-client.json",
+      "result": "Both clients enrolled; authenticated SSH through self-hosted relay passed; listening private HTTPS denied; persistent droplet identity and temporary runner cleanup verified"
+    }
   },
   "remaining": [
-    "Confirm foreground go call and live boot persistence",
-    "Apply hostname-scoped HAProxy bot-rule exception and verify client access",
+    "Verify live boot persistence at the next owner-managed reboot",
     "Configure local split DNS if needed; pfSense LAN HTTPS and STUN paths already pass",
-    "Enroll droplet/disposable client and test overlay allow/deny, authenticated relay and ephemeral cleanup",
-    "Integrate GitHub private deployment transport and promote verified preview",
-    "Complete M5 running application recovery, rollback, capacity and client acceptance"
+    "Complete M5 running application recovery, rollback, capacity and client acceptance",
+    "Merge private deployment workflow and promote verified main preview",
+    "Verify independent Headscale state backup and restore"
   ]
 }

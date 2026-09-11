@@ -1,0 +1,167 @@
+{
+  "recordedAt": "2026-09-11T17:55:47.128333+00:00",
+  "scope": "Live droplet and disposable runner enrollment, private SSH, policy and self-hosted relay rehearsal; actual GitHub promotion remains pending",
+  "client": {
+    "version": "1.98.10",
+    "platform": "linux/amd64",
+    "archive": "https://pkgs.tailscale.com/stable/tailscale_1.98.10_amd64.tgz",
+    "sha256": "52490ce0832b245857e2afef7426d6ae5a4b49fb391412833cc95729bd23f7de"
+  },
+  "archiveChecksumVerified": true,
+  "binaryVersion": "1.98.10-t0ee734d30-g6b4108809",
+  "clientFamilySource": "https://github.com/juanfont/headscale/blob/v0.29.3/hscontrol/capver/capver_generated.go",
+  "installedPaths": {
+    "client": "/usr/local/bin/tailscale",
+    "daemon": "/usr/local/sbin/tailscaled",
+    "service": "/etc/systemd/system/tailscaled.service",
+    "defaults": "/etc/default/tailscaled",
+    "resourceDropIn": "/etc/systemd/system/tailscaled.service.d/nurevolution-resources.conf",
+    "keyEntry": "/usr/local/sbin/nurevolution-headscale-key"
+  },
+  "service": {
+    "enabled": true,
+    "state": "active; enrolled; private identity preserved across restart",
+    "upstreamUnitChange": "Daemon path changed from /usr/sbin/tailscaled to /usr/local/sbin/tailscaled",
+    "flags": "--no-logs-no-support",
+    "GOMEMLIMIT": "64MiB",
+    "GOMAXPROCS": 1,
+    "MemoryHighMiB": 96,
+    "MemoryMaxMiB": 128,
+    "beforeEnrollmentMemoryCurrentBytes": 11411456,
+    "beforeEnrollmentMemoryPeakBytes": 11415552,
+    "limitation": "Idle enrolled observation only; application/backup/client capacity is not accepted",
+    "enrolledIdleMemoryCurrentBytes": 14659584,
+    "enrolledIdleMemoryPeakBytes": 14757888
+  },
+  "keyEntry": {
+    "ownerConfirmedBothSaved": true,
+    "directory": "/run/nurevolution-enrollment",
+    "directoryMode": "0700",
+    "keyMode": "0600",
+    "dropletKey": "single use; one hour expiration requested",
+    "runnerKey": "reusable; ephemeral nodes; 2160-hour expiration requested",
+    "valuesRecorded": false,
+    "cleanup": "Both temporary enrollment key files removed after successful consumption and GitHub secret configuration",
+    "serverMetadata": {
+      "source": "Owner-provided filtered Headscale CLI output on 2026-09-11; enrollment key values excluded",
+      "droplet": {
+        "id": 1,
+        "tags": ["tag:nurevolution-droplet"],
+        "expiration": "2026-09-11T18:27:47.100008241Z"
+      },
+      "runner": {
+        "id": 2,
+        "tags": ["tag:nurevolution-deploy"],
+        "reusable": true,
+        "ephemeral": true,
+        "expiration": "2026-12-10T17:27:47.299590209Z"
+      }
+    }
+  },
+  "machineUserAgentsAfterBotException": {
+    "curl": 200,
+    "Go-http-client/1.1": 200
+  },
+  "enrollment": {
+    "result": "passed after owner corrected HAProxy Host ACL",
+    "clientState": "Running",
+    "privateIPs": ["100.64.0.1", "fd7a:115c:a1e0::1"],
+    "tags": ["tag:nurevolution-droplet"],
+    "ControlURL": "https://headscale.treyturner.info",
+    "acceptDns": false,
+    "acceptRoutes": false,
+    "tailscaleSsh": false,
+    "advertisedRoutes": [],
+    "exitNode": "none",
+    "clientRestart": "same private address and authenticated operator SSH passed",
+    "dropletKeyFile": "removed after successful enrollment",
+    "publicSshRule": "unchanged: TCP 22 only from 136.49.253.125/32"
+  },
+  "hostHeaderDiagnosis": {
+    "headscale.treyturner.info": 200,
+    "headscale.treyturner.info:443": 200,
+    "path": "/health",
+    "method": "GET",
+    "userAgent": "Go-http-client/1.1",
+    "clientSource": "https://github.com/tailscale/tailscale/blob/v1.98.10/control/controlhttp/client.go",
+    "finding": "Initial port-qualified Host returned 404; owner applied optional-port ACL, both health forms and actual control-protocol enrollment passed.",
+    "ownerDelta": "Use a case-insensitive Host ACL matching ^headscale[.]treyturner[.]info(:443)?$ for backend selection and the bot exception.",
+    "initialResults": {
+      "bareHost": 200,
+      "explicit443": 404
+    },
+    "ownerApplied": true
+  },
+  "remaining": [
+    "Review/merge workflow and promote verified main release through normal preview workflow",
+    "Verify Unraid boot persistence at the next owner-managed reboot",
+    "Verify independent Headscale backup/restore",
+    "Finish M5 application deployment and operational acceptance"
+  ],
+  "runnerRehearsal": {
+    "fixtureBaseImage": "docker@sha256:12e683a161823b2a839aeea999b9d960e6e1f9a97b1679ad6b441982e2d9cf07",
+    "client": "same checksum-verified 1.98.10 archive as droplet",
+    "isolation": "Disposable containers and networks, userspace Tailscale with SOCKS5, no host networking/PID/mounts or published ports; no shared-host firewall changes",
+    "dns": "1.1.1.1 scoped to disposable containers; workspace resolver left unchanged",
+    "clientState": "memory only",
+    "firstRunner": {
+      "privateIp": "100.64.0.2",
+      "sshUser": "nurevolution-deploy",
+      "deniedHttpsCurlExit": 28
+    },
+    "secondRunner": {
+      "privateIp": "100.64.0.3",
+      "sshUser": "nurevolution-deploy",
+      "deniedHttpsCurlExit": 28
+    },
+    "tags": ["tag:nurevolution-deploy"],
+    "sshIdentity": "Original verified ED25519 public host key mapped to 100.64.0.1",
+    "sshFingerprint": "SHA256:Oubqo79ywI0Qxz0kWLbWLOj/UoUYmbQc6ZLqucKQB50",
+    "sshAuthentication": "Actual preview deployment key authenticated as nurevolution-deploy",
+    "denyPositiveControl": "Droplet ss confirmed Caddy listening on TCP 443; private HTTPS through runner SOCKS timed out with curl exit 28",
+    "relay": "Real SSH and Tailscale ping carried by DERP(headscale), region 999; observed ping 43\u201344 ms",
+    "directUdp": "Not established under existing firewall/NAT; no ingress rule widened",
+    "normalLogout": "Logout succeeded; droplet peer map became empty",
+    "interruptedCleanup": {
+      "method": "SIGKILL of disposable client without logout; observe droplet netmap removal",
+      "interruptedAt": "2026-09-11T17:46:17.766678+00:00",
+      "removedAfterSeconds": 318.9,
+      "offlineEntryObservedBeforeRemoval": true,
+      "remainingPeers": [],
+      "observation": "Server removed the interrupted node from the droplet netmap after the configured five-minute inactivity interval; no administrator delete was used."
+    },
+    "fixtureCleanup": "Both task-owned client containers and their networks removed after logout/inactivity checks; no credential files retained in the workspace"
+  },
+  "verification": {
+    "localFullGate": "pnpm verify passed after workflow change: 298 application, 12 migration, 17 operations, 76 browser checks plus two existing skips, Docker delivery",
+    "workflowTargeted": "17 operations tests and actionlint 1.7.12 passed",
+    "actualGitHubRun": "pending merge and verified-main promotion"
+  },
+  "githubPreview": {
+    "configuredAt": "2026-09-11T17:51:35.529863+00:00",
+    "environment": "preview",
+    "variables": {
+      "DEPLOYMENT_ENABLED": "true",
+      "DEPLOY_HOST": "100.64.0.1",
+      "DEPLOY_USER": "nurevolution-deploy",
+      "HEADSCALE_URL": "https://headscale.treyturner.info"
+    },
+    "secretNames": ["HEADSCALE_AUTH_KEY", "SSH_KNOWN_HOSTS", "SSH_PRIVATE_KEY"],
+    "sshFingerprint": "SHA256:Oubqo79ywI0Qxz0kWLbWLOj/UoUYmbQc6ZLqucKQB50",
+    "sshPrivateKey": "existing dedicated operator secret unchanged",
+    "knownHosts": "original verified public key mapped to 100.64.0.1",
+    "temporaryEnrollmentKeys": "both droplet and runner files removed after successful consumption",
+    "productionChanges": "none",
+    "actualDeployment": "pending merged workflow and verified main release"
+  },
+  "serverRecreation": {
+    "source": "Owner recreated Headscale with saved restart policy; droplet independently checked afterward",
+    "checkedAt": "2026-09-11T17:54:56.626639+00:00",
+    "publicHttps": 200,
+    "backendState": "Running",
+    "privateIPv4": "100.64.0.1",
+    "selfOnline": true,
+    "health": [],
+    "remainingRunnerPeers": 0
+  }
+}

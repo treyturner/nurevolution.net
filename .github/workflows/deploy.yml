@@ -37,12 +37,21 @@ jobs:
           TARGET_ENVIRONMENT: ${{ inputs.environment }}
           DEPLOYMENT_ENABLED: ${{ vars.DEPLOYMENT_ENABLED }}
           CUTOVER_ENABLED: ${{ vars.CUTOVER_ENABLED }}
+          HEADSCALE_URL: ${{ vars.HEADSCALE_URL }}
+          DEPLOY_HOST: ${{ vars.DEPLOY_HOST }}
         run: |
           [[ "$RELEASE_COMMIT" =~ ^[a-f0-9]{40}$ ]]
           [[ "$VERIFY_RUN_ID" =~ ^[1-9][0-9]*$ ]]
           [[ "$TARGET_ENVIRONMENT" == preview || "$TARGET_ENVIRONMENT" == production ]]
           [[ "$DEPLOYMENT_ENABLED" == true ]]
           [[ "$TARGET_ENVIRONMENT" != production || "$CUTOVER_ENABLED" == true ]]
+          [[ "$HEADSCALE_URL" =~ ^https://[a-zA-Z0-9][a-zA-Z0-9.-]*[a-zA-Z0-9](:443)?$ ]]
+          python3 - <<'PY'
+          import ipaddress, os
+          address = ipaddress.ip_address(os.environ['DEPLOY_HOST'])
+          if address not in ipaddress.ip_network('100.64.0.0/10'):
+              raise SystemExit('DEPLOY_HOST must be the verified Headscale IPv4 address')
+          PY
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
       - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
         with:
@@ -66,6 +75,29 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           VERIFY_RUN_ID: ${{ inputs.verify_run_id }}
         run: node release/deploy.mjs verify-release --bundle release --run "$VERIFY_RUN_ID"
+      - name: Prepare the temporary enrollment credential
+        env:
+          HEADSCALE_AUTH_KEY: ${{ secrets.HEADSCALE_AUTH_KEY }}
+        run: |
+          test -n "$HEADSCALE_AUTH_KEY"
+          umask 077
+          mkdir -p "$RUNNER_TEMP/headscale"
+          printf '%s' "$HEADSCALE_AUTH_KEY" > "$RUNNER_TEMP/headscale/auth.key"
+      - name: Join the private deployment network
+        uses: tailscale/github-action@306e68a486fd2350f2bfc3b19fcd143891a4a2d8 # v4
+        with:
+          authkey: file:${{ runner.temp }}/headscale/auth.key
+          version: '1.98.10'
+          sha256sum: 52490ce0832b245857e2afef7426d6ae5a4b49fb391412833cc95729bd23f7de
+          hostname: nurevolution-${{ github.run_id }}-${{ github.run_attempt }}
+          args: --login-server=${{ vars.HEADSCALE_URL }} --accept-dns=false --accept-routes=false --ssh=false --timeout=45s
+          tailscaled-args: --no-logs-no-support
+          timeout: 60s
+          retry: '1'
+          use-cache: 'false'
+      - name: Remove the consumed enrollment credential
+        if: always()
+        run: rm -f "$RUNNER_TEMP/headscale/auth.key"
       - name: Transfer the release and invoke the installed host helper
         env:
           DEPLOY_HOST: ${{ vars.DEPLOY_HOST }}
@@ -84,10 +116,11 @@ jobs:
           mkdir -p "$RUNNER_TEMP/ssh"
           printf '%s\n' "$SSH_PRIVATE_KEY" > "$RUNNER_TEMP/ssh/key"
           printf '%s\n' "$SSH_KNOWN_HOSTS" > "$RUNNER_TEMP/ssh/known_hosts"
-          ssh_args=(-i "$RUNNER_TEMP/ssh/key" -o BatchMode=yes -o StrictHostKeyChecking=yes -o "UserKnownHostsFile=$RUNNER_TEMP/ssh/known_hosts" -o ConnectTimeout=15)
+          ssh_args=(-i "$RUNNER_TEMP/ssh/key" -o IdentitiesOnly=yes -o BatchMode=yes -o StrictHostKeyChecking=yes -o "UserKnownHostsFile=$RUNNER_TEMP/ssh/known_hosts" -o ConnectTimeout=15)
+          test "$(ssh "${ssh_args[@]}" "$DEPLOY_USER@$DEPLOY_HOST" 'id -un')" = "$DEPLOY_USER"
           ssh "${ssh_args[@]}" "$DEPLOY_USER@$DEPLOY_HOST" "mkdir -m 700 /srv/nurevolution/incoming/$TRANSFER_ID"
           scp "${ssh_args[@]}" release/release.json release/manifest.json release/configuration.json "$DEPLOY_USER@$DEPLOY_HOST:/srv/nurevolution/incoming/$TRANSFER_ID/"
           ssh "${ssh_args[@]}" "$DEPLOY_USER@$DEPLOY_HOST" "nurevolution-deploy $TARGET_ENVIRONMENT $TRANSFER_ID"
-      - name: Remove temporary SSH credentials
+      - name: Remove temporary deployment credentials
         if: always()
-        run: rm -rf "$RUNNER_TEMP/ssh"
+        run: rm -rf "$RUNNER_TEMP/ssh" "$RUNNER_TEMP/headscale"

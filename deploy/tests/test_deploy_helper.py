@@ -1,8 +1,10 @@
 import json
+import os
 from pathlib import Path
 import re
 import subprocess
 import tempfile
+import textwrap
 import unittest
 
 
@@ -10,6 +12,38 @@ REPO = Path(__file__).resolve().parents[2]
 
 
 class DeployHelper(unittest.TestCase):
+    def test_workflow_rejects_public_deployment_targets_and_invalid_promotions(self):
+        workflow = (REPO / '.github/workflows/deploy.yml').read_text()
+        block = re.search(
+            r'      - name: Validate promotion inputs and environment readiness\n'
+            r'.*?        run: \|\n(.*?)(?=      - )', workflow, re.DOTALL
+        ).group(1)
+        script = textwrap.dedent(block)
+        valid = {
+            'RELEASE_COMMIT': 'a' * 40, 'VERIFY_RUN_ID': '12345',
+            'TARGET_ENVIRONMENT': 'preview', 'DEPLOYMENT_ENABLED': 'true',
+            'CUTOVER_ENABLED': 'false', 'HEADSCALE_URL': 'https://headscale.treyturner.info',
+            'DEPLOY_HOST': '100.64.0.1',
+        }
+        cases = [({}, True), ({'HEADSCALE_URL': valid['HEADSCALE_URL'] + ':443'}, True),
+                 ({'TARGET_ENVIRONMENT': 'production', 'CUTOVER_ENABLED': 'true'}, True)]
+        cases += [({key: value}, False) for key, value in [
+            ('DEPLOY_HOST', '159.89.86.21'), ('DEPLOY_HOST', '192.168.1.1'),
+            ('DEPLOY_HOST', '127.0.0.1'), ('DEPLOY_HOST', '100.128.0.1'),
+            ('DEPLOY_HOST', 'example.com'), ('DEPLOY_HOST', '::1'),
+            ('DEPLOY_HOST', ''), ('HEADSCALE_URL', 'http://headscale.treyturner.info'),
+            ('HEADSCALE_URL', valid['HEADSCALE_URL'] + ' --accept-routes'),
+            ('HEADSCALE_URL', ''), ('RELEASE_COMMIT', 'main'), ('VERIFY_RUN_ID', '0'),
+            ('TARGET_ENVIRONMENT', 'production'), ('TARGET_ENVIRONMENT', 'unknown'),
+            ('DEPLOYMENT_ENABLED', 'false'),
+        ]]
+        for override, accepted in cases:
+            with self.subTest(override=override):
+                result = subprocess.run(['bash', '-euo', 'pipefail', '-c', script],
+                                        env={**os.environ, **valid, **override},
+                                        capture_output=True, text=True, check=False)
+                self.assertEqual(result.returncode == 0, accepted, result.stderr)
+
     def test_workflow_attempts_use_distinct_bundles_and_keep_failed_attempt(self):
         workflow = (REPO / '.github/workflows/deploy.yml').read_text()
         template = re.search(r'^\s+TRANSFER_ID: (.+)$', workflow, re.MULTILINE).group(1)
