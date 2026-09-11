@@ -364,7 +364,7 @@
     "Owner-managed Unraid reboot/firewall persistence check.",
     "Physical iOS/Android playback/download and real podcast-client candidate check; repeat on canonical production hosts at M6.",
     "Traffic forecast, total budget including extras, and final whole-host recovery target/owner acceptance.",
-    "Install the tested Headscale interactive-output correction; backup, restore, retention marker, and weekly User Script are confirmed.",
+    "Confirm Headscale JSON reports on Unraid; backup, restore, retention marker, and weekly User Script are confirmed.",
     "PR CI/review for the new Headscale backup helpers and this evidence."
   ],
   "localVerification": {
@@ -382,6 +382,6 @@
       "functions": 98.3,
       "lines": 98.86
     },
-    "headscaleBackupFixture": "Eleven checks with actual restic/rclone, lifecycle fault injection, exact restoration, and a real-terminal regression; passed after the output correction."
+    "headscaleBackupFixture": "Twelve checks with actual restic/rclone, lifecycle fault injection, exact restoration, matching JSON reports through pipes and a real terminal, empty repositories, and missing/failed report data."
   }
 }

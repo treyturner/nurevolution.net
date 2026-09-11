@@ -74,12 +74,27 @@ case ${1:-} in
     ;;
   snapshots)
     [[ $# == 1 ]] || fail 'Usage: backup.sh snapshots'
-    restic_run snapshots --host vault --tag headscale
+    # Pipe structured output so restic never selects its interactive renderer.
+    restic_run snapshots --json --host vault --tag headscale |
+      jq -Me 'map({id, hostname, tags, time})' || fail 'Snapshot report failed.'
     ;;
   retention)
     [[ $# == 1 ]] || fail 'Usage: backup.sh retention'
-    restic_run forget --host vault --tag headscale --group-by host,tags \
-      --keep-weekly 4 --keep-monthly 3 --dry-run
+    # forget legitimately emits nothing for an empty selection. Confirm that
+    # case first, so absent output for a populated selection remains an error.
+    hs_snapshot_count=$(restic_run snapshots --json --host vault --tag headscale |
+      jq -er 'length') || fail 'Retention report failed.'
+    {
+      if [[ $hs_snapshot_count == 0 ]]; then
+        printf '[]\n'
+      else
+        restic_run forget --host vault --tag headscale --group-by host,tags \
+          --keep-weekly 4 --keep-monthly 3 --dry-run --json
+      fi
+    } |
+      jq -Me '{dryRun:true, policy:{keepWeekly:4, keepMonthly:3},
+        keep:[.[] | .keep[]? | {id, hostname, tags, time}],
+        remove:[.[] | .remove[]? | {id, hostname, tags, time}]}' || fail 'Retention report failed.'
     ;;
   check)
     [[ $# == 1 ]] || fail 'Usage: backup.sh check'

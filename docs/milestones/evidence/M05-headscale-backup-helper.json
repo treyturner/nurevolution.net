@@ -1,5 +1,6 @@
 {
   "checks": [
+    "empty repository produces explicit empty reports",
     "real restic 0.19.1 + rclone init, encrypted backup, full check, exact restore after service restart",
     "existing and live-directory restore destinations refused",
     "FAIL_STOP: service running, failed capture cleaned, accepted snapshot unchanged",
@@ -8,9 +9,9 @@
     "repository failure leaves running service untouched",
     "intentionally stopped service stays stopped",
     "existing capture preserved without stopping service",
-    "real restic retention dry run",
-    "explicit retention marker allows scoped forget and prune",
-    "Real PTY: snapshots and retention print policy/snapshot information after scoping progress throttling to the captured JSON backup only."
+    "snapshot and dry-run retention JSON match through pipes and a real PTY despite a silent TTY renderer",
+    "missing report output and restic failures produce visible errors and fail the helper",
+    "explicit retention marker allows scoped forget and prune"
   ],
   "restic": "restic 0.19.1 compiled with go1.26.4 on linux/amd64",
   "rclone": "rclone v1.69.3-DEV",
@@ -34,8 +35,10 @@
   },
   "terminalRegression": {
     "reproduced": "Pinned helper and restic 0.19.1 exit successfully with no snapshots/retention output on a TTY when RESTIC_PROGRESS_FPS=0.016666 is global; non-TTY output works.",
-    "fix": "Unset inherited/global RESTIC_PROGRESS_FPS; apply 0.016666 only to the JSON backup subprocess.",
-    "test": "A real PTY checks for vault and the selected retention policy in output.",
-    "passed": true
+    "fix": "Format piped restic JSON as plain JSON for snapshots and retention; confirm empty selections and fail visibly on missing/failed report data. Progress throttling remains limited to the captured backup log.",
+    "test": "Real PTY and pipe reports must match the accepted snapshot ID, host, tag, time, retention policy, and keep/remove selections even when the restic wrapper suppresses TTY reports.",
+    "passed": true,
+    "firstCorrection": "Scoping progress throttling passed locally but the owner confirmed reports remained silent after a checksum-verified update.",
+    "at": "2026-09-11T20:12:02.796187+00:00"
   }
 }

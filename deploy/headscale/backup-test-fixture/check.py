@@ -51,6 +51,12 @@ exec /bin/cp "$@"
 (binpath / 'cp').chmod(0o755)
 (binpath / 'restic').write_text('''#!/bin/bash
 for arg in "$@"; do
+  if [[ $arg == snapshots || $arg == forget ]]; then
+    [[ ${EMPTY_REPORT:-} != "$arg" ]] || exit 0
+    [[ ${FAIL_REPORT:-} != "$arg" ]] || exit 42
+    # Reproduce a silent renderer whenever a report reaches restic on a TTY.
+    [[ ! -t 1 ]] || exit 0
+  fi
   if [[ $arg == backup ]]; then
     [[ $(cat /test/running) == true ]] || { echo 'Upload started before Headscale restarted' >&2; exit 99; }
     [[ ${FAIL_UPLOAD:-} != 1 ]] || exit 42
@@ -101,6 +107,10 @@ def terminal(*args):
         os.close(master)
     return output.decode()
 run('init')
+assert json.loads(run('snapshots').stdout) == []
+empty_retention = json.loads(run('retention').stdout)
+assert empty_retention['keep'] == empty_retention['remove'] == []
+passed('empty repository produces explicit empty reports')
 run('backup')
 accepted = (backup/'last-success.json').read_bytes()
 snapshot = json.loads(accepted)['snapshotId']
@@ -139,11 +149,22 @@ assert (root/'running').read_text() == 'true'
 (backup/'capture/keep').unlink()
 (backup/'capture').rmdir()
 passed('existing capture preserved without stopping service')
-run('retention')
-passed('real restic retention dry run')
-assert 'vault' in terminal('snapshots')
-assert 'Applying Policy: keep 4 weekly, 3 monthly snapshots' in terminal('retention')
-passed('interactive snapshot and retention output is visible through a real PTY')
+for report in ('snapshots', 'retention'):
+    expected = json.loads(run(report).stdout)
+    assert json.loads(terminal(report)) == expected
+    snapshots = expected if report == 'snapshots' else expected['keep']
+    assert len(snapshots) == 1 and snapshots[0]['id'] == snapshot
+    assert snapshots[0]['hostname'] == 'vault' and snapshots[0]['tags'] == ['headscale']
+    assert snapshots[0]['time']
+    if report == 'retention':
+        assert expected['dryRun'] is True
+        assert expected['policy'] == {'keepWeekly':4, 'keepMonthly':3}
+        assert expected['remove'] == []
+    for flag in ('EMPTY_REPORT', 'FAIL_REPORT'):
+        result = run(report, ok=False, extra={flag:'snapshots' if report == 'snapshots' else 'forget'})
+        assert 'report failed' in result.stderr
+passed('snapshot and dry-run retention JSON match through pipes and a real PTY despite a silent TTY renderer')
+passed('missing report output and restic failures produce visible errors and fail the helper')
 (backup/'retention-enabled').touch()
 run('backup')
 run('check')

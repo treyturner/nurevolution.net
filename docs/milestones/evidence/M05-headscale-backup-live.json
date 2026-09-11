@@ -41,7 +41,7 @@
       "mode": "0600"
     },
     "filteredOutput": {
-      "issue": "Global slow progress setting hides interactive snapshots/retention output in restic 0.19.1.",
+      "issue": "Interactive snapshots and retention commands returned success without displaying reports; direct piped restic JSON displayed the expected live snapshot.",
       "reproducedLocally": true,
       "snapshotMetadataConfirmed": {
         "id": "85bfee4396d9317649ee65e133448fcaed7f66368e6d0896701d27d812d316b2",
@@ -53,7 +53,12 @@
         "snapshots": 0,
         "retention": 0
       },
-      "correctedHelper": "tested; owner update pending"
+      "correctedHelper": "Piped JSON reports implemented; owner confirmation pending.",
+      "firstCorrection": {
+        "commit": "1360a204c63fe101e83608ed7f80ffeb60aac58e",
+        "localTerminalRegression": "passed",
+        "ownerInstallation": "checksum verified; reports remained silent"
+      }
     }
   },
   "limits": [
