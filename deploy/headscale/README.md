@@ -184,6 +184,8 @@ Add both mount directories to the Unraid backup procedure. For the simplest cons
 
 Keep an encrypted independent copy of that backup and test a restore into a separate location. Server and relay private keys in `data` are part of the server's identity. The DigitalOcean site's backup does not include these Unraid paths. Follow [Headscale's upgrade guide](https://headscale.net/stable/setup/upgrade/) when changing the pinned version; preserve a pre-upgrade backup.
 
+For the owner's configured `gdrive.fracturetrey` remote, follow [Headscale backup to Google Drive](../../docs/operations/headscale-backup.md). It uses the existing rclone config and restic 0.19.1, restarts Headscale before uploading, and tests a restored server without network access. Run `python3 deploy/headscale/check-backup.py /path/to/restic-0.19.1` from the repository to repeat the isolated encryption/restore and lifecycle-failure tests; Docker and a Linux/amd64 restic binary are required. No live credentials are used by that test.
+
 ## Validation performed
 
 The pinned Linux/amd64 image passed configuration validation, policy validation, health checks, tagged reusable/ephemeral key creation and revocation, and database/server-key persistence across restart. This used UID/GID `99:100`, a read-only root, removed capabilities, and the same writable-path/resource settings. Compose syntax validation and the repository's full `pnpm verify` gate passed, including after the routed-network revision.

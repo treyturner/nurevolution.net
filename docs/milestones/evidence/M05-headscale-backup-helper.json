@@ -1,0 +1,34 @@
+{
+  "checks": [
+    "real restic 0.19.1 + rclone init, encrypted backup, full check, exact restore after service restart",
+    "existing and live-directory restore destinations refused",
+    "FAIL_STOP: service running, failed capture cleaned, accepted snapshot unchanged",
+    "FAIL_COPY: service running, failed capture cleaned, accepted snapshot unchanged",
+    "FAIL_UPLOAD: service running, failed capture cleaned, accepted snapshot unchanged",
+    "repository failure leaves running service untouched",
+    "intentionally stopped service stays stopped",
+    "existing capture preserved without stopping service",
+    "real restic retention dry run",
+    "explicit retention marker allows scoped forget and prune"
+  ],
+  "restic": "restic 0.19.1 compiled with go1.26.4 on linux/amd64",
+  "rclone": "rclone v1.69.3-DEV",
+  "limits": "Lifecycle fault injection uses a Docker command fixture; repository encryption, rclone transport, backup and restore use real clients. Live Google Drive and Headscale restore remain owner acceptance.",
+  "at": "2026-09-11T19:29:43.312249+00:00",
+  "isolatedServer": {
+    "version": "0.29.3",
+    "network": "none",
+    "healthy": true,
+    "serverKeysPreserved": true,
+    "restoreFilesUnchanged": true,
+    "fixtureEnrollmentKeysRecovered": 1,
+    "fixtureUsersRecovered": 1,
+    "liveNodesTested": false
+  },
+  "liveDestination": {
+    "remote": "gdrive.fracturetrey",
+    "rcloneConfig": "/boot/config/plugins/rclone/.rclone.conf",
+    "repository": "rclone:gdrive.fracturetrey:Headscale/restic",
+    "status": "owner connection reported; initial backup and restore pending"
+  }
+}
