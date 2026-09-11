@@ -123,6 +123,8 @@ jobs:
           bzip2 --decompress "$backup_test/restic.bz2"
           chmod 700 "$backup_test/restic"
           python3 deploy/headscale/check-backup.py "$backup_test/restic"
+      - name: Verify the restored Headscale server and identities
+        run: sudo python3 deploy/headscale/check-restore.py
 
   publish:
     needs: [verify, image-identity, headscale-runner, headscale-backup]

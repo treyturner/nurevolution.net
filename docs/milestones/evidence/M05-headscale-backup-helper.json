@@ -25,7 +25,14 @@
     "restoreFilesUnchanged": true,
     "fixtureEnrollmentKeysRecovered": 1,
     "fixtureUsersRecovered": 1,
-    "liveNodesTested": false
+    "liveNodesTested": false,
+    "repeatableCheck": {
+      "command": "sudo python3 deploy/headscale/check-restore.py",
+      "requiredCiJob": "headscale-backup",
+      "at": "2026-09-11T20:22:50.702289+00:00",
+      "passed": true,
+      "scope": "Runs the actual check-restore.sh against a populated fixture; restic encryption and file restoration are exercised separately by check-backup.py."
+    }
   },
   "liveDestination": {
     "remote": "gdrive.fracturetrey",
