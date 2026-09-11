@@ -1,0 +1,100 @@
+{
+  "schemaVersion": 1,
+  "reportedAt": "2026-09-11T19:42:49.101895+00:00",
+  "source": "Owner-run Unraid commands and filtered result supplied in this task",
+  "helperCommit": "86ccc85da024101744b90bb33e3cdb4560d16317",
+  "host": "vault",
+  "repository": "rclone:gdrive.fracturetrey:Headscale/restic",
+  "rcloneConfig": "/boot/config/plugins/rclone/.rclone.conf",
+  "restic": "0.19.1 (owner installation: go1.26.5 linux/amd64)",
+  "backupAccepted": true,
+  "repositoryFullReadCheck": "passed before restore in an errexit command block",
+  "restore": {
+    "at": "2026-09-11T19:37:54Z",
+    "snapshotId": "85bfee4396d9317649ee65e133448fcaed7f66368e6d0896701d27d812d316b2",
+    "healthy": true,
+    "serverKeysPreserved": true,
+    "restoreFilesUnchanged": true,
+    "network": "none",
+    "nodes": [
+      {
+        "id": 1,
+        "name": "nurevolution-droplet",
+        "addresses": ["100.64.0.1", "fd7a:115c:a1e0::1"],
+        "tags": ["tag:nurevolution-droplet"]
+      }
+    ],
+    "savedEnrollmentKeyCount": 2,
+    "savedUserCount": 0
+  },
+  "schedule": {
+    "frequency": "weekly",
+    "script": "/boot/config/plugins/user.scripts/scripts/backup_headscale/script",
+    "source": "Owner confirmed configured on 2026-09-11"
+  },
+  "retention": {
+    "weekly": 4,
+    "monthly": 3,
+    "enabled": true,
+    "marker": {
+      "owner": "root",
+      "mode": "0600"
+    },
+    "filteredOutput": {
+      "issue": "Interactive snapshots and retention commands returned success without displaying reports; direct piped restic JSON displayed the expected live snapshot.",
+      "reproducedLocally": true,
+      "snapshotMetadataConfirmed": {
+        "id": "85bfee4396d9317649ee65e133448fcaed7f66368e6d0896701d27d812d316b2",
+        "hostname": "vault",
+        "tags": ["headscale"],
+        "time": "2026-09-11T14:36:16.304716588-05:00"
+      },
+      "commandExitStatuses": {
+        "snapshots": 0,
+        "retention": 0
+      },
+      "correctedHelper": "Owner confirmed snapshot and retention JSON reports displayed successfully.",
+      "firstCorrection": {
+        "commit": "1360a204c63fe101e83608ed7f80ffeb60aac58e",
+        "localTerminalRegression": "passed",
+        "ownerInstallation": "checksum verified; reports remained silent"
+      },
+      "acceptedReport": {
+        "recordedAt": "2026-09-11T20:14:24.388245+00:00",
+        "helperCommit": "db838590f068e8ed173274657c7f2ac463aa9a04",
+        "helperSha256": "1f0ae5a761f04227f91ff7046d05aa38fb1ce8161ba0fc8fa88f3a2e539c7aa5",
+        "snapshotList": [
+          {
+            "id": "85bfee4396d9317649ee65e133448fcaed7f66368e6d0896701d27d812d316b2",
+            "hostname": "vault",
+            "tags": ["headscale"],
+            "time": "2026-09-11T14:36:16.304716588-05:00"
+          }
+        ],
+        "retention": {
+          "dryRun": true,
+          "policy": {
+            "keepWeekly": 4,
+            "keepMonthly": 3
+          },
+          "keep": [
+            {
+              "id": "85bfee4396d9317649ee65e133448fcaed7f66368e6d0896701d27d812d316b2",
+              "hostname": "vault",
+              "tags": ["headscale"],
+              "time": "2026-09-11T14:36:16.304716588-05:00"
+            }
+          ],
+          "remove": []
+        }
+      }
+    }
+  },
+  "limits": [
+    "Recovery tested in an isolated container on the original Unraid host, not a replacement host.",
+    "Original service remained untouched during restore.",
+    "Unraid boot/firewall persistence requires a later owner-managed reboot.",
+    "Recovery needs the encryption password and the same Google OAuth client ID for drive.file access.",
+    "Broader appdata backups are outside this task."
+  ]
+}

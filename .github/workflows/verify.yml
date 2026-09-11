@@ -104,8 +104,30 @@ jobs:
           umask 0002
           python3 deploy/headscale/check-runner.py
 
+  headscale-backup:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version-file: .python-version
+      - name: Verify the pinned backup client and exercise recovery
+        run: |
+          backup_test="$RUNNER_TEMP/headscale-backup"
+          mkdir -p "$backup_test"
+          curl --fail --silent --show-error --location \
+            https://github.com/restic/restic/releases/download/v0.19.1/restic_0.19.1_linux_amd64.bz2 \
+            --output "$backup_test/restic.bz2"
+          printf '%s  %s\n' f415415624dcc452f2a02b8c33641791a8c6d6d3b65bbb3543fcf9a25151585c "$backup_test/restic.bz2" | sha256sum --check
+          bzip2 --decompress "$backup_test/restic.bz2"
+          chmod 700 "$backup_test/restic"
+          python3 deploy/headscale/check-backup.py "$backup_test/restic"
+      - name: Verify the restored Headscale server and identities
+        run: sudo python3 deploy/headscale/check-restore.py
+
   publish:
-    needs: [verify, image-identity, headscale-runner]
+    needs: [verify, image-identity, headscale-runner, headscale-backup]
     if: github.event_name == 'push' && github.ref == 'refs/heads/main' && github.repository == 'treyturner/nurevolution.net'
     runs-on: ubuntu-24.04
     timeout-minutes: 15

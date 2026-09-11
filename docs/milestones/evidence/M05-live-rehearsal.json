@@ -1,0 +1,386 @@
+{
+  "schemaVersion": 1,
+  "at": "2026-09-11T19:50:36.789084+00:00",
+  "status": "core live rehearsal passed; remaining owner/client and operational decisions listed",
+  "droplet": {
+    "region": "NYC1",
+    "os": "Ubuntu 26.04 LTS x64",
+    "tier": "Basic Premium Intel",
+    "baseMonthlyUsd": 8,
+    "vCpu": 1,
+    "memoryGb": 1,
+    "storageGb": 35,
+    "transferTb": 1,
+    "additionalHostedSites": 0,
+    "dockerStorage": "containerd",
+    "publicSshSources": ["136.49.253.125/32"]
+  },
+  "current": {
+    "release": {
+      "schemaVersion": 1,
+      "sourceCommit": "73919417de625582792ed9e5637176408a7329a6",
+      "verifyRunUrl": "https://github.com/treyturner/nurevolution.net/actions/runs/34636424238",
+      "imageDigest": "sha256:aed068c3439f0ffc52b6e030db2c389db502cc4bb0b5510ecd3c961b410c89fc",
+      "imageId": "sha256:a2429f2dec4c4c3938d8c10eab3cdd4acdeb07bab96d4eb15945b76a9843d083",
+      "caddyImageDigest": "sha256:dd11b699a9cf5216544c651899f45ebf9a8bb28c044664bcb577f7b6b2f34d73",
+      "caddyImageId": "sha256:3a3a8d75c4193f1e739eb5bb36dde1d84ddfb486247dabf46dab0b2bfb1adb87",
+      "caddyBinarySha256": "6dbc9c58aeda388498cf1bd00f3f23912643a5a707b3ef34963d50fbcf42df34",
+      "configurationSha256": "66087c9e5937bf3baa95d58a910c0a50bc6ef50f489667b36aa1efb7649a5180",
+      "mediaManifestSha256": "5b5851bf11c74b9a0d30a9dfa3067902f22cd15e83e2d8c75c3b7d94c694a047",
+      "publishedAt": "2026-09-11T19:07:06.212Z"
+    },
+    "profile": {
+      "environment": "preview",
+      "webOrigin": "https://preview.nurevolution.net",
+      "mediaOrigin": "https://podcast-preview.nurevolution.net",
+      "appMemoryMiB": 256,
+      "reserveMemoryMiB": 192,
+      "minimumFreeDiskMiB": 2048,
+      "readinessSeconds": 60
+    },
+    "profileSha256": "4a352fc7bf933df71ea8eccf3a9c3fb83902cc14b058b6558103cb854af9186b",
+    "edgeSha256": "2e7db7414894c5e952768f868211e5112ce225c109eec75777160612db945743",
+    "deployedAt": "2026-09-11T19:44:38.930Z"
+  },
+  "initialDeployment": {
+    "run": "https://github.com/treyturner/nurevolution.net/actions/runs/34637364338",
+    "conclusion": "success",
+    "completedAt": "2026-09-11T19:11:17Z",
+    "transport": "GitHub-hosted userspace Tailscale 1.98.10 through self-hosted Headscale; pinned OpenSSH identity"
+  },
+  "capacity": {
+    "at": "2026-09-11T19:25:43Z",
+    "durationSeconds": 120.129,
+    "minimumAvailableBytes": 431181824,
+    "swapUsedBytes": 0,
+    "containersUninterrupted": true,
+    "backup": {
+      "at": "2026-09-11T19:23:50.002Z",
+      "snapshotId": "92a037645ec8af85a8e11bbbd0c92ce40a730d6f27d4b66436836543b3489040",
+      "repositoryCheck": "passed"
+    },
+    "backupUnit": "ActiveEnterTimestamp=\nInactiveEnterTimestamp=\nResult=success\nExecMainStatus=0\nMemoryPeak=[not set]",
+    "dockerStats": "nurevolution-preview-app-1 104.6MiB / 256MiB 0.00%\nnurevolution-edge-edge-1 42.98MiB / 956.4MiB 2.08%",
+    "tailscaleMemory": "MemoryCurrent=36425728\nMemoryPeak=46006272",
+    "traffic": {
+      "at": "2026-09-11T19:25:43.671Z",
+      "durationSeconds": 120.493,
+      "concurrentWorkers": 4,
+      "results": [
+        {
+          "url": "https://preview.nurevolution.net/episodes/trey-turner-praxis",
+          "requests": 200,
+          "bytes": 11229933,
+          "maximumMs": 453,
+          "errors": []
+        },
+        {
+          "url": "https://preview.nurevolution.net/episodes/trey-turner-ruminate",
+          "requests": 201,
+          "bytes": 11048719,
+          "maximumMs": 422,
+          "errors": []
+        },
+        {
+          "url": "https://preview.nurevolution.net/feed/podcast/",
+          "requests": 187,
+          "bytes": 9976263,
+          "maximumMs": 421,
+          "errors": []
+        },
+        {
+          "url": "https://podcast-preview.nurevolution.net/2015_11_20-Trey_Turner-Praxis-v0.mp3",
+          "requests": 188,
+          "bytes": 49283072,
+          "maximumMs": 315,
+          "errors": []
+        }
+      ]
+    },
+    "backupServiceRuntimeSeconds": 6.724,
+    "backupServiceMemoryPeak": "192 MiB as reported by systemd; no OOM or container restart"
+  },
+  "mediaAudit": {
+    "at": "2026-09-11T19:12:44.406Z",
+    "publicAssets": 156,
+    "rangeBytesPerAsset": 1024,
+    "totalRangeBytes": 159744,
+    "downloadRoutes": 55,
+    "allPassed": true
+  },
+  "resumeAndFeed": {
+    "at": "2026-09-11T19:44:14.929Z",
+    "url": "https://podcast-preview.nurevolution.net/2015_11_20-Trey_Turner-Praxis-v0.mp3",
+    "interruptedAt": 1048576,
+    "bytes": 104560655,
+    "sha256": "03b4cb9a682b02711095cf7543b48a31a8f08e4155a4aa68b9632921c7e5f227",
+    "durationSeconds": 7.222,
+    "resumeStatus": 206,
+    "feed": {
+      "items": 55,
+      "etag": "W/\"7bd7daddfa54c2386ab976afa9c157fe424624c8eb42e7754063d2bbf7edb9d9\"",
+      "conditionalStatus": 304
+    }
+  },
+  "feedValidator": {
+    "url": "https://validator.w3.org/feed/check.cgi?url=https%3A%2F%2Fpreview.nurevolution.net%2Ffeed%2Fpodcast",
+    "result": "Valid RSS",
+    "warnings": [
+      "Self reference differs from document location because preview preserves the production feed URL."
+    ],
+    "physicalPodcastClient": "pending"
+  },
+  "browsers": {
+    "method": "Unmodified HTTPS connections through a loopback CONNECT proxy mapping only the four site hosts to 159.89.86.21. TLS verified; no mocked bytes or response rewriting. Website bypassed Cloudflare for this candidate resolver test; public Cloudflare HTTP/feed probes passed separately.",
+    "records": [
+      {
+        "browser": "chromium",
+        "version": "153.0.8010.12",
+        "initial": {
+          "paused": true,
+          "time": 0,
+          "duration": 3396.349388,
+          "source": "https://podcast.nurevolution.net/2015_11_20-Trey_Turner-Praxis-v0.mp3"
+        },
+        "playedAndSeeked": true,
+        "pausedSelectionAndHistory": true,
+        "mobileTabs": true,
+        "download": {
+          "filename": "2015_11_20-Trey_Turner-Praxis-v0.mp3",
+          "bytes": 104560655,
+          "sha256": "03b4cb9a682b02711095cf7543b48a31a8f08e4155a4aa68b9632921c7e5f227"
+        },
+        "pageErrors": []
+      },
+      {
+        "browser": "firefox",
+        "version": "155.0",
+        "initial": {
+          "paused": true,
+          "time": 0,
+          "duration": 3396.349387,
+          "source": "https://podcast.nurevolution.net/2015_11_20-Trey_Turner-Praxis-v0.mp3"
+        },
+        "playedAndSeeked": true,
+        "pausedSelectionAndHistory": true,
+        "mobileTabs": true,
+        "download": {
+          "filename": "2015_11_20-Trey_Turner-Praxis-v0.mp3",
+          "bytes": 104560655,
+          "sha256": "03b4cb9a682b02711095cf7543b48a31a8f08e4155a4aa68b9632921c7e5f227"
+        },
+        "pageErrors": []
+      },
+      {
+        "browser": "webkit",
+        "afterSeek": {
+          "time": 1800.256782246,
+          "paused": false,
+          "readyState": 2,
+          "playRejection": null
+        },
+        "version": "26.6",
+        "initial": {
+          "paused": true,
+          "time": 0,
+          "duration": 3396.349387755,
+          "source": "https://podcast.nurevolution.net/2015_11_20-Trey_Turner-Praxis-v0.mp3"
+        },
+        "playedAndSeeked": true,
+        "pausedSelectionAndHistory": true,
+        "mobileTabs": true,
+        "download": {
+          "filename": "2015_11_20-Trey_Turner-Praxis-v0.mp3",
+          "bytes": 104560655,
+          "sha256": "03b4cb9a682b02711095cf7543b48a31a8f08e4155a4aa68b9632921c7e5f227"
+        },
+        "pageErrors": []
+      }
+    ],
+    "webkitObservation": "A native play() promise remained pending while currentTime advanced. Seek acceptance checks paused state, observed playback advancement, and absence of errors or rejected play requests.",
+    "physicalDevicesTested": false
+  },
+  "rollback": {
+    "at": "2026-09-11T19:45:26Z",
+    "durationSeconds": 47.994,
+    "from": "afb4365dec2ea5c641b1c75f617fcdf575985613",
+    "to": "73919417de625582792ed9e5637176408a7329a6",
+    "operator": "nurevolution-deploy",
+    "method": "Installed pinned deploy.mjs rollback command; normal validation and transaction",
+    "edgeStartedAt": "2026-09-10T04:50:55.159142697Z",
+    "edgeUninterrupted": true,
+    "unresolvedJournal": false,
+    "priorReleaseWorkflow": "https://github.com/treyturner/nurevolution.net/actions/runs/34640191514",
+    "availability": [
+      {
+        "phase": "m5-promotion-watch",
+        "durationSeconds": 161.961,
+        "applicationProbes": 610,
+        "mediaProbes": 660,
+        "mediaFailures": 0,
+        "applicationFailures": 4,
+        "failedSamples": [
+          {
+            "kind": "application",
+            "at": "2026-09-11T19:42:26.244Z",
+            "status": 502,
+            "valid": false,
+            "durationMs": 75
+          },
+          {
+            "kind": "application",
+            "at": "2026-09-11T19:42:26.518Z",
+            "status": 502,
+            "valid": false,
+            "durationMs": 67
+          },
+          {
+            "kind": "application",
+            "at": "2026-09-11T19:42:26.786Z",
+            "status": 502,
+            "valid": false,
+            "durationMs": 67
+          },
+          {
+            "kind": "application",
+            "at": "2026-09-11T19:42:27.053Z",
+            "status": 502,
+            "valid": false,
+            "durationMs": 70
+          }
+        ],
+        "observedReleases": [
+          "73919417de625582792ed9e5637176408a7329a6",
+          "afb4365dec2ea5c641b1c75f617fcdf575985613"
+        ]
+      },
+      {
+        "phase": "m5-rollback-watch",
+        "durationSeconds": 114.259,
+        "applicationProbes": 430,
+        "mediaProbes": 453,
+        "mediaFailures": 0,
+        "applicationFailures": 4,
+        "failedSamples": [
+          {
+            "kind": "application",
+            "at": "2026-09-11T19:45:23.750Z",
+            "status": 502,
+            "valid": false,
+            "durationMs": 75
+          },
+          {
+            "kind": "application",
+            "at": "2026-09-11T19:45:24.026Z",
+            "status": 502,
+            "valid": false,
+            "durationMs": 64
+          },
+          {
+            "kind": "application",
+            "at": "2026-09-11T19:45:24.290Z",
+            "status": 502,
+            "valid": false,
+            "durationMs": 69
+          },
+          {
+            "kind": "application",
+            "at": "2026-09-11T19:45:24.560Z",
+            "status": 502,
+            "valid": false,
+            "durationMs": 63
+          }
+        ],
+        "observedReleases": [
+          "afb4365dec2ea5c641b1c75f617fcdf575985613",
+          "73919417de625582792ed9e5637176408a7329a6"
+        ]
+      }
+    ]
+  },
+  "recovery": {
+    "at": "2026-09-11T19:47:03Z",
+    "runtimeRehearsalSeconds": 32.064,
+    "snapshotId": "92a037645ec8af85a8e11bbbd0c92ce40a730d6f27d4b66436836543b3489040",
+    "release": "73919417de625582792ed9e5637176408a7329a6",
+    "assetsVerified": 156,
+    "assetBytes": 6808089382,
+    "manifestToolingProfileStateEdgeHashes": "passed",
+    "applicationHealth": {
+      "healthy": true,
+      "release": "73919417de625582792ed9e5637176408a7329a6"
+    },
+    "feedItems": 55,
+    "mediaRangeBytes": 262144,
+    "downloadRedirect": "passed",
+    "certificates": [
+      {
+        "hostname": "nurevolution.net",
+        "certificateSha256": "d27aedcb0a4df437121d2625a46677b6b40675378bf56293432c3f907e091205",
+        "keyMatchesOriginal": true,
+        "details": "notBefore=Sep 10 03:13:43 2026 GMT\nnotAfter=Dec  9 03:13:42 2026 GMT\nsha256 Fingerprint=CB:56:EC:02:C9:18:C4:72:D5:64:EF:10:DC:81:42:06:46:86:8E:82:7C:E1:B8:07:EA:06:B5:A3:7A:A1:CF:F5"
+      },
+      {
+        "hostname": "podcast.nurevolution.net",
+        "certificateSha256": "4cd54ed7bf19c1ccd14186eb7b462988c3d6ea3b272edb9f9d5ca99399066cc1",
+        "keyMatchesOriginal": true,
+        "details": "notBefore=Sep 10 03:14:03 2026 GMT\nnotAfter=Dec  9 03:14:02 2026 GMT\nsha256 Fingerprint=C1:87:2A:69:BD:CB:C3:B2:1F:B3:DB:5D:1C:4D:C1:74:35:E0:B5:1A:D9:4A:38:CF:A0:3D:6F:38:84:C7:27:2E"
+      },
+      {
+        "hostname": "preview.nurevolution.net",
+        "certificateSha256": "afd6c1ae3a0b3babaf657aeb54203218df50cc107f8d2105198a97c313f2500f",
+        "keyMatchesOriginal": true,
+        "details": "notBefore=Sep 10 03:14:03 2026 GMT\nnotAfter=Dec  9 03:14:02 2026 GMT\nsha256 Fingerprint=8E:A4:61:DE:8B:BE:EB:0D:DE:D0:B3:09:AB:DB:21:9C:A0:C2:4B:19:DA:8D:2E:53:C2:03:9D:5A:BD:8F:A3:D1"
+      },
+      {
+        "hostname": "podcast-preview.nurevolution.net",
+        "certificateSha256": "68424d06848ed580120d8558e1eeda1fe816794404b3381487f99498a68b57e4",
+        "keyMatchesOriginal": true,
+        "details": "notBefore=Sep 10 03:14:03 2026 GMT\nnotAfter=Dec  9 03:14:02 2026 GMT\nsha256 Fingerprint=C9:02:68:63:85:39:20:90:E1:5D:07:B6:23:73:6D:68:40:82:2C:DE:87:F8:0F:3B:36:97:31:CC:2D:17:50:81"
+      }
+    ],
+    "liveContainersUninterrupted": true,
+    "limits": "Fresh app/edge containers recovered against the independent restored files on the existing host; isolated internal network, no published ports, TLS probed from the host against the private container address. Certificates loaded from restored data without contacting ACME. This is not a complete replacement-droplet provisioning rehearsal.",
+    "fullRepositoryRead": "passed",
+    "restoreWithVerification": "passed",
+    "restoreUnitSeconds": 468.127,
+    "restoreUnitMemoryPeak": "194 MiB reported by systemd; no swap/OOM failure",
+    "networkRetry": "One reset transfer completed after the built-in retry."
+  },
+  "backup": {
+    "destination": "Encrypted MinIO nurevolution-backups repository",
+    "latest": {
+      "at": "2026-09-11T19:48:08.920Z",
+      "snapshotId": "ecb2118209354a721b12c8c944391e45eed2c28cf012fb4d8e8031cb92f6ba95",
+      "repositoryCheck": "passed"
+    },
+    "schedule": "ActiveState=active\nUnitFileState=enabled\nNextElapseUSecRealtime=Sun 2026-09-13 04:02:45 UTC",
+    "snapshotActuallyRestored": "92a037645ec8af85a8e11bbbd0c92ce40a730d6f27d4b66436836543b3489040",
+    "note": "The later accepted backup captures post-rollback release state; it passed repository structure checking. The complete application/media/certificate restore used the explicitly recorded earlier snapshot."
+  },
+  "productionGateExists": false,
+  "productionCutover": "M6; not performed",
+  "pending": [
+    "Owner-managed Unraid reboot/firewall persistence check.",
+    "Physical iOS/Android playback/download and real podcast-client candidate check; repeat on canonical production hosts at M6.",
+    "Traffic forecast, total budget including extras, and final whole-host recovery target/owner acceptance.",
+    "PR CI/review for the new Headscale backup helpers and this evidence."
+  ],
+  "localVerification": {
+    "command": "CI=1 pnpm verify",
+    "passed": true,
+    "applicationToolingTests": 298,
+    "migrationTests": 12,
+    "operatorTests": 21,
+    "browserChecksPassed": 76,
+    "existingPortabilitySkips": 2,
+    "deliveryBrowsers": 3,
+    "coverage": {
+      "statements": 98.58,
+      "branches": 97.06,
+      "functions": 98.3,
+      "lines": 98.86
+    },
+    "headscaleBackupFixture": "Twelve checks with actual restic/rclone, lifecycle fault injection, exact restoration, matching JSON reports through pipes and a real terminal, empty repositories, and missing/failed report data."
+  }
+}
