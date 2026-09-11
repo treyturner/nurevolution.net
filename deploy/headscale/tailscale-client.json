@@ -1,0 +1,6 @@
+{
+  "version": "1.98.10",
+  "platform": "linux/amd64",
+  "archive": "https://pkgs.tailscale.com/stable/tailscale_1.98.10_amd64.tgz",
+  "sha256": "52490ce0832b245857e2afef7426d6ae5a4b49fb391412833cc95729bd23f7de"
+}
