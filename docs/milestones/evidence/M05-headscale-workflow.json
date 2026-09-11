@@ -1,0 +1,68 @@
+{
+  "recordedAt": "2026-09-11T18:36:56.645117+00:00",
+  "scope": "Merged-main deployment failure and repository-owned runner repair; successful public preview promotion remains pending",
+  "main": {
+    "commit": "afb4365dec2ea5c641b1c75f617fcdf575985613",
+    "verifyRun": 34631352296,
+    "verifyAndPublication": "passed",
+    "completeReleaseBundleRetainedOnDroplet": true
+  },
+  "failedDeployment": {
+    "run": 34632240790,
+    "url": "https://github.com/treyturner/nurevolution.net/actions/runs/34632240790",
+    "stage": "private client startup, before enrollment or release transfer",
+    "cause": "Upstream action unconditionally added --accept-routes alongside --accept-routes=false; the pinned client rejects duplicate flags.",
+    "originalAction": "tailscale/github-action@306e68a486fd2350f2bfc3b19fcd143891a4a2d8",
+    "earlierRehearsalGap": "Direct-client rehearsal did not execute the upstream action."
+  },
+  "repair": {
+    "entryPoint": "deploy/headscale/runner.py",
+    "entryPointSha256": "060d59e26d989c9288d79a83fbd4f3cdcbb40ebaa640192dd6e1f92cd5df031b",
+    "clientPin": "deploy/headscale/tailscale-client.json",
+    "transport": "Unprivileged userspace daemon with in-memory state; OpenSSH/SCP ProxyCommand through tailscale nc",
+    "hostRoutingAndDns": "unchanged",
+    "temporaryFiles": "private directory; enrollment file removed on success/failure; always-run logout, daemon stop, and directory removal",
+    "publicationGate": "Verify headscale-runner job, without live credentials"
+  },
+  "integration": {
+    "command": "python3 deploy/headscale/check-runner.py",
+    "result": "passed",
+    "headscaleImage": "ghcr.io/juanfont/headscale@sha256:0e7f1c6e4ce6c2a2a001103ecd3fa645a045adf30ac8a5234fe037b43000cd72",
+    "fixtureBaseImage": "alpine@sha256:14358309a308569c32bdc37e2e0e9694be33a9d99e68afb0f5ff33cc1f695dce",
+    "client": "1.98.10, official archive checksum verified by the workflow helper",
+    "checks": [
+      "Original duplicate-flag failure reproduced with the actual binary",
+      "Actual helper enrolled both roles against a disposable TLS Headscale server",
+      "Unprivileged clients left interfaces, routes, and resolv.conf unchanged",
+      "Client DNS, route acceptance, and Tailscale SSH preferences remained disabled",
+      "OpenSSH authenticated with the expected fixture host identity",
+      "OpenSSH rejected a different fixture host identity",
+      "SCP transferred and independently compared a real file",
+      "Listening TCP 443 positively reachable locally, denied through the private policy",
+      "Normal logout removed both ephemeral nodes; repeated cleanup succeeded",
+      "Expired registration key rejected without exposing it; credential removed; daemon/directory cleanup succeeded"
+    ],
+    "isolation": "Task-owned containers/network/image only; no published ports, privileged containers, host network/PID/mounts, or shared-host firewall changes",
+    "cleanup": "Task-owned containers, network and image removed"
+  },
+  "unitAndWorkflowChecks": {
+    "operationsTests": 21,
+    "operationsResult": "passed",
+    "actionlint": "1.7.12 passed for deploy.yml and verify.yml"
+  },
+  "limits": [
+    "Integration uses isolated fixtures; the live public Headscale/DERP path passed the earlier client rehearsal but the replacement still needs the merged-main GitHub deployment.",
+    "No production DNS/cutover or public SSH firewall changes.",
+    "Full application/backup/restore/rollback/capacity acceptance remains pending."
+  ],
+  "fullLocalGate": {
+    "command": "CI=1 pnpm verify",
+    "result": "passed",
+    "applicationTests": 298,
+    "migrationTests": 12,
+    "operationsTests": 21,
+    "browserTests": 76,
+    "unchangedPortabilitySkips": 2,
+    "delivery": "Actual application/Caddy images, all 55 episode URLs, offline certificate issuance, ranges/resume, three browser downloads, restart isolation, and verified archive export passed"
+  }
+}
