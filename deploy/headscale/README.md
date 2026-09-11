@@ -6,7 +6,7 @@ The public name is `headscale.treyturner.info`, using the existing `*.treyturner
 
 ## 0. Install the host firewall before stack startup
 
-Headscale stays managed by the existing Compose stack, with `restart: unless-stopped`. The host firewall loads synchronously from `/boot/config/go` before `emhttp`. It needs neither a running Docker daemon nor `DOCKER-USER`, a Compose profile, a separate service-start hook, or a polling loop. The owner has already verified the running container and firewall; boot persistence and public routing remain to be confirmed.
+Headscale stays managed by the existing Compose stack, with `restart: unless-stopped`. The host firewall loads synchronously from `/boot/config/go` before `emhttp`. It needs neither a running Docker daemon nor `DOCKER-USER`, a Compose profile, a separate service-start hook, or a polling loop. The owner has already verified the running container and firewall; boot persistence and public machine-client access remain to be confirmed.
 
 Save [firewall.sh](firewall.sh) as the User Scripts file `/boot/config/plugins/user.scripts/scripts/isolate_headscale_network/script`. Use **LF line endings**. The owner encountered CRLF (`0d 0a`), which makes direct Bash execution reject `set -euo pipefail`, even when the editor does not display `^M`. Normalize and run the stored file directly as root:
 
@@ -114,6 +114,8 @@ Use the Headscale container's fixed address **`172.26.0.2`** below. The existing
 | Existing bot/auth rules         | Exempt this hostname from browser challenges, bot user-agent rejection, and interactive login middleware so machine clients can enroll and maintain connections. Keep the exception scoped to this host.                                           |
 | pfSense WAN UDP **3478**        | Forward directly to **172.26.0.2:3478/UDP**, with the associated pass rule. STUN does not pass through the HTTP backend.                                                                                                                           |
 
+For local clients, a [pfSense DNS Resolver host override](https://docs.netgate.com/pfsense/en/latest/nat/reflection.html#dns-resolver-forwarder-overrides) can resolve `headscale.treyturner.info` to **192.168.1.1**. The HTTPS frontend and UDP 3478 path at that LAN address both passed on 2026-09-11. Preserve the public DNS record for external clients. If recreating the LAN UDP forward, ensure replies return through pfSense; when routing would bypass it, source NAT is needed for that scoped path. See [pfSense's explanation of the return path](https://docs.netgate.com/pfsense/en/latest/nat/reflection.html#configuring-nat-reflection).
+
 The relay's encrypted traffic uses the same public HTTPS endpoint on TCP 443. Headscale verifies that relay clients belong to this network. Metrics are disabled and gRPC administration listens only on container loopback. No additional administration port needs a public route.
 
 For optional HTTP captive-portal detection, the existing port-80 frontend can return 204 for this hostname's `/generate_204` path before its normal HTTPS redirect. This is separate from the required HTTPS control/relay route.
@@ -144,4 +146,6 @@ The reproducible [firewall check](check-firewall.py) installs the actual script 
 
 The owner verified the live Unraid container as healthy with HTTP 200. Connections from Headscale to Unraid SSH, pfSense HTTPS, and a listening services container were blocked; the same targets were reachable from Unraid. The mangle DROP counter recorded nine packets, and health remained 200 after removing the old hooks. These results and remaining limits are recorded in [firewall evidence](../../docs/milestones/evidence/M05-headscale-firewall.json).
 
-The stored script's successful direct execution after CRLF conversion and boot persistence remain unconfirmed. On 2026-09-11, `headscale.treyturner.info` did not resolve from the workspace. Public HAProxy upgrades/TLS, client enrollment, overlay allowed/denied traffic, actual relay connectivity, restore, and GitHub deployment still need testing.
+The owner confirmed successful direct execution after CRLF conversion and that neither the custom startup hook nor Compose profile was installed. Saving the foreground `go` call and boot persistence remain unconfirmed. Public DNS resolves through `wan.treyturner.info` to `136.49.253.125`; the workspace's earlier lookup failure is local. Trusted HTTPS passed through WAN and pfSense LAN. Correct Tailscale STUN requests passed from the droplet over WAN and from the workspace through both paths and directly to the backend. Initial bare STUN requests omitted required SOFTWARE/FINGERPRINT attributes; their timeouts did not establish a NAT failure.
+
+The droplet still receives HAProxy 403 responses with curl/Go user-agents while a browser user-agent receives 200. Apply the exact-host bot-rule exception before enrollment. Real control-protocol upgrades, overlay allowed/denied traffic, authenticated relay connectivity, restore, and GitHub deployment still need testing. A successful STUN response establishes UDP discovery reachability, not a working authenticated DERP relay.

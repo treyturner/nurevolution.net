@@ -51,7 +51,7 @@
     "mangleDropBytes": 540,
     "oldFilterHooks": "Owner confirmed removal of DOCKER-USER/INPUT hooks and NUREV-HS-OUT chain; HTTP health still 200",
     "storedScript": "/boot/config/plugins/user.scripts/scripts/isolate_headscale_network/script",
-    "lineEndingFailure": "Owner confirmed CRLF bytes 0d 0a after set -euo pipefail; direct Bash execution failed. LF conversion supplied; successful rerun not yet confirmed."
+    "lineEndingFailure": "CRLF bytes 0d 0a caused direct Bash execution to fail. Owner subsequently confirmed successful execution after LF conversion."
   },
   "startupDecision": {
     "hook": "Foreground Bash invocation of stored User Script in /boot/config/go before emhttp",
@@ -59,18 +59,45 @@
     "userScriptsSchedule": "Disabled once foreground go call is installed",
     "failurePolicy": "Log and continue boot, per selected owner fragment; not fail-closed on firewall installation failure",
     "liveBootVerification": "pending",
-    "temporaryRestartPolicyRestoration": "pending owner confirmation"
+    "temporaryRestartPolicyRestoration": "pending owner confirmation",
+    "oldHookAndProfile": "Owner confirmed neither the custom docker_started hook nor Compose profile was installed; no removal needed.",
+    "goCallSaved": "Not yet explicitly confirmed; owner was asked separately from successful manual execution."
   },
   "publicEndpoint": {
     "hostname": "headscale.treyturner.info",
-    "observation": "Did not resolve from workspace on 2026-09-11; curl exit 6, HTTP 000",
-    "tlsAndControlUpgrade": "not tested"
+    "tlsAndControlUpgrade": "Trusted TLS passed in follow-up; actual control-protocol upgrade and enrollment remain pending.",
+    "followUp": {
+      "checkedAt": "2026-09-11T17:09:59.046137+00:00",
+      "publicDns": "Google and Cloudflare public resolvers both return CNAME wan.treyturner.info -> 136.49.253.125. The earlier lookup failure is specific to the workspace resolver.",
+      "https": "Workspace requests through WAN and pfSense LAN 192.168.1.1 return 200 with successful TLS certificate validation using the original hostname.",
+      "dropletDns": "Resolves to 136.49.253.125",
+      "dropletHttp": {
+        "curlUserAgent": 403,
+        "goUserAgent": 403,
+        "browserUserAgent": 200,
+        "forbiddenBody": "Request forbidden by administrative rules."
+      },
+      "stun": {
+        "result": "Passed on first correct request from droplet over WAN and from workspace directly to backend, WAN and pfSense LAN.",
+        "udpPort": 3478,
+        "responseBytes": 44,
+        "verified": [
+          "Binding success response",
+          "Magic cookie",
+          "Matching transaction ID"
+        ],
+        "request": "Tailscale SOFTWARE tailnode attribute and valid FINGERPRINT, matching tailscale.com/net/stun.Request",
+        "earlierTimeouts": "Bare STUN requests omitted the fields required by Headscale; those timeouts are not evidence of a forwarding failure."
+      },
+      "remaining": "Exempt the exact Headscale hostname from the HAProxy machine-user-agent rejection, verify real enrollment/control upgrade and authenticated DERP relay."
+    },
+    "initialObservation": "Did not resolve from workspace on 2026-09-11; curl exit 6, HTTP 000"
   },
   "remaining": [
-    "Confirm stored script direct execution and boot configuration",
-    "Verify live boot persistence",
-    "Publish DNS-only name and validate HAProxy HTTPS plus WAN UDP 3478",
-    "Enroll droplet/disposable client and test overlay allow/deny, actual relay and ephemeral cleanup",
+    "Confirm foreground go call and live boot persistence",
+    "Apply hostname-scoped HAProxy bot-rule exception and verify client access",
+    "Configure local split DNS if needed; pfSense LAN HTTPS and STUN paths already pass",
+    "Enroll droplet/disposable client and test overlay allow/deny, authenticated relay and ephemeral cleanup",
     "Integrate GitHub private deployment transport and promote verified preview",
     "Complete M5 running application recovery, rollback, capacity and client acceptance"
   ]
