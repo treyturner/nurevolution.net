@@ -2,7 +2,10 @@ import hashlib
 import json
 import os
 from pathlib import Path
+import pty
+import select
 import subprocess
+import time
 
 root = Path('/test')
 root.mkdir(mode=0o700)
@@ -71,6 +74,32 @@ def run(*args, ok=True, extra=None):
 def passed(label):
     checks.append(label)
     print('PASS', label, flush=True)
+def terminal(*args):
+    master, slave = pty.openpty()
+    process = subprocess.Popen(['bash', '/helper.sh', *args], env=env,
+                               stdin=slave, stdout=slave, stderr=slave)
+    os.close(slave)
+    output = bytearray()
+    deadline = time.monotonic() + 30
+    try:
+        while time.monotonic() < deadline:
+            if select.select([master], [], [], 0.1)[0]:
+                try:
+                    chunk = os.read(master, 65536)
+                except OSError as error:
+                    if error.errno == 5: break  # PTY slave closed.
+                    raise
+                if not chunk: break
+                output.extend(chunk)
+            elif process.poll() is not None:
+                break
+        assert process.wait(timeout=1) == 0
+    finally:
+        if process.poll() is None:
+            process.kill()
+            process.wait()
+        os.close(master)
+    return output.decode()
 run('init')
 run('backup')
 accepted = (backup/'last-success.json').read_bytes()
@@ -112,6 +141,9 @@ assert (root/'running').read_text() == 'true'
 passed('existing capture preserved without stopping service')
 run('retention')
 passed('real restic retention dry run')
+assert 'vault' in terminal('snapshots')
+assert 'Applying Policy: keep 4 weekly, 3 monthly snapshots' in terminal('retention')
+passed('interactive snapshot and retention output is visible through a real PTY')
 (backup/'retention-enabled').touch()
 run('backup')
 run('check')

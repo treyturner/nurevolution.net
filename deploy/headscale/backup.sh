@@ -11,8 +11,8 @@ export RCLONE_CONFIG=${HS_RCLONE_CONFIG:-/boot/config/plugins/rclone/.rclone.con
 export RESTIC_REPOSITORY=${HS_REPOSITORY:-rclone:gdrive.fracturetrey:Headscale/restic}
 export RESTIC_PASSWORD_FILE="$hs_root/restic-password"
 export RESTIC_CACHE_DIR="$hs_root/cache"
-export GOMAXPROCS=1 GOMEMLIMIT=128MiB RESTIC_PROGRESS_FPS=0.016666
-unset RESTIC_PASSWORD RESTIC_PASSWORD_COMMAND RESTIC_REPOSITORY_FILE
+export GOMAXPROCS=1 GOMEMLIMIT=128MiB
+unset RESTIC_PASSWORD RESTIC_PASSWORD_COMMAND RESTIC_REPOSITORY_FILE RESTIC_PROGRESS_FPS
 
 fail() { printf '%s\n' "$*" >&2; exit 1; }
 [[ $EUID == 0 ]] || fail 'Run this helper as root on Unraid.'
@@ -123,7 +123,9 @@ case ${1:-} in
       cd "$hs_capture"
       [[ -z $(find config data -type l -print -quit) ]] || fail 'Headscale capture contains a symlink; inspect before accepting recovery.'
       find config data -type f -print0 | sort -z | xargs -0 sha256sum > checksums.sha256
-      restic_run backup --json --tag headscale --host vault --read-concurrency 1 . > "$hs_root/last-backup.jsonl"
+      # Throttle only the captured JSON progress log. Applying this globally
+      # suppresses short interactive snapshots/retention reports in restic 0.19.1.
+      RESTIC_PROGRESS_FPS=0.016666 restic_run backup --json --tag headscale --host vault --read-concurrency 1 . > "$hs_root/last-backup.jsonl"
     )
     hs_snapshot=$(jq -r 'select(.message_type == "summary") | .snapshot_id' "$hs_root/last-backup.jsonl")
     [[ $hs_snapshot =~ ^[a-f0-9]{64}$ ]] || fail 'No full snapshot ID was returned by this backup.'

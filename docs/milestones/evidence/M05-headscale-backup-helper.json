@@ -9,7 +9,8 @@
     "intentionally stopped service stays stopped",
     "existing capture preserved without stopping service",
     "real restic retention dry run",
-    "explicit retention marker allows scoped forget and prune"
+    "explicit retention marker allows scoped forget and prune",
+    "Real PTY: snapshots and retention print policy/snapshot information after scoping progress throttling to the captured JSON backup only."
   ],
   "restic": "restic 0.19.1 compiled with go1.26.4 on linux/amd64",
   "rclone": "rclone v1.69.3-DEV",
@@ -29,6 +30,12 @@
     "remote": "gdrive.fracturetrey",
     "rcloneConfig": "/boot/config/plugins/rclone/.rclone.conf",
     "repository": "rclone:gdrive.fracturetrey:Headscale/restic",
-    "status": "owner connection reported; initial backup and restore pending"
+    "status": "Owner verified initial backup and independent restore; weekly User Script and retention marker configured."
+  },
+  "terminalRegression": {
+    "reproduced": "Pinned helper and restic 0.19.1 exit successfully with no snapshots/retention output on a TTY when RESTIC_PROGRESS_FPS=0.016666 is global; non-TTY output works.",
+    "fix": "Unset inherited/global RESTIC_PROGRESS_FPS; apply 0.016666 only to the JSON backup subprocess.",
+    "test": "A real PTY checks for vault and the selected retention policy in output.",
+    "passed": true
   }
 }
