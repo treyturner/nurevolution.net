@@ -1,0 +1,109 @@
+{
+  "recordedAt": "2026-09-11T17:55:47.128333+00:00",
+  "script": "deploy/headscale/firewall.sh",
+  "scriptSha256": "15a2973b8bebb91d95a7d7674c672fba2f439bd0a642f34a00d07833631185f9",
+  "policy": {
+    "table": "mangle",
+    "hook": "PREROUTING",
+    "chain": "NUREV-HS-EGRESS",
+    "source": "172.26.0.0/16",
+    "allow": [
+      "ESTABLISHED,RELATED in the REPLY direction",
+      "TCP/UDP to 192.168.1.1:53"
+    ],
+    "otherwise": "DROP",
+    "ipv6": "Docker bridge IPv6 disabled; no IPv6 firewall implemented"
+  },
+  "localTest": {
+    "command": "python3 deploy/headscale/check-firewall.py",
+    "fixtureImage": "docker@sha256:12e683a161823b2a839aeea999b9d960e6e1f9a97b1679ad6b441982e2d9cf07",
+    "method": "Actual script executed by Bash inside one disposable privileged container, with separate fixture network namespaces and no host network/PID namespaces or host mounts. Container removed afterward.",
+    "dockerHostFirewallChanges": "none",
+    "backends": ["iptables-legacy", "iptables-nft"],
+    "result": "passed on both backends",
+    "checks": [
+      "DOCKER-USER absent; installation succeeds",
+      "Repeated installation leaves rules unchanged",
+      "All blocked targets reachable before policy",
+      "Incoming TCP 8080 and UDP 3478 requests receive replies",
+      "TCP and UDP 53 fixture requests to pfSense receive replies",
+      "Unrelated host-to-services TCP traffic remains accessible",
+      "Headscale-initiated TCP to host, LAN, services and a public-address fixture is blocked"
+    ],
+    "dropPacketsPerBackend": 4,
+    "limitations": "Fixtures exercise packet transport, not actual DNS/STUN/DERP protocols, Headscale enrollment, Docker embedded DNS forwarding, or Unraid reboot persistence."
+  },
+  "ownerReportedUnraid": {
+    "source": "Owner-provided terminal output in the task",
+    "container": "services-headscale-1",
+    "health": "healthy; CLI health succeeds; HTTP /health returns 200",
+    "positiveControlsFromUnraid": [
+      "192.168.1.85:22",
+      "192.168.1.1:443",
+      "172.19.0.13:8080"
+    ],
+    "blockedFromHeadscale": [
+      "192.168.1.85:22",
+      "192.168.1.1:443",
+      "172.19.0.13:8080"
+    ],
+    "mangleDropPackets": 9,
+    "mangleDropBytes": 540,
+    "oldFilterHooks": "Owner confirmed removal of DOCKER-USER/INPUT hooks and NUREV-HS-OUT chain; HTTP health still 200",
+    "storedScript": "/boot/config/plugins/user.scripts/scripts/isolate_headscale_network/script",
+    "lineEndingFailure": "CRLF bytes 0d 0a caused direct Bash execution to fail. Owner subsequently confirmed successful execution after LF conversion."
+  },
+  "startupDecision": {
+    "hook": "Foreground Bash invocation of stored User Script in /boot/config/go before emhttp",
+    "serviceManagement": "Existing Compose stack; restart unless-stopped; no custom docker_started hook or profile",
+    "userScriptsSchedule": "Owner confirmed Disabled",
+    "failurePolicy": "Log and continue boot, per selected owner fragment; not fail-closed on firewall installation failure",
+    "liveBootVerification": "pending",
+    "temporaryRestartPolicyRestoration": "Owner saved restart: unless-stopped, recreated only Headscale, and ran its health check; external health/client connection passed afterward",
+    "oldHookAndProfile": "Owner confirmed neither the custom docker_started hook nor Compose profile was installed; no removal needed.",
+    "goCallSaved": "Owner confirmed foreground call before emhttp on 2026-09-11",
+    "unraidWarning": "Docker reported no kernel swap-limit capability; RAM limit remains configured"
+  },
+  "publicEndpoint": {
+    "hostname": "headscale.treyturner.info",
+    "tlsAndControlUpgrade": "Trusted TLS and actual droplet/runner control-protocol enrollment passed after owner applied bot exception and optional-:443 Host ACL",
+    "followUp": {
+      "checkedAt": "2026-09-11T17:09:59.046137+00:00",
+      "publicDns": "Google and Cloudflare public resolvers both return CNAME wan.treyturner.info -> 136.49.253.125. The earlier lookup failure is specific to the workspace resolver.",
+      "https": "Workspace requests through WAN and pfSense LAN 192.168.1.1 return 200 with successful TLS certificate validation using the original hostname.",
+      "dropletDns": "Resolves to 136.49.253.125",
+      "dropletHttp": {
+        "curlUserAgent": 403,
+        "goUserAgent": 403,
+        "browserUserAgent": 200,
+        "forbiddenBody": "Request forbidden by administrative rules."
+      },
+      "stun": {
+        "result": "Passed on first correct request from droplet over WAN and from workspace directly to backend, WAN and pfSense LAN.",
+        "udpPort": 3478,
+        "responseBytes": 44,
+        "verified": [
+          "Binding success response",
+          "Magic cookie",
+          "Matching transaction ID"
+        ],
+        "request": "Tailscale SOFTWARE tailnode attribute and valid FINGERPRINT, matching tailscale.com/net/stun.Request",
+        "earlierTimeouts": "Bare STUN requests omitted the fields required by Headscale; those timeouts are not evidence of a forwarding failure."
+      },
+      "remaining": "Exempt the exact Headscale hostname from the HAProxy machine-user-agent rejection, verify real enrollment/control upgrade and authenticated DERP relay."
+    },
+    "initialObservation": "Did not resolve from workspace on 2026-09-11; curl exit 6, HTTP 000",
+    "clientFollowUp": {
+      "checkedAt": "2026-09-11T17:52:49.206075+00:00",
+      "evidence": "docs/milestones/evidence/M05-headscale-client.json",
+      "result": "Both clients enrolled; authenticated SSH through self-hosted relay passed; listening private HTTPS denied; persistent droplet identity and temporary runner cleanup verified"
+    }
+  },
+  "remaining": [
+    "Verify live boot persistence at the next owner-managed reboot",
+    "Configure local split DNS if needed; pfSense LAN HTTPS and STUN paths already pass",
+    "Complete M5 running application recovery, rollback, capacity and client acceptance",
+    "Merge private deployment workflow and promote verified main preview",
+    "Verify independent Headscale state backup and restore"
+  ]
+}

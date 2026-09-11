@@ -1,0 +1,94 @@
+{
+  "dockerVersion": "29.7.2",
+  "subnet": "172.26.0.0/16",
+  "gateway": "172.26.0.1",
+  "headscaleIp": "172.26.0.2",
+  "gatewayMode": "routed",
+  "hostBindings": {
+    "3478/udp": [
+      {
+        "HostIp": "0.0.0.0",
+        "HostPort": ""
+      }
+    ],
+    "8080/tcp": [
+      {
+        "HostIp": "0.0.0.0",
+        "HostPort": ""
+      }
+    ]
+  },
+  "localFixtureListeners": [
+    {
+      "protocol": "tcp",
+      "port": 8080,
+      "ok": true
+    },
+    {
+      "protocol": "tcp",
+      "port": 8081,
+      "ok": true
+    },
+    {
+      "protocol": "udp",
+      "port": 3478,
+      "ok": true
+    },
+    {
+      "protocol": "udp",
+      "port": 3479,
+      "ok": true
+    }
+  ],
+  "fromSeparateNatUnprotectedBridge": [
+    {
+      "protocol": "tcp",
+      "port": 8080,
+      "ok": true
+    },
+    {
+      "protocol": "tcp",
+      "port": 8081,
+      "ok": false
+    },
+    {
+      "protocol": "udp",
+      "port": 3478,
+      "ok": true
+    },
+    {
+      "protocol": "udp",
+      "port": 3479,
+      "ok": false
+    }
+  ],
+  "towardSeparateNatUnprotectedBridge": [
+    {
+      "protocol": "tcp",
+      "port": 8080,
+      "ok": true
+    },
+    {
+      "protocol": "tcp",
+      "port": 8081,
+      "ok": true
+    },
+    {
+      "protocol": "udp",
+      "port": 3478,
+      "ok": true
+    },
+    {
+      "protocol": "udp",
+      "port": 3479,
+      "ok": true
+    }
+  ],
+  "interNetworkAccess": "allowed; dedicated network is not a LAN security boundary",
+  "limitation": "Docker-local fixture test; Unraid custom firewall, LAN routing, pfSense rules and real Headscale endpoints remain to be verified.",
+  "recordedAt": "2026-09-10T06:01:32.814574+00:00",
+  "method": "Rendered the prepared Compose file, replaced Headscale with TCP/UDP fixture listeners on declared and undeclared ports, confirmed all listeners locally, then probed from a disposable nat-unprotected bridge; scoped containers/networks removed afterward.",
+  "fixtureImage": "node:22.23.2-bookworm-slim@sha256:83f487e0a63425e5b4d146fb5e5be574bcbe1b7b843d3ebafdd95eaf7767a7e5",
+  "hostFirewallChanges": "none",
+  "scope": "Historical routed-network check before host firewall installation. M05-headscale-firewall.json records the subsequent policy and live Unraid checks."
+}

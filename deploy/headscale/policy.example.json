@@ -1,0 +1,13 @@
+{
+  "tagOwners": {
+    "tag:nurevolution-droplet": [],
+    "tag:nurevolution-deploy": []
+  },
+  "grants": [
+    {
+      "src": ["tag:nurevolution-deploy"],
+      "dst": ["tag:nurevolution-droplet"],
+      "ip": ["tcp:22"]
+    }
+  ]
+}
