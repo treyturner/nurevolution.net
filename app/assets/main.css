@@ -317,9 +317,7 @@ audio {
   margin-top: 3rem;
   padding-block: 1.5rem;
   border-top: 1px solid var(--line);
-  display: flex;
-  justify-content: space-between;
-  gap: 1rem;
+  text-align: right;
   font-size: 0.7rem;
   color: var(--muted);
 }
@@ -347,9 +345,5 @@ audio {
   .archive-grid {
     grid-template-columns: minmax(0, 1fr);
     gap: 2rem;
-  }
-  .site-footer {
-    flex-direction: column;
-    gap: 0.25rem;
   }
 }

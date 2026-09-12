@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { episodeHead } from '../services/episode-page'
 const state = useEpisodePage()
+const currentYear = useState('copyright-year', () =>
+  new Date().getUTCFullYear(),
+)
 const announcement = ref('')
 watch(
   () => state.value.model?.selected?.id,
@@ -37,9 +40,7 @@ useHead(() =>
       :selected="state.model.selected"
       :pending-path="state.pendingPath"
     />
-    <footer class="site-footer">
-      <span>Nurevolution</span><span>Music for the spaces between.</span>
-    </footer>
+    <footer class="site-footer">© {{ currentYear }} nurevolution.net</footer>
     <slot />
   </div>
 </template>
