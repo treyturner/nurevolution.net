@@ -28,7 +28,7 @@ test('keeps smaller artwork at its original size with modal focus and all three 
       )
       .toEqual({ natural: [480, 480], rendered: [480, 480] })
     await page
-      .locator('.wordmark')
+      .locator('.rss-link')
       .evaluate((link: HTMLElement) => link.focus())
     await expect(close).toBeFocused()
     await modal.locator('img').click()

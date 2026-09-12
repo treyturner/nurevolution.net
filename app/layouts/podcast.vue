@@ -23,9 +23,16 @@ useHead(() =>
 <template>
   <div v-if="state.model" class="podcast">
     <header class="site-header">
-      <NuxtLink to="/" :prefetch="false" class="wordmark"
-        >nurevolution studios<span>austin, tx</span></NuxtLink
-      >
+      <div class="site-brand">
+        <img
+          class="site-logo"
+          src="/brand/nu.png"
+          width="300"
+          height="300"
+          alt=""
+        />
+        <div class="wordmark">nurevolution studios<span>austin, tx</span></div>
+      </div>
       <a href="/feed/podcast" class="rss-link" aria-label="Subscribe via RSS"
         ><span class="rss-label">Subscribe<br />via RSS</span
         ><RssIcon class="rss-icon"

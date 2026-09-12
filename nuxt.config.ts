@@ -14,6 +14,14 @@ export default defineNuxtConfig({
       title: 'nurevolution studios',
       htmlAttrs: { lang: 'en' },
       meta: [{ name: 'color-scheme', content: 'dark' }],
+      link: [
+        {
+          rel: 'icon',
+          type: 'image/png',
+          sizes: '300x300',
+          href: '/brand/nu.png',
+        },
+      ],
     },
   },
   typescript: { strict: true },
