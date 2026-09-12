@@ -121,6 +121,7 @@ button {
   align-self: center;
   flex-shrink: 0;
   gap: 0.8rem;
+  text-decoration: none;
 }
 .rss-label {
   text-align: right;
@@ -168,7 +169,7 @@ button {
 }
 .episode-artist {
   margin: 0 0 0.35rem;
-  font-size: 1.1rem;
+  font-size: 1.35rem;
   color: #c0c9d7;
   overflow-wrap: anywhere;
 }
@@ -188,12 +189,13 @@ audio {
 .player-actions {
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
+  align-items: baseline;
   gap: 0.5rem 1rem;
   margin-top: 0.35rem;
 }
 .media-status {
   flex: 1;
+  margin: 0;
   font-size: 0.75rem;
   color: var(--muted);
 }
@@ -324,7 +326,6 @@ audio {
 .site-footer {
   margin-top: 3rem;
   padding-block: 1.5rem;
-  border-top: 1px solid var(--line);
   text-align: right;
   font-size: 0.7rem;
   color: var(--muted);
