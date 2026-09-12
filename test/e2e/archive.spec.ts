@@ -160,6 +160,12 @@ test('mobile tabs keep both lists accessible, retain focus, and reflow with larg
       () => document.documentElement.scrollWidth <= innerWidth,
     ),
   ).toBe(true)
+  const text = page.locator('.episode-list-info').first()
+  const textWidth = (await text.boundingBox())!.width
+  const titleFontSize = await text
+    .locator('.episode-list-title')
+    .evaluate((element) => parseFloat(getComputedStyle(element).fontSize))
+  expect(textWidth).toBeGreaterThanOrEqual(titleFontSize * 2)
   await tracks.click()
   await expect(page.locator('#tracks-panel')).toBeVisible()
   await page.setViewportSize({ width: 1200, height: 900 })
