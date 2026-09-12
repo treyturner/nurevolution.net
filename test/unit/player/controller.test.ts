@@ -150,6 +150,25 @@ describe('persistent episode controller', () => {
       player.dispose()
     },
   )
+  it.each([5_000, 15_000, 25_000])(
+    'resumes bounded recovery after Play then pause at %i ms with no further progress',
+    async (delay) => {
+      const { media, changed, player } = setup()
+      player.select(a)
+      vi.advanceTimersByTime(delay)
+      await media.play()
+      media.pause()
+      vi.advanceTimersByTime(20_000)
+      expect(changed).toHaveBeenLastCalledWith('delayed')
+      expect(media.load).toHaveBeenCalledTimes(2)
+      expect(media.play).toHaveBeenCalledOnce()
+      expect(media.pause).toHaveBeenCalledOnce()
+      expect(media.paused).toBe(true)
+      media.ready()
+      expect(changed).toHaveBeenLastCalledWith('paused')
+      player.dispose()
+    },
+  )
   it('does not reload a pending Play request whose native event is still queued', async () => {
     const { media, changed, player } = setup()
     player.select(a)

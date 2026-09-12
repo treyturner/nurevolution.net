@@ -100,8 +100,13 @@ export function createPlayer(
     }
     if (event === 'pause' && snapshot.paused) {
       // A queued source-reset pause must not erase an autoplay rejection.
-      if (status !== 'blocked' && status !== 'error' && status !== 'delayed')
-        set(hasMetadata(snapshot) ? 'paused' : 'loading')
+      if (status !== 'blocked' && status !== 'error' && status !== 'delayed') {
+        const ready = hasMetadata(snapshot)
+        set(ready ? 'paused' : 'loading')
+        // Play cancels background recovery. Resume it if the listener pauses
+        // before metadata arrives, even when the network sends no more events.
+        if (!ready && metadataTimer === undefined) watchMetadata()
+      }
     } else if (
       (event === 'play' || event === 'playing' || event === 'waiting') &&
       !snapshot.paused

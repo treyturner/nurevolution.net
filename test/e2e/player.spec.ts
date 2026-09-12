@@ -93,8 +93,8 @@ test('recovers stalled metadata automatically and shows duration without a Play 
   }
 })
 
-for (const startPlayback of [false, true]) {
-  test(`deferred preload recovers ${startPlayback ? 'through Play' : 'when late metadata arrives'} without a false error`, async ({
+for (const recovery of ['late metadata', 'Play', 'Play then pause']) {
+  test(`deferred preload recovers through ${recovery} without a false error`, async ({
     page,
   }) => {
     await page.clock.install()
@@ -127,7 +127,7 @@ for (const startPlayback of [false, true]) {
       await expect(audio).toHaveJSProperty('error', null)
       await expect(audio).toHaveJSProperty('paused', true)
       const loads = attempts
-      if (startPlayback) {
+      if (recovery !== 'late metadata') {
         await audio.evaluate((a: HTMLAudioElement) => {
           a.muted = true
           a.loop = true
@@ -135,6 +135,18 @@ for (const startPlayback of [false, true]) {
         })
         await expect(page.locator('.media-status')).toHaveText('Buffering…')
       }
+      if (recovery === 'Play then pause') {
+        await audio.evaluate((a: HTMLAudioElement) => a.pause())
+        await expect(page.locator('.media-status')).toHaveText('Loading audio…')
+        await page.clock.fastForward(10_000)
+        await expect(page.locator('.media-status')).toHaveText(
+          'Audio is taking longer to load.',
+        )
+        await expect(
+          page.getByRole('button', { name: 'Retry audio' }),
+        ).toBeVisible()
+      }
+      const startPlayback = recovery === 'Play'
       await page.clock.fastForward(30_000)
       expect(attempts).toBe(loads)
       await expect(audio).toHaveJSProperty('paused', !startPlayback)
