@@ -4,6 +4,7 @@ import { formatDate, formatTime } from '../services/episode-page'
 import { usePodcastPlayer } from '../composables/usePodcastPlayer'
 import { deliveryAssetUrl } from '../services/delivery-assets'
 import DownloadIcon from './DownloadIcon.vue'
+import ArtworkDialog from './ArtworkDialog.vue'
 const props = defineProps<{ episode: EpisodeDetail | null }>()
 const config = useRuntimeConfig()
 const artworkUrl = computed(() =>
@@ -17,8 +18,17 @@ const artworkUrl = computed(() =>
 )
 const { element, status, retry } = usePodcastPlayer(() => props.episode)
 const failedArtwork = ref(false)
+const artworkOpen = ref(false)
+const artworkTrigger = ref<HTMLButtonElement | null>(null)
+function closeArtwork() {
+  artworkOpen.value = false
+  artworkTrigger.value?.focus({ preventScroll: true })
+}
 watch(artworkUrl, () => {
   failedArtwork.value = false
+})
+watch([artworkUrl, () => props.episode?.id], () => {
+  artworkOpen.value = false
 })
 const messages = {
   idle: 'Choose an episode to listen.',
@@ -35,14 +45,23 @@ const messages = {
 <template>
   <section class="player" aria-labelledby="episode-title">
     <div v-if="episode" class="artwork">
-      <img
+      <button
         v-if="!failedArtwork"
-        :src="artworkUrl"
-        :alt="`${episode.artist} — ${episode.title} cover art`"
-        width="480"
-        height="480"
-        @error="failedArtwork = true"
-      />
+        ref="artworkTrigger"
+        type="button"
+        class="artwork-trigger"
+        aria-haspopup="dialog"
+        :aria-label="`Enlarge ${episode.artist} — ${episode.title} cover art`"
+        @click="artworkOpen = true"
+      >
+        <img
+          :src="artworkUrl"
+          :alt="`${episode.artist} — ${episode.title} cover art`"
+          width="480"
+          height="480"
+          @error="failedArtwork = true"
+        />
+      </button>
       <div
         v-else
         class="artwork-fallback"
@@ -97,5 +116,11 @@ const messages = {
       />
       <!-- eslint-enable vue/no-v-html -->
     </div>
+    <ArtworkDialog
+      v-if="artworkOpen && episode && !failedArtwork"
+      :src="artworkUrl"
+      :alt="`${episode.artist} — ${episode.title} cover art`"
+      @close="closeArtwork"
+    />
   </section>
 </template>
