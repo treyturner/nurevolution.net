@@ -23,7 +23,7 @@ useHead(() =>
   <div v-if="state.model" class="podcast">
     <header class="site-header">
       <NuxtLink to="/" :prefetch="false" class="wordmark"
-        >Nurevolution<span>Independent transmissions</span></NuxtLink
+        >nurevolution studios<span>austin, tx</span></NuxtLink
       >
       <a :href="state.model.show.feedUrl"
         >Subscribe via RSS <span aria-hidden="true">↗</span></a

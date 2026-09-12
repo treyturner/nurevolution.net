@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { EpisodeSummary } from '../../shared/content/public'
+import { formatDate } from '../services/episode-page'
 import DownloadIcon from './DownloadIcon.vue'
 defineProps<{
   episodes: EpisodeSummary[]
@@ -22,7 +23,15 @@ defineProps<{
         :aria-busy="pendingPath === episode.path || undefined"
       >
         <span class="episode-list-title">{{ episode.title }}</span
-        ><span class="episode-list-artist">{{ episode.artist }}</span>
+        ><span class="episode-list-artist"
+          >{{ episode.artist
+          }}<template v-if="episode.publishedAt"
+            ><span aria-hidden="true"> · </span
+            ><time :datetime="episode.publishedAt">{{
+              formatDate(episode.publishedAt)
+            }}</time></template
+          ></span
+        >
       </NuxtLink>
       <a
         class="row-download"
