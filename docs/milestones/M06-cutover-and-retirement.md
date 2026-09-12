@@ -1,6 +1,6 @@
 # M6 — Cutover and WordPress retirement
 
-Status: **Planning draft, 2026-09-12.** The current implementation is ready for cutover planning. Production routing, deployment gates, and WordPress remain unchanged. The owner confirmed on 2026-09-12 that WordPress has not changed since the audit and can stay frozen. The owner chose to proceed with the current player and defer M7 until after cutover; the remaining acceptance items below gate live cutover, not preparation of this plan.
+Status: **Cutover preparation in progress, 2026-09-12.** The owner authorized continuing cutover and confirmed the existing WordPress runtime and all fallback files can remain intact. Public routing and WordPress remain unchanged; the production GitHub environment exists with both deployment gates disabled. The owner confirmed on 2026-09-12 that WordPress has not changed since the audit and can stay frozen. The owner chose to proceed with the current player and defer M7 until after cutover; the remaining acceptance items below gate live cutover, not preparation of this plan.
 
 Roadmap: [M6](../../ROADMAP.md#m6--cutover-and-wordpress-retirement). Dependencies: [M5 rehearsal](M05-production-delivery.md), [deployment operations](../DEPLOYMENT.md), [feed validation](../FEED-VALIDATION.md), and [rollback](../operations/rollback.md).
 
@@ -42,7 +42,7 @@ The current player satisfies the intended R1 feature scope. The owner confirmed 
 | Headscale boot persistence | Saved early firewall call and Compose restart policy confirmed; no completed reboot observation recorded.                                                                                                                                                             | Record result or an explicit owner-accepted deferral in the operational handoff.     |
 | Operator and observation   | Proposed: owner is accountable for release/fallback decisions, agent executes authorized accessible operations, owner executes Unraid/pfSense/device steps. Proposed observation: seven days, with checks immediately, after 24 hours, and at the end.                | Approval of the concrete cutover record.                                             |
 
-Do not interpret a completed preview deployment as approval to change production DNS or stop WordPress. Present the exact candidate, fallback, test results, remaining limitations, and operator actions together before the live transition. Unanswered items stay marked pending; no new account purchases or new notification messages are assumed.
+The owner explicitly authorized continuing cutover on 2026-09-12. Continue the preparation within that authorization and report the exact candidate, fallback, test results, remaining limitations, and operator actions before switching traffic. Retirement follows the agreed observation period; it has not occurred. Unanswered items stay marked pending; no new account purchases or new notification messages are assumed.
 
 ## Implementation slices
 
@@ -79,9 +79,21 @@ Canonical page metadata and copied episode URLs retain production URLs. RSS XML 
 
 **Open launch issue:** the public preview feed returned HTTP 200 to curl's default user agent, but HTTP 403 with body `error code: 1010` to `Python-urllib/3.14`. The same Python user agent received HTTP 200 when the HTTPS request was resolved directly to the droplet with hostname/TLS verification preserved. This isolates the observed denial to the Cloudflare path. Cloudflare documents [error 1010](https://developers.cloudflare.com/support/troubleshooting/http-status-codes/cloudflare-1xxx-errors/error-1010/) as a browser-signature denial and supports a [selective Browser Integrity Check exception](https://developers.cloudflare.com/waf/tools/browser-integrity-check/). Inspect the actual zone settings and prepare a narrowly scoped feed/alias exception before final external-client acceptance; do not treat changing the test user agent as fixing reachability. No Cloudflare rules were changed during this audit.
 
+### Mobile and host preparation — 2026-09-12
+
+The owner reports Brave 1.94.121 / Chromium 152.0.7977.83 on Android 16 (BP4A.251205.006). Android success feedback now uses a three-second inline checkmark on the clicked permalink button, preserving the accessible status and visible copy failures. This avoids duplicating Android's clipboard popup without guessing the OS version from its reduced user-agent string. The focused six-test clipboard suite passed; deployed phone acceptance remains pending.
+
+The owner also observed a multiple-download permission prompt on preview, which did not recur after reopening the site, possibly because permission was saved. Both download controls are ordinary anchors; preview has one 307 to the media host and the development fallback returns the attachment directly. Chromium and Firefox probes each observed one download event per click. These observations do not establish the cause of Brave's native prompt. The regression suite now checks both controls for one saved file per click using small fixtures; physical-device confirmation remains distinct.
+
+The live `www.nurevolution.net` alias currently redirects to the apex. The renderer now preserves that redirect, including the request path/query; the bootstrap TLS configuration explicitly includes its hostname. The shared live certificate policy still requires this addition before cutover.
+
+The owner created GitHub's `production` environment after the integration returned 403 on creation. Connection variables and the pinned SSH secrets are installed; `DEPLOYMENT_ENABLED` and `CUTOVER_ENABLED` remain false. The deployment runner's enrollment secret is pending owner entry. The DNS token cannot change Cloudflare settings; the owner has the narrowly scoped feed-exception instructions. Current private DNS/host captures are retained outside Git. The latest host inspection found a healthy preview, no deployment locks, about 426 MiB available memory, about 16 GiB free disk, and a successful September 11 backup; refresh these before promotion.
+
+The combined RSS, Android feedback, download regression, and `www` changes passed the full gate: 340 application/tooling tests, 121 browser checks (two existing skips), and Docker delivery including all five certificate hostnames, path/query-preserving `www` redirects, and saved downloads through all three browser engines. Coverage is 98.21% statements, 96.17% branches, 98.19% functions, and 98.54% lines. These are local results; the final trusted main release and phone acceptance are still pending.
+
 ### 3. Prepare and rehearse the one-slot transition
 
-Deliver `docs/operations/cutover.md`, a reviewed production profile based on measured settings, and `docs/milestones/evidence/M06-transition-rehearsal.json`.
+The [operator cutover runbook](../operations/cutover.md) records the concrete host/DNS/profile/fallback sequence. Deliver a reviewed production profile based on measured settings, and `docs/milestones/evidence/M06-transition-rehearsal.json`.
 
 The existing host has one app/network-alias/edge-route slot. Preview and production have separate deployment records and Compose project names. Starting production does not automatically stop the preview project. The first production release has no `state/production/previous.json`; preview is not a valid automatic production fallback.
 
@@ -142,7 +154,8 @@ For live checks, reuse `audit-http`/`check-assets` from the verified deployment 
 - [x] Owner confirmed WordPress is unchanged and can stay frozen (2026-09-12).
 - [x] Owner chose current-player cutover before M7 (2026-09-12).
 - [ ] Final delta, device/client acceptance, operations decisions, and transition rehearsal completed.
-- [ ] Concrete production cutover approved and executed.
+- [x] Owner authorized continuing production cutover (2026-09-12); legacy fallback remains available.
+- [ ] Candidate accepted and public production cutover executed.
 - [ ] Observation completed, WordPress services retired, final evidence committed.
 
-No live infrastructure changes were made while writing this draft.
+Production environment preparation is recorded above. No production traffic has switched and no legacy service has stopped.

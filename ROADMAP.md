@@ -1,6 +1,6 @@
 # Nurevolution roadmap
 
-Status: M0–M4 are implemented and merged. M5 delivery, preview deployment, rollback, capacity, and independent recovery are rehearsed; final device/client and operations acceptance remains. Subsequent player polish, artwork thumbnails, and copy links are merged and deployed to preview. [M6 cutover planning](docs/milestones/M06-cutover-and-retirement.md) is drafted; production cutover and WordPress retirement have not started. M7–M9 remain future work.
+Status: M0–M4 are implemented and merged. M5 delivery, preview deployment, rollback, capacity, and independent recovery are rehearsed; final device/client and operations acceptance remains. Subsequent player polish, artwork thumbnails, and copy links are merged and deployed to preview. [M6 cutover preparation](docs/milestones/M06-cutover-and-retirement.md) is authorized and underway; public traffic has not switched and WordPress remains intact. M7–M9 remain future work.
 
 Updated: 2026-09-12.
 
@@ -141,7 +141,7 @@ Feed and media URLs must be usable by podcast clients without interactive browse
 
 ## 6. Milestone sequence
 
-M0–M4 are **implemented and merged**. M5 is **implemented with live rehearsal evidence and remaining acceptance items**. M6 has a **planning draft**; live cutover and M7–M9 implementation have not started. IDs remain stable.
+M0–M4 are **implemented and merged**. M5 is **implemented with live rehearsal evidence and remaining acceptance items**. M6 **cutover preparation is underway**; public traffic has not switched and M7–M9 implementation has not started. IDs remain stable.
 
 Plans and completion evidence are available for [M0 — Migration audit](docs/milestones/M00-migration-audit.md) and [M1 — Foundation and verification](docs/milestones/M01-foundation-and-verification.md). The [M2 — Canonical content record](docs/milestones/M02-canonical-content.md) documents schemas, faithful import, protected edits, public data access, and completed acceptance checks. The [M3 — Replacement RSS record](docs/milestones/M03-podcast-rss.md) documents implemented metadata, serialization, aliases, cache behavior, compatibility tests, and the public validation handoff. Owner instructions are in the [content authoring guide](docs/CONTENT.md) and [feed validation guide](docs/FEED-VALIDATION.md).
 
@@ -281,7 +281,7 @@ Run `pnpm verify`. External validator/client results are provisional until repea
 
 ### M6 — Cutover and WordPress retirement
 
-**Planning draft written on 2026-09-12:** [M06-cutover-and-retirement.md](docs/milestones/M06-cutover-and-retirement.md). The draft covers final archive reconciliation, remaining R1 acceptance, the single-slot preview-to-production transition, DNS/local resolver changes, first-production fallback, observation, and service retirement. The owner confirmed on 2026-09-12 that WordPress is unchanged and can stay frozen. The owner chose to proceed with the current player; M7 follows production cutover.
+**Cutover preparation authorized on 2026-09-12:** [M06-cutover-and-retirement.md](docs/milestones/M06-cutover-and-retirement.md). The draft covers final archive reconciliation, remaining R1 acceptance, the single-slot preview-to-production transition, DNS/local resolver changes, first-production fallback, observation, and service retirement. The owner confirmed on 2026-09-12 that WordPress is unchanged and can stay frozen. The owner chose to proceed with the current player; M7 follows production cutover.
 
 **Outcome:** the public domain serves the verified replacement and existing subscribers retain their episode identities and audio access.
 
