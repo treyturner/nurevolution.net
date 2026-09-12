@@ -1,0 +1,43 @@
+{
+  "schemaVersion": 1,
+  "at": "2026-09-12T18:14:46.802615+00:00",
+  "source": "read-only hash check of owner-supplied source copies with original M0 manifest algorithm",
+  "checks": [
+    {
+      "sourceRoot": "wordpress",
+      "fileCount": 7399,
+      "sha256": "435800a11fea8862d8c95921b226b9a41267072c3fa1b94db25d76d3ecaad770",
+      "expectedSha256": "435800a11fea8862d8c95921b226b9a41267072c3fa1b94db25d76d3ecaad770",
+      "matchesM0": true
+    },
+    {
+      "sourceRoot": "audio",
+      "fileCount": 57,
+      "sha256": "7b8654dc153183b6dbc7cae283120ea5c9c848238e09cde2097ea848dac7a1be",
+      "expectedSha256": "7b8654dc153183b6dbc7cae283120ea5c9c848238e09cde2097ea848dac7a1be",
+      "matchesM0": true
+    },
+    {
+      "sourceRoot": "uploads",
+      "fileCount": 103,
+      "sha256": "4c113dde477de0e83dc92f77bea0796c591a4f54b67a41a0a81e2fa56ae5939f",
+      "expectedSha256": "4c113dde477de0e83dc92f77bea0796c591a4f54b67a41a0a81e2fa56ae5939f",
+      "matchesM0": true
+    },
+    {
+      "sourceRoot": "database",
+      "byteLength": 7973641,
+      "sha256": "a3a11d5772f11fa41473a7c02739f121cf74cb779a0aceb90f9fa3b05577f8bf",
+      "expectedSha256": "a3a11d5772f11fa41473a7c02739f121cf74cb779a0aceb90f9fa3b05577f8bf",
+      "matchesM0": true
+    }
+  ],
+  "ownerConfirmation": {
+    "date": "2026-09-12",
+    "wordpressUnchangedAndFrozen": true,
+    "existingRuntimeAndFallbackFilesRetained": true
+  },
+  "liveFeedComparison": "M06-feed-comparison.json",
+  "livePrivateDatabaseRecaptured": false,
+  "productionCutover": "pending"
+}
