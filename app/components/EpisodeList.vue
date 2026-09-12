@@ -1,12 +1,14 @@
 <script setup lang="ts">
 import type { EpisodeSummary } from '../../shared/content/public'
 import { formatDate } from '../services/episode-page'
+import { deliveryAssetUrl } from '../services/delivery-assets'
 import DownloadIcon from './DownloadIcon.vue'
 defineProps<{
   episodes: EpisodeSummary[]
   selectedId?: string
   pendingPath?: string | null
 }>()
+const config = useRuntimeConfig()
 </script>
 
 <template>
@@ -22,16 +24,33 @@ defineProps<{
         :aria-current="episode.id === selectedId ? 'page' : undefined"
         :aria-busy="pendingPath === episode.path || undefined"
       >
-        <span class="episode-list-title">{{ episode.title }}</span
-        ><span class="episode-list-artist"
-          >{{ episode.artist
-          }}<template v-if="episode.publishedAt"
-            ><span aria-hidden="true"> · </span
-            ><time :datetime="episode.publishedAt">{{
-              formatDate(episode.publishedAt)
-            }}</time></template
-          ></span
-        >
+        <img
+          class="episode-list-artwork"
+          :src="
+            deliveryAssetUrl(
+              episode.artworkUrl,
+              'artwork',
+              config.public.webOrigin,
+            )
+          "
+          alt=""
+          width="48"
+          height="48"
+          loading="lazy"
+          decoding="async"
+        />
+        <span class="episode-list-info">
+          <span class="episode-list-title">{{ episode.title }}</span
+          ><span class="episode-list-artist"
+            >{{ episode.artist
+            }}<template v-if="episode.publishedAt"
+              ><span aria-hidden="true"> · </span
+              ><time :datetime="episode.publishedAt">{{
+                formatDate(episode.publishedAt)
+              }}</time></template
+            ></span
+          >
+        </span>
       </NuxtLink>
       <a
         class="row-download"
