@@ -28,7 +28,7 @@ Create a dedicated droplet tag and a separate deployment-runner tag. Begin with 
 
 Enroll the droplet once using a short-lived, single-use tagged registration key, with persistent client state. Keep its current resolver configuration and avoid subnet routes, exit-node routing, and replacement of OpenSSH by Tailscale SSH. Record its private IP and compare the SSH host key against the existing owner-confirmed fingerprint before GitHub uses the new address. Pin that same identity for the private address; do not replace host verification with a blind network scan.
 
-For GitHub, use a dedicated tagged, reusable, expiring registration key that creates ephemeral nodes. Store it only in the selected deployment environment's secrets. Its tag grants access only to the droplet's SSH port; GitHub does not need a Headscale administrator API key. Record its expiry and rotation procedure. Expiring a registration key prevents new enrollment; deleting or expiring already enrolled nodes is a separate recovery action.
+For GitHub, use a dedicated tagged, reusable registration key that creates ephemeral nodes. The owner prefers avoiding routine enrollment-key renewal and accepts storing a long-lived key in GitHub Actions. The supported long-duration replacement is described below; it has not yet replaced the original key. Store it only in the selected deployment environment's secrets. Its tag grants access only to the droplet's SSH port; OpenSSH still requires its separate private key, and GitHub does not need a Headscale administrator API key. Record the actual expiry and replacement procedure. Expiring a registration key prevents new enrollment; deleting or expiring already enrolled nodes is a separate recovery action.
 
 Each deployment attempt gets its own temporary node name. Log out on completion and verify server-side removal of disconnected ephemeral nodes, including interrupted runs. Do not persist runner client state in caches or artifacts. The workflow uses the repository-owned [runner helper](../../deploy/headscale/runner.py), tested against a disposable Headscale server with the same pinned client. Run `python3 deploy/headscale/check-runner.py` to exercise enrollment, OpenSSH host verification, SCP, denied access, and cleanup without live credentials.
 
@@ -53,16 +53,18 @@ Production is the enabled deployment environment after M6. Keep preview disabled
 
 The host fingerprint remains **SHA256:Oubqo79ywI0Qxz0kWLbWLOj/UoUYmbQc6ZLqucKQB50**. Reuse the independently verified public key; do not replace it with a blind scan of the new address. The public SSH source rule remains `136.49.253.125/32`. Production was enabled during M6; do not enable preview to test a key replacement.
 
-Runner key **ID 2** is reusable and ephemeral and expires **2026-12-10 at 17:27:47 UTC**. Both environment secrets received that key, but only production is enabled. Enrollment-key expiry prevents new runners from joining; it does not stop the website/feed/media, revoke the enrolled droplet, or disable the existing public operator SSH route. Node expiry/revocation is separate. The owner is comfortable allowing this enrollment key to expire between deployments. Renew before the next intended promotion if it has expired; renew before the date above only when uninterrupted deployment readiness is desired.
+Runner key **ID 2** is reusable and ephemeral and expires **2026-12-10 at 17:27:47 UTC**. Both environment secrets received that key, but only production is enabled. Enrollment-key expiry prevents new runners from joining; it does not stop the website/feed/media, revoke the enrolled droplet, or disable the existing public operator SSH route. Node expiry/revocation is separate. The owner clarified that the preference is to avoid routine expiry, rather than allow deployment access to lapse. Replacement remains pending; the original deadline still applies until the new key is installed and verified.
 
-Renewal procedure:
+Headscale 0.29.3 has no supported never-expiring creation option. Its [CLI computes an expiry from the supplied duration](https://github.com/juanfont/headscale/blob/v0.29.3/cmd/headscale/cli/utils.go#L213-L224), so `--expiration 0` expires immediately. Omitting expiry through the API also does not create a never-expiring key: the [handler supplies a zero-time expiry](https://github.com/juanfont/headscale/blob/v0.29.3/hscontrol/grpcv1.go#L147-L180), which [key validation treats as expired](https://github.com/juanfont/headscale/blob/v0.29.3/hscontrol/types/preauth_key.go#L111-L124). Use **`876000h` (100 × 365 days)** as the recommended practical replacement. This duration, the restricted tag, and reusable/ephemeral flags passed creation and metadata checks in an isolated container using the pinned 0.29.3 image on 2026-09-12. It remains a dated credential, not literally non-expiring; revoke/replace it if compromised or no longer needed. Live enrollment with the replacement remains to be verified.
+
+Replacement procedure:
 
 1. Inspect the environments' `DEPLOYMENT_ENABLED` variables and wait for active deployment jobs to finish. Production is currently the only enabled environment. List every enabled consumer of the old key before replacing or revoking it.
 2. From the Unraid Compose directory, create a replacement with the same restricted tag and reusable/ephemeral settings:
 
    ```sh
    docker compose exec -T headscale headscale preauthkeys create \
-     --tags tag:nurevolution-deploy --reusable --ephemeral --expiration 2160h
+     --tags tag:nurevolution-deploy --reusable --ephemeral --expiration 876000h
    ```
 
    Save the newly displayed key in the password manager and record its ID/actual expiry. `preauthkeys list` censors stored key values; it is a metadata check, not a recovery path for the secret. Keep key values out of shell arguments, chat, logs, and review comments.
