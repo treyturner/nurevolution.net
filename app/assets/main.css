@@ -251,14 +251,16 @@ audio {
   display: block;
   min-width: 0;
 }
-/* Keep Chromium's native volume control expanded without requiring hover. */
-.player audio::-webkit-media-controls-volume-control-container {
-  min-width: 100px;
-}
-.player audio::-webkit-media-controls-volume-slider {
-  width: 52px;
-  opacity: 1;
-  pointer-events: auto;
+/* Expand desktop controls; touch browsers may omit the native volume slider. */
+@media (hover: hover) and (pointer: fine) {
+  .player audio::-webkit-media-controls-volume-control-container {
+    min-width: 100px;
+  }
+  .player audio::-webkit-media-controls-volume-slider {
+    width: 52px;
+    opacity: 1;
+    pointer-events: auto;
+  }
 }
 .player-actions {
   display: flex;
