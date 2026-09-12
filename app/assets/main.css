@@ -127,8 +127,8 @@ button {
 }
 .rss-icon {
   /* Match the visible wordmark lettering, excluding its line-height spacing. */
-  width: 2.25rem;
-  height: 2.25rem;
+  width: 2.025rem;
+  height: 2.025rem;
   flex-shrink: 0;
 }
 .player {
