@@ -6,6 +6,8 @@ import { mp3, ready } from './media'
 test('browser saves attachment bytes and punctuation without disturbing playback', async ({
   page,
 }) => {
+  const downloads: string[] = []
+  page.on('download', (download) => downloads.push(download.url()))
   await page.goto(`${mediaBaseURL}/player-test`)
   await ready(page)
   for (const [button, filename] of [
@@ -21,12 +23,20 @@ test('browser saves attachment bytes and punctuation without disturbing playback
         paused: a.paused,
         time: a.currentTime,
       }))
-    const downloadPromise = page.waitForEvent('download')
-    await page.getByRole('link', { name: 'Download MP3' }).click()
-    const download = await downloadPromise
-    expect(download.suggestedFilename()).toBe(filename)
-    expect(await download.failure()).toBeNull()
-    expect(await readFile((await download.path())!)).toEqual(mp3)
+    const slug = button === 'Select first' ? 'first' : 'second'
+    for (const link of [
+      page.getByRole('link', { name: 'Download MP3' }),
+      page.locator(`.row-download[href="/downloads/${slug}"]`),
+    ]) {
+      const count = downloads.length
+      const downloadPromise = page.waitForEvent('download')
+      await link.click()
+      const download = await downloadPromise
+      expect(download.suggestedFilename()).toBe(filename)
+      expect(await download.failure()).toBeNull()
+      expect(await readFile((await download.path())!)).toEqual(mp3)
+      expect(downloads).toHaveLength(count + 1)
+    }
     expect(
       await page.locator('audio').evaluate((a: HTMLAudioElement) => ({
         src: a.src,
