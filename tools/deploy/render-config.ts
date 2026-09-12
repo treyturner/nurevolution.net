@@ -47,9 +47,20 @@ export function renderSite(manifest: MediaManifest, profile: Profile) {
   const media = new URL(profile.mediaOrigin).hostname
   const webHosts = [...new Set([web, 'nurevolution.net'])]
   const mediaHosts = [...new Set([media, 'podcast.nurevolution.net'])]
-  if (webHosts.some((host) => mediaHosts.includes(host)))
+  const www = 'www.nurevolution.net'
+  if (
+    webHosts.some((host) => mediaHosts.includes(host)) ||
+    [...webHosts, ...mediaHosts].includes(www)
+  )
     throw new Error('Host mappings overlap')
   const routes: JsonObject[] = []
+  routes.push(
+    route({ host: [www] }, [
+      response(301, '', {
+        Location: ['https://nurevolution.net{http.request.uri}'],
+      }),
+    ]),
+  )
   routes.push(
     route(
       {
@@ -137,7 +148,7 @@ export function renderSite(manifest: MediaManifest, profile: Profile) {
   routes.push(route({ host: mediaHosts }, [response(404)]))
   return {
     '@id': 'nurevolution',
-    match: [{ host: [...webHosts, ...mediaHosts] }],
+    match: [{ host: [...webHosts, ...mediaHosts, www] }],
     handle: [
       ...(profile.environment === 'preview'
         ? [
