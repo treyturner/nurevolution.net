@@ -94,6 +94,60 @@ describe('persistent episode controller', () => {
     expect(media.load).toHaveBeenCalledOnce()
     player.dispose()
   })
+  it.each(['loadeddata', 'canplay', 'canplaythrough'])(
+    'accepts duration first exposed by %s after WebKit reports zero in its metadata events',
+    (event) => {
+      const { media, changed, player } = setup()
+      player.select(a)
+      media.currentSrc = a.url
+      media.readyState = 4
+      media.duration = 0
+      media.emit('progress')
+      media.emit('durationchange')
+      media.emit('loadedmetadata')
+      expect(changed).toHaveBeenLastCalledWith('loading')
+      media.duration = 120
+      media.emit(event)
+      expect(changed).toHaveBeenLastCalledWith('paused')
+      expect(media.preload).toBe('metadata')
+      expect(media.paused).toBe(true)
+      expect(media.play).not.toHaveBeenCalled()
+      vi.advanceTimersByTime(30_000)
+      expect(media.load).toHaveBeenCalledOnce()
+      player.dispose()
+    },
+  )
+  it.each(['loadeddata', 'canplay', 'canplaythrough'])(
+    '%s respects source identity, active playback, blocked continuation, and real errors',
+    async (event) => {
+      const { media, changed, player } = setup()
+      player.select(a)
+      media.currentSrc = b.url
+      media.readyState = 4
+      media.duration = 120
+      media.emit(event)
+      expect(changed).toHaveBeenLastCalledWith('loading')
+      media.currentSrc = a.url
+      await media.play()
+      media.emit('playing')
+      media.emit(event)
+      expect(changed).toHaveBeenLastCalledWith('playing')
+      media.play.mockRejectedValueOnce(
+        new DOMException('Blocked', 'NotAllowedError'),
+      )
+      player.select(b)
+      await Promise.resolve()
+      media.currentSrc = b.url
+      media.readyState = 4
+      media.duration = 120
+      media.emit(event)
+      expect(changed).toHaveBeenLastCalledWith('blocked')
+      media.error = { code: 2 } as MediaError
+      media.emit(event)
+      expect(changed).toHaveBeenLastCalledWith('error')
+      player.dispose()
+    },
+  )
   it('treats deferred preload as a delay and preserves optional retry through queued events', () => {
     const { media, changed, player } = setup()
     player.select(a)

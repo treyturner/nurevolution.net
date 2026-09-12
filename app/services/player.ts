@@ -119,6 +119,9 @@ export function createPlayer(
     } else if (
       (event === 'loadedmetadata' ||
         event === 'durationchange' ||
+        event === 'loadeddata' ||
+        event === 'canplay' ||
+        event === 'canplaythrough' ||
         event === 'progress') &&
       hasMetadata(snapshot) &&
       snapshot.paused &&
@@ -131,6 +134,11 @@ export function createPlayer(
     [
       'loadedmetadata',
       'durationchange',
+      // WebKit can report duration=0 in the early metadata events and only
+      // expose its positive duration when data becomes ready for playback.
+      'loadeddata',
+      'canplay',
+      'canplaythrough',
       'progress',
       'play',
       'playing',
