@@ -1,0 +1,57 @@
+{
+  "schemaVersion": 1,
+  "at": "2026-09-12T18:16:30.409950+00:00",
+  "source": "agent-operated droplet checks and owner-confirmed GitHub environment creation",
+  "environment": {
+    "name": "production",
+    "connectionVariablesConfigured": true,
+    "sshSecretsConfigured": true,
+    "headscaleEnrollmentSecret": "pending owner entry",
+    "deploymentEnabled": false,
+    "cutoverEnabled": false
+  },
+  "wwwCertificate": {
+    "configuration": {
+      "at": "20260912T181210Z",
+      "change": "append www.nurevolution.net to existing explicit TLS automation and DNS-01 policy",
+      "beforeSha256": "2e7db7414894c5e952768f868211e5112ce225c109eec75777160612db945743",
+      "afterSha256": "3ac4f11b5129b34f9cb7282ca87753b0851e78c310de055fb999f7893b47228e",
+      "httpRoutesUnchanged": true,
+      "reload": "passed",
+      "certificateIssuance": "pending trusted handshake verification",
+      "publicDNS": "unchanged"
+    },
+    "trustedHandshake": {
+      "at": "2026-09-12T18:12:53.558517+00:00",
+      "host": "www.nurevolution.net",
+      "origin": "159.89.86.21",
+      "verifiedTLS": true,
+      "subjectAltName": [["DNS", "www.nurevolution.net"]],
+      "issuer": [
+        [["countryName", "US"]],
+        [["organizationName", "Let's Encrypt"]],
+        [["commonName", "YE1"]]
+      ],
+      "notBefore": "Sep 12 17:13:48 2026 GMT",
+      "notAfter": "Dec 11 17:13:47 2026 GMT"
+    }
+  },
+  "backups": [
+    {
+      "at": "2026-09-12T18:11:00.514Z",
+      "snapshotId": "27a9d6a1045d84b16e28ff9e3933e274c6273e1a12ac9438228ac25dac5a8265",
+      "repositoryCheck": "passed",
+      "purpose": "before certificate-policy change"
+    },
+    {
+      "at": "2026-09-12T18:13:12.604Z",
+      "snapshotId": "e4abf9371c3f32d00aa1f2b9afebc4c47bf8b9bacbb913090b52ad0801a46e70",
+      "repositoryCheck": "passed",
+      "purpose": "after www certificate issuance"
+    }
+  ],
+  "httpRoutesChanged": false,
+  "publicDnsChanged": false,
+  "wordpressStopped": false,
+  "candidatePromotion": "pending reviewed main release and remaining acceptance"
+}

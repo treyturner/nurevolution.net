@@ -31,7 +31,9 @@ Server rendering never constructs browser media objects. Application state is pe
 
 ## Downloads and old links
 
-Each episode row also has a copy-link button. It copies that episode's canonical public URL, including when browsing a preview or local server, without selecting the episode or affecting playback. A successful copy or clipboard failure shows three seconds of feedback beside the button, falling back to the viewport's top center when the button is offscreen or space is limited. Feedback is announced without moving keyboard focus.
+The header RSS link and browser feed discovery use the current host’s `/feed/podcast`. Episode/home navigation and thumbnails also use local paths. Deployed artwork/audio and download redirects use the accepted environment’s delivery hosts. Canonical page metadata, copied episode URLs, and the RSS document’s identity/media URLs retain the production hosts. The local Node download fallback still fetches canonical production audio server-side; deployed downloads are handled by Caddy using the environment profile.
+
+Each episode row also has a copy-link button. It copies that episode's canonical public URL, including when browsing a preview or local server, without selecting the episode or affecting playback. A successful copy or clipboard failure shows three seconds of feedback beside the button, falling back to the viewport's top center when the button is offscreen or space is limited. Feedback is announced without moving keyboard focus. On Android, a successful copy instead shows a three-second inline checkmark on the clicked button, avoiding a duplicate popup alongside the system clipboard confirmation. Copy failures retain the visible toast on every platform.
 
 Each episode has a `/downloads/<saved-slug>` link. The endpoint resolves a public episode, fetches its exact canonical HTTPS URL on `podcast.nurevolution.net`, validates status/type/length/encoding, and serves an attachment with the canonical raw basename. It supplies both quoted ASCII and UTF-8 filename parameters, preserving punctuation such as the apostrophe in `bouche_d'incendie`.
 

@@ -165,6 +165,7 @@ try {
   await waitReady(async () => {
     for (const host of [
       'nurevolution.net',
+      'www.nurevolution.net',
       'podcast.nurevolution.net',
       'preview.nurevolution.net',
       'podcast-preview.nurevolution.net',
@@ -179,7 +180,7 @@ try {
   }, 30)
   await docker(['stop', bootstrap])
   console.log(
-    'Initial edge: account token format and issuance for all four hosts before routes passed (offline local CA)',
+    'Initial edge: account token format and issuance for all five hosts before routes passed (offline local CA)',
   )
   await docker(['network', 'create', network])
   madeNetwork = true
@@ -571,6 +572,31 @@ try {
   const canonicalSite = JSON.parse(
     JSON.stringify(site).replaceAll('nurevolution-preview:3000', app + ':3000'),
   )
+  // Preserve the existing www redirect without relying on WordPress or its TLS.
+  const wwwSite = localSite('www.nurevolution.net', canonicalSite)
+  config.apps.http.servers.https.routes = [sentinel, wwwSite]
+  await stageEdgeConfig(config)
+  await docker([
+    'exec',
+    edge,
+    'caddy',
+    'reload',
+    '--config',
+    '/media/.edge/caddy.json',
+  ])
+  for (const path of [
+    '/',
+    '/feed/podcast',
+    '/episodes/a%20b?q=two%20words&x=1',
+  ]) {
+    const redirect = await get(webOrigin + path, { redirect: 'manual' })
+    assert.equal(redirect.status, 301)
+    assert.equal(
+      redirect.headers.get('location'),
+      'https://nurevolution.net' + path,
+    )
+  }
+  assert.equal(await (await get(webOrigin + '/sentinel')).text(), 'other site')
   config.apps.http.servers.https.routes = [
     sentinel,
     localSite('localhost', canonicalSite),

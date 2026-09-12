@@ -49,7 +49,7 @@ test('every canonical page renders its exact archive content and all historical 
     expect(rendered).toMatchObject({
       title: detail.title,
       canonical: `https://nurevolution.net${detail.path}`,
-      feed: 'https://nurevolution.net/feed/podcast',
+      feed: '/feed/podcast',
       artwork: detail.artworkUrl,
       audio: 1,
     })

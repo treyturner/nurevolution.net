@@ -14,6 +14,7 @@
       "certificates": {
         "automate": [
           "nurevolution.net",
+          "www.nurevolution.net",
           "podcast.nurevolution.net",
           "preview.nurevolution.net",
           "podcast-preview.nurevolution.net"
@@ -24,6 +25,7 @@
           {
             "subjects": [
               "nurevolution.net",
+              "www.nurevolution.net",
               "podcast.nurevolution.net",
               "preview.nurevolution.net",
               "podcast-preview.nurevolution.net"

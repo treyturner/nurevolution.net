@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "at": "2026-09-12T18:15:35.655126+00:00",
+  "origin": "https://preview.nurevolution.net",
+  "userAgent": "Python-urllib/3.14",
+  "resolution": "ordinary public DNS",
+  "earlierFeedStatus": 403,
+  "earlierBody": "error code: 1010",
+  "checks": [
+    {
+      "method": "GET",
+      "path": "/feed/podcast",
+      "status": 200,
+      "items": 55,
+      "sha256": "7bd7daddfa54c2386ab976afa9c157fe424624c8eb42e7754063d2bbf7edb9d9"
+    },
+    {
+      "method": "GET",
+      "path": "/feed/podcast/",
+      "status": 301
+    },
+    {
+      "method": "GET",
+      "path": "/?feed=podcast",
+      "status": 301
+    },
+    {
+      "method": "GET",
+      "path": "/",
+      "status": 403
+    },
+    {
+      "method": "HEAD",
+      "path": "/feed/podcast",
+      "status": 200
+    },
+    {
+      "method": "HEAD",
+      "path": "/feed/podcast/",
+      "status": 301
+    },
+    {
+      "method": "HEAD",
+      "path": "/?feed=podcast",
+      "status": 301
+    },
+    {
+      "method": "HEAD",
+      "path": "/",
+      "status": 403
+    }
+  ],
+  "cloudflareConfiguration": "Owner confirmed Configuration Rule deployed on 2026-09-12: Browser Integrity Check off only for feed GET/HEAD and aliases on canonical/www/preview hosts."
+}

@@ -27,6 +27,10 @@ it('renders exact public routes, attachment redirects and a complete download fa
     renderSite(m, { ...p, webOrigin: 'https://podcast.nurevolution.net' }),
   ).toThrow('overlap')
   expect(() => renderSite(m, { ...p, mediaOrigin: p.webOrigin })).toThrow()
+  for (const field of ['webOrigin', 'mediaOrigin'])
+    expect(() =>
+      renderSite(m, { ...p, [field]: 'https://www.nurevolution.net' }),
+    ).toThrow('overlap')
   for (const url of [
     'http://example.com',
     'https://example.com/path',
