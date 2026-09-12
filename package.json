@@ -9,7 +9,7 @@
   "scripts": {
     "dev": "nuxt dev",
     "prepare": "nuxt prepare",
-    "build": "pnpm check:content && pnpm check:feed && nuxt build",
+    "build": "pnpm check:content && pnpm check:thumbnails && pnpm check:feed && nuxt build",
     "build:fixture": "nuxt build test/fixtures/media-app",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
@@ -27,7 +27,9 @@
     "verify": "pnpm prepare && pnpm format:check && pnpm lint && pnpm typecheck && pnpm test:migration && pnpm test:operations && pnpm check:migration && pnpm test:coverage && pnpm build && pnpm test:e2e && pnpm test:delivery",
     "build:deploy": "esbuild tools/deploy/cli.ts --bundle --platform=node --target=node22 --format=esm --outfile=.local/delivery/artifacts/deploy.mjs",
     "test:delivery": "node test/delivery/run.ts",
-    "test:image-identity": "node test/delivery/image-identity.ts"
+    "test:image-identity": "node test/delivery/image-identity.ts",
+    "check:thumbnails": "node tools/content/thumbnails.ts --check",
+    "generate:thumbnails": "node tools/content/thumbnails.ts --write"
   },
   "dependencies": {
     "nuxt": "4.5.2",
@@ -45,12 +47,13 @@
     "@vitest/coverage-v8": "4.1.11",
     "@vue/test-utils": "2.5.0",
     "@xmldom/xmldom": "0.9.12",
+    "esbuild": "0.28.2",
     "eslint": "10.10.0",
     "happy-dom": "20.14.0",
     "prettier": "3.9.6",
+    "sharp": "0.35.4",
     "typescript": "6.0.3",
     "vitest": "4.1.11",
-    "vue-tsc": "3.3.11",
-    "esbuild": "0.28.2"
+    "vue-tsc": "3.3.11"
   }
 }

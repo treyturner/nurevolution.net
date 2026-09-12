@@ -51,16 +51,27 @@ onBeforeUnmount(() => {
         :aria-current="episode.id === selectedId ? 'page' : undefined"
         :aria-busy="pendingPath === episode.path || undefined"
       >
-        <span class="episode-list-title">{{ episode.title }}</span
-        ><span class="episode-list-artist"
-          >{{ episode.artist
-          }}<template v-if="episode.publishedAt"
-            ><span aria-hidden="true"> · </span
-            ><time :datetime="episode.publishedAt">{{
-              formatDate(episode.publishedAt)
-            }}</time></template
-          ></span
-        >
+        <img
+          class="episode-list-artwork"
+          :src="episode.artworkThumbnailUrl"
+          alt=""
+          width="48"
+          height="48"
+          loading="lazy"
+          decoding="async"
+        />
+        <span class="episode-list-info">
+          <span class="episode-list-title">{{ episode.title }}</span
+          ><span class="episode-list-artist"
+            >{{ episode.artist
+            }}<template v-if="episode.publishedAt"
+              ><span aria-hidden="true"> · </span
+              ><time :datetime="episode.publishedAt">{{
+                formatDate(episode.publishedAt)
+              }}</time></template
+            ></span
+          >
+        </span>
       </NuxtLink>
       <button
         type="button"

@@ -1,6 +1,6 @@
 # Editing the podcast archive
 
-The canonical archive is in `content/`. It contains 55 historical episodes, 832 tracks, and 338 precise track starts across 22 episodes. All audio and artwork remain URL references; no historical media binaries are stored in this repository. M3 serves the complete replacement RSS at `/feed/podcast`. The current page remains the M1 shell; M4 will build episode pages and the player from this archive.
+The canonical archive is in `content/`. It contains 55 historical episodes, 832 tracks, and 338 precise track starts across 22 episodes. Original audio and artwork remain URL references. The repository includes only small generated artwork thumbnails for the episode list. M3 serves the complete replacement RSS at `/feed/podcast`. The current page remains the M1 shell; M4 will build episode pages and the player from this archive.
 
 ## Files you edit
 
@@ -31,7 +31,7 @@ pnpm check:feed
 pnpm verify
 ```
 
-Checks are read-only and name the affected file and field. `pnpm build` runs both content and independently parsed feed checks before building, so it also rejects invalid authoring. RSS publication dates must use whole seconds (`.000Z`); a fractional instant fails the feed check rather than being silently truncated. No private WordPress files, SQL dump, media directory, environment file, credentials, or live feed is needed. Dependencies are installed separately using the setup in [README.md](../README.md). See the [feed validation guide](FEED-VALIDATION.md) for HTTP behavior and the pending public checks.
+Checks are read-only and name the affected file and field. `pnpm build` runs content, thumbnail, and independently parsed feed checks before building, so it also rejects invalid authoring. RSS publication dates must use whole seconds (`.000Z`); a fractional instant fails the feed check rather than being silently truncated. No private WordPress files, SQL dump, media directory, environment file, credentials, or live feed is needed. Dependencies are installed separately using the setup in [README.md](../README.md). See the [feed validation guide](FEED-VALIDATION.md) for HTTP behavior and the pending public checks.
 
 ## Episode fields and new episodes
 
@@ -99,3 +99,18 @@ The archive is packaged as Nitro server assets and loaded through one validated 
 The feed calls `contentRepository.publicArchive(asOf)` from `server/utils/content.ts`; it returns full public records and the show using the same predicate as the list and detail APIs, plus `show.rss` settings and each episode's `rss.link` and `rss.explicit`. These RSS-only fields do not change the three JSON API response shapes. Page code should use the public DTO types from `shared/content/public.ts`. Do not create a second archive, sort order, or publication rule.
 
 GET and HEAD `/feed/podcast` serve RSS with a stable weak ETag and a 60-second cache lifetime. `/feed/podcast/` and the exact root query `/?feed=podcast` redirect to it. Historical item links retain the exact legacy page URL; new episodes use `/episodes/<saved-slug>`. The serializer emits full safe descriptions and rounded positive integer duration seconds, preserving fractional canonical durations for playback. M4 owns episode pages, historical page redirects, and player controls; M5/M6 own media delivery and deployment.
+
+## Episode-list thumbnails
+
+Episode summaries expose `artworkThumbnailUrl`, a same-origin path served by the application image. Each file is a 96×96 WebP displayed at 48×48 CSS pixels, with a 12 KiB maximum payload. The maintained 55-image set totals 111,474 bytes (about 109 KiB), compared with about 27.5 MiB for the originals. Lazy loading defers offscreen thumbnail requests; a failed thumbnail never falls back to an original. The selected player artwork and its enlargement still use the original artwork URL.
+
+Generate thumbnails after adding a published episode or changing its artwork:
+
+```sh
+pnpm generate:thumbnails --uploads /path/to/verified/uploads
+pnpm check:thumbnails
+```
+
+Generation uses pinned Sharp locally, verifies each original's byte length and SHA-256 against the catalog before producing any output, and writes only derivatives of currently public episode artwork to `public/artwork-thumbnails/`. It performs no network requests. Commit the generated WebP files with the content changes; original media and private source directories stay out of Git. When an artwork change leaves obsolete thumbnail files, review and remove those obsolete files explicitly.
+
+The `v1-<source-sha256>.webp` filename ties each derivative to its source and encoding recipe. If the crop or encoding recipe changes, increment the prefix in `shared/content/artwork.ts` and regenerate. Normal builds and CI need no original media or credentials: `check:thumbnails` rejects missing, obsolete, unexpected, oversized, malformed, non-WebP, non-square, or animated files, and fully decodes each committed 96px image. No image resizing or native Sharp dependency runs on the droplet.

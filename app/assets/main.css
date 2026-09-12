@@ -316,14 +316,28 @@ audio {
   box-shadow: inset 2px 0 var(--focus-color);
 }
 .episode-list li > a:first-child {
+  display: flex;
+  align-items: center;
+  gap: 12px;
   flex: 1;
   min-width: 0;
-  padding: 0.9rem 1rem;
+  padding: 0.9rem 16px;
   text-decoration: none;
   color: #e1e6ee;
 }
 .episode-list li > a:first-child:hover {
   background: #1a2029;
+}
+.episode-list-artwork {
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  object-fit: cover;
+  border-radius: 0.2rem;
+  background: #202630;
+}
+.episode-list-info {
+  min-width: 0;
 }
 .episode-list-title {
   display: block;

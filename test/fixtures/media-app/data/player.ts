@@ -11,6 +11,7 @@ export function playerEpisodes(origin: string): EpisodeDetail[] {
     publishedAt: praxis.publishedAt,
     durationSeconds: 2,
     artworkUrl: `${origin}/cover.svg`,
+    artworkThumbnailUrl: `${origin}/cover.svg`,
     descriptionHtml: '<p>Original synthetic tone for browser verification.</p>',
     guid: slug,
     guidIsPermalink: false,

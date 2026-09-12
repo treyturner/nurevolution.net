@@ -1,4 +1,5 @@
 import type { Asset, Catalog, Episode } from './schema.ts'
+import { artworkThumbnailPath } from './artwork.ts'
 
 export function selectPublic(catalog: Catalog, asOf: number): Episode[] {
   if (!Number.isFinite(asOf))
@@ -37,6 +38,7 @@ export function showPublic(catalog: Catalog) {
 }
 
 export function episodeSummary(catalog: Catalog, episode: Episode) {
+  const artwork = asset(catalog, episode.artworkAssetId)
   return {
     id: episode.id,
     slug: episode.slug,
@@ -45,7 +47,8 @@ export function episodeSummary(catalog: Catalog, episode: Episode) {
     artist: episode.artist,
     publishedAt: episode.publishedAt,
     durationSeconds: episode.durationSeconds,
-    artworkUrl: asset(catalog, episode.artworkAssetId).url,
+    artworkUrl: artwork.url,
+    artworkThumbnailUrl: artworkThumbnailPath(artwork),
   }
 }
 

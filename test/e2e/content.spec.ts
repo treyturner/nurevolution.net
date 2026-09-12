@@ -60,6 +60,7 @@ test('serves the complete canonical archive with subscriber identities, precise 
         'publishedAt',
         'durationSeconds',
         'artworkUrl',
+        'artworkThumbnailUrl',
       ].sort(),
     )
     const detailResponse = await request.get(`/api/episodes/${expected.slug}`)
@@ -75,6 +76,7 @@ test('serves the complete canonical archive with subscriber identities, precise 
       publishedAt: expected.publishedAt,
       durationSeconds: expected.durationSeconds,
       artworkUrl: assets.find((a) => a.id === expected.artworkAssetId)!.url,
+      artworkThumbnailUrl: `/artwork-thumbnails/v1-${assets.find((a) => a.id === expected.artworkAssetId)!.sha256}.webp`,
       descriptionHtml: expected.descriptionHtml,
       guid: expected.guid,
       guidIsPermalink: expected.guidIsPermalink,
