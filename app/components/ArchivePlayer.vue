@@ -66,6 +66,7 @@ const messages = {
       <audio
         ref="element"
         controls
+        controlslist="nodownload noplaybackrate"
         preload="metadata"
         aria-describedby="playback-status"
         :aria-label="
