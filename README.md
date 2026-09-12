@@ -29,25 +29,27 @@ pnpm dev
 
 Open the local URL printed by Nuxt. Vue and CSS edits update through HMR; changes to project configuration may restart the development server. Stop it with Ctrl-C. The archive selects the latest episode paused; direct episode URLs select their episode in the same shared player. Mobile uses Episodes/Tracklist tabs.
 
-| Command                 | Behavior                                                                                                                                                                   |
-| ----------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `pnpm prepare`          | Generate Nuxt types and ESLint configuration; also runs during installation.                                                                                               |
-| `pnpm dev`              | Start the local Nuxt development server.                                                                                                                                   |
-| `pnpm format`           | Rewrite maintained files with Prettier; review documentation changes.                                                                                                      |
-| `pnpm format:check`     | Check formatting without edits.                                                                                                                                            |
-| `pnpm lint`             | Check source, tests, and tooling with Nuxt ESLint.                                                                                                                         |
-| `pnpm typecheck`        | Strict Nuxt checks plus explicit test, fixture, and tooling checks.                                                                                                        |
-| `pnpm test`             | Run Node unit tests and Nuxt runtime tests once.                                                                                                                           |
-| `pnpm test:migration`   | Run the deterministic M0 audit unit tests without private source access.                                                                                                   |
-| `pnpm check:migration`  | Validate the public M0 inventory and legacy URL map; exit 2 means valid artifacts contain documented blockers.                                                             |
-| `pnpm import:wordpress` | Dry-run the frozen WordPress import; `--write` creates missing files; `--check` compares without edits.                                                                    |
-| `pnpm check:content`    | Validate authoring, references, safe descriptions, publication rules, and protected historical fields.                                                                     |
-| `pnpm check:feed`       | Generate and independently parse the complete RSS, checking canonical fields and all protected historical identities without network or media access.                      |
-| `pnpm test:coverage`    | Run those tests and enforce coverage thresholds.                                                                                                                           |
-| `pnpm build`            | Validate content and RSS, then produce the portable SSR Node application in `.output/`.                                                                                    |
-| `pnpm build:fixture`    | Build the independent test-only media application.                                                                                                                         |
-| `pnpm test:e2e`         | Build the media fixture and run all browser projects; requires a current normal production build.                                                                          |
-| `pnpm verify`           | Prepare, formatting, lint, types, migration checks, application/content/feed coverage, content/feed validation, production builds, and browser tests, stopping on failure. |
+| Command                                          | Behavior                                                                                                                                                                   |
+| ------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `pnpm prepare`                                   | Generate Nuxt types and ESLint configuration; also runs during installation.                                                                                               |
+| `pnpm dev`                                       | Start the local Nuxt development server.                                                                                                                                   |
+| `pnpm format`                                    | Rewrite maintained files with Prettier; review documentation changes.                                                                                                      |
+| `pnpm format:check`                              | Check formatting without edits.                                                                                                                                            |
+| `pnpm lint`                                      | Check source, tests, and tooling with Nuxt ESLint.                                                                                                                         |
+| `pnpm typecheck`                                 | Strict Nuxt checks plus explicit test, fixture, and tooling checks.                                                                                                        |
+| `pnpm test`                                      | Run Node unit tests and Nuxt runtime tests once.                                                                                                                           |
+| `pnpm test:migration`                            | Run the deterministic M0 audit unit tests without private source access.                                                                                                   |
+| `pnpm check:migration`                           | Validate the public M0 inventory and legacy URL map; exit 2 means valid artifacts contain documented blockers.                                                             |
+| `pnpm import:wordpress`                          | Dry-run the frozen WordPress import; `--write` creates missing files; `--check` compares without edits.                                                                    |
+| `pnpm check:content`                             | Validate authoring, references, safe descriptions, publication rules, and protected historical fields.                                                                     |
+| `pnpm check:thumbnails`                          | Validate the complete committed thumbnail set without original media or network access.                                                                                    |
+| `pnpm generate:thumbnails --uploads <directory>` | Regenerate small list thumbnails from verified original artwork; commit the results with content changes.                                                                  |
+| `pnpm check:feed`                                | Generate and independently parse the complete RSS, checking canonical fields and all protected historical identities without network or media access.                      |
+| `pnpm test:coverage`                             | Run those tests and enforce coverage thresholds.                                                                                                                           |
+| `pnpm build`                                     | Validate content and RSS, then produce the portable SSR Node application in `.output/`.                                                                                    |
+| `pnpm build:fixture`                             | Build the independent test-only media application.                                                                                                                         |
+| `pnpm test:e2e`                                  | Build the media fixture and run all browser projects; requires a current normal production build.                                                                          |
+| `pnpm verify`                                    | Prepare, formatting, lint, types, migration checks, application/content/feed coverage, content/feed validation, production builds, and browser tests, stopping on failure. |
 
 The canonical local and CI gate is **`pnpm verify`**, including the Docker delivery checks. A working Docker daemon is required; see [local and separate-daemon setup](docs/DEPLOYMENT.md#release-and-host-contracts). It prepares its generated prerequisites and builds both applications without a hand-started server. It does not install dependencies, rewrite maintained files, accept snapshots, or contact the legacy site.
 

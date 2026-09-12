@@ -1,14 +1,12 @@
 <script setup lang="ts">
 import type { EpisodeSummary } from '../../shared/content/public'
 import { formatDate } from '../services/episode-page'
-import { deliveryAssetUrl } from '../services/delivery-assets'
 import DownloadIcon from './DownloadIcon.vue'
 defineProps<{
   episodes: EpisodeSummary[]
   selectedId?: string
   pendingPath?: string | null
 }>()
-const config = useRuntimeConfig()
 </script>
 
 <template>
@@ -26,13 +24,7 @@ const config = useRuntimeConfig()
       >
         <img
           class="episode-list-artwork"
-          :src="
-            deliveryAssetUrl(
-              episode.artworkUrl,
-              'artwork',
-              config.public.webOrigin,
-            )
-          "
+          :src="episode.artworkThumbnailUrl"
           alt=""
           width="48"
           height="48"
