@@ -115,12 +115,12 @@ describe('episode page loading and navigation', () => {
     expect(s.model).toEqual(model)
   })
 
-  it('derives canonical metadata from the configured origin and escaped bindings', () => {
+  it('keeps canonical identity while discovering RSS on the current host', () => {
     expect(episodeHead(model, '/')).toMatchObject({
       title: 'nurevolution studios',
       link: [
         { rel: 'canonical', href: 'https://nurevolution.net/' },
-        { rel: 'alternate', href: model.show.feedUrl },
+        { rel: 'alternate', href: '/feed/podcast' },
       ],
     })
     expect(episodeHead(model, model.selected.path).title).toBe(

@@ -94,7 +94,7 @@ export function episodeHead(model: EpisodePage, path: string) {
         rel: 'alternate',
         type: 'application/rss+xml',
         title: model.show.title,
-        href: model.show.feedUrl,
+        href: '/feed/podcast',
       },
     ],
   }

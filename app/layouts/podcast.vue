@@ -26,10 +26,7 @@ useHead(() =>
       <NuxtLink to="/" :prefetch="false" class="wordmark"
         >nurevolution studios<span>austin, tx</span></NuxtLink
       >
-      <a
-        :href="state.model.show.feedUrl"
-        class="rss-link"
-        aria-label="Subscribe via RSS"
+      <a href="/feed/podcast" class="rss-link" aria-label="Subscribe via RSS"
         ><span class="rss-label">Subscribe<br />via RSS</span
         ><RssIcon class="rss-icon"
       /></a>
