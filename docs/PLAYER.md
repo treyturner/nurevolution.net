@@ -31,6 +31,8 @@ Server rendering never constructs browser media objects. Application state is pe
 
 ## Downloads and old links
 
+Each episode row also has a copy-link button. It copies that episode's canonical public URL, including when browsing a preview or local server, without selecting the episode or affecting playback. A successful copy or clipboard failure shows three seconds of feedback beside the button, falling back to the viewport's top center when the button is offscreen or space is limited. Feedback is announced without moving keyboard focus.
+
 Each episode has a `/downloads/<saved-slug>` link. The endpoint resolves a public episode, fetches its exact canonical HTTPS URL on `podcast.nurevolution.net`, validates status/type/length/encoding, and serves an attachment with the canonical raw basename. It supplies both quoted ASCII and UTF-8 filename parameters, preserving punctuation such as the apostrophe in `bouche_d'incendie`.
 
 The application endpoint supports GET and HEAD; other methods return 405. Unknown or nonpublic slugs return 404 before fetching media. It accepts no request-supplied upstream URL, credentials, filename, or forwarded cookies/authorization. Redirects are rejected. Upstream header waiting is bounded to ten seconds; a healthy full download has no short total-duration timeout. The response uses `no-store` and does not advertise ranges; Range requests receive the complete 200 representation. Playback and RSS retain the original direct media URLs.

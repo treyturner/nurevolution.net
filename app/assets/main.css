@@ -352,17 +352,51 @@ audio {
   margin-top: 0.2rem;
   overflow-wrap: anywhere;
 }
-.row-download {
+.row-download,
+.row-copy-link {
   display: flex;
   flex-shrink: 0;
+  align-self: stretch;
   align-items: center;
   justify-content: center;
   min-width: 44px;
   min-height: 44px;
   text-decoration: none;
 }
-.row-download svg {
+.row-copy-link {
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: var(--focus-color);
+}
+.row-copy-link:hover,
+.row-download:hover {
+  background: #1a2029;
+}
+.row-download svg,
+.row-copy-link svg {
   opacity: 0.7;
+}
+.row-copy-link:hover svg,
+.row-copy-link:focus-visible svg {
+  opacity: 1;
+}
+.copy-link-toast {
+  position: fixed;
+  z-index: 20;
+  width: max-content;
+  max-width: calc(100vw - 24px);
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #455976;
+  border-radius: 0.4rem;
+  background: #202c3d;
+  color: #edf3ff;
+  box-shadow: 0 4px 16px #0006;
+  font-size: 0.8rem;
+  line-height: 1.4;
+  text-align: center;
+  pointer-events: none;
 }
 .track-list li {
   display: grid;

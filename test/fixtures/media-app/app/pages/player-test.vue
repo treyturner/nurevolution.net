@@ -3,7 +3,8 @@ import { ref } from 'vue'
 import ArchivePlayer from '../../../../../app/components/ArchivePlayer.vue'
 import ArchiveLists from '../../../../../app/components/ArchiveLists.vue'
 import { playerEpisodes } from '../../data/player'
-const episodes = playerEpisodes(useRequestURL().origin)
+const siteUrl = useRequestURL().origin
+const episodes = playerEpisodes(siteUrl)
 const selected = ref(episodes[0]!)
 const mounted = ref(true)
 function play() {
@@ -27,6 +28,10 @@ function play() {
       <button type="button" @click="mounted = !mounted">Toggle player</button>
     </nav>
     <ArchivePlayer v-if="mounted" :episode="selected" />
-    <ArchiveLists :episodes="episodes" :selected="selected" />
+    <ArchiveLists
+      :episodes="episodes"
+      :selected="selected"
+      :site-url="siteUrl"
+    />
   </main>
 </template>

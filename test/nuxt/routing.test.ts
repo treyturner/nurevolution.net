@@ -14,8 +14,11 @@ it('announces accepted navigation without remounting the player', async () => {
     audio = wrapper.get('audio').element
   await nuxt.$router.push('/episodes/trey-turner-praxis')
   expect(wrapper.get('h1').text()).toBe('Praxis')
-  expect(wrapper.get('.sr-only').text()).toBe('Selected Trey Turner — Praxis')
-  expect(wrapper.findAll('[role="status"], [aria-live]')).toHaveLength(1)
+  expect(wrapper.get('#episode-selection-status').text()).toBe(
+    'Selected Trey Turner — Praxis',
+  )
+  expect(wrapper.findAll('[role="status"], [aria-live]')).toHaveLength(2)
+  expect(wrapper.findAll('[role="status"]')[1]!.text()).toBe('')
   expect(wrapper.get('audio').attributes('aria-describedby')).toBe(
     'playback-status',
   )
@@ -27,7 +30,9 @@ it('announces accepted navigation without remounting the player', async () => {
   expect(wrapper.get('[role="alert"]').text()).toContain('Could not load')
   state.value.model = { ...state.value.model!, selected: null }
   await wrapper.vm.$nextTick()
-  expect(wrapper.get('.sr-only').text()).toBe('No episodes are available.')
+  expect(wrapper.get('#episode-selection-status').text()).toBe(
+    'No episodes are available.',
+  )
   wrapper.unmount()
 })
 

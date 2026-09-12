@@ -2,11 +2,40 @@
 import type { EpisodeSummary } from '../../shared/content/public'
 import { formatDate } from '../services/episode-page'
 import DownloadIcon from './DownloadIcon.vue'
-defineProps<{
+import LinkIcon from './LinkIcon.vue'
+import CopyLinkToast from './CopyLinkToast.vue'
+const props = defineProps<{
   episodes: EpisodeSummary[]
+  siteUrl: string
   selectedId?: string
   pendingPath?: string | null
 }>()
+const toast = shallowRef<{ target: HTMLElement; message: string } | null>(null)
+let sequence = 0
+let timer: ReturnType<typeof setTimeout> | undefined
+async function copyLink(episode: EpisodeSummary, event: MouseEvent) {
+  const target = event.currentTarget as HTMLElement
+  const own = ++sequence
+  clearTimeout(timer)
+  toast.value = null
+  let message = 'Episode link copied'
+  try {
+    await navigator.clipboard.writeText(
+      new URL(episode.path, props.siteUrl).href,
+    )
+  } catch {
+    message = 'Couldn’t copy link. Please try again.'
+  }
+  if (own !== sequence) return
+  toast.value = { target, message }
+  timer = setTimeout(() => {
+    toast.value = null
+  }, 3000)
+}
+onBeforeUnmount(() => {
+  sequence++
+  clearTimeout(timer)
+})
 </script>
 
 <template>
@@ -44,6 +73,15 @@ defineProps<{
           >
         </span>
       </NuxtLink>
+      <button
+        type="button"
+        class="row-copy-link"
+        title="Copy episode link"
+        :aria-label="`Copy link to ${episode.artist} — ${episode.title}`"
+        @click="copyLink(episode, $event)"
+      >
+        <LinkIcon />
+      </button>
       <a
         class="row-download"
         :href="`/downloads/${episode.slug}`"
@@ -54,4 +92,8 @@ defineProps<{
       /></a>
     </li>
   </ol>
+  <span class="sr-only" role="status" aria-atomic="true">{{
+    toast?.message
+  }}</span>
+  <CopyLinkToast v-if="toast" :target="toast.target" :message="toast.message" />
 </template>
