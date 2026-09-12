@@ -7,7 +7,7 @@ test('serves meaningful HTML before JavaScript runs', async ({ request }) => {
   expect(response.status()).toBe(200)
   const html = await response.text()
   expect(html).toMatch(/<html[^>]*lang="en"/)
-  expect(html).toContain('<title>Nurevolution — Podcast archive</title>')
+  expect(html).toContain('<title>nurevolution studios</title>')
   expect(html).toMatch(/<meta[^>]*name="color-scheme"[^>]*content="dark"/)
   expect(html).toMatch(
     /<main[^>]*>[\s\S]*<h1[^>]*>Ruminate<\/h1>[\s\S]*<\/main>/,
@@ -49,7 +49,7 @@ test('hydrates a dark shell with no application errors', async ({ page }) => {
     'rgb(16, 18, 22)',
   )
   await expect(page.locator('audio')).toHaveCount(1)
-  await expect(page).toHaveTitle('Nurevolution — Podcast archive')
+  await expect(page).toHaveTitle('nurevolution studios')
   expect(errors).toEqual([])
 })
 

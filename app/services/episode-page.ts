@@ -73,10 +73,7 @@ export function createEpisodeNavigation(
 export function episodeHead(model: EpisodePage, path: string) {
   const episode = model.selected
   return {
-    title:
-      path === '/' || !episode
-        ? 'Nurevolution — Podcast archive'
-        : `${episode.artist} — ${episode.title} | Nurevolution`,
+    title: 'nurevolution studios',
     meta: [
       {
         name: 'description',
@@ -115,10 +112,21 @@ export function formatTime(seconds: number | null) {
 }
 
 export function formatDate(iso: string | null) {
-  return iso
-    ? new Intl.DateTimeFormat('en-US', {
-        dateStyle: 'long',
-        timeZone: 'UTC',
-      }).format(new Date(iso))
-    : ''
+  if (!iso) return ''
+  const date = new Date(iso)
+  const months = [
+    'Jan.',
+    'Feb.',
+    'Mar.',
+    'Apr.',
+    'May',
+    'June',
+    'July',
+    'Aug.',
+    'Sept.',
+    'Oct.',
+    'Nov.',
+    'Dec.',
+  ]
+  return `${months[date.getUTCMonth()]} ${date.getUTCDate()}, ${date.getUTCFullYear()}`
 }

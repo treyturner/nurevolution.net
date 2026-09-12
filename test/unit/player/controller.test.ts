@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { createAudioAdapter, type AudioPort } from '../../../app/services/audio'
 import { createPlayer } from '../../../app/services/player'
 
@@ -9,6 +9,8 @@ class Media extends EventTarget implements AudioPort {
   paused = true
   ended = false
   readyState = 0
+  duration = NaN
+  preload: AudioPort['preload'] = 'metadata'
   error: MediaError | null = null
   load = vi.fn(() => {
     this.currentSrc = ''
@@ -16,6 +18,7 @@ class Media extends EventTarget implements AudioPort {
     this.ended = false
     this.currentTime = 0
     this.readyState = 0
+    this.duration = NaN
     this.error = null
   })
   play = vi.fn(async () => {
@@ -32,6 +35,7 @@ class Media extends EventTarget implements AudioPort {
   ready() {
     this.currentSrc = this.src
     this.readyState = 4
+    this.duration = 120
     this.emit('loadedmetadata')
   }
 }
@@ -49,6 +53,221 @@ function setup() {
 }
 
 describe('persistent episode controller', () => {
+  beforeEach(() => vi.useFakeTimers())
+  afterEach(() => {
+    vi.clearAllTimers()
+    vi.useRealTimers()
+  })
+  it('retries a stalled metadata request once without starting playback, then loads the real duration', () => {
+    const { media, changed, player } = setup()
+    player.select(a)
+    vi.advanceTimersByTime(10_000)
+    expect(media.load).toHaveBeenCalledTimes(2)
+    expect(media.paused).toBe(true)
+    expect(media.play).not.toHaveBeenCalled()
+    expect(changed).toHaveBeenLastCalledWith('loading')
+    media.ready()
+    vi.advanceTimersByTime(30_000)
+    expect(media.duration).toBe(120)
+    expect(media.preload).toBe('metadata')
+    expect(changed).toHaveBeenLastCalledWith('paused')
+    expect(media.load).toHaveBeenCalledTimes(2)
+    player.dispose()
+  })
+  it('allows slow downloads to keep progressing and waits for a finite duration', () => {
+    const { media, changed, player } = setup()
+    player.select(a)
+    media.currentSrc = a.url
+    media.readyState = 1
+    media.duration = Infinity
+    media.emit('loadedmetadata')
+    expect(changed).toHaveBeenLastCalledWith('loading')
+    for (let i = 0; i < 4; i++) {
+      vi.advanceTimersByTime(9_000)
+      media.emit('progress')
+    }
+    expect(media.load).toHaveBeenCalledOnce()
+    media.duration = 120
+    media.emit('durationchange')
+    vi.advanceTimersByTime(20_000)
+    expect(changed).toHaveBeenLastCalledWith('paused')
+    expect(media.load).toHaveBeenCalledOnce()
+    player.dispose()
+  })
+  it('treats deferred preload as a delay and preserves optional retry through queued events', () => {
+    const { media, changed, player } = setup()
+    player.select(a)
+    vi.advanceTimersByTime(20_000)
+    expect(changed).toHaveBeenLastCalledWith('delayed')
+    media.emit('pause')
+    media.emit('progress')
+    vi.advanceTimersByTime(60_000)
+    expect(changed).toHaveBeenLastCalledWith('delayed')
+    expect(media.load).toHaveBeenCalledTimes(2)
+    expect(media.error).toBeNull()
+    expect(media.pause).not.toHaveBeenCalled()
+    expect(media.preload).toBe('auto')
+    player.retry()
+    expect(changed).toHaveBeenLastCalledWith('loading')
+    vi.advanceTimersByTime(10_000)
+    expect(media.load).toHaveBeenCalledTimes(4)
+    media.ready()
+    expect(media.play).not.toHaveBeenCalled()
+    player.dispose()
+  })
+  it('accepts late metadata after both timeouts without reloading or reporting an error', () => {
+    const { media, changed, player } = setup()
+    player.select(a)
+    vi.advanceTimersByTime(20_000)
+    media.ready()
+    expect(changed).toHaveBeenLastCalledWith('paused')
+    expect(changed).not.toHaveBeenCalledWith('error')
+    expect(media.load).toHaveBeenCalledTimes(2)
+    expect(media.pause).not.toHaveBeenCalled()
+    player.dispose()
+  })
+  it.each([5_000, 15_000, 25_000])(
+    'keeps Play requested after %i ms intact even when metadata remains unavailable',
+    async (delay) => {
+      const { media, changed, player } = setup()
+      player.select(a)
+      vi.advanceTimersByTime(delay)
+      const loads = media.load.mock.calls.length
+      await media.play()
+      media.currentTime = 12
+      media.emit('progress')
+      vi.advanceTimersByTime(60_000)
+      expect(changed).toHaveBeenLastCalledWith('buffering')
+      expect(media.paused).toBe(false)
+      expect(media.currentTime).toBe(12)
+      expect(media.load).toHaveBeenCalledTimes(loads)
+      expect(media.pause).not.toHaveBeenCalled()
+      expect(media.play).toHaveBeenCalledOnce()
+      expect(changed).not.toHaveBeenCalledWith('error')
+      media.ready()
+      media.emit('playing')
+      expect(changed).toHaveBeenLastCalledWith('playing')
+      player.dispose()
+    },
+  )
+  it.each([5_000, 15_000, 25_000])(
+    'resumes bounded recovery after Play then pause at %i ms with no further progress',
+    async (delay) => {
+      const { media, changed, player } = setup()
+      player.select(a)
+      vi.advanceTimersByTime(delay)
+      await media.play()
+      media.pause()
+      vi.advanceTimersByTime(20_000)
+      expect(changed).toHaveBeenLastCalledWith('delayed')
+      expect(media.load).toHaveBeenCalledTimes(2)
+      expect(media.play).toHaveBeenCalledOnce()
+      expect(media.pause).toHaveBeenCalledOnce()
+      expect(media.paused).toBe(true)
+      media.ready()
+      expect(changed).toHaveBeenLastCalledWith('paused')
+      player.dispose()
+    },
+  )
+  it('does not reload a pending Play request whose native event is still queued', async () => {
+    const { media, changed, player } = setup()
+    player.select(a)
+    media.ready()
+    await media.play()
+    media.play.mockImplementationOnce(() => {
+      media.paused = false
+      return new Promise(() => {})
+    })
+    player.select(b)
+    vi.advanceTimersByTime(30_000)
+    expect(media.load).toHaveBeenCalledTimes(2)
+    expect(media.pause).not.toHaveBeenCalled()
+    expect(changed).not.toHaveBeenCalledWith('error')
+    expect(media.paused).toBe(false)
+    player.dispose()
+  })
+  it('preserves a blocked-play prompt when metadata never arrives', async () => {
+    const { media, changed, player } = setup()
+    player.select(a)
+    media.ready()
+    await media.play()
+    media.play.mockRejectedValueOnce(
+      new DOMException('Blocked', 'NotAllowedError'),
+    )
+    player.select(b)
+    await Promise.resolve()
+    media.emit('progress')
+    vi.advanceTimersByTime(30_000)
+    expect(changed).toHaveBeenLastCalledWith('blocked')
+    expect(media.load).toHaveBeenCalledTimes(2)
+    expect(media.pause).not.toHaveBeenCalled()
+    player.dispose()
+  })
+  it('honors a real media error observed by the timeout before its event arrives', () => {
+    const { media, changed, player } = setup()
+    player.select(a)
+    media.error = { code: 2 } as MediaError
+    vi.advanceTimersByTime(10_000)
+    expect(changed).toHaveBeenLastCalledWith('error')
+    expect(media.load).toHaveBeenCalledOnce()
+    player.dispose()
+  })
+  it('cancels obsolete recovery on selection, clearing, native errors, and disposal', () => {
+    const { media, player } = setup()
+    player.select(a)
+    vi.advanceTimersByTime(9_000)
+    player.select(b)
+    vi.advanceTimersByTime(1_000)
+    expect(media.load).toHaveBeenCalledTimes(2)
+    player.select(null)
+    vi.advanceTimersByTime(20_000)
+    expect(media.load).toHaveBeenCalledTimes(2)
+    player.select(c)
+    media.error = { code: 2 } as MediaError
+    media.emit('error')
+    vi.advanceTimersByTime(20_000)
+    expect(media.load).toHaveBeenCalledTimes(3)
+    player.retry()
+    player.dispose()
+    vi.advanceTimersByTime(20_000)
+    expect(media.load).toHaveBeenCalledTimes(4)
+  })
+  it('recovers a source that never became current and accepts metadata even if its event was missed', () => {
+    const { media, changed, player } = setup()
+    player.select(a)
+    media.currentSrc = b.url
+    vi.advanceTimersByTime(10_000)
+    expect(media.load).toHaveBeenCalledTimes(2)
+    media.currentSrc = a.url
+    media.readyState = 1
+    media.duration = 120
+    vi.advanceTimersByTime(10_000)
+    expect(changed).toHaveBeenLastCalledWith('paused')
+    expect(media.preload).toBe('metadata')
+    player.dispose()
+  })
+  it('loads metadata before offering Play and reports actual buffering after playback is requested', async () => {
+    const { media, changed, player } = setup()
+    player.select(a)
+    expect(media.readyState).toBe(0)
+    expect(changed).toHaveBeenLastCalledWith('loading')
+    expect(media.preload).toBe('auto')
+    media.emit('suspend')
+    player.select(b)
+    expect(changed).toHaveBeenLastCalledWith('loading')
+    expect(media.play).not.toHaveBeenCalled()
+    await media.play()
+    expect(changed).toHaveBeenLastCalledWith('buffering')
+    media.ready()
+    media.emit('playing')
+    expect(changed).toHaveBeenLastCalledWith('playing')
+    expect(media.preload).toBe('metadata')
+    player.retry()
+    expect(media.readyState).toBe(0)
+    expect(changed).toHaveBeenLastCalledWith('loading')
+    expect(media.play).toHaveBeenCalledOnce()
+    player.dispose()
+  })
   it('starts paused, preserves the same episode, and changes paused sources at zero', () => {
     const { media, changed, player } = setup()
     player.select(a)

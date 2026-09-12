@@ -11,6 +11,8 @@ class ControlledAudio extends EventTarget implements AudioPort {
   currentTime = 0
   ended = false
   readyState = 0
+  duration = NaN
+  preload: AudioPort['preload'] = 'metadata'
   error = null
   paused = true
   load = vi.fn(() => {
@@ -114,6 +116,7 @@ describe('audio adapter', () => {
     audio.dispose()
     for (const operation of [
       () => audio.snapshot(),
+      () => audio.setPreload('auto'),
       () => audio.load('/another.mp3'),
       () => audio.play(),
       () => audio.pause(),

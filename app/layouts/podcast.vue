@@ -1,6 +1,10 @@
 <script setup lang="ts">
 import { episodeHead } from '../services/episode-page'
+import RssIcon from '../components/RssIcon.vue'
 const state = useEpisodePage()
+const currentYear = useState('copyright-year', () =>
+  new Date().getUTCFullYear(),
+)
 const announcement = ref('')
 watch(
   () => state.value.model?.selected?.id,
@@ -20,11 +24,15 @@ useHead(() =>
   <div v-if="state.model" class="podcast">
     <header class="site-header">
       <NuxtLink to="/" :prefetch="false" class="wordmark"
-        >Nurevolution<span>Independent transmissions</span></NuxtLink
+        >nurevolution studios<span>austin, tx</span></NuxtLink
       >
-      <a :href="state.model.show.feedUrl"
-        >Subscribe via RSS <span aria-hidden="true">↗</span></a
-      >
+      <a
+        :href="state.model.show.feedUrl"
+        class="rss-link"
+        aria-label="Subscribe via RSS"
+        ><span class="rss-label">Subscribe<br />via RSS</span
+        ><RssIcon class="rss-icon"
+      /></a>
     </header>
     <p v-if="state.failedPath" class="navigation-error" role="alert">
       Could not load this episode.
@@ -37,9 +45,7 @@ useHead(() =>
       :selected="state.model.selected"
       :pending-path="state.pendingPath"
     />
-    <footer class="site-footer">
-      <span>Nurevolution</span><span>Music for the spaces between.</span>
-    </footer>
+    <footer class="site-footer">© {{ currentYear }} nurevolution.net</footer>
     <slot />
   </div>
 </template>

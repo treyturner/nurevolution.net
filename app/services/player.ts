@@ -3,6 +3,7 @@ import type { AudioAdapter, AudioEvent } from './audio'
 export type PlayerStatus =
   | 'idle'
   | 'loading'
+  | 'delayed'
   | 'paused'
   | 'playing'
   | 'buffering'
@@ -23,6 +24,45 @@ export function createPlayer(
   let generation = 0
   let disposed = false
   let status: PlayerStatus = 'idle'
+  let metadataTimer: ReturnType<typeof setTimeout> | undefined
+  let metadataRetries = 0
+  function stopMetadataTimer() {
+    clearTimeout(metadataTimer)
+    metadataTimer = undefined
+  }
+  function hasMetadata(snapshot: ReturnType<AudioAdapter['snapshot']>) {
+    return (
+      snapshot.readyState >= 1 &&
+      Number.isFinite(snapshot.duration) &&
+      snapshot.duration > 0
+    )
+  }
+  function watchMetadata() {
+    stopMetadataTimer()
+    const own = generation
+    metadataTimer = setTimeout(() => {
+      metadataTimer = undefined
+      if (disposed || own !== generation || !source) return
+      const snapshot = audio.snapshot()
+      if (snapshot.src !== source.url) return
+      if (snapshot.error) {
+        observe('error')
+        return
+      }
+      if (snapshot.currentSrc === source.url && hasMetadata(snapshot)) {
+        observe('loadedmetadata')
+        return
+      }
+      // Preload is advisory. Never reset an active/pending Play request or
+      // replace a blocked-play prompt just because metadata was deferred.
+      if (!snapshot.paused || snapshot.ended || status === 'blocked') return
+      if (metadataRetries++ === 0) {
+        load(source, false)
+      } else {
+        set('delayed')
+      }
+    }, 10_000)
+  }
   function set(next: PlayerStatus) {
     status = next
     changed(next)
@@ -39,10 +79,20 @@ export function createPlayer(
     const snapshot = current()
     if (!snapshot) return
     if (snapshot.error) {
+      stopMetadataTimer()
+      audio.setPreload('metadata')
       generation++
       set('error')
       if (!snapshot.paused) audio.pause()
       return
+    }
+    if (hasMetadata(snapshot)) {
+      stopMetadataTimer()
+      audio.setPreload('metadata')
+    } else if (!snapshot.paused || snapshot.ended) {
+      stopMetadataTimer()
+    } else if (event === 'progress' && status === 'loading') {
+      watchMetadata()
     }
     if (snapshot.ended) {
       set('ended')
@@ -50,7 +100,13 @@ export function createPlayer(
     }
     if (event === 'pause' && snapshot.paused) {
       // A queued source-reset pause must not erase an autoplay rejection.
-      if (status !== 'blocked') set('paused')
+      if (status !== 'blocked' && status !== 'error' && status !== 'delayed') {
+        const ready = hasMetadata(snapshot)
+        set(ready ? 'paused' : 'loading')
+        // Play cancels background recovery. Resume it if the listener pauses
+        // before metadata arrives, even when the network sends no more events.
+        if (!ready && metadataTimer === undefined) watchMetadata()
+      }
     } else if (
       (event === 'play' || event === 'playing' || event === 'waiting') &&
       !snapshot.paused
@@ -61,8 +117,10 @@ export function createPlayer(
           : 'buffering',
       )
     } else if (
-      event === 'loadedmetadata' &&
-      snapshot.readyState >= 1 &&
+      (event === 'loadedmetadata' ||
+        event === 'durationchange' ||
+        event === 'progress') &&
+      hasMetadata(snapshot) &&
       snapshot.paused &&
       status !== 'blocked'
     ) {
@@ -72,6 +130,8 @@ export function createPlayer(
   const unsubscribe = (
     [
       'loadedmetadata',
+      'durationchange',
+      'progress',
       'play',
       'playing',
       'waiting',
@@ -84,7 +144,10 @@ export function createPlayer(
     const own = ++generation
     source = next
     set('loading')
+    // Fetch through large MP3 tags before reducing background buffering.
+    audio.setPreload('auto')
     audio.load(next.url)
+    watchMetadata()
     if (continuePlaying) {
       // Call immediately: native controls can then cancel the pending play request.
       void audio.play().catch((error: unknown) => {
@@ -97,7 +160,9 @@ export function createPlayer(
           // alone does not determine the outcome of the new play request.
           set(
             error instanceof Error && error.name === 'AbortError'
-              ? 'paused'
+              ? hasMetadata(snapshot)
+                ? 'paused'
+                : 'loading'
               : 'blocked',
           )
         }
@@ -108,13 +173,16 @@ export function createPlayer(
     select(next: PlayerSource | null) {
       if (disposed || next?.id === source?.id) return
       if (!next) {
+        stopMetadataTimer()
         source = null
         generation++
+        audio.setPreload('metadata')
         audio.pause()
         set('idle')
         return
       }
       const snapshot = audio.snapshot()
+      metadataRetries = 0
       load(
         next,
         Boolean(
@@ -125,11 +193,13 @@ export function createPlayer(
     retry() {
       if (disposed || !source) return
       audio.pause()
+      metadataRetries = 0
       load(source, false)
     },
     dispose() {
       if (disposed) return
       disposed = true
+      stopMetadataTimer()
       generation++
       for (const stop of unsubscribe) stop()
       audio.dispose()

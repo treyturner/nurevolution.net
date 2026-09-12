@@ -3,6 +3,8 @@ import type { EpisodeDetail } from '../../shared/content/public'
 import { formatDate, formatTime } from '../services/episode-page'
 import { usePodcastPlayer } from '../composables/usePodcastPlayer'
 import { deliveryAssetUrl } from '../services/delivery-assets'
+import DownloadIcon from './DownloadIcon.vue'
+import ArtworkDialog from './ArtworkDialog.vue'
 const props = defineProps<{ episode: EpisodeDetail | null }>()
 const config = useRuntimeConfig()
 const artworkUrl = computed(() =>
@@ -16,13 +18,23 @@ const artworkUrl = computed(() =>
 )
 const { element, status, retry } = usePodcastPlayer(() => props.episode)
 const failedArtwork = ref(false)
+const artworkOpen = ref(false)
+const artworkTrigger = ref<HTMLButtonElement | null>(null)
+function closeArtwork() {
+  artworkOpen.value = false
+  artworkTrigger.value?.focus({ preventScroll: true })
+}
 watch(artworkUrl, () => {
   failedArtwork.value = false
+})
+watch([artworkUrl, () => props.episode?.id], () => {
+  artworkOpen.value = false
 })
 const messages = {
   idle: 'Choose an episode to listen.',
   loading: 'Loading audio…',
-  paused: 'Ready when you are.',
+  delayed: 'Audio is taking longer to load.',
+  paused: 'Press Play to listen.',
   playing: 'Playing',
   buffering: 'Buffering…',
   ended: 'Episode finished.',
@@ -34,14 +46,23 @@ const messages = {
 <template>
   <section class="player" aria-labelledby="episode-title">
     <div v-if="episode" class="artwork">
-      <img
+      <button
         v-if="!failedArtwork"
-        :src="artworkUrl"
-        :alt="`${episode.artist} — ${episode.title} cover art`"
-        width="480"
-        height="480"
-        @error="failedArtwork = true"
-      />
+        ref="artworkTrigger"
+        type="button"
+        class="artwork-trigger"
+        aria-haspopup="dialog"
+        :aria-label="`Enlarge ${episode.artist} — ${episode.title} cover art`"
+        @click="artworkOpen = true"
+      >
+        <img
+          :src="artworkUrl"
+          :alt="`${episode.artist} — ${episode.title} cover art`"
+          width="480"
+          height="480"
+          @error="failedArtwork = true"
+        />
+      </button>
       <div
         v-else
         class="artwork-fallback"
@@ -52,7 +73,6 @@ const messages = {
       </div>
     </div>
     <div class="player-content">
-      <p class="eyebrow">{{ episode ? 'From the archive' : 'Nurevolution' }}</p>
       <p v-if="episode" class="episode-artist">{{ episode.artist }}</p>
       <h1 id="episode-title">{{ episode?.title ?? 'Podcast archive' }}</h1>
       <p v-if="episode" class="episode-meta">
@@ -66,6 +86,7 @@ const messages = {
       <audio
         ref="element"
         controls
+        controlslist="nodownload noplaybackrate"
         preload="metadata"
         aria-describedby="playback-status"
         :aria-label="
@@ -76,7 +97,11 @@ const messages = {
       />
       <div class="player-actions">
         <p id="playback-status" class="media-status">{{ messages[status] }}</p>
-        <button v-if="status === 'error'" type="button" @click="retry">
+        <button
+          v-if="status === 'error' || status === 'delayed'"
+          type="button"
+          @click="retry"
+        >
           Retry audio
         </button>
         <a
@@ -84,8 +109,8 @@ const messages = {
           class="download-link"
           :href="`/downloads/${episode.slug}`"
           :download="episode.audio.downloadFilename"
-          >Download MP3 <span aria-hidden="true">↓</span></a
-        >
+          >Download MP3 <DownloadIcon
+        /></a>
       </div>
       <!-- The server validates and sanitizes canonical descriptions before this projection. -->
       <!-- eslint-disable vue/no-v-html -->
@@ -96,5 +121,11 @@ const messages = {
       />
       <!-- eslint-enable vue/no-v-html -->
     </div>
+    <ArtworkDialog
+      v-if="artworkOpen && episode && !failedArtwork"
+      :src="artworkUrl"
+      :alt="`${episode.artist} — ${episode.title} cover art`"
+      @close="closeArtwork"
+    />
   </section>
 </template>

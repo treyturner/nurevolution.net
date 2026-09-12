@@ -1,5 +1,7 @@
 export type AudioEvent =
   | 'loadedmetadata'
+  | 'durationchange'
+  | 'progress'
   | 'play'
   | 'playing'
   | 'waiting'
@@ -15,6 +17,8 @@ export type AudioPort = Pick<
   | 'paused'
   | 'ended'
   | 'readyState'
+  | 'duration'
+  | 'preload'
   | 'error'
   | 'load'
   | 'play'
@@ -41,6 +45,7 @@ export function createAudioAdapter(element: AudioPort) {
         paused: element.paused,
         ended: element.ended,
         readyState: element.readyState,
+        duration: element.duration,
         error: element.error,
       }
     },
@@ -48,6 +53,10 @@ export function createAudioAdapter(element: AudioPort) {
       assertActive()
       element.src = sourceUrl
       element.load()
+    },
+    setPreload(value: 'auto' | 'metadata') {
+      assertActive()
+      element.preload = value
     },
     play(): Promise<void> {
       assertActive()
@@ -73,6 +82,7 @@ export function createAudioAdapter(element: AudioPort) {
       if (disposed) return
       disposed = true
       for (const unsubscribe of subscriptions) unsubscribe()
+      element.preload = 'metadata'
       element.pause()
     },
   }

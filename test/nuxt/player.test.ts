@@ -105,6 +105,38 @@ describe('archive presentation and native media integration', () => {
     }
     wrapper.unmount()
   })
+  it('opens the original artwork and clears the dialog on dismissal, image failure, or selection', async () => {
+    const wrapper = await mountSuspended(ArchivePlayer, {
+      attachTo: document.body,
+      props: { episode: detail('wp-417') },
+    })
+    const open = async () => {
+      await wrapper.get('.artwork-trigger').trigger('click')
+      expect(wrapper.get('dialog').element.open).toBe(true)
+    }
+    await open()
+    expect(wrapper.get('dialog img').attributes('src')).toBe(
+      wrapper.get('.artwork img').attributes('src'),
+    )
+    const modal = wrapper.get('dialog').element
+    await wrapper.get('dialog img').trigger('click')
+    expect(modal.open).toBe(true)
+    await wrapper.get('.artwork-dialog-stage').trigger('click')
+    expect(wrapper.find('dialog').exists()).toBe(false)
+    await open()
+    await wrapper.get('.artwork-dialog-close').trigger('click')
+    expect(wrapper.find('dialog').exists()).toBe(false)
+    await open()
+    await wrapper.get('dialog').trigger('click')
+    expect(wrapper.find('dialog').exists()).toBe(false)
+    await open()
+    await wrapper.get('dialog img').trigger('error')
+    expect(wrapper.find('dialog').exists()).toBe(false)
+    await open()
+    await wrapper.setProps({ episode: detail('wp-484') })
+    expect(wrapper.find('dialog').exists()).toBe(false)
+    wrapper.unmount()
+  })
   it('supports keyboard tabs on narrow screens and returns to the two-column list on resize', async () => {
     const query = new EventTarget() as MediaQueryList
     Object.defineProperty(query, 'matches', { configurable: true, value: true })
