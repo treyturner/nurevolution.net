@@ -305,7 +305,8 @@
     "productionSecretInstalled": true,
     "temporaryFileRemoved": true,
     "originalKeyId": 2,
-    "rotateBefore": "2026-12-10T17:27:47Z"
+    "expiresAt": "2026-12-10T17:27:47Z",
+    "renewalPolicy": "Owner accepts expiry between deployments; renew and verify production and any other enabled consumer before the next promotion after expiry."
   },
   "ownerClientObservation": {
     "observedOn": "2026-09-12",

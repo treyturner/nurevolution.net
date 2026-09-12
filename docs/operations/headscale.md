@@ -1,6 +1,6 @@
 # Private deployment access with Headscale
 
-Status: **Actual GitHub deployment and independent Headscale recovery passed; boot verification remains, 2026-09-11.** This extends [M5](../milestones/M05-production-delivery.md). The service runs in the owner's Unraid `services` stack behind pfSense/HAProxy with its embedded relay, dedicated network, and verified host firewall. The droplet remains `100.64.0.1`, public SSH ingress remains restricted to `136.49.253.125/32`, and the pinned SSH identity is unchanged. PR #7 resolved the upstream action's duplicated client flag. [Main preview deployment 34637364338](https://github.com/treyturner/nurevolution.net/actions/runs/34637364338) succeeded through the actual userspace client. The owner also verified [encrypted Google Drive recovery](../milestones/evidence/M05-headscale-backup-live.json), preserving both server identities, the droplet node, and both enrollment keys. Its weekly User Script is configured; the JSON snapshot and retention reports are confirmed on Unraid. The [foreground firewall boot call](../../deploy/headscale/README.md) is saved, but reboot verification remains pending.
+Status: **Production deployment and independent Headscale recovery passed; boot verification remains, updated 2026-09-12.** [Production deployment 34720835192](https://github.com/treyturner/nurevolution.net/actions/runs/34720835192) enrolled its temporary runner, authenticated the pinned SSH identity, and accepted the M6 release. Production is enabled; preview is disabled. The droplet remains `100.64.0.1`, and public SSH ingress remains restricted to `136.49.253.125/32`. The owner's [encrypted Google Drive recovery](../milestones/evidence/M05-headscale-backup-live.json) preserved both server identities, the droplet node, and enrollment records. Its weekly User Script and the [foreground firewall boot call](../../deploy/headscale/README.md) are configured; reboot verification remains pending.
 
 ## Purpose and boundaries
 
@@ -38,31 +38,50 @@ The workflow downloads Tailscale 1.98.10 and verifies the SHA-256 in [the client
 
 The first merged workflow [failed before enrollment or transfer](https://github.com/treyturner/nurevolution.net/actions/runs/34632240790): the pinned upstream action added `--accept-routes` alongside the supplied `--accept-routes=false`, which Tailscale 1.98.10 rejects as a duplicate. The earlier direct-client rehearsal did not exercise that action behavior. The replacement helper is also the exact entry point used by the isolated integration gate; main publication now requires that gate to pass. See [workflow repair evidence](../milestones/evidence/M05-headscale-workflow.json).
 
-Configure only the environment being enabled:
+Production is the enabled deployment environment after M6. Keep preview disabled on the single-slot host:
 
-| Variable or secret            | Preview value / purpose                                            |
+| Variable or secret            | Current value / purpose                                            |
 | ----------------------------- | ------------------------------------------------------------------ |
 | `HEADSCALE_URL` variable      | `https://headscale.treyturner.info`                                |
 | `DEPLOY_HOST` variable        | `100.64.0.1`, restricted by the workflow to the overlay IPv4 range |
 | `DEPLOY_USER` variable        | `nurevolution-deploy`                                              |
-| `DEPLOYMENT_ENABLED` variable | `true` for preview                                                 |
+| `DEPLOYMENT_ENABLED` variable | `true` for production; `false` for preview                         |
+| `CUTOVER_ENABLED` variable    | `true` for production                                              |
 | `HEADSCALE_AUTH_KEY` secret   | Dedicated reusable, ephemeral-node enrollment key                  |
 | `SSH_PRIVATE_KEY` secret      | Existing dedicated deployment operator key                         |
 | `SSH_KNOWN_HOSTS` secret      | Original verified ED25519 host public key, mapped to `100.64.0.1`  |
 
-The host fingerprint remains **SHA256:Oubqo79ywI0Qxz0kWLbWLOj/UoUYmbQc6ZLqucKQB50**. Reuse the independently verified public key; do not replace it with a blind scan of the new address. The public SSH source rule remains `136.49.253.125/32`. Production stays disabled for cutover until M6.
+The host fingerprint remains **SHA256:Oubqo79ywI0Qxz0kWLbWLOj/UoUYmbQc6ZLqucKQB50**. Reuse the independently verified public key; do not replace it with a blind scan of the new address. The public SSH source rule remains `136.49.253.125/32`. Production was enabled during M6; do not enable preview to test a key replacement.
 
-The owner confirmed runner key **ID 2**, reusable and ephemeral, expiring **2026-12-10 at 17:27:47 UTC** (90 days after creation); retain this date with its password-manager entry. Before expiry, create a replacement with the same tag, reusable and ephemeral settings, save it directly to the preview secret, and verify a disposable enrollment. Then expire the old key with `headscale preauthkeys expire --id 2` through the Unraid Compose CLI. Record the replacement's ID and expiry before the next rotation. For suspected compromise, also inspect and delete affected enrolled nodes; expiring the registration key alone does not revoke existing clients. Do not put key values in command arguments or review comments.
+Runner key **ID 2** is reusable and ephemeral and expires **2026-12-10 at 17:27:47 UTC**. Both environment secrets received that key, but only production is enabled. Enrollment-key expiry prevents new runners from joining; it does not stop the website/feed/media, revoke the enrolled droplet, or disable the existing public operator SSH route. Node expiry/revocation is separate. The owner is comfortable allowing this enrollment key to expire between deployments. Renew before the next intended promotion if it has expired; renew before the date above only when uninterrupted deployment readiness is desired.
+
+Renewal procedure:
+
+1. Inspect the environments' `DEPLOYMENT_ENABLED` variables and wait for active deployment jobs to finish. Production is currently the only enabled environment. List every enabled consumer of the old key before replacing or revoking it.
+2. From the Unraid Compose directory, create a replacement with the same restricted tag and reusable/ephemeral settings:
+
+   ```sh
+   docker compose exec -T headscale headscale preauthkeys create \
+     --tags tag:nurevolution-deploy --reusable --ephemeral --expiration 2160h
+   ```
+
+   Save the newly displayed key in the password manager and record its ID/actual expiry. `preauthkeys list` censors stored key values; it is a metadata check, not a recovery path for the secret. Keep key values out of shell arguments, chat, logs, and review comments.
+
+3. In GitHub, open repository **Settings → Environments → production → Environment secrets** and update **`HEADSCALE_AUTH_KEY`** with the new key. Update the secret in every other enabled environment consuming the old key as well. Preview stays disabled; replace its stale secret before any future authorized re-enablement. The private [key-entry helper](../../deploy/headscale/README.md#droplet-client-and-key-entry) may be used when the agent installs the secret through stdin; remove its temporary `runner.key` file after successful installation.
+4. Use the next intended, verified **production** promotion from `main` to verify the stored secret. Confirm the workflow's private-network enrollment, pinned-SSH transfer/host acceptance, and temporary-client cleanup steps succeed. Record that run and the new key's ID/expiry. Listing GitHub secret names or creating the key alone does not verify enrollment. If another environment is enabled in the future, verify its replacement through its authorized workflow too; do not deploy preview over the current production slot as a key test.
+5. Once all enabled consumers use and have verified the replacement, expire the old key through the Unraid Compose CLI if it is still valid. For the original key only, the command is `docker compose exec -T headscale headscale preauthkeys expire --id 2`; use the recorded predecessor ID on later renewals. If it already expired naturally, no additional expiry action is needed. Back up the changed Headscale state using the [normal backup procedure](headscale-backup.md).
+
+For suspected compromise, also inspect and delete affected enrolled nodes; expiring the registration key alone does not revoke existing clients.
 
 An always-run workflow step logs out, stops only the helper's own daemon, and removes its temporary directory. Cleanup reports warnings if logout fails; Headscale's five-minute inactivity cleanup supplies the interrupted-run fallback. Both the disposable rehearsal and the actual merged-main GitHub deployment passed. No branch dispatch bypasses the main-only promotion gate.
 
-## Implementation sequence
+## Initial implementation sequence (historical)
 
 1. Preparation completed: a version-pinned Headscale service with SQLite, an explicit access policy, persistent storage, and the embedded relay configuration. Configuration validation and basic container checks passed; the setup guide documents backup requirements. Keep reusable Headscale server administration distinct from this site's release helper.
 2. Live service and container isolation passed at `172.26.0.2`; see [firewall evidence](../milestones/evidence/M05-headscale-firewall.json). The owner confirmed successful direct execution after LF conversion and that the earlier custom hook/profile was never installed. The owner confirmed the foreground call before `emhttp` and Disabled User Script schedule. The owner recreated Headscale with the saved `unless-stopped` policy, and external health plus the existing client connection passed afterward. Verify persistence at the next owner-managed reboot.
 3. Public DNS, trusted HTTPS, and correct Tailscale STUN requests through WAN/LAN passed. The owner applied the exact-host bot exception, and machine-user-agent health requests now pass. Actual control-protocol enrollment passed after the additional optional-`:443` Host ACL correction. A successful `/health` response alone does not verify enrollment or an HTTP upgrade through HAProxy.
 4. Both client roles are enrolled and private SSH identity, allowed TCP 22, denied listening TCP 443, authenticated relay traffic, and droplet client restart passed. Normal logout removed the runner from the droplet's peer map. An interrupted runner disappeared from the droplet netmap after 318.9 seconds without administrator intervention; see [client evidence](../milestones/evidence/M05-headscale-client.json). Measure the droplet client's memory alongside the application and backup workload before accepting the 1 GB profile.
-5. The workflow updates `.github/workflows/deploy.yml` to validate the HTTPS control URL and private deployment address before promotion, join only after source/release verification, authenticate the expected SSH operator before transfer, and clean up temporary credential files. The client version and archive checksum are pinned. The repository-owned helper uses in-memory userspace client state, SSH proxying, no binary/state cache, and always-run logout/cleanup. The preview environment is configured as described above; network credentials remain outside PR verification and both preview/production gates remain in place.
+5. The workflow updates `.github/workflows/deploy.yml` to validate the HTTPS control URL and private deployment address before promotion, join only after source/release verification, authenticate the expected SSH operator before transfer, and clean up temporary credential files. The client version and archive checksum are pinned. The repository-owned helper uses in-memory userspace client state, SSH proxying, no binary/state cache, and always-run logout/cleanup. The initial preview environment was configured for rehearsal; M6 subsequently enabled production and disabled preview as described above. Network credentials remain outside PR verification and both environments retain their promotion gates.
 6. Validate the workflow with actionlint and the repository's canonical verification gate. Exercise real enrollment/cleanup against the prepared server, then promote a verified main release through the normal preview workflow. Record the successful run and check the public website/media endpoints.
 7. Finish M5 application/certificate restore, rollback, resource, and client acceptance. Record recovery for Headscale separately from the existing site backup, then enable scheduled backups only for the services whose backup and restore procedures have passed.
 
