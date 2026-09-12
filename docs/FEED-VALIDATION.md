@@ -37,15 +37,15 @@ Do not run the original WordPress import over authored content. Its unchanged M2
 | `If-Modified-Since` alone                     | Normal 200/HEAD response; the feed has no trustworthy editorial Last-Modified value and does not emit one.                                                                                                                     |
 | Content load/serialization failure            | 503, `text/plain; charset=utf-8`, `Cache-Control: no-store`, generic message; HEAD has no body. No successful ETag or partial archive.                                                                                         |
 
-The channel's Atom self link always names the canonical production feed, including on preview hosts. Historical item links retain their exact old URLs; M4 must redirect those pages to `/episodes/<saved-slug>` before WordPress retirement. New episodes use saved-slug URLs. Both show-artwork paths and all enclosure URLs remain unchanged.
+The channel's Atom self link always names the canonical production feed, including on preview hosts. Historical item links retain their exact old URLs; the implemented redirects send those pages to `/episodes/<saved-slug>`, with all 55 verified in production during M6. New episodes use saved-slug URLs. Both show-artwork paths and all enclosure URLs remain unchanged.
 
 The new feed uses complete sanitized descriptions and canonical artist/title data. The [M3 plan](milestones/M03-podcast-rss.md#reviewed-differences-from-the-legacy-feed) records the small title/author differences, duration formatting, clean-label spelling, and removed WordPress fields. Its [reference evidence](milestones/evidence/M03-feed-reference.json) matches M0's raw feed hash and retains all 55 legacy title/author/explicit values. Never regenerate those historical references to hide a regression.
 
-## Public rehearsal — M5 evidence and final candidate checks
+## Public delivery — evidence and reusable checks
 
-[M5 live evidence](milestones/evidence/M05-live-rehearsal.json) records public feed/media checks and W3C validation for its dated rehearsal release, including the expected preview canonical-self-URL warning. Actual podcast-client acceptance remains open. Repeat the relevant checks for the final M6 candidate; the earlier result is not proof of a later release or physical-client behavior.
+[M5 live evidence](milestones/evidence/M05-live-rehearsal.json) records public feed/media checks and W3C validation for its dated rehearsal release, including the expected preview canonical-self-URL warning. [M6 cutover evidence](milestones/evidence/M06-cutover.json) records the completed canonical production checks for release `cd96435205764c51771f4d49292df259adab89cd` after the 2026-09-12 cutover. Actual client-refresh and directory acceptance remain unverified, as detailed below.
 
-Perform these checks on a public rehearsal URL with production-equivalent TLS, routing, compression, caching, and media delivery. Record the URL, tested application commit, UTC date, tool/client versions, results, and any outstanding issue. A localhost XML check does not establish public reachability or podcast-directory acceptance.
+Use the following procedure for future releases or delivery changes, repeating the relevant checks on the public candidate and canonical production URLs. Rehearsal needs production-equivalent TLS, routing, compression, caching, and media delivery. Record the URL, tested application commit, UTC date, tool/client versions, results, and any outstanding issue. Earlier release evidence does not prove later behavior; a localhost XML check does not establish public reachability or podcast-directory acceptance.
 
 - Fetch GET and HEAD without a browser session. Verify the response table above, redirects, public DNS/TLS, MIME types, ETags after compression, and an editorial update followed by revalidation. Verify the proxy does not impose a long HTML-cache lifetime or ignore the feed's cache policy.
 - Run an external podcast-feed validator against the reachable rehearsal feed and retain its report. Distinguish feed/XML problems from known differences in rehearsal media reachability. A staging feed's canonical self link is intentional; record any validator finding about it for the final canonical-URL check.
@@ -53,9 +53,13 @@ Perform these checks on a public rehearsal URL with production-equivalent TLS, r
 - Under the M5 media plan, verify all enclosure URLs preserve their exact spelling and serve the audited byte lengths/media types. Check HEAD, range requests (206 and appropriate Content-Range), redirects, seeking and full downloads with representative clients, then complete the archive-wide delivery checks. Audio remains on droplet storage for R1; Spaces is post-release. [Apple delivery requirements](https://podcasters.apple.com/support/823-podcast-requirements)
 - Rehearse restoring the previous application/feed serving path at the same URL, preserving media and invalidating affected caches. Keep the prior working release until cutover acceptance and rollback readiness are established.
 
-## Canonical URL and clients — pending M6
+## Canonical production delivery — completed M6 checks
 
-Repeat the rehearsal checks against `https://nurevolution.net/feed/podcast` after the controlled cutover. Confirm historical page redirects and media paths first.
+After traffic switched on **2026-09-12 at 21:49 UTC**, checks against `https://nurevolution.net/feed/podcast` passed: GET/HEAD, canonical aliases, ETag revalidation, machine-client access, and equivalence of all 55 historical feed identities. The external W3C feed validator reported a valid feed with no warnings. All 55 historical page redirects and 156 public media assets passed the recorded delivery checks, including representative full and resumed downloads. See the [cutover record](milestones/evidence/M06-cutover.json) for the exact coverage and release identity. These production checks are complete; repeat relevant checks when the serving release or configuration changes.
+
+## Podcast clients and directories — outstanding observations
+
+The owner loaded the new feed and reported that it looked as expected. There was no existing subscription available to refresh, and the client name/version and in-app playback/download results were not reported. This confirms the reported appearance only; it does not establish existing-subscription continuity or directory acceptance.
 
 Use an existing subscription in Apple Podcasts where available and at least one other podcast client. Refresh it and check for duplicate/missing episodes, the oldest and newest archive entries, show metadata/artwork, description links, and successful downloads/streaming. Retain observations and client versions. Client caching may exceed the server's advertised freshness, so record observation times.
 
@@ -65,4 +69,4 @@ M8 must review the 60-second HTTP cache window, any intermediary caches, client 
 
 ## Evidence record
 
-M3's local implementation results are recorded in its [completion evidence](milestones/M03-podcast-rss.md#completion-evidence). M5 public rehearsal results are recorded in its [live evidence](milestones/evidence/M05-live-rehearsal.json). Actual client refresh, final canonical production delivery, and directory checks remain **pending M6**. Record release-specific results in the [M6 plan](milestones/M06-cutover-and-retirement.md); do not mark them complete from an automated local test.
+M3's local implementation results are recorded in its [completion evidence](milestones/M03-podcast-rss.md#completion-evidence). M5 public rehearsal results are recorded in its [live evidence](milestones/evidence/M05-live-rehearsal.json). Canonical production delivery and feed validation are complete in the [M6 cutover evidence](milestones/evidence/M06-cutover.json). Existing-subscription refresh, explicit podcast-client playback/download observations, and directory checks remain outstanding. Record any later observations in the [M6 plan](milestones/M06-cutover-and-retirement.md); do not infer them from automated delivery checks. The broader observation window and retirement decision also remain open in that plan.
