@@ -1,5 +1,8 @@
 export type AudioEvent =
   | 'loadedmetadata'
+  | 'loadeddata'
+  | 'canplay'
+  | 'canplaythrough'
   | 'durationchange'
   | 'progress'
   | 'play'

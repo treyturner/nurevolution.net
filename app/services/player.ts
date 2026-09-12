@@ -25,10 +25,24 @@ export function createPlayer(
   let disposed = false
   let status: PlayerStatus = 'idle'
   let metadataTimer: ReturnType<typeof setTimeout> | undefined
+  let durationTimer: ReturnType<typeof setTimeout> | undefined
   let metadataRetries = 0
   function stopMetadataTimer() {
     clearTimeout(metadataTimer)
     metadataTimer = undefined
+  }
+  function stopDurationTimer() {
+    clearTimeout(durationTimer)
+    durationTimer = undefined
+  }
+  function watchDuration() {
+    if (durationTimer !== undefined) return
+    const own = generation
+    durationTimer = setTimeout(() => {
+      if (disposed || own !== generation) return
+      durationTimer = undefined
+      observe('durationchange')
+    }, 250)
   }
   function hasMetadata(snapshot: ReturnType<AudioAdapter['snapshot']>) {
     return (
@@ -80,6 +94,7 @@ export function createPlayer(
     if (!snapshot) return
     if (snapshot.error) {
       stopMetadataTimer()
+      stopDurationTimer()
       audio.setPreload('metadata')
       generation++
       set('error')
@@ -88,11 +103,15 @@ export function createPlayer(
     }
     if (hasMetadata(snapshot)) {
       stopMetadataTimer()
+      stopDurationTimer()
       audio.setPreload('metadata')
-    } else if (!snapshot.paused || snapshot.ended) {
-      stopMetadataTimer()
-    } else if (event === 'progress' && status === 'loading') {
-      watchMetadata()
+    } else {
+      // The native backend can finish calculating duration after its final
+      // readiness event. Recheck that value without resetting the download.
+      if (snapshot.readyState >= 1 && !snapshot.ended) watchDuration()
+      else stopDurationTimer()
+      if (!snapshot.paused || snapshot.ended) stopMetadataTimer()
+      else if (event === 'progress' && status === 'loading') watchMetadata()
     }
     if (snapshot.ended) {
       set('ended')
@@ -119,6 +138,9 @@ export function createPlayer(
     } else if (
       (event === 'loadedmetadata' ||
         event === 'durationchange' ||
+        event === 'loadeddata' ||
+        event === 'canplay' ||
+        event === 'canplaythrough' ||
         event === 'progress') &&
       hasMetadata(snapshot) &&
       snapshot.paused &&
@@ -131,6 +153,11 @@ export function createPlayer(
     [
       'loadedmetadata',
       'durationchange',
+      // WebKit can report duration=0 in the early metadata events and only
+      // expose its positive duration when data becomes ready for playback.
+      'loadeddata',
+      'canplay',
+      'canplaythrough',
       'progress',
       'play',
       'playing',
@@ -141,6 +168,7 @@ export function createPlayer(
     ] as const
   ).map((event) => audio.subscribe(event, () => observe(event)))
   function load(next: PlayerSource, continuePlaying: boolean) {
+    stopDurationTimer()
     const own = ++generation
     source = next
     set('loading')
@@ -174,6 +202,7 @@ export function createPlayer(
       if (disposed || next?.id === source?.id) return
       if (!next) {
         stopMetadataTimer()
+        stopDurationTimer()
         source = null
         generation++
         audio.setPreload('metadata')
@@ -200,6 +229,7 @@ export function createPlayer(
       if (disposed) return
       disposed = true
       stopMetadataTimer()
+      stopDurationTimer()
       generation++
       for (const stop of unsubscribe) stop()
       audio.dispose()
