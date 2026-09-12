@@ -306,7 +306,8 @@
     "temporaryFileRemoved": true,
     "originalKeyId": 2,
     "expiresAt": "2026-12-10T17:27:47Z",
-    "renewalPolicy": "Owner prefers avoiding routine expiry and accepts a long-lived GitHub Actions enrollment secret. A replacement with the verified 876000h duration is recommended but not yet installed; key ID 2 and its recorded expiry remain current. Install and verify production and every other enabled consumer before revoking the predecessor."
+    "renewalPolicy": "Owner prefers avoiding routine expiry and accepts a long-lived GitHub Actions enrollment secret. The subsequent key 3 installation and production verification are recorded separately; the fields above preserve key 2 as used at cutover.",
+    "replacementEvidence": "M06-headscale-key-replacement.json"
   },
   "ownerClientObservation": {
     "observedOn": "2026-09-12",

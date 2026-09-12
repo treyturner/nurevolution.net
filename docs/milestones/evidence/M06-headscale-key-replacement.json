@@ -1,0 +1,88 @@
+{
+  "schemaVersion": 1,
+  "observedAt": "2026-09-12T23:35:53.574086+00:00",
+  "operation": "Replace the reusable GitHub Actions Headscale enrollment key with a long-lived key",
+  "key": {
+    "id": 3,
+    "idAndExpirySource": "Owner-filtered Headscale metadata",
+    "reusable": true,
+    "ephemeral": true,
+    "requestedDurationHours": 876000,
+    "expiresAt": "2126-08-19T23:29:04.797272424Z",
+    "expirationTimestamp": {
+      "seconds": 4942855744,
+      "nanos": 797272424
+    }
+  },
+  "installation": {
+    "installedAt": "2026-09-12T23:34:00.000959+00:00",
+    "environments": {
+      "production": {
+        "secret": "HEADSCALE_AUTH_KEY",
+        "updatedAt": "2026-09-12T23:33:58Z"
+      },
+      "preview": {
+        "secret": "HEADSCALE_AUTH_KEY",
+        "updatedAt": "2026-09-12T23:33:59Z"
+      }
+    },
+    "temporaryKeyRemoved": true,
+    "productionEnabled": true,
+    "previewEnabled": false
+  },
+  "verification": {
+    "workflow": "https://github.com/treyturner/nurevolution.net/actions/runs/34725749393",
+    "conclusion": "success",
+    "release": "cd96435205764c51771f4d49292df259adab89cd",
+    "verifyRun": "https://github.com/treyturner/nurevolution.net/actions/runs/34720254236",
+    "privateNetworkEnrollment": "passed",
+    "pinnedSSHTransferAndHostAcceptance": "passed",
+    "temporaryClientCleanup": "passed; runner absent from droplet peer list after completion",
+    "preview": "Secret updated while disabled; no preview deployment performed",
+    "host": {
+      "containers": [
+        {
+          "name": "nurevolution-production-app-1",
+          "running": true,
+          "health": "healthy",
+          "startedAt": "2026-09-12T23:35:03.990200333Z",
+          "oomKilled": false
+        },
+        {
+          "name": "nurevolution-edge-edge-1",
+          "running": true,
+          "health": null,
+          "startedAt": "2026-09-10T04:50:55.159142697Z",
+          "oomKilled": false
+        }
+      ],
+      "verificationRunnerPresent": false,
+      "temporaryKeyPresent": false,
+      "publicChecks": [
+        {
+          "path": "/api/health",
+          "status": 200,
+          "type": "application/json",
+          "identity": {
+            "healthy": true,
+            "release": "cd96435205764c51771f4d49292df259adab89cd"
+          }
+        },
+        {
+          "path": "/feed/podcast",
+          "status": 200,
+          "type": "application/rss+xml; charset=utf-8"
+        }
+      ],
+      "observedAt": "2026-09-12T23:35:53.574086+00:00"
+    }
+  },
+  "predecessor": {
+    "id": 2,
+    "originalExpiresAt": "2026-12-10T17:27:47Z",
+    "revocation": "Awaiting owner confirmation"
+  },
+  "headscaleBackup": {
+    "status": "Awaiting owner confirmation after predecessor revocation"
+  }
+}
