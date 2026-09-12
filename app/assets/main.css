@@ -98,8 +98,24 @@ button {
   gap: 0.5rem;
   font-size: 0.85rem;
 }
+.site-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  min-width: 0;
+  max-width: 100%;
+}
+.site-logo {
+  display: block;
+  width: 3rem;
+  height: 3rem;
+  flex-shrink: 0;
+  object-fit: contain;
+  transform: translateY(0.1rem);
+}
 .site-header .wordmark {
   display: flex;
+  min-width: 0;
   align-items: flex-start;
   flex-direction: column;
   gap: 0;
@@ -108,6 +124,7 @@ button {
   font-weight: 650;
   text-decoration: none;
   letter-spacing: -0.04em;
+  overflow-wrap: anywhere;
 }
 .wordmark span {
   color: var(--muted);
@@ -119,6 +136,8 @@ button {
 .site-header .rss-link {
   margin-inline-start: auto;
   align-self: center;
+  /* Balance the visible lettering, rather than the fonts' unequal line boxes. */
+  transform: translateY(0.1rem);
   flex-shrink: 0;
   gap: 0.8rem;
   text-decoration: none;
@@ -128,8 +147,8 @@ button {
   line-height: 1.35;
 }
 .rss-icon {
-  width: 1.65rem;
-  height: 1.65rem;
+  width: 1.9rem;
+  height: 1.9rem;
   flex-shrink: 0;
 }
 .player {
