@@ -4,6 +4,7 @@ import { mediaBaseURL } from '../../playwright.config'
 
 test.beforeEach(async ({ page }) => {
   await stubArchiveMedia(page)
+  if (process.env.NUREVOLUTION_MEDIA_TRACE !== '1') return
   await page.addInitScript(() => {
     const trace: unknown[] = []
     Object.assign(window, { playerMediaTrace: trace })
@@ -61,7 +62,7 @@ test.beforeEach(async ({ page }) => {
 })
 
 test.afterEach(async ({ page }, testInfo) => {
-  if (!page.isClosed()) {
+  if (process.env.NUREVOLUTION_MEDIA_TRACE === '1' && !page.isClosed()) {
     const trace = await page.evaluate(() =>
       Reflect.get(window, 'playerMediaTrace'),
     )
@@ -116,58 +117,73 @@ test('keeps loading until metadata arrives, with playback still paused', async (
   }
 })
 
-test('reconciles duration that becomes positive only after the early metadata events', async ({
-  page,
-}) => {
-  await page.addInitScript(() => {
-    const descriptor = Object.getOwnPropertyDescriptor(
-      HTMLMediaElement.prototype,
-      'duration',
-    )!
-    const ready = new WeakSet<HTMLMediaElement>()
-    // Reproduce the recorded WebKit ordering with real native media events:
-    // durationchange/loadedmetadata report zero; loadeddata exposes duration.
-    Object.defineProperty(HTMLMediaElement.prototype, 'duration', {
-      ...descriptor,
-      get(this: HTMLMediaElement) {
-        return ready.has(this) ? descriptor.get!.call(this) : 0
-      },
-    })
-    document.addEventListener(
-      'loadedmetadata',
-      (event) => {
-        if (event.target instanceof HTMLAudioElement)
-          document.documentElement.dataset.earlyDuration = String(
-            event.target.duration,
-          )
-      },
-      true,
+for (const late of [false, true]) {
+  test(`reconciles duration exposed ${late ? 'after all readiness events' : 'at loadeddata'}`, async ({
+    page,
+  }) => {
+    await page.addInitScript((late) => {
+      const descriptor = Object.getOwnPropertyDescriptor(
+        HTMLMediaElement.prototype,
+        'duration',
+      )!
+      const ready = new WeakSet<HTMLMediaElement>()
+      // Reproduce the recorded WebKit ordering with real native media events:
+      // Duration becomes positive at loadeddata, or silently after every event.
+      Object.defineProperty(HTMLMediaElement.prototype, 'duration', {
+        ...descriptor,
+        get(this: HTMLMediaElement) {
+          return ready.has(this) ? descriptor.get!.call(this) : 0
+        },
+      })
+      document.addEventListener(
+        'loadedmetadata',
+        (event) => {
+          if (event.target instanceof HTMLAudioElement)
+            document.documentElement.dataset.earlyDuration = String(
+              event.target.duration,
+            )
+        },
+        true,
+      )
+      document.addEventListener(
+        'loadeddata',
+        (event) => {
+          if (event.target instanceof HTMLAudioElement && !late)
+            ready.add(event.target)
+        },
+        true,
+      )
+      document.addEventListener(
+        'canplaythrough',
+        (event) => {
+          const audio = event.target
+          if (audio instanceof HTMLAudioElement && late)
+            setTimeout(() => ready.add(audio), 50)
+        },
+        true,
+      )
+    }, late)
+    await page.goto('/episodes/trey-turner-lost-in-translation')
+    await ready(page)
+    await expect(page.locator('html')).toHaveAttribute(
+      'data-early-duration',
+      '0',
     )
-    document.addEventListener(
-      'loadeddata',
-      (event) => {
-        if (event.target instanceof HTMLAudioElement) ready.add(event.target)
-      },
-      true,
+    await expect
+      .poll(() =>
+        page
+          .locator('audio')
+          .evaluate((audio: HTMLAudioElement) => audio.duration),
+      )
+      .toBeGreaterThan(0)
+    await expect(page.locator('.media-status')).toHaveText(
+      'Press Play to listen.',
     )
+    await expect(page.locator('audio')).toHaveJSProperty('paused', true)
+    await expect(page.locator('audio')).toHaveJSProperty('currentTime', 0)
+    await expect(page.locator('audio')).toHaveAttribute('preload', 'metadata')
   })
-  await page.goto('/episodes/trey-turner-lost-in-translation')
-  await ready(page)
-  await expect(page.locator('html')).toHaveAttribute('data-early-duration', '0')
-  await expect
-    .poll(() =>
-      page
-        .locator('audio')
-        .evaluate((audio: HTMLAudioElement) => audio.duration),
-    )
-    .toBeGreaterThan(0)
-  await expect(page.locator('.media-status')).toHaveText(
-    'Press Play to listen.',
-  )
-  await expect(page.locator('audio')).toHaveJSProperty('paused', true)
-  await expect(page.locator('audio')).toHaveJSProperty('currentTime', 0)
-  await expect(page.locator('audio')).toHaveAttribute('preload', 'metadata')
-})
+}
 
 test('recovers stalled metadata automatically and shows duration without a Play request', async ({
   page,

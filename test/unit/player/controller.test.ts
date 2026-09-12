@@ -148,6 +148,59 @@ describe('persistent episode controller', () => {
       player.dispose()
     },
   )
+  it('reconciles a duration that becomes positive after every readiness event without another notification', () => {
+    const { media, changed, player } = setup()
+    player.select(a)
+    media.currentSrc = a.url
+    media.readyState = 4
+    media.duration = 0
+    for (const event of [
+      'durationchange',
+      'loadedmetadata',
+      'loadeddata',
+      'canplay',
+      'canplaythrough',
+    ])
+      media.emit(event)
+    expect(changed).toHaveBeenLastCalledWith('loading')
+    vi.advanceTimersByTime(50)
+    media.duration = 120
+    vi.advanceTimersByTime(250)
+    expect(changed).toHaveBeenLastCalledWith('paused')
+    expect(media.preload).toBe('metadata')
+    expect(media.paused).toBe(true)
+    expect(media.play).not.toHaveBeenCalled()
+    expect(media.pause).not.toHaveBeenCalled()
+    expect(vi.getTimerCount()).toBe(0)
+    vi.advanceTimersByTime(30_000)
+    expect(media.load).toHaveBeenCalledOnce()
+    player.dispose()
+  })
+  it.each(['selection', 'clear', 'error', 'ended', 'dispose'])(
+    'cancels pending duration checks on %s',
+    (transition) => {
+      const { media, player } = setup()
+      player.select(a)
+      media.currentSrc = a.url
+      media.readyState = 4
+      media.duration = 0
+      media.emit('loadedmetadata')
+      if (transition === 'selection') player.select(b)
+      else if (transition === 'clear') player.select(null)
+      else if (transition === 'error') {
+        media.error = { code: 2 } as MediaError
+        media.emit('error')
+      } else if (transition === 'ended') {
+        media.ended = true
+        media.emit('ended')
+      } else player.dispose()
+      const readDuration = vi.fn(() => 120)
+      Object.defineProperty(media, 'duration', { get: readDuration })
+      vi.advanceTimersByTime(1_000)
+      expect(readDuration).not.toHaveBeenCalled()
+      player.dispose()
+    },
+  )
   it('treats deferred preload as a delay and preserves optional retry through queued events', () => {
     const { media, changed, player } = setup()
     player.select(a)
