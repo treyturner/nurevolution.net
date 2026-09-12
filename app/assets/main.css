@@ -126,9 +126,9 @@ button {
   line-height: 1.35;
 }
 .rss-icon {
-  /* Match the combined title and subtitle line heights. */
-  width: calc((1.2rem + 0.68rem) * 1.6);
-  height: calc((1.2rem + 0.68rem) * 1.6);
+  /* Match the visible wordmark lettering, excluding its line-height spacing. */
+  width: 2.25rem;
+  height: 2.25rem;
   flex-shrink: 0;
 }
 .player {
