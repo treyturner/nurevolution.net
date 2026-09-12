@@ -38,10 +38,13 @@ useHead(() =>
       Could not load this episode.
       <NuxtLink :to="state.failedPath" :prefetch="false">Try again</NuxtLink>
     </p>
-    <p class="sr-only" role="status">{{ announcement }}</p>
+    <p id="episode-selection-status" class="sr-only" role="status">
+      {{ announcement }}
+    </p>
     <ArchivePlayer :episode="state.model.selected" />
     <ArchiveLists
       :episodes="state.model.episodes"
+      :site-url="state.model.show.siteUrl"
       :selected="state.model.selected"
       :pending-path="state.pendingPath"
     />
