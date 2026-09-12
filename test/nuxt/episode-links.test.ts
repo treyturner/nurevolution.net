@@ -68,6 +68,36 @@ it('reports a rejected clipboard write instead of claiming success, and allows r
   expect(wrapper.get('[role="status"]').text()).toBe('Episode link copied')
 })
 
+it.each([
+  'Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 Chrome/152.0.0.0 Mobile Safari/537.36',
+  'Mozilla/5.0 (Android 12; Mobile; rv:140.0) Gecko/140.0 Firefox/140.0',
+])(
+  'uses inline Android success feedback but keeps visible errors: %s',
+  async (agent) => {
+    vi.spyOn(navigator, 'userAgent', 'get').mockReturnValue(agent)
+    vi.spyOn(navigator.clipboard, 'writeText')
+      .mockResolvedValueOnce()
+      .mockRejectedValueOnce(new DOMException('Denied', 'NotAllowedError'))
+    const wrapper = await mount()
+    const button = wrapper.findAll('.row-copy-link')[1]!
+    await button.trigger('click')
+    await flushPromises()
+    expect(wrapper.get('[role="status"]').text()).toBe('Episode link copied')
+    expect(button.find('.copy-link-confirmation').exists()).toBe(true)
+    expect(wrapper.findAll('.copy-link-confirmation')).toHaveLength(1)
+    expect(document.querySelector('.copy-link-toast')).toBeNull()
+    await vi.advanceTimersByTimeAsync(3000)
+    expect(wrapper.find('.copy-link-confirmation').exists()).toBe(false)
+    expect(wrapper.get('[role="status"]').text()).toBe('')
+    await button.trigger('click')
+    await flushPromises()
+    expect(wrapper.find('.copy-link-confirmation').exists()).toBe(false)
+    expect(document.querySelector('.copy-link-toast')?.textContent).toBe(
+      'Couldn’t copy link. Please try again.',
+    )
+  },
+)
+
 it('ignores a stale clipboard result and restarts the toast lifetime for the latest click', async () => {
   let rejectFirst!: (error: Error) => void
   vi.spyOn(navigator.clipboard, 'writeText')

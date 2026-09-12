@@ -10,7 +10,11 @@ const props = defineProps<{
   selectedId?: string
   pendingPath?: string | null
 }>()
-const toast = shallowRef<{ target: HTMLElement; message: string } | null>(null)
+const toast = shallowRef<{
+  target: HTMLElement
+  message: string
+  inlineEpisodeId?: string
+} | null>(null)
 let sequence = 0
 let timer: ReturnType<typeof setTimeout> | undefined
 async function copyLink(episode: EpisodeSummary, event: MouseEvent) {
@@ -19,15 +23,19 @@ async function copyLink(episode: EpisodeSummary, event: MouseEvent) {
   clearTimeout(timer)
   toast.value = null
   let message = 'Episode link copied'
+  let inlineEpisodeId: string | undefined
   try {
     await navigator.clipboard.writeText(
       new URL(episode.path, props.siteUrl).href,
     )
+    // Modern Android already confirms copies. An inline check also gives older
+    // Android versions feedback without relying on a reduced OS-version string.
+    if (/Android/i.test(navigator.userAgent)) inlineEpisodeId = episode.id
   } catch {
     message = 'Couldn’t copy link. Please try again.'
   }
   if (own !== sequence) return
-  toast.value = { target, message }
+  toast.value = { target, message, inlineEpisodeId }
   timer = setTimeout(() => {
     toast.value = null
   }, 3000)
@@ -76,11 +84,31 @@ onBeforeUnmount(() => {
       <button
         type="button"
         class="row-copy-link"
-        title="Copy episode link"
+        :title="
+          toast?.inlineEpisodeId === episode.id
+            ? 'Link copied'
+            : 'Copy episode link'
+        "
         :aria-label="`Copy link to ${episode.artist} — ${episode.title}`"
         @click="copyLink(episode, $event)"
       >
-        <LinkIcon />
+        <svg
+          v-if="toast?.inlineEpisodeId === episode.id"
+          class="copy-link-confirmation"
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+          focusable="false"
+        >
+          <path d="m5 12 4 4L19 6" />
+        </svg>
+        <LinkIcon v-else />
       </button>
       <a
         class="row-download"
@@ -95,5 +123,9 @@ onBeforeUnmount(() => {
   <span class="sr-only" role="status" aria-atomic="true">{{
     toast?.message
   }}</span>
-  <CopyLinkToast v-if="toast" :target="toast.target" :message="toast.message" />
+  <CopyLinkToast
+    v-if="toast && !toast.inlineEpisodeId"
+    :target="toast.target"
+    :message="toast.message"
+  />
 </template>
