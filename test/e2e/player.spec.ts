@@ -2,7 +2,75 @@ import { expect, test } from '@playwright/test'
 import { hydrated, ready, stubArchiveMedia } from './media'
 import { mediaBaseURL } from '../../playwright.config'
 
-test.beforeEach(async ({ page }) => stubArchiveMedia(page))
+test.beforeEach(async ({ page }) => {
+  await stubArchiveMedia(page)
+  await page.addInitScript(() => {
+    const trace: unknown[] = []
+    Object.assign(window, { playerMediaTrace: trace })
+    const record = (entry: object) => {
+      if (trace.length < 500) trace.push({ at: performance.now(), ...entry })
+    }
+    // Record actual reads without introducing additional duration queries.
+    const descriptor = Object.getOwnPropertyDescriptor(
+      HTMLMediaElement.prototype,
+      'duration',
+    )!
+    Object.defineProperty(HTMLMediaElement.prototype, 'duration', {
+      ...descriptor,
+      get(this: HTMLMediaElement) {
+        const duration = descriptor.get!.call(this)
+        record({
+          read: 'duration',
+          value: String(duration),
+          readyState: this.readyState,
+          paused: this.paused,
+          preload: this.preload,
+          src: this.src,
+          currentSrc: this.currentSrc,
+        })
+        return duration
+      },
+    })
+    for (const event of [
+      'loadstart',
+      'durationchange',
+      'loadedmetadata',
+      'loadeddata',
+      'canplay',
+      'canplaythrough',
+      'progress',
+      'suspend',
+      'stalled',
+      'play',
+      'playing',
+      'pause',
+      'waiting',
+      'ended',
+      'error',
+    ]) {
+      document.addEventListener(
+        event,
+        (event) => {
+          if (event.target instanceof HTMLAudioElement)
+            record({ event: event.type })
+        },
+        true,
+      )
+    }
+  })
+})
+
+test.afterEach(async ({ page }, testInfo) => {
+  if (!page.isClosed()) {
+    const trace = await page.evaluate(() =>
+      Reflect.get(window, 'playerMediaTrace'),
+    )
+    await testInfo.attach('player-media-events', {
+      body: JSON.stringify(trace, null, 2),
+      contentType: 'application/json',
+    })
+  }
+})
 
 test('keeps loading until metadata arrives, with playback still paused', async ({
   page,
