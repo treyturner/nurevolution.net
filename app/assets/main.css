@@ -114,6 +114,22 @@ button {
   font-size: 0.68rem;
   font-weight: 400;
   letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.site-header .rss-link {
+  margin-inline-start: auto;
+  flex-shrink: 0;
+  gap: 0.8rem;
+}
+.rss-label {
+  text-align: right;
+  line-height: 1.35;
+}
+.rss-icon {
+  /* Match the combined title and subtitle line heights. */
+  width: calc((1.2rem + 0.68rem) * 1.6);
+  height: calc((1.2rem + 0.68rem) * 1.6);
+  flex-shrink: 0;
 }
 .player {
   display: grid;
@@ -149,13 +165,6 @@ button {
   font-size: 3rem;
   letter-spacing: -0.08em;
   color: #c0cee2;
-}
-.eyebrow {
-  margin: 0 0 1rem;
-  font-size: 0.65rem;
-  text-transform: uppercase;
-  letter-spacing: 0.18em;
-  color: var(--focus-color);
 }
 .episode-artist {
   margin: 0 0 0.35rem;

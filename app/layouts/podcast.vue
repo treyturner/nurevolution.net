@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { episodeHead } from '../services/episode-page'
+import RssIcon from '../components/RssIcon.vue'
 const state = useEpisodePage()
 const currentYear = useState('copyright-year', () =>
   new Date().getUTCFullYear(),
@@ -25,9 +26,13 @@ useHead(() =>
       <NuxtLink to="/" :prefetch="false" class="wordmark"
         >nurevolution studios<span>austin, tx</span></NuxtLink
       >
-      <a :href="state.model.show.feedUrl"
-        >Subscribe via RSS <span aria-hidden="true">↗</span></a
-      >
+      <a
+        :href="state.model.show.feedUrl"
+        class="rss-link"
+        aria-label="Subscribe via RSS"
+        ><span class="rss-label">Subscribe<br />via RSS</span
+        ><RssIcon class="rss-icon"
+      /></a>
     </header>
     <p v-if="state.failedPath" class="navigation-error" role="alert">
       Could not load this episode.

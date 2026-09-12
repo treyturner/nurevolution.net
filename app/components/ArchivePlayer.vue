@@ -53,7 +53,6 @@ const messages = {
       </div>
     </div>
     <div class="player-content">
-      <p class="eyebrow">{{ episode ? 'From the archive' : 'Nurevolution' }}</p>
       <p v-if="episode" class="episode-artist">{{ episode.artist }}</p>
       <h1 id="episode-title">{{ episode?.title ?? 'Podcast archive' }}</h1>
       <p v-if="episode" class="episode-meta">
