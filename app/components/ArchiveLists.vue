@@ -4,6 +4,7 @@ import EpisodeList from './EpisodeList.vue'
 import EpisodeTracklist from './EpisodeTracklist.vue'
 defineProps<{
   episodes: EpisodeSummary[]
+  siteUrl: string
   selected: EpisodeDetail | null
   pendingPath?: string | null
 }>()
@@ -84,6 +85,7 @@ function key(event: KeyboardEvent) {
         </h2>
         <EpisodeList
           :episodes="episodes"
+          :site-url="siteUrl"
           :selected-id="selected?.id"
           :pending-path="pendingPath"
         />
