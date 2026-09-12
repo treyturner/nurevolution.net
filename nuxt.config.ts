@@ -11,7 +11,7 @@ export default defineNuxtConfig({
   css: ['~/assets/main.css'],
   app: {
     head: {
-      title: 'Nurevolution',
+      title: 'nurevolution studios',
       htmlAttrs: { lang: 'en' },
       meta: [{ name: 'color-scheme', content: 'dark' }],
     },

@@ -117,14 +117,14 @@ describe('episode page loading and navigation', () => {
 
   it('derives canonical metadata from the configured origin and escaped bindings', () => {
     expect(episodeHead(model, '/')).toMatchObject({
-      title: 'Nurevolution — Podcast archive',
+      title: 'nurevolution studios',
       link: [
         { rel: 'canonical', href: 'https://nurevolution.net/' },
         { rel: 'alternate', href: model.show.feedUrl },
       ],
     })
-    expect(episodeHead(model, model.selected.path).title).toContain(
-      model.selected.title,
+    expect(episodeHead(model, model.selected.path).title).toBe(
+      'nurevolution studios',
     )
     expect(
       episodeHead({ ...model, selected: null }, '/').meta[0]!.content,

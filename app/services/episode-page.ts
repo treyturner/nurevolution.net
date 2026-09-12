@@ -73,10 +73,7 @@ export function createEpisodeNavigation(
 export function episodeHead(model: EpisodePage, path: string) {
   const episode = model.selected
   return {
-    title:
-      path === '/' || !episode
-        ? 'Nurevolution — Podcast archive'
-        : `${episode.artist} — ${episode.title} | Nurevolution`,
+    title: 'nurevolution studios',
     meta: [
       {
         name: 'description',
