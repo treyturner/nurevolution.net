@@ -3,6 +3,7 @@ import type { AudioAdapter, AudioEvent } from './audio'
 export type PlayerStatus =
   | 'idle'
   | 'loading'
+  | 'delayed'
   | 'paused'
   | 'playing'
   | 'buffering'
@@ -40,20 +41,25 @@ export function createPlayer(
     stopMetadataTimer()
     const own = generation
     metadataTimer = setTimeout(() => {
+      metadataTimer = undefined
       if (disposed || own !== generation || !source) return
       const snapshot = audio.snapshot()
       if (snapshot.src !== source.url) return
+      if (snapshot.error) {
+        observe('error')
+        return
+      }
       if (snapshot.currentSrc === source.url && hasMetadata(snapshot)) {
         observe('loadedmetadata')
         return
       }
+      // Preload is advisory. Never reset an active/pending Play request or
+      // replace a blocked-play prompt just because metadata was deferred.
+      if (!snapshot.paused || snapshot.ended || status === 'blocked') return
       if (metadataRetries++ === 0) {
-        load(source, !snapshot.paused && !snapshot.ended && !snapshot.error)
+        load(source, false)
       } else {
-        generation++
-        audio.setPreload('metadata')
-        audio.pause()
-        set('error')
+        set('delayed')
       }
     }, 10_000)
   }
@@ -83,7 +89,9 @@ export function createPlayer(
     if (hasMetadata(snapshot)) {
       stopMetadataTimer()
       audio.setPreload('metadata')
-    } else if (event === 'progress' && status !== 'error') {
+    } else if (!snapshot.paused || snapshot.ended) {
+      stopMetadataTimer()
+    } else if (event === 'progress' && status === 'loading') {
       watchMetadata()
     }
     if (snapshot.ended) {
@@ -92,7 +100,7 @@ export function createPlayer(
     }
     if (event === 'pause' && snapshot.paused) {
       // A queued source-reset pause must not erase an autoplay rejection.
-      if (status !== 'blocked' && status !== 'error')
+      if (status !== 'blocked' && status !== 'error' && status !== 'delayed')
         set(hasMetadata(snapshot) ? 'paused' : 'loading')
     } else if (
       (event === 'play' || event === 'playing' || event === 'waiting') &&

@@ -93,6 +93,69 @@ test('recovers stalled metadata automatically and shows duration without a Play 
   }
 })
 
+for (const startPlayback of [false, true]) {
+  test(`deferred preload recovers ${startPlayback ? 'through Play' : 'when late metadata arrives'} without a false error`, async ({
+    page,
+  }) => {
+    await page.clock.install()
+    let release!: () => void
+    const gate = new Promise<void>((resolve) => {
+      release = resolve
+    })
+    let attempts = 0
+    await page.route('https://podcast.nurevolution.net/**', async (route) => {
+      attempts++
+      await gate
+      await route.fallback()
+    })
+    try {
+      await page.goto('/episodes/trey-turner-lost-in-translation', {
+        waitUntil: 'domcontentloaded',
+      })
+      await hydrated(page)
+      await expect.poll(() => attempts).toBeGreaterThanOrEqual(1)
+      await page.clock.fastForward(10_000)
+      await expect.poll(() => attempts).toBeGreaterThanOrEqual(2)
+      await page.clock.fastForward(10_000)
+      const audio = page.locator('audio')
+      await expect(page.locator('.media-status')).toHaveText(
+        'Audio is taking longer to load.',
+      )
+      await expect(
+        page.getByRole('button', { name: 'Retry audio' }),
+      ).toBeVisible()
+      await expect(audio).toHaveJSProperty('error', null)
+      await expect(audio).toHaveJSProperty('paused', true)
+      const loads = attempts
+      if (startPlayback) {
+        await audio.evaluate((a: HTMLAudioElement) => {
+          a.muted = true
+          a.loop = true
+          void a.play()
+        })
+        await expect(page.locator('.media-status')).toHaveText('Buffering…')
+      }
+      await page.clock.fastForward(30_000)
+      expect(attempts).toBe(loads)
+      await expect(audio).toHaveJSProperty('paused', !startPlayback)
+      release()
+      await ready(page)
+      await expect(page.locator('.media-status')).toHaveText(
+        startPlayback ? 'Playing' : 'Press Play to listen.',
+      )
+      await expect(
+        page.getByRole('button', { name: 'Retry audio' }),
+      ).toHaveCount(0)
+      await expect(audio).toHaveJSProperty('paused', !startPlayback)
+      expect(
+        await audio.evaluate((a: HTMLAudioElement) => a.duration),
+      ).toBeGreaterThan(0)
+    } finally {
+      release()
+    }
+  })
+}
+
 test('fresh root, deep links and refresh load once and never initiate playback', async ({
   page,
 }) => {

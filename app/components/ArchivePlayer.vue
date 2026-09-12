@@ -33,6 +33,7 @@ watch([artworkUrl, () => props.episode?.id], () => {
 const messages = {
   idle: 'Choose an episode to listen.',
   loading: 'Loading audio…',
+  delayed: 'Audio is taking longer to load.',
   paused: 'Press Play to listen.',
   playing: 'Playing',
   buffering: 'Buffering…',
@@ -96,7 +97,11 @@ const messages = {
       />
       <div class="player-actions">
         <p id="playback-status" class="media-status">{{ messages[status] }}</p>
-        <button v-if="status === 'error'" type="button" @click="retry">
+        <button
+          v-if="status === 'error' || status === 'delayed'"
+          type="button"
+          @click="retry"
+        >
           Retry audio
         </button>
         <a
