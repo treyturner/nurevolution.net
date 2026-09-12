@@ -1,6 +1,6 @@
 # Nurevolution
 
-A podcast website being rebuilt from WordPress. M1 supplies the minimal dark Nuxt shell and browser-audio boundary. M2 adds the validated 55-episode archive, a repeatable importer, and read-only content APIs. M3 serves the complete podcast RSS with compatibility checks. M4 adds the shared archive player, canonical episode URLs, mobile tabs, attachment downloads, and historical page redirects. M5 adds verified application/Caddy images, media delivery, and deployment/recovery tooling; live rehearsal and M6 cutover remain pending. See [deployment operations](docs/DEPLOYMENT.md).
+A podcast website being rebuilt from WordPress. M1 supplies the minimal dark Nuxt shell and browser-audio boundary. M2 adds the validated 55-episode archive, a repeatable importer, and read-only content APIs. M3 serves the complete podcast RSS with compatibility checks. M4 adds the shared archive player, canonical episode URLs, mobile tabs, attachment downloads, and historical page redirects. M5 adds verified application/Caddy images, media delivery, and deployment/recovery tooling. Preview deployment, rollback, capacity, and independent recovery are rehearsed; final device/client and operations acceptance remains. The [M6 cutover plan](docs/milestones/M06-cutover-and-retirement.md) prepares production launch and WordPress retirement. See [deployment operations](docs/DEPLOYMENT.md).
 
 See the [roadmap](ROADMAP.md), [M0 audit plan and evidence](docs/milestones/M00-migration-audit.md), [M1 completion record](docs/milestones/M01-foundation-and-verification.md), [M2 implementation and evidence](docs/milestones/M02-canonical-content.md), [M3 replacement RSS record](docs/milestones/M03-podcast-rss.md), [M4 archive/player plan](docs/milestones/M04-archive-player.md), [player behavior and delivery guide](docs/PLAYER.md), [content authoring guide](docs/CONTENT.md), and [feed validation guide](docs/FEED-VALIDATION.md).
 
@@ -65,7 +65,7 @@ pnpm build:fixture
 pnpm exec playwright test --project chromium
 ```
 
-Run the normal production build locally with `node .output/server/index.mjs`. This validates the portable Node target; infrastructure and public deployment remain later milestone work.
+Run the normal production build locally with `node .output/server/index.mjs`. This validates the portable Node target; it is separate from live deployment and release acceptance.
 
 ## Application and test boundaries
 

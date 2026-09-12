@@ -1,0 +1,159 @@
+{
+  "schemaVersion": 1,
+  "observedAt": "2026-09-12T10:52:44.457514+00:00",
+  "purpose": "Fresh live legacy-versus-preview RSS comparison before M6 cutover; frozen M0/M3 evidence is unchanged",
+  "sources": {
+    "legacy": {
+      "url": "https://nurevolution.net/feed/podcast",
+      "bytes": 89377,
+      "sha256": "98168181a068b9566dada12ecd4b98ea18cce2cac97df2f4ef0d6e8f9e2f5d6e",
+      "matchesFrozenM0AndM03": true
+    },
+    "preview": {
+      "url": "https://preview.nurevolution.net/feed/podcast",
+      "bytes": 53349,
+      "sha256": "7bd7daddfa54c2386ab976afa9c157fe424624c8eb42e7754063d2bbf7edb9d9",
+      "matchesDocumentedM03Replacement": true
+    }
+  },
+  "comparison": {
+    "method": "Namespace-aware XML parse; items aligned by exact GUID and order; dates compared as instants, durations as seconds. Full content compared as HTML-decoded visible text with image alt text and whitespace normalized.",
+    "items": 55,
+    "sameOrder": true,
+    "guidsAndPermalinkFlags": "unchanged",
+    "enclosureUrlsByteLengthsAndTypes": "unchanged",
+    "publicationInstants": "unchanged",
+    "historicalItemLinks": "unchanged",
+    "showArtworkUrls": "unchanged",
+    "fullDescriptionVisibleText": "unchanged across all 55 content:encoded bodies"
+  },
+  "intentionalChanges": {
+    "explicit": {
+      "channel": {
+        "old": "no",
+        "new": "false"
+      },
+      "episodes": 55,
+      "episodeOld": "no",
+      "episodeNew": "false",
+      "meaning": "Preserve the existing not-explicit designation using currently documented Apple boolean spelling; no new rating assessment."
+    },
+    "titleAndAuthor": [
+      {
+        "episodeId": "wp-208",
+        "field": "title",
+        "legacy": "Trey Turner – You Don’t Know Me",
+        "canonicalDerived": "Trey Turner – You Don't Know Me"
+      },
+      {
+        "episodeId": "wp-196",
+        "field": "author",
+        "legacy": "nurevolution studios",
+        "canonicalDerived": "EazyTom"
+      },
+      {
+        "episodeId": "wp-267",
+        "field": "title",
+        "legacy": "Libations & Oscillations – Professor Seaglitch’s Isle of Aural Decadence",
+        "canonicalDerived": "Libations & Oscillations – Professor Seaglitch's Isle of Aural Decadence"
+      },
+      {
+        "episodeId": "wp-293",
+        "field": "title",
+        "legacy": "Trey Turner – The Toad’s Mistress",
+        "canonicalDerived": "Trey Turner – The Toad's Mistress"
+      },
+      {
+        "episodeId": "wp-298",
+        "field": "title",
+        "legacy": "Tonebreaker – Rock’n Noctem",
+        "canonicalDerived": "Tonebreaker – Rock'n Noctem"
+      },
+      {
+        "episodeId": "wp-311",
+        "field": "title",
+        "legacy": "EazyTom – Bouche d’Incendie Remix Finale",
+        "canonicalDerived": "EazyTom – Bouche d'Incendie Remix Finale"
+      },
+      {
+        "episodeId": "wp-344",
+        "field": "title",
+        "legacy": "Fracture – Live on Mega 93.3FM (Mar. 21, 2002) Part 2",
+        "canonicalDerived": "Fracture – Live on Mega 93.3 FM (Mar. 21, 2002) Part 2"
+      }
+    ],
+    "durations": {
+      "format": "HH:MM:SS to integer seconds",
+      "equivalentValues": 54,
+      "correctedValues": [
+        {
+          "title": "Trey Turner – Praxis",
+          "old": "0:56:56",
+          "new": "3396",
+          "deltaSeconds": -20.0
+        }
+      ],
+      "evidence": "M02-praxis-duration.json"
+    },
+    "descriptions": "description now uses the full sanitized content instead of WordPress excerpts; content:encoded visible text is retained with simpler markup, equivalent entity escaping, and emoji text.",
+    "itemFieldsRemoved": [
+      "comments",
+      "dc:creator",
+      "itunes:block",
+      "itunes:keywords",
+      "itunes:subtitle",
+      "itunes:summary",
+      "slash:comments",
+      "wfw:commentRss"
+    ],
+    "channelFieldsRemoved": [
+      "generator",
+      "itunes:block",
+      "itunes:keywords",
+      "itunes:new-feed-url",
+      "lastBuildDate",
+      "sy:updateFrequency",
+      "sy:updatePeriod"
+    ],
+    "ttl": {
+      "oldMinutes": 1440,
+      "newMinutes": 1,
+      "meaning": "Changed refresh/cache guidance, not a promise of podcast-client polling frequency."
+    },
+    "imageLink": {
+      "old": "https://nurevolution.net/wp",
+      "new": "https://nurevolution.net"
+    },
+    "other": [
+      "Equivalent date notation (+0000 to GMT)",
+      "Trailing copyright whitespace removed",
+      "Unused XML namespace declarations and formatting removed"
+    ]
+  },
+  "itemChangedFieldCounts": {
+    "comments": 55,
+    "content:encoded": 55,
+    "dc:creator": 55,
+    "description": 55,
+    "itunes:block": 55,
+    "itunes:duration": 55,
+    "itunes:explicit": 55,
+    "itunes:keywords": 55,
+    "itunes:subtitle": 55,
+    "itunes:summary": 55,
+    "pubDate": 55,
+    "slash:comments": 55,
+    "wfw:commentRss": 55,
+    "title": 6,
+    "itunes:author": 1
+  },
+  "unexpectedDifferences": [],
+  "validation": {
+    "pnpm check:feed": "passed: 55 items and 55 protected historical comparisons",
+    "focusedTests": "23 passed across RSS serialization and feed-check tests"
+  },
+  "limits": [
+    "Parsed compatibility is not a completed real-podcast-client refresh check.",
+    "No RSS implementation or production configuration changed during this comparison."
+  ]
+}

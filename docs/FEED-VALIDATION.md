@@ -2,6 +2,8 @@
 
 The replacement RSS is served at `/feed/podcast` from the canonical archive. Its production identity remains `https://nurevolution.net/feed/podcast`. No WordPress, private export, external validator, or media download is needed for the automated checks.
 
+The header subscription link and browser RSS discovery use `/feed/podcast` on the current host: preview opens the preview feed and local development opens the local feed. The XML itself preserves the canonical production self URL, website/artwork/item links, GUIDs, and audio enclosure URLs. A podcast client reading preview RSS may therefore fetch production media; this is the existing subscriber-compatibility contract, not an isolated alternate podcast.
+
 ## Routine authoring and CI
 
 Use the pinned toolchain described in [README.md](../README.md):
@@ -39,7 +41,9 @@ The channel's Atom self link always names the canonical production feed, includi
 
 The new feed uses complete sanitized descriptions and canonical artist/title data. The [M3 plan](milestones/M03-podcast-rss.md#reviewed-differences-from-the-legacy-feed) records the small title/author differences, duration formatting, clean-label spelling, and removed WordPress fields. Its [reference evidence](milestones/evidence/M03-feed-reference.json) matches M0's raw feed hash and retains all 55 legacy title/author/explicit values. Never regenerate those historical references to hide a regression.
 
-## Public rehearsal — pending M5
+## Public rehearsal — M5 evidence and final candidate checks
+
+[M5 live evidence](milestones/evidence/M05-live-rehearsal.json) records public feed/media checks and W3C validation for its dated rehearsal release, including the expected preview canonical-self-URL warning. Actual podcast-client acceptance remains open. Repeat the relevant checks for the final M6 candidate; the earlier result is not proof of a later release or physical-client behavior.
 
 Perform these checks on a public rehearsal URL with production-equivalent TLS, routing, compression, caching, and media delivery. Record the URL, tested application commit, UTC date, tool/client versions, results, and any outstanding issue. A localhost XML check does not establish public reachability or podcast-directory acceptance.
 
@@ -61,4 +65,4 @@ M8 must review the 60-second HTTP cache window, any intermediary caches, client 
 
 ## Evidence record
 
-M3's local implementation results are recorded in its [completion evidence](milestones/M03-podcast-rss.md#completion-evidence). Public rehearsal, actual client refresh, production delivery, and directory checks remain **pending M5/M6**. Record results in the relevant milestone; do not mark them complete from an automated local test.
+M3's local implementation results are recorded in its [completion evidence](milestones/M03-podcast-rss.md#completion-evidence). M5 public rehearsal results are recorded in its [live evidence](milestones/evidence/M05-live-rehearsal.json). Actual client refresh, final canonical production delivery, and directory checks remain **pending M6**. Record release-specific results in the [M6 plan](milestones/M06-cutover-and-retirement.md); do not mark them complete from an automated local test.
