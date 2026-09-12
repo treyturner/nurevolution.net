@@ -190,17 +190,15 @@ html:has(.artwork-dialog[open]) {
 .artwork-dialog-stage {
   display: grid;
   place-items: center;
-  width: max-content;
-  min-width: 100%;
+  width: 100%;
   min-height: 100%;
-  padding: 4rem;
 }
 .artwork-dialog-stage img {
   display: block;
   width: auto;
   height: auto;
-  max-width: none;
-  max-height: none;
+  max-width: 90vw;
+  max-height: 90dvh;
 }
 .artwork-dialog-close {
   position: fixed;

@@ -3,13 +3,6 @@ defineProps<{ src: string; alt: string }>()
 const emit = defineEmits<{ close: [] }>()
 const dialog = ref<HTMLDialogElement | null>(null)
 const close = () => dialog.value?.close()
-function centerImage() {
-  const modal = dialog.value!
-  modal.scrollTo(
-    (modal.scrollWidth - modal.clientWidth) / 2,
-    (modal.scrollHeight - modal.clientHeight) / 2,
-  )
-}
 onMounted(() => dialog.value!.showModal())
 onBeforeUnmount(close)
 </script>
@@ -23,7 +16,7 @@ onBeforeUnmount(close)
     @click.self="close"
   >
     <div class="artwork-dialog-stage" @click.self="close">
-      <img :src="src" :alt="alt" @load="centerImage" @error="close" />
+      <img :src="src" :alt="alt" @error="close" />
     </div>
     <button
       type="button"

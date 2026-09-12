@@ -119,15 +119,6 @@ describe('archive presentation and native media integration', () => {
       wrapper.get('.artwork img').attributes('src'),
     )
     const modal = wrapper.get('dialog').element
-    Object.defineProperties(modal, {
-      scrollWidth: { value: 1400 },
-      clientWidth: { value: 800 },
-      scrollHeight: { value: 1000 },
-      clientHeight: { value: 600 },
-    })
-    const scroll = vi.spyOn(modal, 'scrollTo')
-    await wrapper.get('dialog img').trigger('load')
-    expect(scroll).toHaveBeenCalledWith(300, 200)
     await wrapper.get('dialog img').trigger('click')
     expect(modal.open).toBe(true)
     await wrapper.get('.artwork-dialog-stage').trigger('click')

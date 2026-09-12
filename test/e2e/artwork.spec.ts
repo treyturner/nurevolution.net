@@ -3,7 +3,7 @@ import { ready, stubArchiveMedia } from './media'
 
 test.beforeEach(async ({ page }) => stubArchiveMedia(page))
 
-test('opens original-size artwork with modal focus and supports all three close actions', async ({
+test('keeps smaller artwork at its original size with modal focus and all three close actions', async ({
   page,
 }) => {
   await page.setViewportSize({ width: 1280, height: 900 })
@@ -42,7 +42,7 @@ test('opens original-size artwork with modal focus and supports all three close 
   }
 })
 
-test('large originals scroll inside the modal while its close button stays accessible', async ({
+test('large originals fit within the viewport with a clickable margin after resizing', async ({
   page,
 }) => {
   await page.route('https://nurevolution.net/wp/**', (route) =>
@@ -59,29 +59,44 @@ test('large originals scroll inside the modal while its close button stays acces
   const close = modal.getByRole('button', { name: 'Close artwork' })
   await expect
     .poll(() =>
-      modal.locator('img').evaluate((img: HTMLImageElement) => ({
-        natural: [img.naturalWidth, img.naturalHeight],
-        rendered: [img.clientWidth, img.clientHeight],
-      })),
+      modal
+        .locator('img')
+        .evaluate((img: HTMLImageElement) => [
+          img.naturalWidth,
+          img.naturalHeight,
+        ]),
     )
-    .toEqual({ natural: [1400, 1100], rendered: [1400, 1100] })
+    .toEqual([1400, 1100])
   await expect(page.locator('html')).toHaveCSS('overflow', 'hidden')
-  expect(
-    await modal.evaluate((dialog) => ({
-      horizontal: dialog.scrollWidth > dialog.clientWidth,
-      vertical: dialog.scrollHeight > dialog.clientHeight,
-    })),
-  ).toEqual({ horizontal: true, vertical: true })
-  const before = await close.boundingBox()
-  await modal.evaluate((dialog) => dialog.scrollTo(0, 0))
-  expect(await close.boundingBox()).toEqual(before)
-  await expect(close).toBeInViewport()
-  expect(
-    await page.evaluate(
-      () => document.documentElement.scrollWidth <= innerWidth,
-    ),
-  ).toBe(true)
-  await close.click()
+  for (const viewport of [
+    { width: 390, height: 844 },
+    { width: 1280, height: 900 },
+    { width: 844, height: 390 },
+  ]) {
+    await page.setViewportSize(viewport)
+    await expect
+      .poll(() =>
+        modal.locator('img').evaluate((img) => {
+          const rect = img.getBoundingClientRect()
+          return (
+            rect.width <= innerWidth * 0.9 + 1 &&
+            rect.height <= innerHeight * 0.9 + 1 &&
+            rect.left >= innerWidth * 0.05 - 1 &&
+            rect.top >= innerHeight * 0.05 - 1 &&
+            Math.abs(rect.width / rect.height - 1400 / 1100) < 0.01
+          )
+        }),
+      )
+      .toBe(true)
+    expect(
+      await modal.evaluate((dialog) => ({
+        horizontal: dialog.scrollWidth > dialog.clientWidth,
+        vertical: dialog.scrollHeight > dialog.clientHeight,
+      })),
+    ).toEqual({ horizontal: false, vertical: false })
+    await expect(close).toBeInViewport()
+  }
+  await page.mouse.click(10, 10)
   await expect(modal).toHaveCount(0)
   await expect(page.locator('html')).not.toHaveCSS('overflow', 'hidden')
 })
