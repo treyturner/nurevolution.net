@@ -1,0 +1,333 @@
+{
+  "schemaVersion": 1,
+  "observedAt": "2026-09-12T21:57:09.159069+00:00",
+  "operator": "Codex, with owner performing private key entry and pfSense DNS changes",
+  "publicCutoverAt": "2026-09-12T21:49:17.654160+00:00",
+  "environment": "production",
+  "webOrigin": "https://nurevolution.net",
+  "mediaOrigin": "https://podcast.nurevolution.net",
+  "release": {
+    "schemaVersion": 1,
+    "sourceCommit": "cd96435205764c51771f4d49292df259adab89cd",
+    "verifyRunUrl": "https://github.com/treyturner/nurevolution.net/actions/runs/34720254236",
+    "imageDigest": "sha256:5d99493fb3a07249d16ac0801adbb9a5903a79f3657131d4e6c5e4d7ca4821e3",
+    "imageId": "sha256:b86fa149973da7e85a5f0520668cdc166c45f636ab2ab6aa837584209665d586",
+    "caddyImageDigest": "sha256:796483cc86d295eb885e7eff909c9a86fe2116b3ef90896fcb8d0131502539d4",
+    "caddyImageId": "sha256:9fdc541668b9ec755bf900ec7e0abec07d9f79c944370a1501225c8c6a929c7f",
+    "caddyBinarySha256": "6dbc9c58aeda388498cf1bd00f3f23912643a5a707b3ef34963d50fbcf42df34",
+    "configurationSha256": "1c8bcbccf7d64a07b935ba87779e8ab3862d1e8c456229e6b598d5ee1f9d202e",
+    "mediaManifestSha256": "ec49814f1fc5d212fadbbe7eeec4ce45111fb428fd85d4425d59820fd3084304",
+    "publishedAt": "2026-09-12T21:39:24.162Z"
+  },
+  "pullRequest": "https://github.com/treyturner/nurevolution.net/pull/17",
+  "reviewAcceptance": "Automated review completed with no threads/findings and a thumbs-up on 2ef70269476ee9ce2f41a32cdce4598e63d93f83; all PR checks passed before squash merge.",
+  "previewDeploy": "https://github.com/treyturner/nurevolution.net/actions/runs/34720616293",
+  "productionDeploy": "https://github.com/treyturner/nurevolution.net/actions/runs/34720835192",
+  "productionDeployResult": "success",
+  "dns": {
+    "changes": [
+      {
+        "before": {
+          "type": "CNAME",
+          "name": "podcast.nurevolution.net",
+          "content": "nurevolution.net",
+          "ttl": 1,
+          "proxied": true,
+          "comment": null,
+          "tags": [],
+          "settings": {
+            "flatten_cname": false
+          }
+        },
+        "after": {
+          "type": "A",
+          "name": "podcast.nurevolution.net",
+          "content": "159.89.86.21",
+          "ttl": 1,
+          "proxied": false,
+          "comment": null,
+          "tags": [],
+          "settings": {}
+        },
+        "idBefore": "508e18349d37a952ee3a01c1d43a29b6",
+        "idAfter": "508e18349d37a952ee3a01c1d43a29b6"
+      },
+      {
+        "before": {
+          "type": "A",
+          "name": "nurevolution.net",
+          "content": "136.49.253.125",
+          "ttl": 1,
+          "proxied": false,
+          "comment": null,
+          "tags": [],
+          "settings": {}
+        },
+        "after": {
+          "type": "A",
+          "name": "nurevolution.net",
+          "content": "159.89.86.21",
+          "ttl": 1,
+          "proxied": true,
+          "comment": null,
+          "tags": [],
+          "settings": {}
+        },
+        "idBefore": "398f6665a7ff1d88d299062db2839cf7",
+        "idAfter": "398f6665a7ff1d88d299062db2839cf7"
+      }
+    ],
+    "unrelatedRecordsUnchanged": true,
+    "recordCount": 24,
+    "ownerLANOverridesRemoved": [
+      "nurevolution.net",
+      "www.nurevolution.net",
+      "podcast.nurevolution.net"
+    ]
+  },
+  "candidateAcceptance": {
+    "observedAt": "2026-09-12T21:47:27.973Z",
+    "resolution": "Only three canonical hostnames resolve to 159.89.86.21; original SNI and TLS certificate validation preserved",
+    "healthIdentity": "passed",
+    "episodePages": 55,
+    "publicAssets": 156,
+    "feed": {
+      "items": 55,
+      "legacyEffectiveIdentityMatch": true,
+      "etag304": true,
+      "aliases": true,
+      "machineUserAgent": true
+    },
+    "fullTransfers": [
+      {
+        "assetId": "asset-c57974e04aade227",
+        "bytes": 41697124,
+        "sha256": "65dafa4b5817319c6f0c242ed649171059f613fb0b0a84deb76ee4d2e0acca34"
+      },
+      {
+        "assetId": "asset-9344649bc27ef8ce",
+        "bytes": 286927439,
+        "sha256": "6a229323a5a082d8d59e8155a0bc9929a970ffcc082ae8cfc4d6628baf14d4d5"
+      },
+      {
+        "assetId": "asset-693aadab8770ee0e",
+        "bytes": 1739931,
+        "sha256": "266c8d8466f7195a0c715dd0cdfcb952795ad73e49978569e72ac9fc092d014e"
+      },
+      {
+        "assetId": "asset-c57974e04aade227",
+        "resumed": true,
+        "bytes": 41697124,
+        "sha256": "65dafa4b5817319c6f0c242ed649171059f613fb0b0a84deb76ee4d2e0acca34"
+      }
+    ]
+  },
+  "publicAcceptance": {
+    "observedAt": "2026-09-12T21:50:59.612Z",
+    "resolution": "Public DNS from Cloudflare DNS over HTTPS, bypassing home DNS overrides; original SNI and TLS certificate validation preserved",
+    "healthIdentity": "passed",
+    "episodePages": 55,
+    "publicAssets": 156,
+    "feed": {
+      "items": 55,
+      "legacyEffectiveIdentityMatch": true,
+      "etag304": true,
+      "aliases": true,
+      "machineUserAgent": true
+    },
+    "fullTransfers": [
+      {
+        "assetId": "asset-c57974e04aade227",
+        "bytes": 41697124,
+        "sha256": "65dafa4b5817319c6f0c242ed649171059f613fb0b0a84deb76ee4d2e0acca34"
+      },
+      {
+        "assetId": "asset-9344649bc27ef8ce",
+        "bytes": 286927439,
+        "sha256": "6a229323a5a082d8d59e8155a0bc9929a970ffcc082ae8cfc4d6628baf14d4d5"
+      },
+      {
+        "assetId": "asset-693aadab8770ee0e",
+        "bytes": 1739931,
+        "sha256": "266c8d8466f7195a0c715dd0cdfcb952795ad73e49978569e72ac9fc092d014e"
+      },
+      {
+        "assetId": "asset-c57974e04aade227",
+        "resumed": true,
+        "bytes": 41697124,
+        "sha256": "65dafa4b5817319c6f0c242ed649171059f613fb0b0a84deb76ee4d2e0acca34"
+      }
+    ],
+    "legacyEpisodeRedirects": {
+      "count": 55,
+      "status": 301,
+      "correctCanonicalTargets": true,
+      "resolution": "ordinary LAN DNS after owner removed overrides"
+    },
+    "robots": {
+      "status": 200,
+      "siteWideDisallow": false
+    }
+  },
+  "externalFeedValidator": {
+    "url": "https://validator.w3.org/feed/check.cgi?url=https%3A%2F%2Fnurevolution.net%2Ffeed%2Fpodcast",
+    "result": "This is a valid RSS feed.",
+    "warningsObserved": false
+  },
+  "resolverCleanup": {
+    "at": "2026-09-12T21:51:40.570639+00:00",
+    "temporaryOverrideRemoved": true,
+    "otherHostsEntriesPreserved": true,
+    "originalHostsFileRestored": true,
+    "ordinaryNodeDNSAndHTTPS": {
+      "resolution": {
+        "nurevolution.net": [
+          {
+            "address": "104.21.72.182",
+            "family": 4
+          },
+          {
+            "address": "172.67.153.216",
+            "family": 4
+          },
+          {
+            "address": "2606:4700:3032::ac43:99d8",
+            "family": 6
+          },
+          {
+            "address": "2606:4700:3036::6815:48b6",
+            "family": 6
+          }
+        ],
+        "podcast.nurevolution.net": [
+          {
+            "address": "159.89.86.21",
+            "family": 4
+          }
+        ],
+        "www.nurevolution.net": [
+          {
+            "address": "172.67.153.216",
+            "family": 4
+          },
+          {
+            "address": "104.21.72.182",
+            "family": 4
+          },
+          {
+            "address": "2606:4700:3036::6815:48b6",
+            "family": 6
+          },
+          {
+            "address": "2606:4700:3032::ac43:99d8",
+            "family": 6
+          }
+        ]
+      },
+      "checks": [
+        {
+          "path": "/api/health",
+          "status": 200
+        },
+        {
+          "path": "/",
+          "status": 200
+        },
+        {
+          "path": "/api/episodes",
+          "status": 200
+        },
+        {
+          "path": "/feed/podcast",
+          "status": 200
+        }
+      ]
+    }
+  },
+  "browser": {
+    "observedAt": "2026-09-12T21:53:51.125Z",
+    "context": "Playwright Chromium; fresh context with no extra permissions",
+    "resolution": "ordinary LAN DNS after owner removed overrides",
+    "visibleImagesLoaded": 4,
+    "audioMetadataLoaded": true,
+    "durationSeconds": 4229.2,
+    "selectedAudioPaused": true,
+    "pageErrors": []
+  },
+  "host": {
+    "containers": [
+      {
+        "name": "nurevolution-production-app-1",
+        "imageReference": "ghcr.io/treyturner/nurevolution.net@sha256:5d99493fb3a07249d16ac0801adbb9a5903a79f3657131d4e6c5e4d7ca4821e3",
+        "running": true,
+        "oomKilled": false,
+        "restarts": 0,
+        "startedAt": "2026-09-12T21:46:10.922793021Z",
+        "health": "healthy"
+      },
+      {
+        "name": "nurevolution-edge-edge-1",
+        "imageReference": "ghcr.io/treyturner/nurevolution.net-caddy@sha256:a3dc6de367a8f05182e6cdf6fa327adf2ae8e4378b1e2ca20d8a79f7d86525b0",
+        "running": true,
+        "oomKilled": false,
+        "restarts": 0,
+        "startedAt": "2026-09-10T04:50:55.159142697Z",
+        "health": null
+      }
+    ],
+    "availableMemoryMiB": 438,
+    "freeDiskMiB": 16329,
+    "previewContainersAbsent": true,
+    "pendingJournal": false,
+    "locks": {
+      "/srv/nurevolution/state/deploy.lock": false,
+      "/srv/edge/config/deploy.lock": false
+    },
+    "productionMarker": true,
+    "networkCounters": {
+      "interface": "eth0",
+      "receivedBytesSinceBoot": 36712023868,
+      "transmittedBytesSinceBoot": 13377012079,
+      "billingUsage": "Host counters, not provider billing figures"
+    }
+  },
+  "backup": {
+    "at": "2026-09-12T21:52:04.900Z",
+    "snapshotId": "b99da9023a404dc6611a6c86874a1fdab9ca745afa78599090803c2b0f0e8ac7",
+    "repositoryCheck": "passed"
+  },
+  "deploymentGates": {
+    "previewEnabled": false,
+    "productionEnabled": true,
+    "cutoverEnabled": true
+  },
+  "enrollment": {
+    "productionSecretInstalled": true,
+    "temporaryFileRemoved": true,
+    "originalKeyId": 2,
+    "expiresAt": "2026-12-10T17:27:47Z",
+    "renewalPolicy": "Owner prefers avoiding routine expiry and accepts a long-lived GitHub Actions enrollment secret. The subsequent key 3 installation and production verification are recorded separately; the fields above preserve key 2 as used at cutover.",
+    "replacementEvidence": "M06-headscale-key-replacement.json"
+  },
+  "ownerClientObservation": {
+    "observedOn": "2026-09-12",
+    "newFeedAppearance": "Owner loaded the new feed and reported it looks as expected.",
+    "existingSubscriptionRefresh": "Unavailable: owner did not currently have a subscription.",
+    "appName": "not reported",
+    "clientPlaybackOrDownload": "not separately reported"
+  },
+  "fallback": {
+    "decision": "Keep production: all required serving/identity probes passed; no rollback trigger observed.",
+    "wordPress": "Frozen and running; original runtime, configuration, SQL, uploads and episodes retained by owner.",
+    "privateCapture": "Retained on the droplet and copied to the private workspace; excluded from Git.",
+    "previewHistory": "Preserved separately; preview app stopped and promotion disabled."
+  },
+  "remaining": {
+    "24HourObservation": "pending",
+    "observationEndAndLegacyRetirement": "pending owner timing; seven-day observation proposed, no retirement authorized by this record",
+    "existingSubscriptionBeforeAfter": "not available in owner testing",
+    "additionalClientPlatforms": "not claimed as tested",
+    "headscaleBootRehearsal": "pending",
+    "replacementHostRecoveryTimeAndExtraTrafficBudget": "previously unconfirmed; no new purchase or higher resource commitment made"
+  }
+}

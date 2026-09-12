@@ -1,6 +1,6 @@
 # Production cutover
 
-Status: preparation authorized on 2026-09-12; **traffic has not switched**. This is the operator sequence for the first production release. Record the actual candidate, checks, timestamps, and exceptions in the [M6 evidence](../milestones/M06-cutover-and-retirement.md). A completed step below must have evidence; this runbook is not evidence of execution.
+Status: **First production cutover completed on 2026-09-12 at 21:49 UTC.** The [cutover record](../milestones/evidence/M06-cutover.json) identifies the accepted release and completed checks. Production is enabled, preview is disabled, and WordPress remains frozen/running during observation. The sequence below documents the first conversion and recovery procedure; do not rerun its preview-conversion steps against the accepted production state. Subsequent releases use normal verified production promotion. Observation and legacy retirement remain open.
 
 The owner keeps WordPress frozen and its existing services, configuration, database, uploads, and episode files available for fallback. The agent performs accessible repository, droplet, and DNS operations. The owner handles Cloudflare settings outside the DNS token's scope, home DNS, physical devices, and eventual legacy retirement. Seven days of observation is proposed; duration and retirement timing remain pending owner confirmation.
 

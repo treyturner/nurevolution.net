@@ -1,12 +1,12 @@
 # Nurevolution roadmap
 
-Status: M0–M4 are implemented and merged. M5 delivery, preview deployment, rollback, capacity, and independent recovery are rehearsed; final device/client and operations acceptance remains. Subsequent player polish, artwork thumbnails, and copy links are merged and deployed to preview. [M6 cutover preparation](docs/milestones/M06-cutover-and-retirement.md) is authorized and underway; public traffic has not switched and WordPress remains intact. M7–M9 remain future work.
+Status: M0–M4 are implemented and merged. M5 delivery, rollback, capacity, and independent recovery are rehearsed. [M6 production cutover](docs/milestones/M06-cutover-and-retirement.md) completed on 2026-09-12 with the merged player refinements, artwork thumbnails, copy links, and branding. Production is active; preview and its promotion gate are disabled. WordPress remains frozen and running for fallback; observation, retirement, and explicitly unperformed client/recovery checks remain open. M7–M9 remain future work.
 
 Updated: 2026-09-12.
 
 Inputs: [project bootstrap](docs/BOOTSTRAP.md), the owner's product answers dated 2026-09-06, M0/M1 decisions and audit dated 2026-09-07, M2/M3 implementation and M4 planning evidence dated 2026-09-08, M4 implementation/mobile acceptance and M5 planning dated 2026-09-09, M5 live/recovery evidence dated 2026-09-11, and merged preview refinements plus M6 readiness inspection dated 2026-09-12.
 
-This document defines outcomes, dependencies, and acceptance evidence from which to write implementation-grade milestone plans. M0 audited the archive and froze the production feed; M5 records the provisioned candidate infrastructure and live rehearsal. M6 must reconcile any final legacy changes and record production cutover evidence. Newer owner decisions recorded here take precedence over conflicting defaults in the bootstrap.
+This document defines outcomes, dependencies, and acceptance evidence from which to write implementation-grade milestone plans. M0 audited the archive and froze the production feed; M5 records the provisioned candidate infrastructure and live rehearsal. M6 records the reconciled legacy archive and completed production cutover; observation and WordPress retirement remain open. Newer owner decisions recorded here take precedence over conflicting defaults in the bootstrap.
 
 ## 1. Product and release boundaries
 
@@ -141,7 +141,7 @@ Feed and media URLs must be usable by podcast clients without interactive browse
 
 ## 6. Milestone sequence
 
-M0–M4 are **implemented and merged**. M5 is **implemented with live rehearsal evidence and remaining acceptance items**. M6 **cutover preparation is underway**; public traffic has not switched and M7–M9 implementation has not started. IDs remain stable.
+M0–M4 are **implemented and merged**. M5 is **implemented with live rehearsal evidence and remaining acceptance items**. M6 **production cutover is complete, with observation and WordPress retirement open**; production is active, preview is disabled, and M7–M9 implementation has not started. IDs remain stable.
 
 Plans and completion evidence are available for [M0 — Migration audit](docs/milestones/M00-migration-audit.md) and [M1 — Foundation and verification](docs/milestones/M01-foundation-and-verification.md). The [M2 — Canonical content record](docs/milestones/M02-canonical-content.md) documents schemas, faithful import, protected edits, public data access, and completed acceptance checks. The [M3 — Replacement RSS record](docs/milestones/M03-podcast-rss.md) documents implemented metadata, serialization, aliases, cache behavior, compatibility tests, and the public validation handoff. Owner instructions are in the [content authoring guide](docs/CONTENT.md) and [feed validation guide](docs/FEED-VALIDATION.md).
 
@@ -260,7 +260,7 @@ Run `pnpm verify`. External validator/client results are provisional until repea
 
 ### M5 — Production delivery and operational rehearsal
 
-**Implemented and rehearsed, updated 2026-09-12:** [M05-production-delivery.md](docs/milestones/M05-production-delivery.md) records normal GitHub/Headscale preview promotion, public feed/media delivery, loaded capacity, rollback, trusted certificate recovery, MinIO archive/application restore, and Google Drive Headscale restore. Both weekly backup schedules and Headscale retention reports are confirmed. Preview now runs `daa7e7b93a210c76e022622c88f6fb8428639bd1`, with successful [main Verify/publication](https://github.com/treyturner/nurevolution.net/actions/runs/34685197866) and [deployment](https://github.com/treyturner/nurevolution.net/actions/runs/34685541203). Physical-device/screen-reader/podcast-client observations, owner-managed Unraid boot verification, and final traffic/budget/whole-host recovery acceptance remain recorded handoff items. Production traffic remains on the legacy setup; M6 owns the release decision and transition.
+**Implemented and rehearsed; production active, updated 2026-09-12:** [M05-production-delivery.md](docs/milestones/M05-production-delivery.md) records the earlier GitHub/Headscale preview promotion, public feed/media delivery, loaded capacity, rollback, trusted certificate recovery, MinIO archive/application restore, and Google Drive Headscale restore. Both weekly backup schedules and Headscale retention reports are confirmed. Following [M6 cutover](docs/milestones/evidence/M06-cutover.json), production now serves `cd96435205764c51771f4d49292df259adab89cd`, with successful [main Verify/publication](https://github.com/treyturner/nurevolution.net/actions/runs/34720254236) and [production deployment](https://github.com/treyturner/nurevolution.net/actions/runs/34720835192); preview is stopped and deployment-disabled. The owner accepted mobile testing as sufficient for cutover. Screen-reader and unavailable podcast-client observations, owner-managed Unraid boot verification, and final traffic/budget/whole-host recovery acceptance remain recorded handoff items. WordPress stays frozen and running for fallback during M6 observation; retirement remains open.
 
 **Outcome:** a deployable, recoverable release on the chosen infrastructure, with media and HTTPS working independently of the home WordPress stack.
 
@@ -281,7 +281,7 @@ Run `pnpm verify`. External validator/client results are provisional until repea
 
 ### M6 — Cutover and WordPress retirement
 
-**Cutover preparation authorized on 2026-09-12:** [M06-cutover-and-retirement.md](docs/milestones/M06-cutover-and-retirement.md). The draft covers final archive reconciliation, remaining R1 acceptance, the single-slot preview-to-production transition, DNS/local resolver changes, first-production fallback, observation, and service retirement. The owner confirmed on 2026-09-12 that WordPress is unchanged and can stay frozen. The owner chose to proceed with the current player; M7 follows production cutover.
+**Production cutover completed on 2026-09-12; observation and retirement remain open:** [M06-cutover-and-retirement.md](docs/milestones/M06-cutover-and-retirement.md). Release `cd96435205764c51771f4d49292df259adab89cd` now serves the public website and canonical feed/media hosts. Candidate/public audits, the external RSS validator, and the production backup passed. WordPress stays frozen and running for fallback; the existing-subscription comparison was unavailable, and observation/retirement are not marked complete. The owner chose to proceed with the current player; M7 follows production cutover.
 
 **Outcome:** the public domain serves the verified replacement and existing subscribers retain their episode identities and audio access.
 
