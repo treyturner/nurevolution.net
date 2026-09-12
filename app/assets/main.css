@@ -273,6 +273,9 @@ audio {
   min-height: 44px;
   text-decoration: none;
 }
+.row-download svg {
+  opacity: 0.7;
+}
 .track-list li {
   display: grid;
   grid-template-columns: 1.5rem minmax(0, 1fr) auto;
