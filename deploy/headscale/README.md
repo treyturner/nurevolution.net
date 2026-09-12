@@ -164,10 +164,10 @@ docker compose exec -T headscale headscale preauthkeys create \
   --tags tag:nurevolution-droplet --expiration 1h
 
 docker compose exec -T headscale headscale preauthkeys create \
-  --tags tag:nurevolution-deploy --reusable --ephemeral --expiration 2160h
+  --tags tag:nurevolution-deploy --reusable --ephemeral --expiration 876000h
 ```
 
-The first key permits one enrollment within one hour. The second expires after 90 days and creates temporary runner nodes; label it **Nurevolution — Headscale GitHub enrollment key** in the password manager. In the droplet's root SSH session, enter the corresponding key at each hidden prompt:
+The first key permits one enrollment within one hour. The second lasts 100 × 365 days and creates temporary runner nodes, matching the owner's long-lived enrollment policy; label it **Nurevolution — Headscale GitHub enrollment key** in the password manager and record its actual expiry. In the droplet's root SSH session, enter the corresponding key at each hidden prompt:
 
 ```sh
 nurevolution-headscale-key droplet

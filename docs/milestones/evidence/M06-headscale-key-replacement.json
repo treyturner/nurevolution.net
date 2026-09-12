@@ -2,8 +2,10 @@
   "schemaVersion": 1,
   "observedAt": "2026-09-12T23:39:41.254628+00:00",
   "operation": "Replace the reusable GitHub Actions Headscale enrollment key with a long-lived key",
+  "operator": "Owner created key 3 and entered it through the droplet's private helper; Codex installed the GitHub environment secrets and ran production verification; owner expired key 2 and ran the Headscale backup.",
   "key": {
     "id": 3,
+    "createdBy": "Owner, using the Headscale CLI on Unraid",
     "idAndExpirySource": "Owner-filtered Headscale metadata",
     "reusable": true,
     "ephemeral": true,
@@ -15,6 +17,7 @@
     }
   },
   "installation": {
+    "operator": "Codex, reading the private droplet file into memory and supplying each GitHub environment secret through stdin",
     "installedAt": "2026-09-12T23:34:00.000959+00:00",
     "environments": {
       "production": {
