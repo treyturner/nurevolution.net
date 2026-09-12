@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "observedAt": "2026-09-12T23:35:53.574086+00:00",
+  "observedAt": "2026-09-12T23:39:41.254628+00:00",
   "operation": "Replace the reusable GitHub Actions Headscale enrollment key with a long-lived key",
   "key": {
     "id": 3,
@@ -80,9 +80,18 @@
   "predecessor": {
     "id": 2,
     "originalExpiresAt": "2026-12-10T17:27:47Z",
-    "revocation": "Awaiting owner confirmation"
+    "revocation": "Owner confirmed CLI expiry and filtered key metadata",
+    "revokedAt": "2026-09-12T23:36:32.920173023Z",
+    "expirationTimestamp": {
+      "seconds": 1789256192,
+      "nanos": 920173023
+    }
   },
   "headscaleBackup": {
-    "status": "Awaiting owner confirmation after predecessor revocation"
+    "status": "accepted",
+    "source": "Owner-reported backup helper result after key 2 revocation",
+    "snapshotId": "dd826c72574a4833a4ef1d792b17460586120be5976cbc7084b9bb6b1b876b59",
+    "headscaleRestartedHealthy": true,
+    "confirmationRecordedAt": "2026-09-12T23:39:41.254628+00:00"
   }
 }
