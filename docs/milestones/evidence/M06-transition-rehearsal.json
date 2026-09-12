@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "observedAt": "2026-09-12T21:35:30.896Z",
+  "operator": "Codex workspace",
+  "sourceCommit": "cd96435205764c51771f4d49292df259adab89cd",
+  "runtimeRelease": "a1bd8c497fefb034c1fb502d497622f5e85586ca",
+  "runtimeVerifyRun": "https://github.com/treyturner/nurevolution.net/actions/runs/34712171664",
+  "fixture": "test/delivery/fixture.ts; three synthetic MP3s and one generated PNG",
+  "transport": "isolated Docker network and HTTP listener; real production renderer/transaction/early host guards; unique Compose project/network names",
+  "scenarios": [
+    {
+      "name": "accepted preview with synthetic media",
+      "passed": true
+    },
+    {
+      "name": "occupied preview slot detected before production mutation",
+      "passed": true
+    },
+    {
+      "name": "interrupted transition journal blocks promotion; explicit preview restoration preserves its history",
+      "passed": true
+    },
+    {
+      "name": "failed first production acceptance has no predecessor; explicit preview restoration succeeds",
+      "passed": true
+    },
+    {
+      "name": "preview to production success with one application and separate environment history",
+      "passed": true
+    },
+    {
+      "name": "actual host guard blocks preview after production marker or accepted production history",
+      "passed": true
+    }
+  ],
+  "sharedEdgeRestarted": false,
+  "continuousMediaAndSentinelFailures": [],
+  "limitations": [
+    "This is an operator transition rehearsal, not another complete deployOnHost trust/image/capacity test; those remain covered by the canonical gate.",
+    "Trusted public TLS and the temporary production DNS override are checked separately on the live host."
+  ],
+  "publicDNS": "unchanged",
+  "liveHost": "unchanged",
+  "temporaryResources": "Removed only rehearsal containers, network and media volume; live services unchanged."
+}

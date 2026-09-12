@@ -281,7 +281,7 @@ Run `pnpm verify`. External validator/client results are provisional until repea
 
 ### M6 — Cutover and WordPress retirement
 
-**Cutover preparation authorized on 2026-09-12:** [M06-cutover-and-retirement.md](docs/milestones/M06-cutover-and-retirement.md). The draft covers final archive reconciliation, remaining R1 acceptance, the single-slot preview-to-production transition, DNS/local resolver changes, first-production fallback, observation, and service retirement. The owner confirmed on 2026-09-12 that WordPress is unchanged and can stay frozen. The owner chose to proceed with the current player; M7 follows production cutover.
+**Production cutover completed on 2026-09-12; observation and retirement remain open:** [M06-cutover-and-retirement.md](docs/milestones/M06-cutover-and-retirement.md). Release `cd96435205764c51771f4d49292df259adab89cd` now serves the public website and canonical feed/media hosts. Candidate/public audits, the external RSS validator, and the production backup passed. WordPress stays frozen and running for fallback; the existing-subscription comparison was unavailable, and observation/retirement are not marked complete. The owner chose to proceed with the current player; M7 follows production cutover.
 
 **Outcome:** the public domain serves the verified replacement and existing subscribers retain their episode identities and audio access.
 
