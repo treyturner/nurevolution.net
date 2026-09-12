@@ -5,7 +5,7 @@ Every episode URL selects an episode in the same shared interface. `/` selects t
 ## Listening and navigation
 
 - Fresh loads, refreshes, and new tabs start at zero and stay paused. There is no local playback restoration in M4.
-- Paused episodes show “Press Play to listen.” immediately, even if the browser delays metadata preloading. Loading and buffering messages appear during playback attempts.
+- Every selection loads the audio's metadata while staying paused unless playback was already active. “Loading audio…” remains until the browser has a finite, positive duration; then paused episodes show “Press Play to listen.” The player requests automatic preloading until metadata arrives and reduces it afterward. Ten seconds without loading progress triggers one automatic retry; another stall exposes “Retry audio”. Source changes and disposal cancel pending recovery.
 - Selecting another episode starts it at zero. Active playback attempts to continue; paused playback stays paused. Selecting the current episode preserves its source, time, and playback state.
 - Episode links add browser history entries. Back/Forward selects the addressed episode with the same active/paused rule. Progress never changes the URL.
 - Native controls provide playback, seeking, and platform-supported volume. The selected episode stops at its natural end. Interactive tracks, custom controls, automatic sequencing, and remembered position remain M7.

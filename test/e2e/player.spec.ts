@@ -4,7 +4,7 @@ import { mediaBaseURL } from '../../playwright.config'
 
 test.beforeEach(async ({ page }) => stubArchiveMedia(page))
 
-test('offers Play before delayed metadata arrives and reports buffering only after playback starts', async ({
+test('keeps loading until metadata arrives, with playback still paused', async ({
   page,
 }) => {
   let release!: () => void
@@ -23,6 +23,13 @@ test('offers Play before delayed metadata arrives and reports buffering only aft
     const audio = page.locator('audio')
     await expect(audio).toHaveJSProperty('readyState', 0)
     await expect(audio).toHaveJSProperty('paused', true)
+    await expect(page.locator('.media-status')).toHaveText('Loading audio…')
+    release()
+    await ready(page)
+    expect(
+      await audio.evaluate((a: HTMLAudioElement) => a.duration),
+    ).toBeGreaterThan(0)
+    await expect(audio).toHaveJSProperty('paused', true)
     await expect(page.locator('.media-status')).toHaveText(
       'Press Play to listen.',
     )
@@ -31,10 +38,53 @@ test('offers Play before delayed metadata arrives and reports buffering only aft
       a.loop = true
       void a.play()
     })
-    await expect(page.locator('.media-status')).toHaveText('Buffering…')
-    release()
     await expect(page.locator('.media-status')).toHaveText('Playing')
     await audio.evaluate((a: HTMLAudioElement) => a.pause())
+    await expect(page.locator('.media-status')).toHaveText(
+      'Press Play to listen.',
+    )
+  } finally {
+    release()
+  }
+})
+
+test('recovers stalled metadata automatically and shows duration without a Play request', async ({
+  page,
+}) => {
+  await page.clock.install()
+  let release!: () => void
+  let requested!: () => void
+  const gate = new Promise<void>((resolve) => {
+    release = resolve
+  })
+  const firstRequest = new Promise<void>((resolve) => {
+    requested = resolve
+  })
+  let attempts = 0
+  await page.route('https://podcast.nurevolution.net/**', async (route) => {
+    if (++attempts === 1) {
+      requested()
+      await gate
+      await route.abort()
+    } else await route.fallback()
+  })
+  try {
+    await page.goto('/episodes/trey-turner-lost-in-translation', {
+      waitUntil: 'domcontentloaded',
+    })
+    await hydrated(page)
+    await firstRequest
+    const audio = page.locator('audio')
+    await expect(audio).toHaveJSProperty('readyState', 0)
+    await expect(page.locator('.media-status')).toHaveText('Loading audio…')
+    await page.clock.fastForward(10_000)
+    await ready(page)
+    expect(attempts).toBeGreaterThanOrEqual(2)
+    expect(
+      await audio.evaluate((a: HTMLAudioElement) => a.duration),
+    ).toBeGreaterThan(0)
+    await expect(audio).toHaveJSProperty('paused', true)
+    await expect(audio).toHaveJSProperty('currentTime', 0)
     await expect(page.locator('.media-status')).toHaveText(
       'Press Play to listen.',
     )

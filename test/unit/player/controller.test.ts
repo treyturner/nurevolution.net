@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { createAudioAdapter, type AudioPort } from '../../../app/services/audio'
 import { createPlayer } from '../../../app/services/player'
 
@@ -9,6 +9,8 @@ class Media extends EventTarget implements AudioPort {
   paused = true
   ended = false
   readyState = 0
+  duration = NaN
+  preload: AudioPort['preload'] = 'metadata'
   error: MediaError | null = null
   load = vi.fn(() => {
     this.currentSrc = ''
@@ -16,6 +18,7 @@ class Media extends EventTarget implements AudioPort {
     this.ended = false
     this.currentTime = 0
     this.readyState = 0
+    this.duration = NaN
     this.error = null
   })
   play = vi.fn(async () => {
@@ -32,6 +35,7 @@ class Media extends EventTarget implements AudioPort {
   ready() {
     this.currentSrc = this.src
     this.readyState = 4
+    this.duration = 120
     this.emit('loadedmetadata')
   }
 }
@@ -49,23 +53,119 @@ function setup() {
 }
 
 describe('persistent episode controller', () => {
-  it('offers Play while paused even when metadata never arrives, then reports actual buffering', async () => {
+  beforeEach(() => vi.useFakeTimers())
+  afterEach(() => {
+    vi.clearAllTimers()
+    vi.useRealTimers()
+  })
+  it('retries a stalled metadata request once without starting playback, then loads the real duration', () => {
+    const { media, changed, player } = setup()
+    player.select(a)
+    vi.advanceTimersByTime(10_000)
+    expect(media.load).toHaveBeenCalledTimes(2)
+    expect(media.paused).toBe(true)
+    expect(media.play).not.toHaveBeenCalled()
+    expect(changed).toHaveBeenLastCalledWith('loading')
+    media.ready()
+    vi.advanceTimersByTime(30_000)
+    expect(media.duration).toBe(120)
+    expect(media.preload).toBe('metadata')
+    expect(changed).toHaveBeenLastCalledWith('paused')
+    expect(media.load).toHaveBeenCalledTimes(2)
+    player.dispose()
+  })
+  it('allows slow downloads to keep progressing and waits for a finite duration', () => {
+    const { media, changed, player } = setup()
+    player.select(a)
+    media.currentSrc = a.url
+    media.readyState = 1
+    media.duration = Infinity
+    media.emit('loadedmetadata')
+    expect(changed).toHaveBeenLastCalledWith('loading')
+    for (let i = 0; i < 4; i++) {
+      vi.advanceTimersByTime(9_000)
+      media.emit('progress')
+    }
+    expect(media.load).toHaveBeenCalledOnce()
+    media.duration = 120
+    media.emit('durationchange')
+    vi.advanceTimersByTime(20_000)
+    expect(changed).toHaveBeenLastCalledWith('paused')
+    expect(media.load).toHaveBeenCalledOnce()
+    player.dispose()
+  })
+  it('bounds automatic retries and preserves the retry action through queued pause/progress events', () => {
+    const { media, changed, player } = setup()
+    player.select(a)
+    vi.advanceTimersByTime(20_000)
+    expect(changed).toHaveBeenLastCalledWith('error')
+    media.emit('pause')
+    media.emit('progress')
+    vi.advanceTimersByTime(60_000)
+    expect(changed).toHaveBeenLastCalledWith('error')
+    expect(media.load).toHaveBeenCalledTimes(2)
+    expect(media.preload).toBe('metadata')
+    player.retry()
+    expect(changed).toHaveBeenLastCalledWith('loading')
+    vi.advanceTimersByTime(10_000)
+    expect(media.load).toHaveBeenCalledTimes(4)
+    media.ready()
+    expect(media.play).not.toHaveBeenCalled()
+    player.dispose()
+  })
+  it('cancels obsolete recovery on selection, clearing, native errors, and disposal', () => {
+    const { media, player } = setup()
+    player.select(a)
+    vi.advanceTimersByTime(9_000)
+    player.select(b)
+    vi.advanceTimersByTime(1_000)
+    expect(media.load).toHaveBeenCalledTimes(2)
+    player.select(null)
+    vi.advanceTimersByTime(20_000)
+    expect(media.load).toHaveBeenCalledTimes(2)
+    player.select(c)
+    media.error = { code: 2 } as MediaError
+    media.emit('error')
+    vi.advanceTimersByTime(20_000)
+    expect(media.load).toHaveBeenCalledTimes(3)
+    player.retry()
+    player.dispose()
+    vi.advanceTimersByTime(20_000)
+    expect(media.load).toHaveBeenCalledTimes(4)
+  })
+  it('recovers a source that never became current and accepts metadata even if its event was missed', () => {
+    const { media, changed, player } = setup()
+    player.select(a)
+    media.currentSrc = b.url
+    vi.advanceTimersByTime(10_000)
+    expect(media.load).toHaveBeenCalledTimes(2)
+    media.currentSrc = a.url
+    media.readyState = 1
+    media.duration = 120
+    vi.advanceTimersByTime(10_000)
+    expect(changed).toHaveBeenLastCalledWith('paused')
+    expect(media.preload).toBe('metadata')
+    player.dispose()
+  })
+  it('loads metadata before offering Play and reports actual buffering after playback is requested', async () => {
     const { media, changed, player } = setup()
     player.select(a)
     expect(media.readyState).toBe(0)
-    expect(changed).toHaveBeenLastCalledWith('paused')
+    expect(changed).toHaveBeenLastCalledWith('loading')
+    expect(media.preload).toBe('auto')
     media.emit('suspend')
     player.select(b)
-    expect(changed).toHaveBeenLastCalledWith('paused')
+    expect(changed).toHaveBeenLastCalledWith('loading')
     expect(media.play).not.toHaveBeenCalled()
     await media.play()
     expect(changed).toHaveBeenLastCalledWith('buffering')
     media.ready()
     media.emit('playing')
     expect(changed).toHaveBeenLastCalledWith('playing')
+    expect(media.preload).toBe('metadata')
     player.retry()
     expect(media.readyState).toBe(0)
-    expect(changed).toHaveBeenLastCalledWith('paused')
+    expect(changed).toHaveBeenLastCalledWith('loading')
     expect(media.play).toHaveBeenCalledOnce()
     player.dispose()
   })
@@ -163,7 +263,7 @@ describe('persistent episode controller', () => {
     media.currentSrc = b.url
     media.error = { code: 2 } as MediaError
     media.emit('error')
-    expect(changed).toHaveBeenLastCalledWith('paused')
+    expect(changed).toHaveBeenLastCalledWith('loading')
     media.currentSrc = a.url
     media.emit('error')
     expect(changed).toHaveBeenLastCalledWith('error')
