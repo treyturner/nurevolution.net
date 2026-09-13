@@ -159,13 +159,13 @@ it('connects manual sequencing, automatic completion, and single-source restart 
   )
   const older = state.value.model!.episodes[index + 1]!
   const newer = state.value.model!.episodes[index - 1]!
-  await button('Older episode').trigger('click')
+  await button('Next episode').trigger('click')
   await vi.waitFor(() => expect(state.value.model!.selected!.id).toBe(older.id))
-  await button('Newer episode').trigger('click')
+  await button('Previous episode').trigger('click')
   await vi.waitFor(() =>
     expect(state.value.model!.selected!.id).toBe(selected.id),
   )
-  await wrapper.get('select').setValue('newer')
+  await wrapper.get('.episode-sort').trigger('click')
   await wrapper.get('[aria-label="Play"]').trigger('click')
   const audio = wrapper.get('audio')
   ended = true
@@ -180,7 +180,7 @@ it('connects manual sequencing, automatic completion, and single-source restart 
   }
   audio.element.currentTime = 12
   await audio.trigger('timeupdate')
-  await button('Older episode').trigger('click')
+  await button('Next episode').trigger('click')
   expect(audio.element.currentTime).toBe(0)
   expect(paused).toBe(true)
   wrapper.unmount()

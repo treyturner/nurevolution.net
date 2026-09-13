@@ -616,22 +616,43 @@ button.track-row:disabled {
   }
 }
 
-.episode-controls label {
+.episode-list-heading {
   display: flex;
-  flex-direction: column;
-  gap: 0.35rem;
-  font-size: 0.8rem;
-  max-width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
 }
-.episode-controls select {
+.episode-list-heading h2 {
+  margin: 0;
+}
+.episode-sort {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 44px;
+  width: 44px;
+  height: 44px;
+  margin-block: -8px;
   font: inherit;
-  min-height: 44px;
-  max-width: 100%;
-  padding: 0.4rem;
+  padding: 0;
+  background: transparent;
+  color: var(--muted);
+  border: 0;
+  border-radius: 0.3rem;
+  cursor: pointer;
+}
+.episode-sort:hover {
+  color: var(--focus-color);
   background: #202630;
-  color: #f1f3f6;
-  border: 1px solid #455976;
-  border-radius: 0.4rem;
+}
+.episode-sort[aria-disabled='true'] {
+  opacity: 0.45;
+  cursor: default;
+}
+.episode-sort svg {
+  width: 22px;
+  height: 22px;
 }
 
 @media (max-width: 420px) {

@@ -46,6 +46,9 @@ function harness(
       const player = usePodcastPlayer(() => episode, {
         pending: false,
         neighbor: () => null,
+        episodes: [],
+        sortOrder: 'newest-first',
+        toggleSort: () => {},
         move: async () => 'failed',
         waitForSelection: async () => true,
         ...navigation,
@@ -248,6 +251,9 @@ it('persists zero when Retry discards a pending restore and when the same ID rec
           restore: async () => 'restored',
           pending: false,
           neighbor: () => null,
+          episodes: [],
+          sortOrder: 'newest-first',
+          toggleSort: () => {},
           move: async () => 'failed',
           waitForSelection: async () => true,
         })

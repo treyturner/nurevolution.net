@@ -1,7 +1,4 @@
-import {
-  createEpisodeSequencer,
-  type EpisodeDirection,
-} from '../services/episode-sequencing'
+import { createEpisodeSequencer } from '../services/episode-sequencing'
 import type { ComponentPublicInstance } from 'vue'
 import { trackNavigation } from '../services/track-navigation'
 import { createAudioAdapter, type AudioEvent } from '../services/audio'
@@ -48,6 +45,7 @@ export function usePodcastPlayer(
   let controller: ReturnType<typeof createPlayer> | undefined
   let storage: ReturnType<typeof createPlaybackStorage> | undefined
   let bootstrapped = false
+  let playbackStarted = false
   let disposed = false
   let suspended = false
   let savedId: string | null = null
@@ -159,6 +157,7 @@ export function usePodcastPlayer(
       () => {},
       (snapshot, event) => {
         Object.assign(state, snapshot)
+        if (snapshot.status === 'playing') playbackStarted = true
         if (
           sequence.snapshot().continuing &&
           (snapshot.status === 'error' || snapshot.status === 'blocked')
@@ -269,9 +268,28 @@ export function usePodcastPlayer(
       void sequenceRevision.value
       return sequence.snapshot()
     },
-    olderEpisode: () => sequence.manual('older'),
-    newerEpisode: () => sequence.manual('newer'),
-    setOrder: (direction: EpisodeDirection) => sequence.setOrder(direction),
+    previousEpisode: () => sequence.manual('previous'),
+    nextEpisode: () => sequence.manual('next'),
+    get sortOrder() {
+      return navigation?.sortOrder ?? 'newest-first'
+    },
+    async toggleSort() {
+      if (
+        !navigation ||
+        !bootstrapped ||
+        state.restoring ||
+        sequence.snapshot().busy ||
+        navigation.episodes.length < 2
+      )
+        return
+      const selectFirst =
+        navigation.episodes[0]?.id === episode()?.id &&
+        !playbackStarted &&
+        !state.wantsPlay
+      navigation.toggleSort()
+      // The unplayed first episode is now last; Next wraps to the new first.
+      if (selectFirst) await sequence.manual('next')
+    },
     get tracks() {
       return { ...tracks.value, current: currentTrack.value }
     },

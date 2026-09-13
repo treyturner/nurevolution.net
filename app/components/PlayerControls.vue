@@ -178,9 +178,9 @@ watch(
           !player.sequencing.available ||
           player.sequencing.busy
         "
-        @click="player.olderEpisode()"
+        @click="player.previousEpisode()"
       >
-        Older episode
+        Previous episode
       </button>
       <button
         type="button"
@@ -190,25 +190,10 @@ watch(
           !player.sequencing.available ||
           player.sequencing.busy
         "
-        @click="player.newerEpisode()"
+        @click="player.nextEpisode()"
       >
-        Newer episode
+        Next episode
       </button>
-      <label
-        >Automatic playback order
-        <select
-          :value="player.sequencing.order"
-          :disabled="!player.sequencing.available"
-          @change="
-            player.setOrder(
-              ($event.target as HTMLSelectElement).value as 'older' | 'newer',
-            )
-          "
-        >
-          <option value="older">Newer to older</option>
-          <option value="newer">Older to newer</option>
-        </select>
-      </label>
     </div>
     <div class="volume-row">
       <button

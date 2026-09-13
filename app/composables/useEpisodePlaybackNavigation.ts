@@ -1,7 +1,9 @@
 import {
   episodeNeighbor,
+  orderedEpisodes,
   type EpisodeDirection,
   type EpisodeMoveResult,
+  type EpisodeSort,
 } from '../services/episode-sequencing'
 import type { EpisodeSummary } from '../../shared/content/public'
 export type RestoreResult = 'restored' | 'missing' | 'failed' | 'cancelled'
@@ -10,6 +12,10 @@ export function useEpisodePlaybackNavigation() {
   const nuxt = useNuxtApp()
   const state = useEpisodePage()
   const router = useRouter()
+  const sortOrder = ref<EpisodeSort>('newest-first')
+  const episodes = computed(() =>
+    orderedEpisodes(state.value.model?.episodes ?? [], sortOrder.value),
+  )
   let stopMove: (() => void) | undefined
   let stopSelectionWait: (() => void) | undefined
   onBeforeUnmount(() => {
@@ -49,6 +55,16 @@ export function useEpisodePlaybackNavigation() {
     })
   }
   return {
+    get sortOrder() {
+      return sortOrder.value
+    },
+    get episodes() {
+      return episodes.value
+    },
+    toggleSort() {
+      sortOrder.value =
+        sortOrder.value === 'newest-first' ? 'oldest-first' : 'newest-first'
+    },
     isRoot: () => router.currentRoute.value.path === '/',
     waitForSelection(): Promise<boolean> {
       if (!state.value.pendingPath)
@@ -74,7 +90,7 @@ export function useEpisodePlaybackNavigation() {
     },
     neighbor: (direction: EpisodeDirection) =>
       episodeNeighbor(
-        state.value.model?.episodes ?? [],
+        episodes.value,
         state.value.model?.selected?.id ?? null,
         direction,
       ),
