@@ -1,6 +1,6 @@
 # M7 — Rich player, interactive tracklists, and restoration
 
-Status: **Partially implemented; the playback, seek, and storage foundations are under PR review.** The owner authorized implementation and sequential PR review/merge cycles on 2026-09-13, with production deployment expressly prohibited. Restoration wiring and subsequent UI/sequencing slices follow. Prepared 2026-09-13 on `feat/m7-player-enhancements`, created from `main` at `f33d001a9427f35612ad1d2d3290929e2129ca0a` after fetching and confirming equality with `origin/main`.
+Status: **Implementation in progress, authorized by the owner on 2026-09-13.** The original decision-complete plan below was prepared on `feat/m7-player-enhancements`, created from `main` at `f33d001a9427f35612ad1d2d3290929e2129ca0a` after fetching and confirming equality with `origin/main`. The owner authorized sequential PR review/merge cycles and a complete development-server handoff, with production deployment expressly prohibited.
 
 Roadmap: [M7](../../ROADMAP.md#m7--rich-player-interactive-tracklists-and-restoration). Prerequisites: [M4 player](M04-archive-player.md), the existing [player guide](../PLAYER.md), and confirmed roadmap decisions D01/D02. The owner's request starts M7 planning while [M6 observation and retirement](M06-cutover-and-retirement.md) remain open. M6 retirement is not an implementation prerequisite; its unfinished checks remain in M6.
 
@@ -8,7 +8,7 @@ Roadmap: [M7](../../ROADMAP.md#m7--rich-player-interactive-tracklists-and-restor
 
 Deliver one persistent, accessible player with custom playback/seek/volume controls, seekable timed tracks, position-based highlighting, older/newer episode controls, automatic sequencing, and local restoration within a 24-hour visit window. Fresh documents always start paused, including restored positions and explicit episode links.
 
-The following implementation contract was accepted by the owner's instruction to implement M7. Earlier owner-confirmed behavior is distinguished from the choices proposed in this plan. There are no unanswered product or architecture questions required to proceed.
+The following choices are the implementation contract accepted by the owner's instruction to implement M7. Earlier owner-confirmed behavior is identified separately from decisions proposed in this plan. There are no unanswered product or architecture questions required to begin implementation.
 
 | Area            | Decision                                                                                                                                                                                                                                                               |
 | --------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -252,4 +252,14 @@ During implementation, update `docs/PLAYER.md`, the README's current behavior, t
 
 M7 implementation is complete when all four slices are implemented, the canonical gate passes, owner interface review is recorded, and device/accessibility results or explicitly accepted limitations are documented. Deployment uses the existing verified immutable application image and production promotion procedure; no media, Caddy, DNS, workflow, or host configuration change is expected. Production is the only hosted environment; review implementation through local/workspace servers. Publish only as a separately authorized release after that concrete result is ready. A same-environment rollback restores the prior application; the additive local keys are ignored by the older player and leave content/feed/media untouched.
 
-The initial planning task delivered the branch, plan, links, and documentation checks. Subsequent owner authorization covers implementation, commits, pushes, review cycles, and merging, with one open PR at a time. Production deployment and M6 retirement remain excluded. PR #20 adds the controller/seek/storage foundations; the visible native player behavior is unchanged until the restoration integration and custom-control slices follow.
+The initial planning task delivered the feature branch, plan, navigation links, and documentation checks without implementation. The subsequent owner instruction authorizes implementation, commits, pushes, PR review, and merging, with only one PR open at a time. Production deployment and M6 retirement remain outside this task.
+
+## Implementation progress — 2026-09-13
+
+Slice 1 implements the layout-owned session, finite-duration restoration seek, explicit play/pause cancellation, versioned one-slot persistence, visit lifecycle, and bounded/cancellable root restoration. Existing native controls remain until slice 2. `player-seek.ts` isolates pending-seek handling from source transitions; this is a focused implementation refinement of the planned controller/navigation split.
+
+Client navigation now uses a fresh public-data reader for each attempt. Reusing a keyed async-data handler with a captured AbortSignal caused revisits to inherit a previously cancelled signal; the existing Back/Forward and retry browser regressions exposed it. SSR still uses keyed async data, and hydration uses its already-seeded page model. Browser media stubs now honor byte-range requests so paused seeks are exercised against usable media delivery.
+
+Verification and PR acceptance will be recorded here as they complete. Physical-device acceptance belongs to the final development review; none is claimed by the automated results.
+
+Restoration review follow-ups preserve the saved slot while a superseding manual request is unresolved or fails, suppress deferred native teardown pauses across cached-page returns, and persist accepted retry/replacement-source resets. The runtime lifecycle harness explicitly supplies `persisted=true` because Happy DOM aliases PageTransitionEvent to Event and ignores that constructor option. These are controlled lifecycle regressions, not a claim of physical-device cache behavior. All 30 restoration browser cases passed across the three engines, and the unchanged coverage thresholds passed after the follow-ups.

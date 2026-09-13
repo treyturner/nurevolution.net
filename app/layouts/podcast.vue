@@ -2,6 +2,11 @@
 import { episodeHead } from '../services/episode-page'
 import RssIcon from '../components/RssIcon.vue'
 const state = useEpisodePage()
+const navigation = useEpisodePlaybackNavigation()
+const player = usePodcastPlayer(
+  () => state.value.model?.selected ?? null,
+  navigation,
+)
 const currentYear = useState('copyright-year', () =>
   new Date().getUTCFullYear(),
 )
@@ -45,7 +50,7 @@ useHead(() =>
     <p id="episode-selection-status" class="sr-only" role="status">
       {{ announcement }}
     </p>
-    <ArchivePlayer :episode="state.model.selected" />
+    <ArchivePlayer :episode="state.model.selected" :player="player" />
     <ArchiveLists
       :episodes="state.model.episodes"
       :site-url="state.model.show.siteUrl"

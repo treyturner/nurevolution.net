@@ -27,7 +27,7 @@ The version marker in `.nuxtrc` records the completed Nuxt test-utils setup so v
 pnpm dev
 ```
 
-Open the local URL printed by Nuxt. Vue and CSS edits update through HMR; changes to project configuration may restart the development server. Stop it with Ctrl-C. The archive selects the latest episode paused; direct episode URLs select their episode in the same shared player. Mobile uses Episodes/Tracklist tabs.
+Open the local URL printed by Nuxt. Vue and CSS edits update through HMR; changes to project configuration may restart the development server. Stop it with Ctrl-C. The archive restores its locally saved episode/position within 24 hours of the last document visit, always paused; otherwise it selects the latest episode. Direct episode URLs take precedence. Mobile uses Episodes/Tracklist tabs.
 
 | Command                                          | Behavior                                                                                                                                                                   |
 | ------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |

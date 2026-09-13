@@ -1,11 +1,14 @@
 <script setup lang="ts">
 import type { EpisodeDetail } from '../../shared/content/public'
 import { formatDate, formatTime } from '../services/episode-page'
-import { usePodcastPlayer } from '../composables/usePodcastPlayer'
+import type { PodcastPlayer } from '../composables/usePodcastPlayer'
 import { deliveryAssetUrl } from '../services/delivery-assets'
 import DownloadIcon from './DownloadIcon.vue'
 import ArtworkDialog from './ArtworkDialog.vue'
-const props = defineProps<{ episode: EpisodeDetail | null }>()
+const props = defineProps<{
+  episode: EpisodeDetail | null
+  player: PodcastPlayer
+}>()
 const config = useRuntimeConfig()
 const artworkUrl = computed(() =>
   props.episode
@@ -16,7 +19,8 @@ const artworkUrl = computed(() =>
       )
     : '',
 )
-const { element, status, retry } = usePodcastPlayer(() => props.episode)
+const status = computed(() => props.player.state.status)
+const retry = () => props.player.retry()
 const failedArtwork = ref(false)
 const artworkOpen = ref(false)
 const artworkTrigger = ref<HTMLButtonElement | null>(null)
@@ -84,7 +88,7 @@ const messages = {
       </p>
       <p v-else>No episodes are available yet.</p>
       <audio
-        ref="element"
+        :ref="player.bindAudio"
         controls
         controlslist="nodownload noplaybackrate"
         preload="metadata"
@@ -96,7 +100,17 @@ const messages = {
         "
       />
       <div class="player-actions">
-        <p id="playback-status" class="media-status">{{ messages[status] }}</p>
+        <p id="playback-status" class="media-status">
+          {{
+            player.state.restoring ? 'Restoring your place…' : messages[status]
+          }}
+        </p>
+        <p
+          v-if="player.state.restoreMessage || player.state.seekMessage"
+          role="status"
+        >
+          {{ player.state.restoreMessage || player.state.seekMessage }}
+        </p>
         <button
           v-if="status === 'error' || status === 'delayed'"
           type="button"

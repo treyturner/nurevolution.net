@@ -284,9 +284,14 @@ export function createPlayer(
     ] as const
   ).map((event) =>
     audio.subscribe(event, () => {
-      if (!current()) return
+      const actual = current()
+      if (!actual) return
+      const sourceResetPause =
+        event === 'pause' &&
+        (!actual.paused || (resetPausePending && !playObservedSinceLoad))
       observe(event)
-      publish(event)
+      // A source-reset pause is not fresh listener activity.
+      publish(sourceResetPause ? undefined : event)
     }),
   )
   function load(next: PlayerSource, continuePlaying: boolean) {

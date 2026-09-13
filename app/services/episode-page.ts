@@ -36,18 +36,39 @@ export async function loadEpisodePage(
 /** Stage independently of the displayed episode; only a successful route commits. */
 export function createEpisodeNavigation(
   state: EpisodePageState,
-  load: (path: string, slug?: string) => Promise<EpisodePage>,
+  load: (
+    path: string,
+    slug?: string,
+    signal?: AbortSignal,
+  ) => Promise<EpisodePage>,
 ) {
   let generation = 0
+  let controller: AbortController | undefined
+  const preparing = new Set<(path: string, token: number) => void>()
   let staged: { path: string; model: EpisodePage } | undefined
   return {
+    onPrepare(listener: (path: string, token: number) => void) {
+      preparing.add(listener)
+      return () => preparing.delete(listener)
+    },
+    cancel(token: number) {
+      if (token !== generation) return
+      generation++
+      controller?.abort()
+      staged = undefined
+      state.pendingPath = null
+      state.failedPath = null
+    },
     async prepare(path: string, slug?: string) {
       const own = ++generation
+      controller?.abort()
+      controller = new AbortController()
       staged = undefined
       state.pendingPath = path
       state.failedPath = null
+      for (const listener of preparing) listener(path, own)
       try {
-        const model = await load(path, slug)
+        const model = await load(path, slug, controller.signal)
         if (own !== generation) return false
         staged = { path, model }
         return own

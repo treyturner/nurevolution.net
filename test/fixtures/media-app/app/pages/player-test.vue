@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import ArchivePlayer from '../../../../../app/components/ArchivePlayer.vue'
+import ArchivePlayer from '../../../PlayerHarness.vue'
 import ArchiveLists from '../../../../../app/components/ArchiveLists.vue'
 import { playerEpisodes } from '../../data/player'
 const siteUrl = useRequestURL().origin
