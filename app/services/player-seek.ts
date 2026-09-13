@@ -89,9 +89,8 @@ export function createPlayerSeek(audio: AudioAdapter, changed: () => void) {
       const target = seekTarget(pending, snapshot.duration, snapshot.seekable)
       if (applied !== target) {
         applied = target
-        pending = target
-        clearTimeout(timer)
-        timer = setTimeout(fail, 5000)
+        // Retain the requested value while bounds evolve, within one deadline.
+        timer ??= setTimeout(fail, 5000)
         try {
           audio.seek(target)
         } catch {

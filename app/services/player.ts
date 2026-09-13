@@ -234,7 +234,10 @@ export function createPlayer(
       (event === 'play' || event === 'playing' || event === 'waiting') &&
       !snapshot.paused
     ) {
-      if (pendingPlays.size && !wantsPlay) {
+      // Once a run has already emitted playback events, a subsequent native
+      // play event is a fresh request. WebKit may leave the earlier promise open.
+      const nativeRestart = event === 'play' && playObservedSinceLoad
+      if (pendingPlays.size && !wantsPlay && !nativeRestart) {
         audio.pause()
         return
       }
@@ -311,6 +314,7 @@ export function createPlayer(
     select(next: PlayerSource | null, options: PlayerSelection = {}) {
       if (disposed || (next?.id === source?.id && next?.url === source?.url))
         return
+      if (options.paused) cancelPlay()
       seek.reset()
       if (!next) {
         stopMetadataTimer()
