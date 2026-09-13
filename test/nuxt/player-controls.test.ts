@@ -24,6 +24,10 @@ function fixture() {
   })
   const player: PodcastPlayer = {
     state,
+    tracks: { previous: null, next: null, current: null, positions: [] },
+    seekTrack: vi.fn(),
+    previousTrack: vi.fn(),
+    nextTrack: vi.fn(),
     bindAudio: vi.fn(),
     retry: vi.fn(),
     play: vi.fn(() => {

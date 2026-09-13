@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import type { EpisodeDetail, EpisodeSummary } from '../../shared/content/public'
+import type { PodcastPlayer } from '../composables/usePodcastPlayer'
 import EpisodeList from './EpisodeList.vue'
 import EpisodeTracklist from './EpisodeTracklist.vue'
 defineProps<{
+  player?: PodcastPlayer
   episodes: EpisodeSummary[]
   siteUrl: string
   selected: EpisodeDetail | null
@@ -99,7 +101,11 @@ function key(event: KeyboardEvent) {
         <h2 id="tracks-heading">
           Tracklist <span v-if="selected">{{ selected.tracks.length }}</span>
         </h2>
-        <EpisodeTracklist v-if="selected" :tracks="selected.tracks" />
+        <EpisodeTracklist
+          v-if="selected"
+          :tracks="selected.tracks"
+          :player="player"
+        />
         <p v-else class="empty-tracks">
           Choose an episode to see its tracklist.
         </p>
