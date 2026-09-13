@@ -606,7 +606,7 @@ Questions likely to require resolution include:
 
 ## Design
 
-- Is the existing Nurevolution visual identity being retained?
+- Is the existing nurevolution visual identity being retained?
 - Is there existing artwork/logo material that should drive the new design?
 - Should the aesthetic remain tied to electronic music / breakbeat culture?
 - Is dark mode preferred, mandatory, or optional?

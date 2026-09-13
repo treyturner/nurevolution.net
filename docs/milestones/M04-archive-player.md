@@ -71,7 +71,7 @@ All model and controller ownership must be per Nuxt application/request. Do not 
 
 ### SSR metadata and links
 
-- Root title: `Nurevolution — Podcast archive`; episode title: `<artist> — <title> | Nurevolution`. Use normal escaped head bindings, a plain-text description, and a canonical link resolved against validated `show.siteUrl`, never the request Host header.
+- Root title: `nurevolution — Podcast archive`; episode title: `<artist> — <title> | nurevolution`. Use normal escaped head bindings, a plain-text description, and a canonical link resolved against validated `show.siteUrl`, never the request Host header.
 - Include `link rel="alternate" type="application/rss+xml"` with `show.feedUrl`, and a visible “Subscribe via RSS” anchor. Do not replace it with an unsupported directory-subscription button.
 - Render actual episode links in the initial HTML. Use `NuxtLink` with each saved `path`, preserve modifier-click/new-tab semantics, and disable automatic prefetch of all episode details. Selecting the same episode may update `/` to its canonical path without reloading audio or resetting time.
 - Render one current-episode H1, labelled episode/tracklist regions, artist, publication date, and duration when known. Format dates explicitly in UTC so SSR and hydration agree; do not assume IDs/slugs encode presentation dates. Unknown duration gets an honest unavailable label, not `0:00` or `NaN`.

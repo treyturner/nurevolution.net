@@ -31,13 +31,13 @@ Keep enough disk for both copies, images, logs, backups, and recovery. Serialize
 
 The website `/downloads/<slug>` returns a no-store 307 to the DNS-only media host. Its attachment route uses `application/octet-stream` plus the exact ASCII/UTF-8 filename disposition: WebKit otherwise opens redirected `audio/mpeg` as media. Original enclosure paths remain `audio/mpeg`, support HEAD/ranges/resume, and have no attachment disposition. Artwork retains its original MIME type. Unknown download/asset routes cannot fall through to Node or reveal arbitrary files.
 
-Run the explicit HTTP audit against the candidate preview names:
+Run the explicit HTTP audit against the production hosts:
 
 ```sh
 node /srv/nurevolution/tooling/deploy.mjs audit-http \
   --manifest RELEASE_BUNDLE/manifest.json \
-  --web https://preview.nurevolution.net \
-  --media https://podcast-preview.nurevolution.net
+  --web https://nurevolution.net \
+  --media https://podcast.nurevolution.net
 ```
 
 This checks every public asset's HEAD/range metadata and all attachment mappings. `--full` additionally downloads and verifies every public asset, about 6.34 GiB; use it deliberately and record the transfer cost. For representative full/resume checks, use the largest MP3, apostrophe filename, and both Mega parts with `curl --resolve` to the candidate and compare SHA-256 against the manifest. A saved subset may be audited only if recorded as a subset, never represented as the complete archive. Keep private source paths out of public evidence.

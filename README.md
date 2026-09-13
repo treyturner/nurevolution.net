@@ -1,6 +1,6 @@
-# Nurevolution
+# nurevolution
 
-A podcast website rebuilt from WordPress, now serving [nurevolution.net](https://nurevolution.net/). M1–M4 provide the verified Nuxt application, 55-episode archive, compatible RSS feed, and shared player. M5 provides verified application/Caddy images and deployment/recovery tooling. [M6 production cutover](docs/milestones/M06-cutover-and-retirement.md) completed on 2026-09-12; production is active and preview is disabled. WordPress stays frozen and running for fallback while observation and retirement remain open. See [deployment operations](docs/DEPLOYMENT.md).
+A podcast website rebuilt from WordPress, now serving [nurevolution.net](https://nurevolution.net/). M1–M4 provide the verified Nuxt application, 55-episode archive, compatible RSS feed, and shared player. M5 provides verified application/Caddy images and deployment/recovery tooling. [M6 production cutover](docs/milestones/M06-cutover-and-retirement.md) completed on 2026-09-12; production is active. Development uses local/workspace servers; production is the only deployment environment. WordPress stays frozen and running for fallback while observation and retirement remain open. See [deployment operations](docs/DEPLOYMENT.md).
 
 See the [roadmap](ROADMAP.md), [M0 audit plan and evidence](docs/milestones/M00-migration-audit.md), [M1 completion record](docs/milestones/M01-foundation-and-verification.md), [M2 implementation and evidence](docs/milestones/M02-canonical-content.md), [M3 replacement RSS record](docs/milestones/M03-podcast-rss.md), [M4 archive/player plan](docs/milestones/M04-archive-player.md), [player behavior and delivery guide](docs/PLAYER.md), [content authoring guide](docs/CONTENT.md), and [feed validation guide](docs/FEED-VALIDATION.md).
 
