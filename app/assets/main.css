@@ -500,12 +500,44 @@ audio.custom-audio {
   pointer-events: none;
 }
 .track-list li {
+  border-bottom: 1px solid #222832;
+}
+.track-row {
   display: grid;
   grid-template-columns: 1.5rem minmax(0, 1fr) auto;
   align-items: start;
   gap: 0.7rem;
   padding: 0.7rem 0;
-  border-bottom: 1px solid #222832;
+  width: 100%;
+  text-align: left;
+}
+button.track-row {
+  border: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  min-height: 44px;
+}
+button.track-row:hover {
+  background: #202630;
+}
+button.track-row:focus-visible {
+  outline: 2px solid var(--focus-color);
+  outline-offset: -2px;
+}
+button.track-row:disabled {
+  cursor: default;
+  opacity: 0.6;
+}
+.track-current {
+  display: block;
+  color: #f1f3f6;
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+.track-list li[aria-current] {
+  border-left: 3px solid var(--focus-color);
+  padding-left: 0.4rem;
 }
 .track-number,
 .track-start {

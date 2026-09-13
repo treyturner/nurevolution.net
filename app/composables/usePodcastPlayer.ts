@@ -1,4 +1,5 @@
 import type { ComponentPublicInstance } from 'vue'
+import { trackNavigation } from '../services/track-navigation'
 import { createAudioAdapter, type AudioEvent } from '../services/audio'
 import { createPlayer, type PlayerSnapshot } from '../services/player'
 import {
@@ -215,8 +216,41 @@ export function usePodcastPlayer(
     for (const stop of cleanups) stop()
     controller?.dispose()
   })
+  const tracks = computed(() =>
+    trackNavigation(
+      episode()?.tracks ?? [],
+      state.pendingSeek ?? state.currentTime,
+      state.duration,
+    ),
+  )
+  const currentTrack = computed(
+    () =>
+      trackNavigation(
+        episode()?.tracks ?? [],
+        state.currentTime,
+        state.duration,
+      ).current,
+  )
   return {
     state: readonly(state),
+    get tracks() {
+      return { ...tracks.value, current: currentTrack.value }
+    },
+    seekTrack(position: number) {
+      if (!tracks.value.positions.includes(position)) return
+      const target = episode()?.tracks.find(
+        (track) => track.position === position,
+      )
+      if (target?.startTime !== null && target?.startTime !== undefined)
+        controller?.seek(target.startTime)
+    },
+    previousTrack() {
+      if (tracks.value.previous !== null)
+        controller?.seek(tracks.value.previous)
+    },
+    nextTrack() {
+      if (tracks.value.next !== null) controller?.seek(tracks.value.next)
+    },
     bindAudio(value: Element | ComponentPublicInstance | null) {
       element = value as HTMLAudioElement | null
     },

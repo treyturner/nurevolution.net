@@ -113,6 +113,14 @@ watch(
     <div class="transport-row">
       <button
         type="button"
+        aria-label="Previous track"
+        :disabled="!available || player.tracks.previous === null"
+        @click="player.previousTrack()"
+      >
+        Previous track
+      </button>
+      <button
+        type="button"
         aria-label="Back 30 seconds"
         :disabled="!seekable || (state.pendingSeek ?? state.currentTime) <= 0"
         @click="player.skip(-30)"
@@ -142,6 +150,14 @@ watch(
         @click="player.skip(30)"
       >
         +30<span class="seconds-label">s</span>
+      </button>
+      <button
+        type="button"
+        aria-label="Next track"
+        :disabled="!available || player.tracks.next === null"
+        @click="player.nextTrack()"
+      >
+        Next track
       </button>
     </div>
     <div class="volume-row">

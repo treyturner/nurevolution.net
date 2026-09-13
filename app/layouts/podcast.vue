@@ -52,6 +52,7 @@ useHead(() =>
     </p>
     <ArchivePlayer :episode="state.model.selected" :player="player" />
     <ArchiveLists
+      :player="player"
       :episodes="state.model.episodes"
       :site-url="state.model.show.siteUrl"
       :selected="state.model.selected"
