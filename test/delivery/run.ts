@@ -178,7 +178,7 @@ try {
   }, 30)
   await docker(['stop', bootstrap])
   console.log(
-    'Initial edge: account token format and issuance for all five hosts before routes passed (offline local CA)',
+    'Initial edge: account token format and issuance for all three canonical hosts before routes passed (offline local CA)',
   )
   await docker(['network', 'create', network])
   madeNetwork = true
