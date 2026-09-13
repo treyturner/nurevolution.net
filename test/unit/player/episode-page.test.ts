@@ -38,6 +38,34 @@ function deferred<T>() {
 }
 
 describe('episode page loading and navigation', () => {
+  it('cancels an owned restore request and aborts superseded requests without cancelling a newer navigation', async () => {
+    const s = state()
+    const first = deferred<typeof model>()
+    const signals: AbortSignal[] = []
+    const nav = createEpisodeNavigation(s, (_path, _slug, signal) => {
+      signals.push(signal!)
+      return first.promise
+    })
+    const prepared = vi.fn()
+    const unsubscribe = nav.onPrepare(prepared)
+    const old = nav.prepare('/old')
+    expect(prepared).toHaveBeenCalledWith('/old', 1)
+    const next = nav.prepare('/new')
+    expect(signals[0]!.aborted).toBe(true)
+    nav.cancel(1)
+    expect(s.pendingPath).toBe('/new')
+    nav.cancel(2)
+    expect(signals[1]!.aborted).toBe(true)
+    expect(s.pendingPath).toBeNull()
+    first.resolve(model)
+    expect(await old).toBe(false)
+    expect(await next).toBe(false)
+    nav.complete('/new', 2)
+    expect(s.model).toBeNull()
+    unsubscribe()
+    await nav.prepare('/final')
+    expect(prepared).toHaveBeenCalledTimes(2)
+  })
   it('loads only the requested or latest detail, and handles an empty archive', async () => {
     const reader = {
       show: async () => model.show,
