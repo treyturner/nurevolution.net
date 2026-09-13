@@ -1,0 +1,170 @@
+{
+  "schemaVersion": 1,
+  "observedAt": "2026-09-13T05:20:28.583199+00:00",
+  "scope": "Complete M7 implementation, local verification; PR review and owner device/interface acceptance are separate.",
+  "environment": "local development and isolated Docker delivery",
+  "sourceCommit": "025342e3bd90f7c5026de03a6eb091425e74191c",
+  "productionDeployed": false,
+  "command": "CI=1 NUREVOLUTION_DOCKER_ADDRESS=172.18.0.2 corepack pnpm verify",
+  "environmentNote": "The separate Docker daemon address was confirmed for this workspace; it is not a portable default.",
+  "versions": {
+    "node": "22.23.2",
+    "pnpm": "12.3.4",
+    "python": "3.14.4",
+    "nuxt": "4.5.2",
+    "vue": "3.5.42",
+    "typescript": "6.0.3",
+    "vitest": "4.1.11",
+    "playwright": "1.63.0",
+    "chromium": "153.0.8010.12",
+    "firefox": "155.0",
+    "webkit": "26.6"
+  },
+  "verification": {
+    "result": "passed",
+    "unitRuntimeTooling": {
+      "passed": 430,
+      "files": 40
+    },
+    "coveragePercent": {
+      "statements": 96.92,
+      "branches": 94.74,
+      "functions": 96.72,
+      "lines": 97.8
+    },
+    "coverageThresholdPercent": {
+      "statements": 95,
+      "branches": 90,
+      "functions": 95,
+      "lines": 95
+    },
+    "browser": {
+      "passed": 199,
+      "skipped": 2,
+      "skipNote": "The duplicate Firefox/WebKit checks of the same Node-output portability test are intentionally skipped; Chromium performs it."
+    },
+    "otherPassed": [
+      "format",
+      "lint",
+      "strict types",
+      "migration unit tests and inventory audit",
+      "operations unit tests",
+      "content, thumbnails and feed validation",
+      "production and media-fixture builds",
+      "Docker proxy, ranges/resume, downloads, restart isolation and exact tested image export"
+    ],
+    "reports": [
+      "/tmp/nurevolution-m7-final-review-verify.log",
+      "coverage/index.html",
+      "coverage/lcov.info",
+      "playwright-report/index.html"
+    ],
+    "reportNote": "Generated local reports are not committed. Each PR CI run independently verifies its submitted head and retains available reports as workflow artifacts."
+  },
+  "criteria": [
+    {
+      "ids": [
+        "M7-PAUSED",
+        "M7-RESTORE",
+        "M7-TABS",
+        "M7-SEEK",
+        "M7-TRACKS",
+        "M7-SEQUENCE",
+        "M7-RACES",
+        "M7-REGRESSION"
+      ],
+      "result": "passed",
+      "evidence": "Controlled unit/runtime regressions and complete three-engine production/fixture browser suite."
+    },
+    {
+      "ids": ["M7-VISITS"],
+      "result": "automated-passed; physical-pending",
+      "evidence": "Fake-clock visit boundaries and controlled prerender/BFCache lifecycle events, including delayed reset pauses. Happy DOM requires explicitly defining persisted=true. Physical cached-page behavior remains unobserved."
+    },
+    {
+      "ids": ["M7-VOLUME"],
+      "result": "automated-passed; physical-pending",
+      "evidence": "Independent capability/readback/ignored-write tests and real browser volume/mute inputs. Device loudness and hardware-button behavior are unobserved."
+    },
+    {
+      "ids": ["M7-A11Y"],
+      "result": "automated-and-visual-passed; assistive-technology-pending",
+      "evidence": "Keyboard controls, accessible labels/slider values, focus, mobile tabs, and 320-pixel enlarged-text reflow. No desktop screen reader, VoiceOver, or TalkBack session was performed."
+    }
+  ],
+  "manualDevelopmentObservations": {
+    "browser": "Linux HeadlessChrome 151.0.0.0 through the workspace browser",
+    "origin": "http://localhost:3001",
+    "episode": "/episodes/trey-turner-praxis",
+    "result": "passed",
+    "observations": [
+      "One paused audio element with native controls hidden after attachment.",
+      "Real archive MP3 duration 3396.349388 seconds.",
+      "Next track moved from 208.794059 to 395.481225 seconds while paused; marker changed from Air to Hani.",
+      "Opening root restored the canonical Praxis path and exact 395.481225-second position while paused.",
+      "Desktop 1365-pixel and mobile 320-pixel/200-percent text layouts inspected without horizontal page overflow."
+    ],
+    "screenshots": [".local/m7-desktop.png", ".local/m7-mobile-enlarged.png"],
+    "limitations": "Representative real-media seeks do not claim full-length playback of the archive or physical-device compatibility."
+  },
+  "ownerDevelopmentReview": {
+    "result": "pending",
+    "items": [
+      "Final interface and behavior tweaks on the development server.",
+      "Android Chrome/Brave and iPhone Safari media, volume, background/return checks.",
+      "Desktop screen reader and mobile VoiceOver or TalkBack observations."
+    ],
+    "note": "The owner requested an undeployed complete implementation for this final review. These observations are not represented as passed or as accepted limitations."
+  },
+  "acceptedEarlierPullRequests": [
+    {
+      "url": "https://github.com/treyturner/nurevolution.net/pull/20",
+      "acceptedHead": "9e4d197828fdc93d23424c759b26a76a0a2c38ef",
+      "mergeCommit": "70846ba91bbdd2526728ab6650994236062b58a2",
+      "reviewCompletedAt": "2026-09-13T03:55:27.952481Z",
+      "reviewer": "chatgpt-codex-connector",
+      "acceptance": "Completed review with no remaining findings and reviewer thumbs-up",
+      "resolvedInlineThreads": 9,
+      "ci": "https://github.com/treyturner/nurevolution.net/actions/runs/34736474708",
+      "ciResult": "passed"
+    },
+    {
+      "url": "https://github.com/treyturner/nurevolution.net/pull/21",
+      "acceptedHead": "339f0de76de510cbc159ca925225ec7a371ee010",
+      "mergeCommit": "27d654bea32a1be06a5de2e68e8f8ecd39b68707",
+      "reviewCompletedAt": "2026-09-13T04:46:07.403180Z",
+      "reviewer": "chatgpt-codex-connector",
+      "acceptance": "Completed review with no remaining findings and reviewer thumbs-up",
+      "resolvedInlineThreads": 6,
+      "ci": "https://github.com/treyturner/nurevolution.net/actions/runs/34738390512",
+      "ciResult": "passed"
+    },
+    {
+      "url": "https://github.com/treyturner/nurevolution.net/pull/22",
+      "acceptedHead": "c7f4899b82dee3d04c1b6c3e308f2944cd68a645",
+      "mergeCommit": "bc6d2be12c28e77b06116ff4359d8d94ab453cfc",
+      "reviewCompletedAt": "2026-09-13T05:10:31.277288Z",
+      "reviewer": "chatgpt-codex-connector",
+      "acceptance": "Completed review with no remaining findings and reviewer thumbs-up",
+      "resolvedInlineThreads": 3,
+      "ci": "https://github.com/treyturner/nurevolution.net/actions/runs/34739488371",
+      "ciResult": "passed"
+    },
+    {
+      "url": "https://github.com/treyturner/nurevolution.net/pull/23",
+      "acceptedHead": "afd21f74e972c3b059f6cbcd9157f0dab33a7277",
+      "mergeCommit": "da8e1a842ce25390e24ad13bfeaa70eaf5d5c9f7",
+      "reviewCompletedAt": "2026-09-13T05:17:32.725965Z",
+      "reviewer": "chatgpt-codex-connector",
+      "acceptance": "Completed review with no remaining findings and reviewer thumbs-up",
+      "resolvedInlineThreads": 0,
+      "ci": "https://github.com/treyturner/nurevolution.net/actions/runs/34739791019",
+      "ciResult": "passed"
+    }
+  ],
+  "finalImplementationReview": {
+    "url": "https://github.com/treyturner/nurevolution.net/pull/24",
+    "evidenceLocation": "The PR timeline records CI, reviewer acceptance at the final head, discussion resolutions, and merge after this evidence commit.",
+    "note": "Local verification is complete. This file does not claim acceptance of the commit that contains it before review occurs."
+  }
+}
