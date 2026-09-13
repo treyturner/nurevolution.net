@@ -1,8 +1,8 @@
 # nurevolution roadmap
 
-Status: M0–M4 are implemented and merged. M5 delivery, rollback, capacity, and independent recovery are rehearsed. [M6 production cutover](docs/milestones/M06-cutover-and-retirement.md) completed on 2026-09-12 with the merged player refinements, artwork thumbnails, copy links, and branding. Production is the only hosted environment; development uses local/workspace servers. WordPress remains frozen and running for fallback; observation, retirement, and explicitly unperformed client/recovery checks remain open. M7–M9 remain future work.
+Status: M0–M4 are implemented and merged. M5 delivery, rollback, capacity, and independent recovery are rehearsed. [M6 production cutover](docs/milestones/M06-cutover-and-retirement.md) completed on 2026-09-12 with the merged player refinements, artwork thumbnails, copy links, and branding. Production is the only hosted environment; development uses local/workspace servers. WordPress remains frozen and running for fallback; observation, retirement, and explicitly unperformed client/recovery checks remain open. [M7 has a decision-complete implementation plan for owner review](docs/milestones/M07-rich-player-and-restoration.md); M7–M9 implementation remains future work.
 
-Updated: 2026-09-12.
+Updated: 2026-09-13.
 
 Inputs: [project bootstrap](docs/BOOTSTRAP.md), the owner's product answers dated 2026-09-06, M0/M1 decisions and audit dated 2026-09-07, M2/M3 implementation and M4 planning evidence dated 2026-09-08, M4 implementation/mobile acceptance and M5 planning dated 2026-09-09, M5 live/recovery evidence dated 2026-09-11, and merged preview refinements plus M6 readiness inspection dated 2026-09-12.
 
@@ -141,7 +141,7 @@ Feed and media URLs must be usable by podcast clients without interactive browse
 
 ## 6. Milestone sequence
 
-M0–M4 are **implemented and merged**. M5 is **implemented with live rehearsal evidence and remaining acceptance items**. M6 **production cutover is complete, with observation and WordPress retirement open**; production is active, and M7–M9 implementation has not started. IDs remain stable.
+M0–M4 are **implemented and merged**. M5 is **implemented with live rehearsal evidence and remaining acceptance items**. M6 **production cutover is complete, with observation and WordPress retirement open**; production is active. M7 is **planned for owner review**; M7–M9 implementation has not started. IDs remain stable.
 
 Plans and completion evidence are available for [M0 — Migration audit](docs/milestones/M00-migration-audit.md) and [M1 — Foundation and verification](docs/milestones/M01-foundation-and-verification.md). The [M2 — Canonical content record](docs/milestones/M02-canonical-content.md) documents schemas, faithful import, protected edits, public data access, and completed acceptance checks. The [M3 — Replacement RSS record](docs/milestones/M03-podcast-rss.md) documents implemented metadata, serialization, aliases, cache behavior, compatibility tests, and the public validation handoff. Owner instructions are in the [content authoring guide](docs/CONTENT.md) and [feed validation guide](docs/FEED-VALIDATION.md).
 
@@ -299,6 +299,8 @@ Run `pnpm verify`. External validator/client results are provisional until repea
 **Acceptance/verification:** all five R1 requirements have current production evidence, verification is green, no unexplained archive or identity differences remain, and no active service depends on WordPress, podPress, or home pfSense certificate renewal. Record any gaps explicitly rather than marking the milestone complete. Do not delete historical backups as part of normal retirement.
 
 ### M7 — Rich player, interactive tracklists, and restoration
+
+**Plan ready for owner review on 2026-09-13.** The [M7 implementation plan](docs/milestones/M07-rich-player-and-restoration.md) resolves route/restore precedence, visit expiry and tabs, custom seek/volume behavior, timed-track boundaries, playback/navigation races, and automatic sequence history. It defines four implementation slices and their acceptance evidence. These are proposed implementation decisions pending review; implementation has not started. M6 observation and retirement remain separate open work.
 
 **Outcome:** deliver the full application-like listening experience using the established player/model boundaries.
 
