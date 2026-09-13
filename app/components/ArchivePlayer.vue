@@ -102,6 +102,9 @@ const messages = {
         "
       />
       <PlayerControls v-if="player.state.attached" :player="player" />
+      <p v-if="player.sequencing.failed" role="status">
+        Episode could not be loaded. Choose an episode to try again.
+      </p>
       <div class="player-actions">
         <p id="playback-status" class="media-status">
           {{

@@ -4,6 +4,9 @@ import { formatTime } from '../services/episode-page'
 const props = defineProps<{ player: PodcastPlayer }>()
 const state = computed(() => props.player.state)
 const draft = ref<number | null>(null)
+const showPause = computed(
+  () => state.value.wantsPlay || state.value.continuing,
+)
 const time = computed(() => draft.value ?? state.value.currentTime)
 const seekable = computed(
   () =>
@@ -130,15 +133,15 @@ watch(
       <button
         class="play-toggle"
         type="button"
-        :aria-label="state.wantsPlay ? 'Pause' : 'Play'"
+        :aria-label="showPause ? 'Pause' : 'Play'"
         :disabled="!available"
-        @click="state.wantsPlay ? player.pause() : player.play()"
+        @click="showPause ? player.pause() : player.play()"
       >
         <svg viewBox="0 0 24 24" aria-hidden="true">
-          <path v-if="state.wantsPlay" d="M6 4h4v16H6zm8 0h4v16h-4z" />
+          <path v-if="showPause" d="M6 4h4v16H6zm8 0h4v16h-4z" />
           <path v-else d="m7 3 15 9-15 9z" />
         </svg>
-        <span>{{ state.wantsPlay ? 'Pause' : 'Play' }}</span>
+        <span>{{ showPause ? 'Pause' : 'Play' }}</span>
       </button>
       <button
         type="button"
@@ -159,6 +162,52 @@ watch(
       >
         Next track
       </button>
+    </div>
+    <div
+      class="episode-controls"
+      role="group"
+      aria-label="Episode navigation"
+      :aria-busy="player.sequencing.busy"
+    >
+      <button
+        type="button"
+        :disabled="
+          state.restoring ||
+          !state.sourceId ||
+          !player.sequencing.available ||
+          player.sequencing.busy
+        "
+        @click="player.olderEpisode()"
+      >
+        Older episode
+      </button>
+      <button
+        type="button"
+        :disabled="
+          state.restoring ||
+          !state.sourceId ||
+          !player.sequencing.available ||
+          player.sequencing.busy
+        "
+        @click="player.newerEpisode()"
+      >
+        Newer episode
+      </button>
+      <label
+        >Automatic playback order
+        <select
+          :value="player.sequencing.order"
+          :disabled="!player.sequencing.available"
+          @change="
+            player.setOrder(
+              ($event.target as HTMLSelectElement).value as 'older' | 'newer',
+            )
+          "
+        >
+          <option value="older">Newer to older</option>
+          <option value="newer">Older to newer</option>
+        </select>
+      </label>
     </div>
     <div class="volume-row">
       <button

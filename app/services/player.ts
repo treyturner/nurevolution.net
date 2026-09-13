@@ -40,10 +40,12 @@ export function createPlayer(
   audio: AudioAdapter,
   changed: (status: PlayerStatus) => void,
   observed: (snapshot: PlayerSnapshot, event?: AudioEvent) => void = () => {},
+  eligibleEnd: (sourceId: string) => void = () => {},
 ) {
   let source: PlayerSource | null = null
   let generation = 0
   let disposed = false
+  let endArmed = false
   let status: PlayerStatus = 'idle'
   let metadataTimer: ReturnType<typeof setTimeout> | undefined
   let durationTimer: ReturnType<typeof setTimeout> | undefined
@@ -102,8 +104,10 @@ export function createPlayer(
         if (!wantsPlay && !audio.snapshot().paused) audio.pause()
         return
       }
-      const actual = current()
-      if (!actual) return
+      // The request generation identifies this load even before currentSrc
+      // catches up. An immediate permission rejection must remain visible.
+      const actual = audio.snapshot()
+      if (actual.src !== source?.url) return
       if (actual.error) observe('error')
       else if (error && actual.paused) {
         cancelPlay()
@@ -198,6 +202,7 @@ export function createPlayer(
       stopDurationTimer()
       audio.setPreload('metadata')
       generation++
+      endArmed = false
       cancelPlay()
       seek.reset()
       set('error')
@@ -228,7 +233,10 @@ export function createPlayer(
       return
     }
     if (event === 'pause' && snapshot.paused) {
-      if (!resetPause) cancelPlay()
+      if (!resetPause) {
+        endArmed = false
+        cancelPlay()
+      }
       // A queued source-reset pause must not erase an autoplay rejection.
       if (status !== 'blocked' && status !== 'error' && status !== 'delayed') {
         const ready = hasMetadata(snapshot)
@@ -250,6 +258,7 @@ export function createPlayer(
       }
       wantsPlay = true
       playObservedSinceLoad = true
+      if (event === 'playing' && snapshot.readyState >= 3) endArmed = true
       set(
         event === 'playing' && snapshot.readyState >= 3
           ? 'playing'
@@ -300,10 +309,15 @@ export function createPlayer(
       observe(event)
       // A source-reset pause is not fresh listener activity.
       publish(sourceResetPause ? undefined : event)
+      if (event === 'ended' && current()?.ended && endArmed && source) {
+        endArmed = false
+        eligibleEnd(source.id)
+      }
     }),
   )
   function load(next: PlayerSource, continuePlaying: boolean) {
     stopDurationTimer()
+    endArmed = false
     generation++
     // Only unresolved requests from this source can guard its native events.
     pendingPlays.clear()
@@ -367,6 +381,7 @@ export function createPlayer(
     },
     pause() {
       if (disposed) return
+      endArmed = false
       cancelPlay()
       audio.pause()
       publish('pause')
@@ -418,6 +433,7 @@ export function createPlayer(
       stopMetadataTimer()
       stopDurationTimer()
       generation++
+      endArmed = false
       cancelPlay()
       seek.reset()
       for (const stop of unsubscribe) stop()

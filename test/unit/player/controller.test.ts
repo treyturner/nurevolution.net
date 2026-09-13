@@ -995,3 +995,100 @@ it('clamps retained skip targets before rapid opposite actions', () => {
   expect(player.snapshot().pendingSeek).toBe(10)
   player.dispose()
 })
+
+describe('eligible natural ends', () => {
+  beforeEach(() => vi.useFakeTimers())
+  afterEach(() => {
+    vi.clearAllTimers()
+    vi.useRealTimers()
+  })
+  it('arms only real playback and consumes an end once before the next active run', () => {
+    const media = new Media()
+    const ended = vi.fn()
+    const player = createPlayer(
+      createAudioAdapter(media),
+      vi.fn(),
+      vi.fn(),
+      ended,
+    )
+    player.select(a)
+    media.ready()
+    player.seek(120)
+    media.ended = true
+    media.emit('ended')
+    expect(ended).not.toHaveBeenCalled()
+    media.ended = false
+    player.play()
+    media.emit('playing')
+    media.currentTime = 120
+    media.ended = true
+    media.paused = true
+    media.emit('timeupdate')
+    media.emit('pause')
+    media.emit('ended')
+    media.emit('ended')
+    expect(ended).toHaveBeenCalledExactlyOnceWith('a')
+    media.ended = false
+    player.play()
+    media.emit('playing')
+    media.ended = true
+    media.emit('ended')
+    expect(ended).toHaveBeenCalledTimes(2)
+    player.dispose()
+    media.emit('ended')
+    expect(ended).toHaveBeenCalledTimes(2)
+  })
+  it('Pause, source changes and media failure disarm obsolete completions', () => {
+    const media = new Media()
+    const ended = vi.fn()
+    const player = createPlayer(
+      createAudioAdapter(media),
+      vi.fn(),
+      vi.fn(),
+      ended,
+    )
+    player.select(a)
+    media.ready()
+    player.play()
+    media.emit('playing')
+    player.pause()
+    media.ended = true
+    media.emit('ended')
+    expect(ended).not.toHaveBeenCalled()
+    media.ended = false
+    player.play()
+    media.emit('playing')
+    player.select(b)
+    media.currentSrc = a.url
+    media.ended = true
+    media.emit('ended')
+    expect(ended).not.toHaveBeenCalled()
+    media.ended = false
+    media.ready()
+    player.play()
+    media.emit('playing')
+    media.error = { code: 2 } as MediaError
+    media.emit('error')
+    media.ended = true
+    media.emit('ended')
+    expect(ended).not.toHaveBeenCalled()
+  })
+})
+
+it('keeps an immediate continuation rejection visible before currentSrc catches up to the new load', async () => {
+  const { media, player } = setup()
+  player.select(a)
+  media.ready()
+  await media.play()
+  media.play.mockRejectedValueOnce(
+    new DOMException('blocked', 'NotAllowedError'),
+  )
+  player.select(b)
+  media.currentSrc = a.url
+  await Promise.resolve()
+  expect(player.snapshot().status).toBe('blocked')
+  media.ready()
+  expect(player.snapshot().status).toBe('blocked')
+  expect(player.snapshot().wantsPlay).toBe(false)
+  player.dispose()
+})

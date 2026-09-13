@@ -107,3 +107,81 @@ it('provides a useful 404 and distinct retryable unavailable page', async () => 
   expect(reload).toHaveBeenCalledOnce()
   wrapper.unmount()
 })
+
+it('connects manual sequencing, automatic completion, and single-source restart to the shared route session', async () => {
+  let paused = true
+  let ended = false
+  vi.spyOn(HTMLMediaElement.prototype, 'paused', 'get').mockImplementation(
+    () => paused,
+  )
+  vi.spyOn(HTMLMediaElement.prototype, 'ended', 'get').mockImplementation(
+    () => ended,
+  )
+  vi.spyOn(HTMLMediaElement.prototype, 'duration', 'get').mockReturnValue(40)
+  vi.spyOn(HTMLMediaElement.prototype, 'readyState', 'get').mockReturnValue(4)
+  vi.spyOn(HTMLMediaElement.prototype, 'currentSrc', 'get').mockImplementation(
+    function (this: HTMLMediaElement) {
+      return this.src
+    },
+  )
+  vi.spyOn(HTMLMediaElement.prototype, 'load').mockImplementation(function (
+    this: HTMLMediaElement,
+  ) {
+    paused = true
+    ended = false
+    this.currentTime = 0
+    this.dispatchEvent(new Event('loadedmetadata'))
+  })
+  vi.spyOn(HTMLMediaElement.prototype, 'pause').mockImplementation(function (
+    this: HTMLMediaElement,
+  ) {
+    paused = true
+    this.dispatchEvent(new Event('pause'))
+  })
+  const play = vi
+    .spyOn(HTMLMediaElement.prototype, 'play')
+    .mockImplementation(async function (this: HTMLMediaElement) {
+      paused = false
+      ended = false
+      this.dispatchEvent(new Event('play'))
+      this.dispatchEvent(new Event('playing'))
+    })
+  const wrapper = await mountSuspended(App, {
+    route: '/episodes/trey-turner-praxis',
+  })
+  const nuxt = useNuxtApp()
+  const state = await nuxt.runWithContext(useEpisodePage)
+  const button = (name: string) =>
+    wrapper.findAll('button').find((button) => button.text() === name)!
+  const selected = state.value.model!.selected!
+  const index = state.value.model!.episodes.findIndex(
+    (episode) => episode.id === selected.id,
+  )
+  const older = state.value.model!.episodes[index + 1]!
+  const newer = state.value.model!.episodes[index - 1]!
+  await button('Older episode').trigger('click')
+  await vi.waitFor(() => expect(state.value.model!.selected!.id).toBe(older.id))
+  await button('Newer episode').trigger('click')
+  await vi.waitFor(() =>
+    expect(state.value.model!.selected!.id).toBe(selected.id),
+  )
+  await wrapper.get('select').setValue('newer')
+  await wrapper.get('[aria-label="Play"]').trigger('click')
+  const audio = wrapper.get('audio')
+  ended = true
+  paused = true
+  await audio.trigger('ended')
+  await vi.waitFor(() => expect(play).toHaveBeenCalledTimes(2))
+  expect(state.value.model!.selected!.id).toBe(newer.id)
+  await wrapper.get('[aria-label="Pause"]').trigger('click')
+  state.value.model = {
+    ...state.value.model!,
+    episodes: [state.value.model!.selected!],
+  }
+  audio.element.currentTime = 12
+  await audio.trigger('timeupdate')
+  await button('Older episode').trigger('click')
+  expect(audio.element.currentTime).toBe(0)
+  expect(paused).toBe(true)
+  wrapper.unmount()
+})
