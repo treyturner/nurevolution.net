@@ -2,11 +2,12 @@ import { mountSuspended } from '@nuxt/test-utils/runtime'
 import { reactive } from 'vue'
 import { expect, it, vi } from 'vitest'
 import PlayerControls from '../../app/components/PlayerControls.vue'
+import type { PlayerStatus } from '../../app/services/player'
 import type { PodcastPlayer } from '../../app/composables/usePodcastPlayer'
 function fixture() {
   const state = reactive({
     sourceId: 'episode',
-    status: 'paused' as const,
+    status: 'paused' as PlayerStatus,
     wantsPlay: false,
     currentTime: 10,
     duration: 40 as number | null,
@@ -110,8 +111,8 @@ it('provides exact keyboard seek operations without global shortcuts and speaks 
     ['ArrowDown', 15],
     ['Home', 0],
     ['End', 40],
-    ['PageUp', 50],
-    ['PageDown', -10],
+    ['PageUp', 40],
+    ['PageDown', 0],
   ] as const) {
     await input.trigger('keydown', { key })
     expect(player.seek).toHaveBeenLastCalledWith(target)
@@ -150,5 +151,39 @@ it('wires volume and mute independently and leaves no slider space for device-ow
   state.muteSupported = false
   await wrapper.vm.$nextTick()
   expect(wrapper.find('[aria-label="Unmute"]').exists()).toBe(false)
+  wrapper.unmount()
+})
+
+it('preserves a drag through buffering changes and cancels only on terminal states', async () => {
+  const { player, state } = fixture()
+  state.status = 'playing'
+  const wrapper = await mountSuspended(PlayerControls, { props: { player } })
+  const input = wrapper.get<HTMLInputElement>(
+    '[aria-label="Playback position"]',
+  )
+  input.element.value = '23'
+  await input.trigger('input')
+  for (const status of ['buffering', 'playing'] as const) {
+    state.status = status
+    await wrapper.vm.$nextTick()
+    expect(input.element.value).toBe('23')
+  }
+  await input.trigger('change')
+  expect(player.seek).toHaveBeenCalledExactlyOnceWith(23)
+  for (const status of ['error', 'ended'] as const) {
+    state.status = 'playing'
+    await wrapper.vm.$nextTick()
+    input.element.value = '28'
+    await input.trigger('input')
+    state.status = status
+    await wrapper.vm.$nextTick()
+    await input.trigger('change')
+    expect(player.seek).toHaveBeenCalledOnce()
+  }
+  state.status = 'playing'
+  state.pendingSeek = 65
+  await wrapper.vm.$nextTick()
+  await input.trigger('keydown', { key: 'PageDown' })
+  expect(player.seek).toHaveBeenLastCalledWith(10)
   wrapper.unmount()
 })

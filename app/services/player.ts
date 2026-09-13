@@ -385,10 +385,14 @@ export function createPlayer(
       publish()
     },
     skip(seconds: number) {
-      if (disposed || snapshot().duration === null) return
-      this.seek(
-        (seek.snapshot().pendingSeek ?? snapshot().currentTime) + seconds,
+      if (disposed) return
+      const state = snapshot()
+      if (state.duration === null) return
+      const base = Math.min(
+        state.duration,
+        state.pendingSeek ?? state.currentTime,
       )
+      this.seek(Math.min(state.duration, Math.max(0, base + seconds)))
     },
     setVolume(value: number) {
       if (disposed) return

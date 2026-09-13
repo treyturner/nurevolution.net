@@ -51,7 +51,10 @@ function key(event: KeyboardEvent) {
     return
   }
   if (!seekable.value) return
-  const current = state.value.pendingSeek ?? state.value.currentTime
+  const current = Math.min(
+    state.value.duration!,
+    state.value.pendingSeek ?? state.value.currentTime,
+  )
   const targets: Record<string, number> = {
     ArrowLeft: current - 5,
     ArrowDown: current - 5,
@@ -66,10 +69,13 @@ function key(event: KeyboardEvent) {
   if (target === undefined) return
   event.preventDefault()
   draft.value = null
-  props.player.seek(target)
+  props.player.seek(Math.min(state.value.duration!, Math.max(0, target)))
 }
 watch(
-  () => [state.value.sourceId, state.value.status === 'error'],
+  [
+    () => state.value.sourceId,
+    () => state.value.status === 'error' || state.value.status === 'ended',
+  ],
   () => {
     draft.value = null
   },

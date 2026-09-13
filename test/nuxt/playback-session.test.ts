@@ -316,3 +316,67 @@ it('keeps saving actual activity after a seek times out with a visible error', a
   wrapper.unmount()
   vi.useRealTimers()
 })
+
+it.each([false, true])(
+  'saves a paused seek failure with its original activity time (newer tab: %s)',
+  async (newerTab) => {
+    vi.useFakeTimers()
+    let paused = true
+    let position = 0
+    vi.spyOn(HTMLMediaElement.prototype, 'pause').mockImplementation(() => {
+      paused = true
+    })
+    const wrapper = await mountSuspended(
+      harness({ isRoot: () => false, restore: async () => 'restored' }),
+    )
+    const audio = wrapper.get('audio')
+    Object.defineProperties(audio.element, {
+      paused: { configurable: true, get: () => paused },
+      currentTime: { configurable: true, get: () => position, set: () => {} },
+      duration: { configurable: true, value: 40 },
+      readyState: { configurable: true, value: 4 },
+      seeking: { configurable: true, value: true },
+    })
+    await audio.trigger('loadedmetadata')
+    paused = false
+    await audio.trigger('playing')
+    position = 12
+    await audio.trigger('timeupdate')
+    const player = wrapper.findComponent(ArchivePlayer).props('player')
+    await vi.advanceTimersByTimeAsync(5000)
+    await audio.trigger('timeupdate')
+    player.seek(30)
+    position = 18
+    player.pause()
+    await audio.trigger('pause')
+    expect(JSON.parse(localStorage.getItem(resumeKey)!).positionSeconds).toBe(
+      12,
+    )
+    const pausedAt = Date.now()
+    await vi.advanceTimersByTimeAsync(1000)
+    if (newerTab)
+      localStorage.setItem(
+        resumeKey,
+        JSON.stringify({
+          schemaVersion: 1,
+          episodeId: 'wp-484',
+          positionSeconds: 27,
+          updatedAt: Date.now(),
+        }),
+      )
+    await vi.advanceTimersByTimeAsync(4000)
+    expect(wrapper.text()).toContain('Could not seek. Try again.')
+    expect(JSON.parse(localStorage.getItem(resumeKey)!)).toMatchObject(
+      newerTab
+        ? {
+            episodeId: 'wp-484',
+            positionSeconds: 27,
+            updatedAt: pausedAt + 1000,
+          }
+        : { episodeId: episode.id, positionSeconds: 18, updatedAt: pausedAt },
+    )
+    expect(paused).toBe(true)
+    wrapper.unmount()
+    vi.useRealTimers()
+  },
+)

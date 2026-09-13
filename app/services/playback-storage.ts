@@ -104,14 +104,24 @@ export function createPlaybackStorage(
       dirty = null
       access((port) => port.removeItem(resumeKey))
     },
-    capture(episodeId: string, positionSeconds: number, immediate = false) {
-      if (disabled || !Number.isFinite(positionSeconds) || positionSeconds < 0)
+    capture(
+      episodeId: string,
+      positionSeconds: number,
+      immediate = false,
+      activityAt = now(),
+    ) {
+      if (
+        disabled ||
+        !Number.isFinite(positionSeconds) ||
+        positionSeconds < 0 ||
+        !timestamp(activityAt, now())
+      )
         return
       dirty = {
         schemaVersion: 1,
         episodeId,
         positionSeconds,
-        updatedAt: now(),
+        updatedAt: activityAt,
       }
       if (immediate || now() - lastWrite >= 5000) flush()
     },
