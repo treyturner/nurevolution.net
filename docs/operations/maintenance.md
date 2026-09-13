@@ -15,7 +15,7 @@ The maintenance branch adds lowercase share metadata, production-only deployment
 
 The owner deleted the obsolete GitHub environment after the workspace integration returned HTTP 403. The owner also supplied the revised Cloudflare feed exception: only the apex and www production hosts match, with GET/HEAD and the existing feed paths preserved. The DNS token cannot edit Configuration Rules (HTTP 403).
 
-The owner must install/configure the new Headscale `scheduled-backup.sh` wrapper on Unraid and point the existing weekly User Script to it. The script prompts privately for the Discord destination, sends no setup message, and stays quiet on success. The existing backup schedule continues to work until replaced. [Installation and recovery details](headscale-backup.md).
+The owner installed/configured the Headscale `scheduled-backup.sh` wrapper on Unraid and updated the existing weekly User Script. Its live normal backup completed with snapshot `80c6d358e4fa399313ec56582b9be90d1c93538e28ea5576627e4f33ab673004`; Headscale restarted healthy. Configuration and successful backup sent no message. Failure delivery is covered by isolated tests; a live failure notification has not been triggered. The owner also installed the repository `UPTIME_DISCORD_WEBHOOK` secret; the first Actions monitor run follows merge. [Installation and recovery details](headscale-backup.md).
 
 ## Remaining observations
 
