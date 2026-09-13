@@ -1,5 +1,5 @@
 import { mountSuspended } from '@nuxt/test-utils/runtime'
-import { defineComponent, h } from 'vue'
+import { defineComponent, h, ref } from 'vue'
 import { afterEach, expect, it, vi } from 'vitest'
 import ArchivePlayer from '../../app/components/ArchivePlayer.vue'
 import { usePodcastPlayer } from '../../app/composables/usePodcastPlayer'
@@ -11,6 +11,12 @@ const episode = episodeDetail(
   archiveCatalog,
   archiveCatalog.episodes.find((e) => e.id === 'wp-417')!,
 )
+function returnFromCache() {
+  // Happy DOM aliases PageTransitionEvent to Event and drops its options.
+  const event = new Event('pageshow')
+  Object.defineProperty(event, 'persisted', { value: true })
+  window.dispatchEvent(event)
+}
 function seeded() {
   localStorage.setItem(
     visitKey,
@@ -26,10 +32,21 @@ function seeded() {
     }),
   )
 }
-function harness(navigation: ReturnType<typeof useEpisodePlaybackNavigation>) {
+function harness(
+  navigation: Pick<
+    ReturnType<typeof useEpisodePlaybackNavigation>,
+    'restore' | 'isRoot'
+  > &
+    Partial<
+      Pick<ReturnType<typeof useEpisodePlaybackNavigation>, 'waitForSelection'>
+    >,
+) {
   return defineComponent({
     setup() {
-      const player = usePodcastPlayer(() => episode, navigation)
+      const player = usePodcastPlayer(() => episode, {
+        waitForSelection: async () => true,
+        ...navigation,
+      })
       return () => h(ArchivePlayer, { episode, player })
     },
   })
@@ -53,7 +70,7 @@ it('does not turn an idle pagehide or bfcache return into a newer resume write o
   localStorage.setItem(resumeKey, newer)
   window.dispatchEvent(new Event('pagehide'))
   expect(localStorage.getItem(resumeKey)).toBe(newer)
-  window.dispatchEvent(new PageTransitionEvent('pageshow', { persisted: true }))
+  returnFromCache()
   expect(localStorage.getItem(resumeKey)).toBe(newer)
   expect(play).not.toHaveBeenCalled()
   wrapper.unmount()
@@ -116,4 +133,132 @@ it('contains denied browser storage while leaving the selected audio usable', as
   expect(load).toHaveBeenCalledOnce()
   expect(wrapper.get('h1').text()).toBe('Praxis')
   wrapper.unmount()
+})
+
+it.each([false, true])(
+  'consumes a deferred lifecycle pause without overwriting newer tab progress (stale source: %s)',
+  async (stale) => {
+    let paused = true
+    vi.spyOn(HTMLMediaElement.prototype, 'paused', 'get').mockImplementation(
+      () => paused,
+    )
+    vi.spyOn(HTMLMediaElement.prototype, 'pause').mockImplementation(() => {
+      paused = true
+    })
+    const wrapper = await mountSuspended(
+      harness({ isRoot: () => false, restore: async () => 'restored' }),
+    )
+    const audio = wrapper.get('audio')
+    paused = false
+    await audio.trigger('play')
+    window.dispatchEvent(new Event('pagehide'))
+    const newer = JSON.stringify({
+      schemaVersion: 1,
+      episodeId: 'wp-484',
+      positionSeconds: 30,
+      updatedAt: Date.now(),
+    })
+    localStorage.setItem(resumeKey, newer)
+    returnFromCache()
+    if (stale)
+      Object.defineProperty(audio.element, 'currentSrc', {
+        configurable: true,
+        value: 'https://old.example/audio.mp3',
+      })
+    await audio.trigger('pause')
+    expect(localStorage.getItem(resumeKey)).toBe(newer)
+    if (stale)
+      Object.defineProperty(audio.element, 'currentSrc', {
+        configurable: true,
+        value: '',
+      })
+    paused = false
+    await audio.trigger('play')
+    audio.element.currentTime = 12
+    paused = true
+    await audio.trigger('pause')
+    expect(JSON.parse(localStorage.getItem(resumeKey)!)).toMatchObject({
+      episodeId: episode.id,
+      positionSeconds: 12,
+    })
+    wrapper.unmount()
+  },
+)
+
+it('retains a cancelled restore record if the document closes during the superseding request', async () => {
+  seeded()
+  const original = localStorage.getItem(resumeKey)
+  const load = vi
+    .spyOn(HTMLMediaElement.prototype, 'load')
+    .mockImplementation(() => {})
+  let finish!: (accepted: boolean) => void
+  const waiting = new Promise<boolean>((resolve) => {
+    finish = resolve
+  })
+  const wrapper = await mountSuspended(
+    harness({
+      isRoot: () => true,
+      restore: async () => 'cancelled',
+      waitForSelection: () => waiting,
+    }),
+  )
+  await Promise.resolve()
+  expect(load).not.toHaveBeenCalled()
+  wrapper.unmount()
+  finish(true)
+  await waiting
+  await Promise.resolve()
+  expect(load).not.toHaveBeenCalled()
+  expect(localStorage.getItem(resumeKey)).toBe(original)
+})
+
+it('persists zero when Retry discards a pending restore and when the same ID receives replacement audio', async () => {
+  vi.useFakeTimers()
+  seeded()
+  const selected = ref(episode)
+  vi.spyOn(HTMLMediaElement.prototype, 'load').mockImplementation(function (
+    this: HTMLMediaElement,
+  ) {
+    this.currentTime = 0
+  })
+  const wrapper = await mountSuspended(
+    defineComponent({
+      setup() {
+        const player = usePodcastPlayer(() => selected.value, {
+          isRoot: () => false,
+          restore: async () => 'restored',
+          waitForSelection: async () => true,
+        })
+        return () => h(ArchivePlayer, { episode: selected.value, player })
+      },
+    }),
+  )
+  await vi.advanceTimersByTimeAsync(20_000)
+  await wrapper
+    .findAll('button')
+    .find((button) => button.text() === 'Retry audio')!
+    .trigger('click')
+  expect(JSON.parse(localStorage.getItem(resumeKey)!)).toMatchObject({
+    episodeId: episode.id,
+    positionSeconds: 0,
+  })
+  const audio = wrapper.get('audio')
+  Object.defineProperties(audio.element, {
+    duration: { configurable: true, value: 40 },
+    readyState: { configurable: true, value: 4 },
+  })
+  await audio.trigger('loadedmetadata')
+  audio.element.currentTime = 12
+  await audio.trigger('seeked')
+  expect(JSON.parse(localStorage.getItem(resumeKey)!).positionSeconds).toBe(12)
+  selected.value = {
+    ...episode,
+    audio: { ...episode.audio, url: episode.audio.url + '?replacement=1' },
+  }
+  await wrapper.vm.$nextTick()
+  expect(audio.element.currentTime).toBe(0)
+  expect(JSON.parse(localStorage.getItem(resumeKey)!).positionSeconds).toBe(0)
+  expect(audio.element.paused).toBe(true)
+  wrapper.unmount()
+  vi.useRealTimers()
 })

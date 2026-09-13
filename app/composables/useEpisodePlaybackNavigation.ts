@@ -5,9 +5,32 @@ export function useEpisodePlaybackNavigation() {
   const state = useEpisodePage()
   const router = useRouter()
   let stopRestore: (() => void) | undefined
-  onBeforeUnmount(() => stopRestore?.())
+  let stopSelectionWait: (() => void) | undefined
+  onBeforeUnmount(() => {
+    stopRestore?.()
+    stopSelectionWait?.()
+  })
   return {
     isRoot: () => router.currentRoute.value.path === '/',
+    waitForSelection(): Promise<boolean> {
+      if (!state.value.pendingPath)
+        return Promise.resolve(!state.value.failedPath)
+      return new Promise((resolve) => {
+        const stop = watch(
+          () => state.value.pendingPath,
+          (pending) => {
+            if (pending) return
+            stop()
+            stopSelectionWait = undefined
+            resolve(!state.value.failedPath)
+          },
+        )
+        stopSelectionWait = () => {
+          stop()
+          resolve(false)
+        }
+      })
+    },
     async restore(episodeId: string): Promise<RestoreResult> {
       const target = state.value.model?.episodes.find((e) => e.id === episodeId)
       if (!target) return 'missing'

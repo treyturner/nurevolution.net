@@ -230,3 +230,78 @@ test('a second tab can update shared progress without moving the first, and idle
     ),
   ).toBe('wp-484')
 })
+
+for (const accepted of [true, false])
+  test(`a superseding navigation defers bootstrap and preserves the saved record until it settles (${accepted})`, async ({
+    page,
+  }) => {
+    await seed(page)
+    await page.addInitScript(() => {
+      const original = HTMLMediaElement.prototype.load
+      HTMLMediaElement.prototype.load = function () {
+        document.documentElement.dataset.loads = String(
+          Number(document.documentElement.dataset.loads ?? 0) + 1,
+        )
+        return original.call(this)
+      }
+    })
+    let releaseRestore!: () => void
+    const restoreGate = new Promise<void>((resolve) => {
+      releaseRestore = resolve
+    })
+    await page.route('**/api/episodes/trey-turner-praxis', async (route) => {
+      await restoreGate
+      await route.continue().catch(() => {})
+    })
+    let releaseManual!: () => void
+    let requested!: () => void
+    const request = new Promise<void>((resolve) => {
+      requested = resolve
+    })
+    const manualGate = new Promise<void>((resolve) => {
+      releaseManual = resolve
+    })
+    const target = '/episodes/trey-turner-the-dark-prophet'
+    await page.route('**/api' + target, async (route) => {
+      requested()
+      await manualGate
+      if (accepted) await route.continue()
+      else await route.fulfill({ status: 503, json: { statusCode: 503 } })
+    })
+    try {
+      await page.goto('/')
+      await hydrated(page)
+      await expect(page.locator('.media-status')).toHaveText(
+        'Restoring your place…',
+      )
+      await page.locator(`a[href="${target}"]`).click()
+      await request
+      expect(await page.locator('html').getAttribute('data-loads')).toBeNull()
+      expect(
+        await page.evaluate(
+          (key) => JSON.parse(localStorage.getItem(key)!).episodeId,
+          resumeKey,
+        ),
+      ).toBe('wp-417')
+      releaseRestore()
+      releaseManual()
+      if (accepted) await expect(page).toHaveURL(new RegExp(target + '$'))
+      else
+        await expect(
+          page.getByText('Saved episode could not be restored.'),
+        ).toBeVisible()
+      await ready(page)
+      expect(await page.locator('html').getAttribute('data-loads')).toBe('1')
+      await expect(page.locator('audio')).toHaveJSProperty('paused', true)
+      if (!accepted)
+        expect(
+          await page.evaluate(
+            (key) => JSON.parse(localStorage.getItem(key)!).episodeId,
+            resumeKey,
+          ),
+        ).toBe('wp-417')
+    } finally {
+      releaseRestore()
+      releaseManual()
+    }
+  })

@@ -41,12 +41,17 @@ export function usePodcastPlayer(
   let suspended = false
   let savedId: string | null = null
   let initialWrite = false
+  let resetting = false
+  let teardownPauses = 0
+  let suppressPauseCapture = false
   const cleanups: (() => void)[] = []
   function capture(snapshot: PlayerSnapshot, event?: AudioEvent) {
     if (
       !storage ||
       !bootstrapped ||
       suspended ||
+      resetting ||
+      suppressPauseCapture ||
       !snapshot.sourceId ||
       snapshot.pendingSeek !== null ||
       snapshot.seekMessage ||
@@ -93,6 +98,21 @@ export function usePodcastPlayer(
       listen(document, 'prerenderingchange', initialize, { once: true })
       return
     }
+    // Consume the native teardown event even if the controller rejects it as
+    // belonging to an older source. Capture phase runs before media observers.
+    listen(
+      element!,
+      'pause',
+      () => {
+        if (!teardownPauses) return
+        teardownPauses--
+        suppressPauseCapture = true
+        queueMicrotask(() => {
+          suppressPauseCapture = false
+        })
+      },
+      { capture: true },
+    )
     // Browser globals and storage are touched only by the mounted owner.
     controller = createPlayer(
       createAudioAdapter(element!),
@@ -109,8 +129,15 @@ export function usePodcastPlayer(
     let saved = storage?.visit()
     if (saved && navigation?.isRoot()) {
       state.restoring = true
-      const result = await navigation.restore(saved.episodeId)
+      let result = await navigation.restore(saved.episodeId)
       if (disposed) return
+      if (result === 'cancelled') {
+        // The accepted model still belongs to root until the newer request
+        // commits. Do not load or persist that fallback while it is pending.
+        const accepted = await navigation.waitForSelection()
+        if (disposed) return
+        if (!accepted) result = 'failed'
+      }
       state.restoring = false
       if (result !== 'restored') saved = null
       if (result === 'missing') storage?.discard()
@@ -132,6 +159,10 @@ export function usePodcastPlayer(
     target.addEventListener(event, callback, options)
     cleanups.push(() => target.removeEventListener(event, callback, options))
   }
+  function pauseForLifecycle() {
+    if (controller && element && !element.paused) teardownPauses++
+    controller?.pause()
+  }
   onMounted(() => {
     listen(document, 'visibilitychange', () => {
       if (document.visibilityState === 'hidden') storage?.flush()
@@ -139,11 +170,11 @@ export function usePodcastPlayer(
     listen(window, 'pagehide', () => {
       storage?.flush()
       suspended = true
-      controller?.pause()
+      pauseForLifecycle()
     })
     listen(window, 'pageshow', (event) => {
       if (!(event as PageTransitionEvent).persisted) return
-      controller?.pause()
+      pauseForLifecycle()
       suspended = false
       storage?.visit(false)
     })
@@ -170,7 +201,18 @@ export function usePodcastPlayer(
     bindAudio(value: Element | ComponentPublicInstance | null) {
       element = value as HTMLAudioElement | null
     },
-    retry: () => controller?.retry(),
+    retry() {
+      if (!controller || !state.sourceId) return
+      resetting = true
+      try {
+        controller.retry()
+      } finally {
+        resetting = false
+      }
+      state.restoreMessage = null
+      initialWrite = true
+      capture(controller.snapshot())
+    },
     play: () => controller?.play(),
     pause: () => controller?.pause(),
     seek: (seconds: number) => controller?.seek(seconds),
