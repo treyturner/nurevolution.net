@@ -44,6 +44,9 @@ function harness(
   return defineComponent({
     setup() {
       const player = usePodcastPlayer(() => episode, {
+        pending: false,
+        neighbor: () => null,
+        move: async () => 'failed',
         waitForSelection: async () => true,
         ...navigation,
       })
@@ -243,6 +246,9 @@ it('persists zero when Retry discards a pending restore and when the same ID rec
         const player = usePodcastPlayer(() => selected.value, {
           isRoot: () => false,
           restore: async () => 'restored',
+          pending: false,
+          neighbor: () => null,
+          move: async () => 'failed',
           waitForSelection: async () => true,
         })
         return () => h(ArchivePlayer, { episode: selected.value, player })

@@ -98,6 +98,12 @@ test('paused native seeking is saved and restored on refresh without a Play requ
   await seed(page, 'wp-417', 0)
   await page.goto(praxis)
   await ready(page)
+  // WebKit can expose readyState before finite duration. Let the initial zero
+  // restore settle before simulating a separate native seek.
+  await expect(
+    page.getByRole('slider', { name: 'Playback position' }),
+  ).toBeEnabled()
+  await expect(page.locator('audio')).toHaveJSProperty('seeking', false)
   await page.locator('audio').evaluate((a: HTMLAudioElement) => {
     a.currentTime = 1.1
   })

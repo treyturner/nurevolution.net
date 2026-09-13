@@ -1,3 +1,7 @@
+import {
+  createEpisodeSequencer,
+  type EpisodeDirection,
+} from '../services/episode-sequencing'
 import type { ComponentPublicInstance } from 'vue'
 import { trackNavigation } from '../services/track-navigation'
 import { createAudioAdapter, type AudioEvent } from '../services/audio'
@@ -17,6 +21,7 @@ export function usePodcastPlayer(
   const config = useRuntimeConfig()
   const state = shallowReactive<
     PlayerSnapshot & {
+      continuing: boolean
       attached: boolean
       restoring: boolean
       restoreMessage: string | null
@@ -34,6 +39,7 @@ export function usePodcastPlayer(
     muted: false,
     volumeSupported: false,
     muteSupported: false,
+    continuing: false,
     attached: false,
     restoring: false,
     restoreMessage: null,
@@ -51,6 +57,21 @@ export function usePodcastPlayer(
   let suppressPauseCapture = false
   let pendingPauseAt: number | null = null
   const cleanups: (() => void)[] = []
+  const sequenceRevision = ref(0)
+  const sequence = createEpisodeSequencer(
+    {
+      neighbor: (direction) => navigation?.neighbor(direction) ?? null,
+      currentId: () => episode()?.id ?? null,
+      pending: () => navigation?.pending ?? false,
+      navigate: (target, replace) => navigation!.move(target, replace),
+      restart: () => controller?.seek(0),
+      play: () => controller?.play(),
+    },
+    () => {
+      sequenceRevision.value++
+      state.continuing = sequence.snapshot().continuing
+    },
+  )
   function capture(
     snapshot: PlayerSnapshot,
     event?: AudioEvent,
@@ -138,7 +159,15 @@ export function usePodcastPlayer(
       () => {},
       (snapshot, event) => {
         Object.assign(state, snapshot)
+        if (
+          sequence.snapshot().continuing &&
+          (snapshot.status === 'error' || snapshot.status === 'blocked')
+        )
+          sequence.pause()
         capture(snapshot, event)
+      },
+      () => {
+        void sequence.ended()
       },
     )
     state.attached = true
@@ -179,6 +208,7 @@ export function usePodcastPlayer(
     cleanups.push(() => target.removeEventListener(event, callback, options))
   }
   function pauseForLifecycle() {
+    sequence.pause()
     if (controller && element && !element.paused) pendingResetPauses++
     controller?.pause()
   }
@@ -206,11 +236,13 @@ export function usePodcastPlayer(
     // A deliberate route selection is activity even when it selects the same
     // source after a failed root restore. Keep its existing playback position.
     initialWrite = true
+    sequence.selected()
     select()
     capture(controller!.snapshot())
   })
   onBeforeUnmount(() => {
     disposed = true
+    sequence.dispose()
     storage?.flush()
     suspended = true
     for (const stop of cleanups) stop()
@@ -233,6 +265,13 @@ export function usePodcastPlayer(
   )
   return {
     state: readonly(state),
+    get sequencing() {
+      void sequenceRevision.value
+      return sequence.snapshot()
+    },
+    olderEpisode: () => sequence.manual('older'),
+    newerEpisode: () => sequence.manual('newer'),
+    setOrder: (direction: EpisodeDirection) => sequence.setOrder(direction),
     get tracks() {
       return { ...tracks.value, current: currentTrack.value }
     },
@@ -257,6 +296,7 @@ export function usePodcastPlayer(
     retry() {
       if (!controller || !state.sourceId) return
       pendingPauseAt = null
+      sequence.pause()
       if (element && !element.paused) pendingResetPauses++
       resetting = true
       try {
@@ -270,6 +310,7 @@ export function usePodcastPlayer(
     },
     play: () => controller?.play(),
     pause() {
+      sequence.pause()
       if (!controller) return
       if (element && !element.paused) pendingResetPauses++
       resetting = true

@@ -398,7 +398,7 @@ test('latest requested episode wins; failed navigation leaves a usable current p
     await route.continue()
   })
   await page.locator('a[href="/episodes/trey-turner-praxis"]').click()
-  await expect(page.locator('[aria-busy="true"]')).toHaveAttribute(
+  await expect(page.locator('a[aria-busy="true"]')).toHaveAttribute(
     'href',
     '/episodes/trey-turner-praxis',
   )
