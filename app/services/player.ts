@@ -1,4 +1,5 @@
 import type { AudioAdapter, AudioEvent } from './audio'
+import { createPlayerSeek } from './player-seek'
 
 export type PlayerStatus =
   | 'idle'
@@ -14,11 +15,26 @@ export interface PlayerSource {
   id: string
   url: string
 }
+export interface PlayerSnapshot {
+  sourceId: string | null
+  status: PlayerStatus
+  wantsPlay: boolean
+  currentTime: number
+  duration: number | null
+  seeking: boolean
+  pendingSeek: number | null
+  seekMessage: string | null
+}
+export interface PlayerSelection {
+  position?: number
+  paused?: boolean
+}
 
 /** One element, with asynchronous work scoped to its current source and play intent. */
 export function createPlayer(
   audio: AudioAdapter,
   changed: (status: PlayerStatus) => void,
+  observed: (snapshot: PlayerSnapshot, event?: AudioEvent) => void = () => {},
 ) {
   let source: PlayerSource | null = null
   let generation = 0
@@ -27,6 +43,74 @@ export function createPlayer(
   let metadataTimer: ReturnType<typeof setTimeout> | undefined
   let durationTimer: ReturnType<typeof setTimeout> | undefined
   let metadataRetries = 0
+  let wantsPlay = false
+  let intent = 0
+  const pendingPlays = new Set<number>()
+  let deferredPlay = false
+  let reconciling = false
+  const seek = createPlayerSeek(audio, () => publish())
+  function snapshot(): PlayerSnapshot {
+    const actual = current()
+    return {
+      sourceId: source?.id ?? null,
+      status,
+      wantsPlay,
+      currentTime:
+        actual && Number.isFinite(actual.currentTime) ? actual.currentTime : 0,
+      duration: actual && hasMetadata(actual) ? actual.duration : null,
+      seeking: actual?.seeking ?? false,
+      ...seek.snapshot(),
+    }
+  }
+  function publish(event?: AudioEvent) {
+    if (!disposed) observed(snapshot(), event)
+  }
+  function cancelPlay() {
+    wantsPlay = false
+    deferredPlay = false
+    intent++
+  }
+  function requestPlay() {
+    if (disposed || !source) return
+    wantsPlay = true
+    if (seek.snapshot().pendingSeek !== null) {
+      deferredPlay = true
+      publish()
+      return
+    }
+    deferredPlay = false
+    const ownSource = generation
+    const ownIntent = ++intent
+    pendingPlays.add(ownIntent)
+    const settled = (error?: unknown) => {
+      pendingPlays.delete(ownIntent)
+      if (disposed) return
+      if (ownSource !== generation || ownIntent !== intent) {
+        if (!wantsPlay && !audio.snapshot().paused) audio.pause()
+        return
+      }
+      const actual = current()
+      if (!actual) return
+      if (actual.error) observe('error')
+      else if (error && actual.paused) {
+        cancelPlay()
+        set(
+          error instanceof Error && error.name === 'AbortError'
+            ? hasMetadata(actual)
+              ? 'paused'
+              : 'loading'
+            : 'blocked',
+        )
+      }
+      publish()
+    }
+    try {
+      void audio.play().then(() => settled(), settled)
+    } catch (error) {
+      settled(error)
+    }
+    publish()
+  }
   function stopMetadataTimer() {
     clearTimeout(metadataTimer)
     metadataTimer = undefined
@@ -80,6 +164,7 @@ export function createPlayer(
   function set(next: PlayerStatus) {
     status = next
     changed(next)
+    publish()
   }
   function current() {
     const snapshot = audio.snapshot()
@@ -97,6 +182,8 @@ export function createPlayer(
       stopDurationTimer()
       audio.setPreload('metadata')
       generation++
+      cancelPlay()
+      seek.reset()
       set('error')
       if (!snapshot.paused) audio.pause()
       return
@@ -105,6 +192,12 @@ export function createPlayer(
       stopMetadataTimer()
       stopDurationTimer()
       audio.setPreload('metadata')
+      if (!reconciling) {
+        reconciling = true
+        seek.reconcile(snapshot, event)
+        reconciling = false
+        if (deferredPlay && seek.snapshot().pendingSeek === null) requestPlay()
+      }
     } else {
       // The native backend can finish calculating duration after its final
       // readiness event. Recheck that value without resetting the download.
@@ -114,10 +207,12 @@ export function createPlayer(
       else if (event === 'progress' && status === 'loading') watchMetadata()
     }
     if (snapshot.ended) {
+      cancelPlay()
       set('ended')
       return
     }
     if (event === 'pause' && snapshot.paused) {
+      if (!pendingPlays.size && !deferredPlay) cancelPlay()
       // A queued source-reset pause must not erase an autoplay rejection.
       if (status !== 'blocked' && status !== 'error' && status !== 'delayed') {
         const ready = hasMetadata(snapshot)
@@ -130,6 +225,11 @@ export function createPlayer(
       (event === 'play' || event === 'playing' || event === 'waiting') &&
       !snapshot.paused
     ) {
+      if (pendingPlays.size && !wantsPlay) {
+        audio.pause()
+        return
+      }
+      wantsPlay = true
       set(
         event === 'playing' && snapshot.readyState >= 3
           ? 'playing'
@@ -165,11 +265,23 @@ export function createPlayer(
       'pause',
       'ended',
       'error',
+      'timeupdate',
+      'seeking',
+      'seeked',
     ] as const
-  ).map((event) => audio.subscribe(event, () => observe(event)))
+  ).map((event) =>
+    audio.subscribe(event, () => {
+      if (!current()) return
+      observe(event)
+      publish(event)
+    }),
+  )
   function load(next: PlayerSource, continuePlaying: boolean) {
     stopDurationTimer()
-    const own = ++generation
+    generation++
+    intent++
+    wantsPlay = continuePlaying
+    seek.reset(true)
     source = next
     set('loading')
     // Fetch through large MP3 tags before reducing background buffering.
@@ -177,34 +289,22 @@ export function createPlayer(
     audio.load(next.url)
     watchMetadata()
     if (continuePlaying) {
-      // Call immediately: native controls can then cancel the pending play request.
-      void audio.play().catch((error: unknown) => {
-        if (disposed || own !== generation) return
-        const snapshot = current()
-        if (!snapshot) return
-        if (snapshot.error) observe('error')
-        else if (snapshot.paused) {
-          // Native pause cancels a pending play with AbortError. A reset pause
-          // alone does not determine the outcome of the new play request.
-          set(
-            error instanceof Error && error.name === 'AbortError'
-              ? hasMetadata(snapshot)
-                ? 'paused'
-                : 'loading'
-              : 'blocked',
-          )
-        }
-      })
+      requestPlay()
     }
+    publish()
   }
   return {
-    select(next: PlayerSource | null) {
-      if (disposed || next?.id === source?.id) return
+    snapshot,
+    select(next: PlayerSource | null, options: PlayerSelection = {}) {
+      if (disposed || (next?.id === source?.id && next?.url === source?.url))
+        return
+      seek.reset()
       if (!next) {
         stopMetadataTimer()
         stopDurationTimer()
         source = null
         generation++
+        cancelPlay()
         audio.setPreload('metadata')
         audio.pause()
         set('idle')
@@ -212,15 +312,50 @@ export function createPlayer(
       }
       const snapshot = audio.snapshot()
       metadataRetries = 0
+      if (options.position !== undefined) seek.request(options.position, true)
       load(
         next,
         Boolean(
-          source && !snapshot.error && !snapshot.ended && !snapshot.paused,
+          !options.paused &&
+          source &&
+          !snapshot.error &&
+          !snapshot.ended &&
+          (deferredPlay || !snapshot.paused),
         ),
       )
     },
+    play() {
+      if (disposed || !source || status === 'error' || wantsPlay) return
+      const actual = current()
+      if (actual?.ended) {
+        seek.request(0)
+        seek.reconcile(actual)
+      }
+      requestPlay()
+    },
+    pause() {
+      if (disposed) return
+      cancelPlay()
+      audio.pause()
+      publish('pause')
+    },
+    seek(seconds: number) {
+      if (
+        disposed ||
+        !source ||
+        status === 'error' ||
+        !Number.isFinite(seconds)
+      )
+        return
+      seek.request(seconds)
+      const actual = current()
+      if (actual) seek.reconcile(actual)
+      publish('seeked')
+    },
     retry() {
       if (disposed || !source) return
+      cancelPlay()
+      seek.reset()
       audio.pause()
       metadataRetries = 0
       load(source, false)
@@ -231,6 +366,8 @@ export function createPlayer(
       stopMetadataTimer()
       stopDurationTimer()
       generation++
+      cancelPlay()
+      seek.reset()
       for (const stop of unsubscribe) stop()
       audio.dispose()
     },

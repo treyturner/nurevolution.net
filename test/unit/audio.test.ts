@@ -9,6 +9,8 @@ class ControlledAudio extends EventTarget implements AudioPort {
   src = ''
   currentSrc = ''
   currentTime = 0
+  seeking = false
+  seekable = { length: 0, start: () => 0, end: () => 0 }
   ended = false
   readyState = 0
   duration = NaN
@@ -29,6 +31,25 @@ class ControlledAudio extends EventTarget implements AudioPort {
 }
 
 describe('audio adapter', () => {
+  it('seeks without playing and returns independent seekable range snapshots', () => {
+    const element = new ControlledAudio()
+    element.seekable = { length: 2, start: () => 5, end: () => 10 }
+    element.readyState = 1
+    element.duration = 10
+    const audio = createAudioAdapter(element)
+    audio.seek(8.25)
+    expect(element.currentTime).toBe(8.25)
+    expect(element.play).not.toHaveBeenCalled()
+    const snapshot = audio.snapshot()
+    expect(snapshot.seekable).toEqual([
+      { start: 5, end: 10 },
+      { start: 5, end: 10 },
+    ])
+    snapshot.seekable[0]!.start = 7
+    expect(audio.snapshot().seekable[0]!.start).toBe(5)
+    audio.dispose()
+    expect(() => audio.seek(0)).toThrow('disposed')
+  })
   it('loads a source without initiating playback', () => {
     const element = new ControlledAudio()
     const audio = createAudioAdapter(element)
