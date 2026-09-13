@@ -49,13 +49,17 @@ export function usePodcastPlayer(
   let pendingResetPauses = 0
   let suppressPauseCapture = false
   const cleanups: (() => void)[] = []
-  function capture(snapshot: PlayerSnapshot, event?: AudioEvent) {
+  function capture(
+    snapshot: PlayerSnapshot,
+    event?: AudioEvent,
+    explicitActivity = false,
+  ) {
     if (
       !storage ||
       !bootstrapped ||
       suspended ||
       resetting ||
-      suppressPauseCapture ||
+      (suppressPauseCapture && !explicitActivity) ||
       !snapshot.sourceId ||
       snapshot.pendingSeek !== null ||
       snapshot.status === 'error' ||
@@ -215,10 +219,21 @@ export function usePodcastPlayer(
       }
       state.restoreMessage = null
       initialWrite = true
-      capture(controller.snapshot())
+      capture(controller.snapshot(), undefined, true)
     },
     play: () => controller?.play(),
-    pause: () => controller?.pause(),
+    pause() {
+      if (!controller) return
+      if (element && !element.paused) pendingResetPauses++
+      resetting = true
+      try {
+        controller.pause()
+      } finally {
+        resetting = false
+      }
+      // Save the command once; its queued native pause is not new activity.
+      capture(controller.snapshot(), 'pause', true)
+    },
     seek: (seconds: number) => controller?.seek(seconds),
     skip: (seconds: number) => controller?.skip(seconds),
     setVolume: (value: number) => controller?.setVolume(value),

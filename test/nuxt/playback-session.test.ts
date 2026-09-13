@@ -136,13 +136,15 @@ it('contains denied browser storage while leaving the selected audio usable', as
 })
 
 it.each([
-  [false, false],
-  [true, false],
-  [false, true],
-  [true, true],
+  [false, 'lifecycle'],
+  [true, 'lifecycle'],
+  [false, 'retry'],
+  [true, 'retry'],
+  [false, 'pause'],
+  [true, 'pause'],
 ])(
-  'consumes a deferred reset pause without overwriting newer progress (stale: %s; Retry: %s)',
-  async (stale, retry) => {
+  'consumes a deferred reset pause without overwriting newer progress (stale: %s; action: %s)',
+  async (stale, action) => {
     let paused = true
     vi.spyOn(HTMLMediaElement.prototype, 'paused', 'get').mockImplementation(
       () => paused,
@@ -156,7 +158,15 @@ it.each([
     const audio = wrapper.get('audio')
     paused = false
     await audio.trigger('play')
-    if (retry) wrapper.findComponent(ArchivePlayer).props('player').retry()
+    audio.element.currentTime = 9
+    const player = wrapper.findComponent(ArchivePlayer).props('player')
+    if (action === 'retry') player.retry()
+    if (action === 'pause') {
+      player.pause()
+      expect(JSON.parse(localStorage.getItem(resumeKey)!).positionSeconds).toBe(
+        9,
+      )
+    }
     window.dispatchEvent(new Event('pagehide'))
     const newer = JSON.stringify({
       schemaVersion: 1,
