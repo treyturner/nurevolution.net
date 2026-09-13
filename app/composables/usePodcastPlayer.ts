@@ -152,7 +152,11 @@ export function usePodcastPlayer(
   watch(episode, () => {
     if (!bootstrapped) return
     state.restoreMessage = null
+    // A deliberate route selection is activity even when it selects the same
+    // source after a failed root restore. Keep its existing playback position.
+    initialWrite = true
     select()
+    capture(controller!.snapshot())
   })
   onBeforeUnmount(() => {
     disposed = true

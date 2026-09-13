@@ -158,6 +158,17 @@ test('failed saved detail leaves root usable and does not overwrite its resume p
       resumeKey,
     ),
   ).toBe('wp-417')
+  await page.locator(`a[href="${ruminate}"]`).click()
+  await expect(page).toHaveURL(new RegExp(ruminate + '$'))
+  await expect
+    .poll(() =>
+      page.evaluate(
+        (key) => JSON.parse(localStorage.getItem(key)!).episodeId,
+        resumeKey,
+      ),
+    )
+    .toBe('wp-484')
+  await position(page, 0)
 })
 
 test('new manual navigation supersedes a pending restore and starts the chosen episode paused', async ({
