@@ -73,7 +73,10 @@ describe('archive presentation and native media integration', () => {
     })
     await wrapper.get('audio').trigger('error')
     expect(wrapper.text()).toContain('Audio could not be loaded')
-    await wrapper.get('button').trigger('click')
+    await wrapper
+      .findAll('button')
+      .find((button) => button.text() === 'Retry audio')!
+      .trigger('click')
     expect(load).toHaveBeenCalledTimes(2)
     expect(play).not.toHaveBeenCalled()
     await wrapper.setProps({ episode: detail('wp-484') })

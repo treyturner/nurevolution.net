@@ -1,5 +1,6 @@
 import type { AudioAdapter, AudioEvent } from './audio'
 import { createPlayerSeek } from './player-seek'
+import { createPlayerVolume } from './player-volume'
 
 export type PlayerStatus =
   | 'idle'
@@ -24,6 +25,10 @@ export interface PlayerSnapshot {
   seeking: boolean
   pendingSeek: number | null
   seekMessage: string | null
+  volume: number
+  muted: boolean
+  volumeSupported: boolean
+  muteSupported: boolean
 }
 export interface PlayerSelection {
   position?: number
@@ -55,6 +60,7 @@ export function createPlayer(
     // A timeout can settle a seek without another browser event.
     if (!disposed && !reconciling && deferredPlay) requestPlay()
   })
+  const volume = createPlayerVolume(audio)
   function snapshot(): PlayerSnapshot {
     const actual = current()
     return {
@@ -66,6 +72,7 @@ export function createPlayer(
       duration: actual && hasMetadata(actual) ? actual.duration : null,
       seeking: actual?.seeking ?? false,
       ...seek.snapshot(),
+      ...volume.snapshot(),
     }
   }
   function publish(event?: AudioEvent) {
@@ -281,6 +288,7 @@ export function createPlayer(
       'timeupdate',
       'seeking',
       'seeked',
+      'volumechange',
     ] as const
   ).map((event) =>
     audio.subscribe(event, () => {
@@ -374,6 +382,26 @@ export function createPlayer(
       seek.request(seconds)
       const actual = current()
       if (actual) seek.reconcile(actual)
+      publish()
+    },
+    skip(seconds: number) {
+      if (disposed) return
+      const state = snapshot()
+      if (state.duration === null) return
+      const base = Math.min(
+        state.duration,
+        state.pendingSeek ?? state.currentTime,
+      )
+      this.seek(Math.min(state.duration, Math.max(0, base + seconds)))
+    },
+    setVolume(value: number) {
+      if (disposed) return
+      volume.setVolume(value)
+      publish()
+    },
+    toggleMute() {
+      if (disposed) return
+      volume.toggleMute()
       publish()
     },
     retry() {

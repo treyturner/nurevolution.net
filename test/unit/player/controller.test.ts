@@ -7,6 +7,8 @@ class Media extends EventTarget implements AudioPort {
   currentSrc = ''
   currentTime = 0
   seeking = false
+  volume = 1
+  muted = false
   seekable = { length: 0, start: () => 0, end: () => 0 }
   paused = true
   ended = false
@@ -970,5 +972,26 @@ it('does not publish queued source-reset pauses as new listening activity', asyn
   expect(observed.mock.calls.some((call) => call[1] === 'pause')).toBe(false)
   media.pause()
   expect(observed.mock.calls.some((call) => call[1] === 'pause')).toBe(true)
+  player.dispose()
+})
+
+it('clamps retained skip targets before rapid opposite actions', () => {
+  const { media, player } = setup()
+  player.select(a)
+  media.ready()
+  media.duration = 40
+  media.currentTime = 35
+  media.seeking = true
+  player.skip(30)
+  expect(player.snapshot().pendingSeek).toBe(40)
+  player.skip(-30)
+  expect(player.snapshot().pendingSeek).toBe(10)
+  player.skip(-30)
+  expect(player.snapshot().pendingSeek).toBe(0)
+  player.skip(30)
+  expect(player.snapshot().pendingSeek).toBe(30)
+  player.seek(65)
+  player.skip(-30)
+  expect(player.snapshot().pendingSeek).toBe(10)
   player.dispose()
 })

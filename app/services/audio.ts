@@ -14,6 +14,7 @@ export type AudioEvent =
   | 'timeupdate'
   | 'seeking'
   | 'seeked'
+  | 'volumechange'
 
 export type AudioPort = Pick<
   HTMLAudioElement,
@@ -22,6 +23,8 @@ export type AudioPort = Pick<
   | 'currentTime'
   | 'seeking'
   | 'seekable'
+  | 'volume'
+  | 'muted'
   | 'paused'
   | 'ended'
   | 'readyState'
@@ -53,6 +56,8 @@ export function createAudioAdapter(element: AudioPort) {
         currentSrc: element.currentSrc,
         currentTime: element.currentTime,
         seeking: element.seeking,
+        volume: element.volume,
+        muted: element.muted,
         // Reading seekable before a finite duration can pin WebKit's early
         // metadata duration at zero. Leave ranges untouched until ready.
         seekable: Array.from(
@@ -97,6 +102,14 @@ export function createAudioAdapter(element: AudioPort) {
     seek(seconds: number) {
       assertActive()
       element.currentTime = seconds
+    },
+    setVolume(volume: number) {
+      assertActive()
+      element.volume = volume
+    },
+    setMuted(muted: boolean) {
+      assertActive()
+      element.muted = muted
     },
     pause() {
       assertActive()

@@ -25,6 +25,11 @@ export function playerEpisodes(origin: string): EpisodeDetail[] {
         'musique-étoile.mp3',
       ][index]!,
     },
-    tracks: praxis.tracks,
+    tracks: [0, 0.5, 1.5].map((startTime, trackIndex) => ({
+      position: trackIndex + 1,
+      artist: 'Test tone',
+      title: `Track ${trackIndex + 1}`,
+      startTime,
+    })),
   }))
 }

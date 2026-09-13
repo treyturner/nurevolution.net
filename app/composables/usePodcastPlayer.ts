@@ -29,6 +29,10 @@ export function usePodcastPlayer(
     seeking: false,
     pendingSeek: null,
     seekMessage: null,
+    volume: 1,
+    muted: false,
+    volumeSupported: false,
+    muteSupported: false,
     attached: false,
     restoring: false,
     restoreMessage: null,
@@ -44,31 +48,46 @@ export function usePodcastPlayer(
   let resetting = false
   let pendingResetPauses = 0
   let suppressPauseCapture = false
+  let pendingPauseAt: number | null = null
   const cleanups: (() => void)[] = []
-  function capture(snapshot: PlayerSnapshot, event?: AudioEvent) {
+  function capture(
+    snapshot: PlayerSnapshot,
+    event?: AudioEvent,
+    explicitActivity = false,
+  ) {
     if (
       !storage ||
       !bootstrapped ||
       suspended ||
       resetting ||
-      suppressPauseCapture ||
+      (suppressPauseCapture && !explicitActivity) ||
       !snapshot.sourceId ||
-      snapshot.pendingSeek !== null ||
       snapshot.status === 'error' ||
       snapshot.sourceId !== episode()?.id
     )
       return
+    if (snapshot.wantsPlay) pendingPauseAt = null
+    else if (event === 'pause') pendingPauseAt = Date.now()
+    if (snapshot.pendingSeek !== null) return
     const selected = snapshot.sourceId !== savedId
     if (
       selected ||
       initialWrite ||
+      pendingPauseAt !== null ||
       event === 'seeked' ||
       event === 'pause' ||
       event === 'ended'
     ) {
+      const activityAt = event === 'seeked' ? Date.now() : pendingPauseAt
+      pendingPauseAt = null
       savedId = snapshot.sourceId
       initialWrite = false
-      storage.capture(snapshot.sourceId, snapshot.currentTime, true)
+      storage.capture(
+        snapshot.sourceId,
+        snapshot.currentTime,
+        true,
+        activityAt ?? Date.now(),
+      )
     } else if (event === 'timeupdate' && snapshot.wantsPlay) {
       storage.capture(snapshot.sourceId, snapshot.currentTime)
     }
@@ -182,6 +201,7 @@ export function usePodcastPlayer(
   watch(episode, () => {
     if (!bootstrapped) return
     state.restoreMessage = null
+    pendingPauseAt = null
     // A deliberate route selection is activity even when it selects the same
     // source after a failed root restore. Keep its existing playback position.
     initialWrite = true
@@ -202,6 +222,7 @@ export function usePodcastPlayer(
     },
     retry() {
       if (!controller || !state.sourceId) return
+      pendingPauseAt = null
       if (element && !element.paused) pendingResetPauses++
       resetting = true
       try {
@@ -211,11 +232,25 @@ export function usePodcastPlayer(
       }
       state.restoreMessage = null
       initialWrite = true
-      capture(controller.snapshot())
+      capture(controller.snapshot(), undefined, true)
     },
     play: () => controller?.play(),
-    pause: () => controller?.pause(),
+    pause() {
+      if (!controller) return
+      if (element && !element.paused) pendingResetPauses++
+      resetting = true
+      try {
+        controller.pause()
+      } finally {
+        resetting = false
+      }
+      // Save the command once; its queued native pause is not new activity.
+      capture(controller.snapshot(), 'pause', true)
+    },
     seek: (seconds: number) => controller?.seek(seconds),
+    skip: (seconds: number) => controller?.skip(seconds),
+    setVolume: (value: number) => controller?.setVolume(value),
+    toggleMute: () => controller?.toggleMute(),
   }
 }
 export type PodcastPlayer = ReturnType<typeof usePodcastPlayer>
