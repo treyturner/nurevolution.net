@@ -118,6 +118,18 @@ describe('episode page loading and navigation', () => {
   it('keeps canonical identity while discovering RSS on the current host', () => {
     expect(episodeHead(model, '/')).toMatchObject({
       title: 'nurevolution studios',
+      meta: [
+        {
+          name: 'description',
+          content: expect.stringContaining('from nurevolution studios.'),
+        },
+        { property: 'og:site_name', content: 'nurevolution studios' },
+        { property: 'og:title', content: 'nurevolution studios' },
+        {
+          property: 'og:description',
+          content: expect.stringContaining('from nurevolution studios.'),
+        },
+      ],
       link: [
         { rel: 'canonical', href: 'https://nurevolution.net/' },
         { rel: 'alternate', href: '/feed/podcast' },

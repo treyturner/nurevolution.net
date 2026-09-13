@@ -72,15 +72,17 @@ export function createEpisodeNavigation(
 
 export function episodeHead(model: EpisodePage, path: string) {
   const episode = model.selected
+  const title = 'nurevolution studios'
+  const description = episode
+    ? `Listen to ${episode.artist} — ${episode.title}. Episode audio, artwork, and tracklist from nurevolution studios.`
+    : model.show.descriptionText
   return {
-    title: 'nurevolution studios',
+    title,
     meta: [
-      {
-        name: 'description',
-        content: episode
-          ? `Listen to ${episode.artist} — ${episode.title}. Episode audio, artwork, and tracklist from Nurevolution.`
-          : model.show.descriptionText,
-      },
+      { name: 'description', content: description },
+      { property: 'og:site_name', content: title },
+      { property: 'og:title', content: title },
+      { property: 'og:description', content: description },
     ],
     link: [
       {

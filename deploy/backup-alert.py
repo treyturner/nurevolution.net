@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-"""Configure and send Nurevolution backup alerts to the owner's Discord webhook."""
+"""Configure and send nurevolution backup alerts to the owner's Discord webhook."""
 
 import getpass
 import json
@@ -81,13 +81,13 @@ def send(event):
     url = read_url()
     if event == "failure":
         content = (
-            f"Nurevolution backup FAILED on {socket.gethostname()}. "
+            f"nurevolution backup FAILED on {socket.gethostname()}. "
             "Inspect nurevolution-backup.service and verify the last successful snapshot. "
             "New content requires a successful backup before publication is complete."
         )
     else:
         content = (
-            f"Nurevolution backup alert TEST from {socket.gethostname()}. "
+            f"nurevolution backup alert TEST from {socket.gethostname()}. "
             "Discord notification delivery is working. This is a setup test."
         )
     payload = {"content": content, "allowed_mentions": {"parse": []}}
@@ -95,7 +95,7 @@ def send(event):
         url + "?wait=true",
         data=json.dumps(payload).encode(),
         method="POST",
-        headers={"Content-Type": "application/json", "User-Agent": "Nurevolution-Backup/1.0"},
+        headers={"Content-Type": "application/json", "User-Agent": "nurevolution-Backup/1.0"},
     )
     opener = urllib.request.build_opener(NoRedirect())
     try:

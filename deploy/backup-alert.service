@@ -1,5 +1,5 @@
 [Unit]
-Description=Nurevolution backup failure notification to Discord
+Description=nurevolution backup failure notification to Discord
 After=network-online.target
 Wants=network-online.target
 StartLimitIntervalSec=5min
