@@ -905,3 +905,53 @@ describe('native restart and changing seek bounds', () => {
     })
   })
 })
+
+it('allows native Play on a new source while an earlier source promise remains unresolved', async () => {
+  const { media, player } = setup()
+  let finish!: () => void
+  media.play.mockImplementationOnce(() => {
+    media.paused = false
+    media.emit('play')
+    return new Promise<void>((resolve) => {
+      finish = resolve
+    })
+  })
+  player.select(a)
+  media.ready()
+  player.play()
+  media.emit('playing')
+  media.pause()
+  player.select(b)
+  media.ready()
+  await media.play()
+  expect(media.paused).toBe(false)
+  expect(player.snapshot().wantsPlay).toBe(true)
+  finish()
+  await Promise.resolve()
+  expect(media.paused).toBe(false)
+  player.dispose()
+})
+
+it('stops a late Play success after disposal without publishing or retaining listeners', async () => {
+  const media = new Media()
+  const changed = vi.fn()
+  let finish!: () => void
+  media.play.mockImplementationOnce(
+    () =>
+      new Promise<void>((resolve) => {
+        finish = resolve
+      }),
+  )
+  const player = createPlayer(createAudioAdapter(media), changed)
+  player.select(a)
+  media.ready()
+  player.play()
+  player.dispose()
+  const calls = changed.mock.calls.length
+  media.paused = false
+  finish()
+  await Promise.resolve()
+  expect(media.paused).toBe(true)
+  media.emit('playing')
+  expect(changed).toHaveBeenCalledTimes(calls)
+})

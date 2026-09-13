@@ -85,7 +85,14 @@ export function createAudioAdapter(element: AudioPort) {
     },
     play(): Promise<void> {
       assertActive()
-      return element.play()
+      const request = element.play()
+      const stopAfterDisposal = () => {
+        if (disposed && !element.paused) element.pause()
+      }
+      // Keep teardown protection on the element: public commands reject after
+      // disposal, and the controller's listeners have already been removed.
+      void request.then(stopAfterDisposal, stopAfterDisposal)
+      return request
     },
     seek(seconds: number) {
       assertActive()

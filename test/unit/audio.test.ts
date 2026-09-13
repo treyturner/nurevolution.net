@@ -179,3 +179,22 @@ describe('audio adapter', () => {
     expect(second.paused).toBe(true)
   })
 })
+
+it('stops a late rejected Play after disposal while preserving its rejection', async () => {
+  const element = new ControlledAudio()
+  let reject!: (reason: Error) => void
+  element.play.mockImplementationOnce(
+    () =>
+      new Promise<void>((_resolve, fail) => {
+        reject = fail
+      }),
+  )
+  const audio = createAudioAdapter(element)
+  const pending = audio.play()
+  audio.dispose()
+  element.paused = false
+  const error = new Error('late rejection')
+  reject(error)
+  await expect(pending).rejects.toBe(error)
+  expect(element.paused).toBe(true)
+})

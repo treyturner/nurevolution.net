@@ -292,6 +292,8 @@ export function createPlayer(
   function load(next: PlayerSource, continuePlaying: boolean) {
     stopDurationTimer()
     generation++
+    // Only unresolved requests from this source can guard its native events.
+    pendingPlays.clear()
     intent++
     // A metadata-only retry must keep a queued Play cancellable in the UI.
     wantsPlay = continuePlaying || deferredPlay
