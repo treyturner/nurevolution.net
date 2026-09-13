@@ -674,4 +674,6 @@ it.each(['head', 'range', 'attachment', 'tls'])(
       ),
     ).toBe(accepted)
   },
+  // Three real, fsync-backed transactions need headroom for CI disk latency.
+  30_000,
 )
