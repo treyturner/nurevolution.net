@@ -9,6 +9,8 @@ class ControlledAudio extends EventTarget implements AudioPort {
   src = ''
   currentSrc = ''
   currentTime = 0
+  seeking = false
+  seekable = { length: 0, start: () => 0, end: () => 0 }
   ended = false
   readyState = 0
   duration = NaN
@@ -29,6 +31,41 @@ class ControlledAudio extends EventTarget implements AudioPort {
 }
 
 describe('audio adapter', () => {
+  it('does not read seekable ranges until metadata has a finite positive duration', () => {
+    const element = new ControlledAudio()
+    const ranges = vi.fn(() => ({ length: 0, start: () => 0, end: () => 0 }))
+    Object.defineProperty(element, 'seekable', { get: ranges })
+    const audio = createAudioAdapter(element)
+    for (const duration of [NaN, Infinity, 0]) {
+      element.readyState = 4
+      element.duration = duration
+      expect(audio.snapshot().seekable).toEqual([])
+    }
+    expect(ranges).not.toHaveBeenCalled()
+    element.duration = 120
+    audio.snapshot()
+    expect(ranges).toHaveBeenCalledOnce()
+  })
+
+  it('seeks without playing and returns independent seekable range snapshots', () => {
+    const element = new ControlledAudio()
+    element.seekable = { length: 2, start: () => 5, end: () => 10 }
+    element.readyState = 1
+    element.duration = 10
+    const audio = createAudioAdapter(element)
+    audio.seek(8.25)
+    expect(element.currentTime).toBe(8.25)
+    expect(element.play).not.toHaveBeenCalled()
+    const snapshot = audio.snapshot()
+    expect(snapshot.seekable).toEqual([
+      { start: 5, end: 10 },
+      { start: 5, end: 10 },
+    ])
+    snapshot.seekable[0]!.start = 7
+    expect(audio.snapshot().seekable[0]!.start).toBe(5)
+    audio.dispose()
+    expect(() => audio.seek(0)).toThrow('disposed')
+  })
   it('loads a source without initiating playback', () => {
     const element = new ControlledAudio()
     const audio = createAudioAdapter(element)
@@ -141,4 +178,23 @@ describe('audio adapter', () => {
     expect(first.paused).toBe(false)
     expect(second.paused).toBe(true)
   })
+})
+
+it('stops a late rejected Play after disposal while preserving its rejection', async () => {
+  const element = new ControlledAudio()
+  let reject!: (reason: Error) => void
+  element.play.mockImplementationOnce(
+    () =>
+      new Promise<void>((_resolve, fail) => {
+        reject = fail
+      }),
+  )
+  const audio = createAudioAdapter(element)
+  const pending = audio.play()
+  audio.dispose()
+  element.paused = false
+  const error = new Error('late rejection')
+  reject(error)
+  await expect(pending).rejects.toBe(error)
+  expect(element.paused).toBe(true)
 })

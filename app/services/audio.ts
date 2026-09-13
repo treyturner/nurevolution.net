@@ -11,12 +11,17 @@ export type AudioEvent =
   | 'pause'
   | 'ended'
   | 'error'
+  | 'timeupdate'
+  | 'seeking'
+  | 'seeked'
 
 export type AudioPort = Pick<
   HTMLAudioElement,
   | 'src'
   | 'currentSrc'
   | 'currentTime'
+  | 'seeking'
+  | 'seekable'
   | 'paused'
   | 'ended'
   | 'readyState'
@@ -41,14 +46,31 @@ export function createAudioAdapter(element: AudioPort) {
   return {
     snapshot() {
       assertActive()
+      const duration = element.duration
+      const readyState = element.readyState
       return {
         src: element.src,
         currentSrc: element.currentSrc,
         currentTime: element.currentTime,
+        seeking: element.seeking,
+        // Reading seekable before a finite duration can pin WebKit's early
+        // metadata duration at zero. Leave ranges untouched until ready.
+        seekable: Array.from(
+          {
+            length:
+              readyState >= 1 && Number.isFinite(duration) && duration > 0
+                ? element.seekable.length
+                : 0,
+          },
+          (_, index) => ({
+            start: element.seekable.start(index),
+            end: element.seekable.end(index),
+          }),
+        ),
         paused: element.paused,
         ended: element.ended,
-        readyState: element.readyState,
-        duration: element.duration,
+        readyState,
+        duration,
         error: element.error,
       }
     },
@@ -63,7 +85,18 @@ export function createAudioAdapter(element: AudioPort) {
     },
     play(): Promise<void> {
       assertActive()
-      return element.play()
+      const request = element.play()
+      const stopAfterDisposal = () => {
+        if (disposed && !element.paused) element.pause()
+      }
+      // Keep teardown protection on the element: public commands reject after
+      // disposal, and the controller's listeners have already been removed.
+      void request.then(stopAfterDisposal, stopAfterDisposal)
+      return request
+    },
+    seek(seconds: number) {
+      assertActive()
+      element.currentTime = seconds
     },
     pause() {
       assertActive()
