@@ -2,7 +2,7 @@
 export default defineEventHandler(async (event) => {
   assertMethod(event, ['GET', 'HEAD'])
   const name = getRouterParam(event, 'name')
-  if (name !== 'sample.wav' && name !== 'sample.mp3')
+  if (name !== 'sample.wav' && name !== 'sample.mp3' && name !== 'long.wav')
     throw createError({ statusCode: 404 })
   const asset = await useStorage('assets:media').getItemRaw<Uint8Array>(name)
   if (!asset)

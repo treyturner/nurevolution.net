@@ -7,6 +7,8 @@ class Media extends EventTarget implements AudioPort {
   currentSrc = ''
   currentTime = 0
   seeking = false
+  volume = 1
+  muted = false
   seekable = { length: 0, start: () => 0, end: () => 0 }
   paused = true
   ended = false

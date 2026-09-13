@@ -29,6 +29,10 @@ export function usePodcastPlayer(
     seeking: false,
     pendingSeek: null,
     seekMessage: null,
+    volume: 1,
+    muted: false,
+    volumeSupported: false,
+    muteSupported: false,
     attached: false,
     restoring: false,
     restoreMessage: null,
@@ -216,6 +220,9 @@ export function usePodcastPlayer(
     play: () => controller?.play(),
     pause: () => controller?.pause(),
     seek: (seconds: number) => controller?.seek(seconds),
+    skip: (seconds: number) => controller?.skip(seconds),
+    setVolume: (value: number) => controller?.setVolume(value),
+    toggleMute: () => controller?.toggleMute(),
   }
 }
 export type PodcastPlayer = ReturnType<typeof usePodcastPlayer>

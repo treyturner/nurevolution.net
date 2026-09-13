@@ -5,6 +5,7 @@ import type { PodcastPlayer } from '../composables/usePodcastPlayer'
 import { deliveryAssetUrl } from '../services/delivery-assets'
 import DownloadIcon from './DownloadIcon.vue'
 import ArtworkDialog from './ArtworkDialog.vue'
+import PlayerControls from './PlayerControls.vue'
 const props = defineProps<{
   episode: EpisodeDetail | null
   player: PodcastPlayer
@@ -89,7 +90,8 @@ const messages = {
       <p v-else>No episodes are available yet.</p>
       <audio
         :ref="player.bindAudio"
-        controls
+        :controls="!player.state.attached"
+        :class="{ 'custom-audio': player.state.attached }"
         controlslist="nodownload noplaybackrate"
         preload="metadata"
         aria-describedby="playback-status"
@@ -99,6 +101,7 @@ const messages = {
             : 'Episode audio'
         "
       />
+      <PlayerControls v-if="player.state.attached" :player="player" />
       <div class="player-actions">
         <p id="playback-status" class="media-status">
           {{
