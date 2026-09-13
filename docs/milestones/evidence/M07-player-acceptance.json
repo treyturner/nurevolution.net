@@ -166,5 +166,17 @@
     "url": "https://github.com/treyturner/nurevolution.net/pull/24",
     "evidenceLocation": "The PR timeline records CI, reviewer acceptance at the final head, discussion resolutions, and merge after this evidence commit.",
     "note": "Local verification is complete. This file does not claim acceptance of the commit that contains it before review occurs."
+  },
+  "ciReadinessFollowUp": {
+    "initialRun": "https://github.com/treyturner/nurevolution.net/actions/runs/34740159717",
+    "initialResult": "One WebKit restoration browser check failed; 198 browser checks passed.",
+    "finding": "The trace showed the test assigning native currentTime while the seek control remained disabled for unavailable duration, racing the pending initial zero restore.",
+    "change": "Wait for the enabled seek control and native seeking=false before the separate paused native assignment. Application behavior and original assertions are unchanged.",
+    "focusedVerification": {
+      "command": "CI=1 corepack pnpm exec playwright test test/e2e/player-restoration.spec.ts --project=webkit --grep 'paused native seeking' --repeat-each=20",
+      "passed": 20,
+      "report": "/tmp/nurevolution-m7-webkit-readiness-repeat.log"
+    },
+    "finalVerification": "Renewed CI and review at the final head are recorded in PR 24."
   }
 }
