@@ -1,5 +1,7 @@
 {
-  "admin": { "listen": "localhost:2019" },
+  "admin": {
+    "listen": "localhost:2019"
+  },
   "apps": {
     "http": {
       "servers": {
@@ -15,9 +17,7 @@
         "automate": [
           "nurevolution.net",
           "www.nurevolution.net",
-          "podcast.nurevolution.net",
-          "preview.nurevolution.net",
-          "podcast-preview.nurevolution.net"
+          "podcast.nurevolution.net"
         ]
       },
       "automation": {
@@ -26,9 +26,7 @@
             "subjects": [
               "nurevolution.net",
               "www.nurevolution.net",
-              "podcast.nurevolution.net",
-              "preview.nurevolution.net",
-              "podcast-preview.nurevolution.net"
+              "podcast.nurevolution.net"
             ],
             "issuers": [
               {

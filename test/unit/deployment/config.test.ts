@@ -16,16 +16,15 @@ it('renders exact public routes, attachment redirects and a complete download fa
   const site = renderSite(m, p)
   const json = JSON.stringify(site)
   expect(json).toContain('attachment;')
-  expect(json).toContain('podcast-preview.nurevolution.net/downloads/')
-  expect(json).toContain('noindex, nofollow')
-  expect(json).toContain('nurevolution-preview:3000')
+  expect(json).toContain('podcast.nurevolution.net/downloads/')
+  expect(json).not.toContain('noindex')
+  expect(json).toContain('nurevolution-production:3000')
   expect(json).toContain('"not":[{"method":["GET","HEAD"]}]')
-  expect(
-    JSON.stringify(renderSite(m, { ...p, environment: 'production' })),
-  ).not.toContain('noindex')
+  for (const environment of ['staging', 'development', undefined])
+    expect(() => profileSchema.parse({ ...p, environment })).toThrow()
   expect(() =>
     renderSite(m, { ...p, webOrigin: 'https://podcast.nurevolution.net' }),
-  ).toThrow('overlap')
+  ).toThrow('Website and media origins must differ')
   expect(() => renderSite(m, { ...p, mediaOrigin: p.webOrigin })).toThrow()
   for (const field of ['webOrigin', 'mediaOrigin'])
     expect(() =>

@@ -1,12 +1,12 @@
 import { expect, test } from '@playwright/test'
 import type { EpisodeSummary } from '../../shared/content/public'
-import { previewBaseURL } from '../../playwright.config'
+import { devBaseURL } from '../../playwright.config'
 import { hydrated, stubArchiveMedia } from './media'
 
-test('serves every thumbnail from the portable app with small WebP bodies on normal and preview origins', async ({
+test('serves every thumbnail from the portable app with small WebP bodies on normal and dev origins', async ({
   request,
 }) => {
-  for (const origin of ['', previewBaseURL]) {
+  for (const origin of ['', devBaseURL]) {
     const { episodes } = (await (
       await request.get(origin + '/api/episodes')
     ).json()) as { episodes: EpisodeSummary[] }

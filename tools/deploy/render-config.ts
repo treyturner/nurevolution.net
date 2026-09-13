@@ -15,7 +15,7 @@ const origin = z
   }, 'Expected an HTTPS origin without credentials or path')
 export const profileSchema = z
   .strictObject({
-    environment: z.enum(['preview', 'production']),
+    environment: z.literal('production'),
     webOrigin: origin,
     mediaOrigin: origin,
     appMemoryMiB: z.int().min(128).max(512),
@@ -149,17 +149,7 @@ export function renderSite(manifest: MediaManifest, profile: Profile) {
   return {
     '@id': 'nurevolution',
     match: [{ host: [...webHosts, ...mediaHosts, www] }],
-    handle: [
-      ...(profile.environment === 'preview'
-        ? [
-            {
-              handler: 'headers',
-              response: { set: { 'X-Robots-Tag': ['noindex, nofollow'] } },
-            },
-          ]
-        : []),
-      { handler: 'subroute', routes },
-    ],
+    handle: [{ handler: 'subroute', routes }],
     terminal: true,
   }
 }

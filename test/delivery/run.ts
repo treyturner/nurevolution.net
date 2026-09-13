@@ -84,9 +84,9 @@ try {
       {
         APP_IMAGE: appImage,
         APP_MEMORY_MIB: '384',
-        DEPLOY_ENVIRONMENT: 'preview',
-        WEB_ORIGIN: 'https://preview.nurevolution.net',
-        MEDIA_ORIGIN: 'https://podcast-preview.nurevolution.net',
+        DEPLOY_ENVIRONMENT: 'production',
+        WEB_ORIGIN: 'https://nurevolution.net',
+        MEDIA_ORIGIN: 'https://podcast.nurevolution.net',
       },
     ),
   ) as {
@@ -102,11 +102,11 @@ try {
   assert.equal(compose.services.app.read_only, true)
   assert.equal(
     compose.services.app.environment.NUXT_PUBLIC_WEB_ORIGIN,
-    'https://preview.nurevolution.net',
+    'https://nurevolution.net',
   )
   assert.equal(
     compose.services.app.environment.NUXT_PUBLIC_MEDIA_ORIGIN,
-    'https://podcast-preview.nurevolution.net',
+    'https://podcast.nurevolution.net',
   )
   await execute(
     'docker',
@@ -167,8 +167,6 @@ try {
       'nurevolution.net',
       'www.nurevolution.net',
       'podcast.nurevolution.net',
-      'preview.nurevolution.net',
-      'podcast-preview.nurevolution.net',
     ])
       await docker([
         'exec',
@@ -278,7 +276,7 @@ try {
     '--network',
     network,
     '--network-alias',
-    'nurevolution-preview',
+    'nurevolution-production',
     fixtureImage,
   ])
   await start(fixtureApp)
@@ -412,7 +410,7 @@ try {
   const webOrigin = 'http://' + address + ':' + edgePort,
     mediaOrigin = 'http://' + address + ':' + (await port(edge, '8081/tcp'))
   const profile = profileSchema.parse({
-    environment: 'preview',
+    environment: 'production',
     webOrigin: 'https://localhost',
     mediaOrigin: 'https://127.0.0.1',
     appMemoryMiB: 384,
@@ -570,7 +568,10 @@ try {
   // Exercise the exact canonical runtime through the same edge, independently
   // of the tiny catalog used by the attachment/browser fixture.
   const canonicalSite = JSON.parse(
-    JSON.stringify(site).replaceAll('nurevolution-preview:3000', app + ':3000'),
+    JSON.stringify(site).replaceAll(
+      'nurevolution-production:3000',
+      app + ':3000',
+    ),
   )
   // Preserve the existing www redirect without relying on WordPress or its TLS.
   const wwwSite = localSite('www.nurevolution.net', canonicalSite)

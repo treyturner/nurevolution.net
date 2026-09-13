@@ -106,10 +106,15 @@ export async function deployOnHost(
   await syncDirectory(paths.root)
   return withLock(resolve(stateRoot, 'deploy.lock'), () =>
     withLock(resolve(paths.edgeDirectory, 'deploy.lock'), async () => {
+      // An orphan journal still needs recovery even if its old profile is unsupported.
+      const stateDirectories = await fs.readdir(stateRoot, {
+        withFileTypes: true,
+      })
       for (const directory of [
         stateRoot,
-        resolve(stateRoot, 'preview'),
-        resolve(stateRoot, 'production'),
+        ...stateDirectories
+          .filter((entry) => entry.isDirectory())
+          .map((entry) => resolve(stateRoot, entry.name)),
       ]) {
         try {
           await fs.access(resolve(directory, 'pending.json'))
@@ -136,28 +141,6 @@ export async function deployOnHost(
         'utf8',
       )
       const profile = profileSchema.parse(JSON.parse(profileBytes))
-      if (profile.environment === 'preview') {
-        // The 1 GB host has one app/route slot. A preview must never replace
-        // canonical production traffic, including through the direct CLI.
-        for (const path of [
-          resolve(paths.root, 'production-enabled'),
-          resolve(stateRoot, 'production/current.json'),
-        ]) {
-          try {
-            await fs.lstat(path)
-            throw new Error(
-              'Preview deployment is disabled once production is enabled or recorded; reconcile cutover before reusing the shared slot',
-            )
-          } catch (error) {
-            if (!(
-              error instanceof Error &&
-              'code' in error &&
-              error.code === 'ENOENT'
-            ))
-              throw error
-          }
-        }
-      }
       const state = resolve(stateRoot, profile.environment)
       await fs.mkdir(state, { recursive: true })
       await syncDirectory(stateRoot)
