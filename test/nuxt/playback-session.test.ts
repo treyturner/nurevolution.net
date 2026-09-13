@@ -135,9 +135,14 @@ it('contains denied browser storage while leaving the selected audio usable', as
   wrapper.unmount()
 })
 
-it.each([false, true])(
-  'consumes a deferred lifecycle pause without overwriting newer tab progress (stale source: %s)',
-  async (stale) => {
+it.each([
+  [false, false],
+  [true, false],
+  [false, true],
+  [true, true],
+])(
+  'consumes a deferred reset pause without overwriting newer progress (stale: %s; Retry: %s)',
+  async (stale, retry) => {
     let paused = true
     vi.spyOn(HTMLMediaElement.prototype, 'paused', 'get').mockImplementation(
       () => paused,
@@ -151,6 +156,7 @@ it.each([false, true])(
     const audio = wrapper.get('audio')
     paused = false
     await audio.trigger('play')
+    if (retry) wrapper.findComponent(ArchivePlayer).props('player').retry()
     window.dispatchEvent(new Event('pagehide'))
     const newer = JSON.stringify({
       schemaVersion: 1,
@@ -259,6 +265,44 @@ it('persists zero when Retry discards a pending restore and when the same ID rec
   expect(audio.element.currentTime).toBe(0)
   expect(JSON.parse(localStorage.getItem(resumeKey)!).positionSeconds).toBe(0)
   expect(audio.element.paused).toBe(true)
+  wrapper.unmount()
+  vi.useRealTimers()
+})
+
+it('keeps saving actual activity after a seek times out with a visible error', async () => {
+  vi.useFakeTimers()
+  let paused = true
+  let ended = false
+  let position = 0
+  const wrapper = await mountSuspended(
+    harness({ isRoot: () => false, restore: async () => 'restored' }),
+  )
+  const audio = wrapper.get('audio')
+  Object.defineProperties(audio.element, {
+    paused: { configurable: true, get: () => paused },
+    ended: { configurable: true, get: () => ended },
+    currentTime: { configurable: true, get: () => position, set: () => {} },
+    duration: { configurable: true, value: 40 },
+    readyState: { configurable: true, value: 4 },
+    seeking: { configurable: true, value: true },
+  })
+  await audio.trigger('loadedmetadata')
+  paused = false
+  await audio.trigger('playing')
+  wrapper.findComponent(ArchivePlayer).props('player').seek(30)
+  await vi.advanceTimersByTimeAsync(5000)
+  expect(wrapper.text()).toContain('Could not seek. Try again.')
+  position = 12
+  await audio.trigger('timeupdate')
+  expect(JSON.parse(localStorage.getItem(resumeKey)!).positionSeconds).toBe(12)
+  position = 13
+  paused = true
+  await audio.trigger('pause')
+  expect(JSON.parse(localStorage.getItem(resumeKey)!).positionSeconds).toBe(13)
+  position = 40
+  ended = true
+  await audio.trigger('ended')
+  expect(JSON.parse(localStorage.getItem(resumeKey)!).positionSeconds).toBe(40)
   wrapper.unmount()
   vi.useRealTimers()
 })

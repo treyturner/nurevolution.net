@@ -42,7 +42,7 @@ export function usePodcastPlayer(
   let savedId: string | null = null
   let initialWrite = false
   let resetting = false
-  let teardownPauses = 0
+  let pendingResetPauses = 0
   let suppressPauseCapture = false
   const cleanups: (() => void)[] = []
   function capture(snapshot: PlayerSnapshot, event?: AudioEvent) {
@@ -54,7 +54,6 @@ export function usePodcastPlayer(
       suppressPauseCapture ||
       !snapshot.sourceId ||
       snapshot.pendingSeek !== null ||
-      snapshot.seekMessage ||
       snapshot.status === 'error' ||
       snapshot.sourceId !== episode()?.id
     )
@@ -98,14 +97,14 @@ export function usePodcastPlayer(
       listen(document, 'prerenderingchange', initialize, { once: true })
       return
     }
-    // Consume the native teardown event even if the controller rejects it as
+    // Consume the native reset/teardown event even if the controller rejects it as
     // belonging to an older source. Capture phase runs before media observers.
     listen(
       element!,
       'pause',
       () => {
-        if (!teardownPauses) return
-        teardownPauses--
+        if (!pendingResetPauses) return
+        pendingResetPauses--
         suppressPauseCapture = true
         queueMicrotask(() => {
           suppressPauseCapture = false
@@ -160,7 +159,7 @@ export function usePodcastPlayer(
     cleanups.push(() => target.removeEventListener(event, callback, options))
   }
   function pauseForLifecycle() {
-    if (controller && element && !element.paused) teardownPauses++
+    if (controller && element && !element.paused) pendingResetPauses++
     controller?.pause()
   }
   onMounted(() => {
@@ -203,6 +202,7 @@ export function usePodcastPlayer(
     },
     retry() {
       if (!controller || !state.sourceId) return
+      if (element && !element.paused) pendingResetPauses++
       resetting = true
       try {
         controller.retry()
