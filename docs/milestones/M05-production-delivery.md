@@ -1,5 +1,7 @@
 # M5 — Production delivery and operational rehearsal
 
+**Operating policy updated 2026-09-13:** production is the only hosted environment; local/workspace servers are used for development. Earlier rehearsal and cutover steps below are historical. Follow the current [deployment runbook](../DEPLOYMENT.md) and [maintenance record](../operations/maintenance.md).
+
 Status: **M5 core operational rehearsal passed; M6 production cutover completed, updated 2026-09-12.** Production now runs verified release `cd96435205764c51771f4d49292df259adab89cd`; preview and its promotion gate are disabled. The dated M5 records below preserve the original media/feed, desktop browser, capacity, rollback, MinIO application/certificate recovery, and Google Drive Headscale recovery evidence. Weekly backups remain configured. See [M6](M06-cutover-and-retirement.md) for production acceptance, the owner’s mobile/fresh-feed observations, remaining client/recovery checks, and observation/WordPress retirement. WordPress stays frozen and running for fallback.
 
 Roadmap: [M5](../../ROADMAP.md#m5--production-delivery-and-operational-rehearsal). Dependencies: [M4](M04-archive-player.md#merged-review-and-ci-evidence), [player delivery contract](../PLAYER.md), [feed validation](../FEED-VALIDATION.md), and the roadmap's D04/D08 decisions. Newer owner decisions take precedence over proposed defaults below.
@@ -42,7 +44,7 @@ Produce a reproducible application image and delivery configuration, then rehear
 
 M5 does not switch the production website or podcast DNS, retire WordPress, change GUIDs/enclosures, re-encode audio, add Spaces, build rich controls, or claim scheduled publishing. Those boundaries remain M6–M9. No new analytics, CMS, database, or managed application platform is needed.
 
-Other sites are future work. M5 configures Nurevolution and preserves the ability to add sites through the shared edge with separate application configuration, networks, secrets, and release state. Their domains, deployment, and capacity planning are outside this milestone and are not required owner inputs. Assess their resource needs when they are added; existing disposable isolation checks do not require provisioning another real site.
+Other sites are future work. M5 configures nurevolution and preserves the ability to add sites through the shared edge with separate application configuration, networks, secrets, and release state. Their domains, deployment, and capacity planning are outside this milestone and are not required owner inputs. Assess their resource needs when they are added; existing disposable isolation checks do not require provisioning another real site.
 
 ## Entry evidence and current modules
 
@@ -110,7 +112,7 @@ Default to one active application container on the selected 1 GB host. Pull the 
 
 Overlapping candidate/prior containers are an optional optimization only after measured peak usage proves the shared 1 GB host has sufficient headroom. If enabled, start and check the candidate before gracefully switching this site's upstream, then drain/stop the prior container. Do not make overlap a deployment prerequisite or claim zero downtime from configuration alone.
 
-Per-site deployment must not restart the shared edge or unrelated containers. An operator-owned helper accepts only validated Nurevolution release records, locks against concurrent site deployments, modifies only this site's configuration, and validates the full edge configuration before reload. Pin SSH host keys and constrain deployment credentials to the chosen operation/transport. Resolve how GitHub-hosted runners reach the host before configuring firewall rules; do not disable host-key verification or silently broaden an existing access policy. [Caddy command/reload reference](https://caddyserver.com/docs/command-line)
+Per-site deployment must not restart the shared edge or unrelated containers. An operator-owned helper accepts only validated nurevolution release records, locks against concurrent site deployments, modifies only this site's configuration, and validates the full edge configuration before reload. Pin SSH host keys and constrain deployment credentials to the chosen operation/transport. Resolve how GitHub-hosted runners reach the host before configuring firewall rules; do not disable host-key verification or silently broaden an existing access policy. [Caddy command/reload reference](https://caddyserver.com/docs/command-line)
 
 ### Media manifest and publication boundary
 

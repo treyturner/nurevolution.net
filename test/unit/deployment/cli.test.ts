@@ -54,11 +54,14 @@ it('requires explicit valid commands/options and routes each operation to its ch
   dirs.push(dir)
   const f = releaseFixture()
   await fs.writeFile(resolve(dir, 'deploy.mjs'), fixtureTooling)
-  await fs.mkdir(resolve(dir, 'state/preview'), { recursive: true })
+  await fs.mkdir(resolve(dir, 'state/production'), { recursive: true })
   await fs.writeFile(resolve(dir, 'profile.json'), serialize(profile))
   for (const key of ['release', 'manifest', 'configuration'] as const)
     await fs.writeFile(resolve(dir, key + '.json'), serialize(f[key]))
-  await fs.writeFile(resolve(dir, 'state/preview/previous.json'), serialize(f))
+  await fs.writeFile(
+    resolve(dir, 'state/production/previous.json'),
+    serialize(f),
+  )
   const print = vi.fn(),
     manifest = ['--manifest', resolve(dir, 'manifest.json')],
     roots = ['--audio', 'audio', '--uploads', 'uploads']

@@ -1,5 +1,5 @@
 [Unit]
-Description=Nurevolution encrypted MinIO backup
+Description=nurevolution encrypted MinIO backup
 After=network-online.target
 Wants=network-online.target
 OnFailure=nurevolution-backup-alert.service

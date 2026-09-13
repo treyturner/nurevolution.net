@@ -1,13 +1,13 @@
 import { expect, test } from '@playwright/test'
 import { readFile } from 'node:fs/promises'
 import {
-  previewBaseURL,
-  previewWebOrigin,
-  previewMediaOrigin,
+  devBaseURL,
+  devWebOrigin,
+  devMediaOrigin,
 } from '../../playwright.config'
 import { ready, stubArchiveMedia } from './media'
 
-test('preview renders and navigates with production media blocked and retains canonical RSS identity', async ({
+test('dev renders and navigates with production media blocked and retains canonical RSS identity', async ({
   page,
   request,
   browserName,
@@ -18,18 +18,18 @@ test('preview renders and navigates with production media blocked and retains ca
     return route.abort('blockedbyclient')
   })
   await stubArchiveMedia(page, {
-    web: previewWebOrigin,
-    media: previewMediaOrigin,
+    web: devWebOrigin,
+    media: devMediaOrigin,
   })
   const selected = '/episodes/trey-turner-praxis'
   const detail = await (
-    await request.get(previewBaseURL + '/api' + selected)
+    await request.get(devBaseURL + '/api' + selected)
   ).json()
-  const artwork = previewWebOrigin + new URL(detail.artworkUrl).pathname
-  const audio = previewMediaOrigin + new URL(detail.audio.url).pathname
-  const html = await (await request.get(previewBaseURL + selected)).text()
+  const artwork = devWebOrigin + new URL(detail.artworkUrl).pathname
+  const audio = devMediaOrigin + new URL(detail.audio.url).pathname
+  const html = await (await request.get(devBaseURL + selected)).text()
   expect(html).toContain(`src="${artwork}"`)
-  await page.goto(previewBaseURL + '/')
+  await page.goto(devBaseURL + '/')
   await ready(page)
   await expect(page.locator('.artwork img')).toBeVisible()
   await page.locator(`a[href="${selected}"]`).click()
@@ -51,18 +51,16 @@ test('preview renders and navigates with production media blocked and retains ca
     'href',
     'https://nurevolution.net' + selected,
   )
-  const feed = await (
-    await request.get(previewBaseURL + '/feed/podcast')
-  ).text()
+  const feed = await (await request.get(devBaseURL + '/feed/podcast')).text()
   expect(feed).toContain(detail.audio.url.replaceAll('&', '&amp;'))
-  expect(feed).not.toContain(previewWebOrigin)
-  expect(feed).not.toContain(previewMediaOrigin)
+  expect(feed).not.toContain(devWebOrigin)
+  expect(feed).not.toContain(devMediaOrigin)
   await expect(
     page.locator('link[rel="alternate"][type="application/rss+xml"]'),
   ).toHaveAttribute('href', '/feed/podcast')
   const rssLink = page.getByRole('link', { name: 'Subscribe via RSS' })
   await expect(rssLink).toHaveAttribute('href', '/feed/podcast')
-  const feedUrl = previewBaseURL + '/feed/podcast'
+  const feedUrl = devBaseURL + '/feed/podcast'
   const [openedFeed, download] = await Promise.all([
     page.waitForResponse(
       (response) =>

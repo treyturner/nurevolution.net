@@ -6,7 +6,7 @@ Use repository `rclone:gdrive.fracturetrey:Headscale/restic`. [Restic encrypts t
 
 ## Initial setup on Unraid
 
-Install [backup.sh](../../deploy/headscale/backup.sh) and [check-restore.sh](../../deploy/headscale/check-restore.sh) into `/mnt/cache/appdata/headscale-backup/`, owned by root. Use directory mode 0700 and script mode 0700. Preserve LF line endings. The helper requires the existing Bash, Docker CLI, jq, GNU coreutils/findutils/tar, flock, rclone, and pinned restic installation.
+Install [backup.sh](../../deploy/headscale/backup.sh), [check-restore.sh](../../deploy/headscale/check-restore.sh), and [scheduled-backup.sh](../../deploy/headscale/scheduled-backup.sh) into `/mnt/cache/appdata/headscale-backup/`, owned by root. Use directory mode 0700 and script mode 0700. Preserve LF line endings. The helper requires the existing Bash, Docker CLI, jq, GNU coreutils/findutils/tar, flock, rclone, and pinned restic installation.
 
 Run these commands individually from an interactive root shell. Stop if any command fails:
 
@@ -52,15 +52,15 @@ The `snapshots` command prints a JSON list of snapshot IDs, hosts, tags, and tim
 
 The helper applies retention and prunes only the `vault` host / `headscale` tag group. [Weekly and monthly retention overlap](https://restic.readthedocs.io/en/stable/060_forget.html); this does not promise seven distinct copies.
 
-Add an Unraid User Script named `backup_headscale`, schedule it weekly at a quiet time, and also run it after configuration/policy/key changes:
+Configure the Discord destination privately with `/bin/bash /mnt/cache/appdata/headscale-backup/scheduled-backup.sh configure`. The prompt hides the webhook URL and saves it as an owner-only file; it sends no message. The wrapper also requires curl. Add an Unraid User Script named `backup_headscale`, schedule it weekly at a quiet time, and also run it after configuration/policy/key changes:
 
 ```bash
 #!/bin/bash
 set -euo pipefail
-/bin/bash /mnt/cache/appdata/headscale-backup/backup.sh backup
+/bin/bash /mnt/cache/appdata/headscale-backup/scheduled-backup.sh
 ```
 
-Keep this separate from `isolate_headscale_network`, whose schedule remains Disabled because `/boot/config/go` loads that firewall before Docker starts. Review User Scripts output and the timestamp in `last-success.json`; the DigitalOcean Discord notifier does not monitor this separate Unraid job. No notification is sent by these helpers.
+Keep this separate from `isolate_headscale_network`, whose schedule remains Disabled because `/boot/config/go` loads that firewall before Docker starts. Review User Scripts output and the timestamp in `last-success.json`. The wrapper sends a concise Discord alert if backup fails, requires confirmation of a saved message, and preserves the failed backup exit status. Successful backups stay quiet. Complete logs stay in User Scripts. A missing webhook fails before backup, so configure it before replacing the scheduled entry point. This separate Unraid wrapper must be installed by the owner; the droplet notifier cannot monitor it. An Unraid outage prevents this local job from running at all; public uptime checks do not detect a missed Headscale backup.
 
 ## Recovering a failed Unraid host
 

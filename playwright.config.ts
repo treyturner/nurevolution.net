@@ -2,12 +2,12 @@ import { defineConfig, devices } from '@playwright/test'
 
 const appPort = process.env.NUREVOLUTION_TEST_PORT ?? '3100'
 const mediaPort = process.env.NUREVOLUTION_MEDIA_TEST_PORT ?? '3101'
-const previewPort = process.env.NUREVOLUTION_PREVIEW_TEST_PORT ?? '3102'
+const devPort = process.env.NUREVOLUTION_DEV_TEST_PORT ?? '3102'
 
 export const mediaBaseURL = `http://127.0.0.1:${mediaPort}`
-export const previewBaseURL = `http://127.0.0.1:${previewPort}`
-export const previewWebOrigin = 'https://preview-web.example.test'
-export const previewMediaOrigin = 'https://preview-media.example.test'
+export const devBaseURL = `http://127.0.0.1:${devPort}`
+export const devWebOrigin = 'https://dev-web.example.test'
+export const devMediaOrigin = 'https://dev-media.example.test'
 
 export default defineConfig({
   testDir: './test/e2e',
@@ -29,12 +29,12 @@ export default defineConfig({
   webServer: [
     {
       command: 'node .output/server/index.mjs',
-      url: previewBaseURL,
+      url: devBaseURL,
       env: {
         HOST: '127.0.0.1',
-        PORT: previewPort,
-        NUXT_PUBLIC_WEB_ORIGIN: previewWebOrigin,
-        NUXT_PUBLIC_MEDIA_ORIGIN: previewMediaOrigin,
+        PORT: devPort,
+        NUXT_PUBLIC_WEB_ORIGIN: devWebOrigin,
+        NUXT_PUBLIC_MEDIA_ORIGIN: devMediaOrigin,
       },
       reuseExistingServer: false,
       gracefulShutdown: { signal: 'SIGTERM', timeout: 5_000 },

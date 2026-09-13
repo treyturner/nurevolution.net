@@ -189,7 +189,8 @@ it('validates/pulls the exact image and deploys only the owned app and site rout
       (await fs.stat(resolve(f.paths.edgeDirectory, name))).mode & 0o777,
     ).toBe(0o644)
   expect(
-    (await fs.stat(resolve(f.root, 'state/preview/current.json'))).mode & 0o777,
+    (await fs.stat(resolve(f.root, 'state/production/current.json'))).mode &
+      0o777,
   ).toBe(0o600)
   expect(
     f.run.mock.calls.some(
@@ -208,10 +209,13 @@ it('validates/pulls the exact image and deploys only the owned app and site rout
   expect(f.run.mock.calls.some(([, args]) => args.includes('down'))).toBe(false)
   expect(
     await fs.readFile(resolve(f.paths.edgeDirectory, 'caddy.json'), 'utf8'),
-  ).toContain('nurevolution-preview:3000')
+  ).toContain('nurevolution-production:3000')
   await deployOnHost(f.bundle, f.paths, f.run, f.request)
   expect(
-    await fs.readFile(resolve(f.root, 'state/preview/previous.json'), 'utf8'),
+    await fs.readFile(
+      resolve(f.root, 'state/production/previous.json'),
+      'utf8',
+    ),
   ).toContain(f.record.release.imageDigest)
 })
 
@@ -239,7 +243,7 @@ it('accepts registry-pulled containerd images whose display IDs are manifest dig
     false,
   )
   expect(
-    await fs.readFile(resolve(f.root, 'state/preview/current.json'), 'utf8'),
+    await fs.readFile(resolve(f.root, 'state/production/current.json'), 'utf8'),
   ).toContain(f.record.release.imageId)
 })
 
@@ -350,7 +354,7 @@ it.each([false, true])(
   async (existing) => {
     const f = await fixture()
     if (existing) await deployOnHost(f.bundle, f.paths, f.run, f.request)
-    const state = resolve(f.root, 'state/preview')
+    const state = resolve(f.root, 'state/production')
     const composePath = resolve(state, 'compose.yaml')
     const acceptedCompose = existing
       ? await fs.readFile(composePath, 'utf8')
@@ -413,13 +417,13 @@ it.each(['webOrigin', 'mediaOrigin'] as const)(
   async (origin) => {
     const f = await fixture()
     await deployOnHost(f.bundle, f.paths, f.run, f.request)
-    const state = resolve(f.root, 'state/preview')
+    const state = resolve(f.root, 'state/production')
     const accepted = await fs.readFile(resolve(state, 'current.json'), 'utf8')
     const edgePath = resolve(f.paths.edgeDirectory, 'caddy.json')
     const acceptedEdge = await fs.readFile(edgePath, 'utf8')
     const changedProfile = {
       ...profile,
-      [origin]: 'https://changed-preview.nurevolution.net',
+      [origin]: 'https://changed-nurevolution.net',
       appMemoryMiB: 256,
     }
     // Different whitespace is allowed; the saved hash covers canonical profile data.
@@ -479,7 +483,7 @@ it.each(['webOrigin', 'mediaOrigin'] as const)(
 it('restarts the prior release with its accepted memory limit after a reduced limit fails', async () => {
   const f = await fixture()
   await deployOnHost(f.bundle, f.paths, f.run, f.request)
-  const current = resolve(f.root, 'state/preview/current.json')
+  const current = resolve(f.root, 'state/production/current.json')
   const accepted = await fs.readFile(current, 'utf8')
   await fs.writeFile(
     resolve(f.root, 'profile.json'),
@@ -502,7 +506,7 @@ it('restarts the prior release with its accepted memory limit after a reduced li
   ).toEqual(['128', String(profile.appMemoryMiB)])
   expect(await fs.readFile(current, 'utf8')).toBe(accepted)
   await expect(
-    fs.access(resolve(f.root, 'state/preview/pending.json')),
+    fs.access(resolve(f.root, 'state/production/pending.json')),
   ).rejects.toThrow()
 })
 
@@ -511,13 +515,13 @@ it.each(['missing', 'checksum', 'environment'])(
   async (failure) => {
     const f = await fixture()
     await deployOnHost(f.bundle, f.paths, f.run, f.request)
-    const current = resolve(f.root, 'state/preview/current.json')
+    const current = resolve(f.root, 'state/production/current.json')
     const saved = JSON.parse(await fs.readFile(current, 'utf8'))
     if (failure === 'missing') delete saved.profile
     else if (failure === 'checksum')
       saved.profile.webOrigin = 'https://wrong.nurevolution.net'
     else {
-      saved.profile.environment = 'production'
+      saved.profile.environment = 'staging'
       saved.profileSha256 = sha256(serialize(saved.profile))
     }
     const bytes = serialize(saved)
@@ -554,98 +558,42 @@ it('keeps an independently rebuilt edge when its tested binary and pinned build 
   ).rejects.toThrow('binary/build policy')
 })
 
-it('keeps preview rollback state separate when the first production deployment fails', async () => {
-  const f = await fixture()
-  await deployOnHost(f.bundle, f.paths, f.run, f.request)
-  const previewState = await fs.readFile(
-    resolve(f.root, 'state/preview/current.json'),
-    'utf8',
-  )
-  await fs.writeFile(
-    resolve(f.root, 'profile.json'),
-    serialize({
-      ...profile,
-      environment: 'production',
-      webOrigin: 'https://nurevolution.net',
-      mediaOrigin: 'https://podcast.nurevolution.net',
-    }),
-  )
-  f.run.mockClear()
-  f.request.mockResolvedValueOnce(new Response('failed', { status: 503 }))
-  await expect(
-    deployOnHost(f.bundle, f.paths, f.run, f.request),
-  ).rejects.toThrow('undeployed')
-  expect(
-    await fs.readFile(resolve(f.root, 'state/preview/current.json'), 'utf8'),
-  ).toBe(previewState)
-  expect(
-    JSON.parse(
-      await fs.readFile(
-        resolve(f.root, 'state/production/last-attempt.json'),
-        'utf8',
-      ),
-    ),
-  ).toMatchObject({ outcome: 'undeployed', previous: null })
-  expect(
-    f.run.mock.calls.filter(([, args]) => args.includes('up')),
-  ).toHaveLength(1)
-  expect(
-    f.run.mock.calls
-      .filter(([, args]) => args[0] === 'compose')
-      .every(([, args]) => args.includes('nurevolution-production')),
-  ).toBe(true)
-  await expect(
-    fs.access(resolve(f.root, 'state/production/current.json')),
-  ).rejects.toThrow()
-})
-
-it.each(['cutover marker', 'accepted production'])(
-  'blocks preview from replacing the shared slot after %s',
-  async (cutover) => {
+it.each(['staging', 'development'])(
+  'rejects an unsupported %s profile before touching accepted production',
+  async (environment) => {
     const f = await fixture()
     await deployOnHost(f.bundle, f.paths, f.run, f.request)
-    const previewPath = resolve(f.root, 'state/preview/current.json')
-    const previewBytes = await fs.readFile(previewPath, 'utf8')
-    if (cutover === 'cutover marker') {
-      await fs.writeFile(resolve(f.root, 'production-enabled'), '')
-    } else {
-      await fs.writeFile(
-        resolve(f.root, 'profile.json'),
-        serialize({
-          ...profile,
-          environment: 'production',
-          webOrigin: 'https://nurevolution.net',
-          mediaOrigin: 'https://podcast.nurevolution.net',
-        }),
-      )
-      await deployOnHost(f.bundle, f.paths, f.run, f.request)
-    }
+    const currentPath = resolve(f.root, 'state/production/current.json')
+    const current = await fs.readFile(currentPath, 'utf8')
     const edgePath = resolve(f.paths.edgeDirectory, 'caddy.json')
-    const acceptedEdge = await fs.readFile(edgePath, 'utf8')
-    await fs.writeFile(resolve(f.root, 'profile.json'), serialize(profile))
+    const edge = await fs.readFile(edgePath, 'utf8')
+    await fs.writeFile(
+      resolve(f.root, 'profile.json'),
+      serialize({ ...profile, environment }),
+    )
     f.run.mockClear()
     f.request.mockClear()
     await expect(
       deployOnHost(f.bundle, f.paths, f.run, f.request),
-    ).rejects.toThrow('Preview deployment is disabled')
+    ).rejects.toThrow()
     expect(f.run).not.toHaveBeenCalled()
     expect(f.request).not.toHaveBeenCalled()
-    expect(await fs.readFile(edgePath, 'utf8')).toBe(acceptedEdge)
-    expect(await fs.readFile(previewPath, 'utf8')).toBe(previewBytes)
+    expect(await fs.readFile(currentPath, 'utf8')).toBe(current)
+    expect(await fs.readFile(edgePath, 'utf8')).toBe(edge)
     await expect(
-      fs.access(resolve(f.root, 'state/preview/pending.json')),
+      fs.access(resolve(f.root, 'state/production/pending.json')),
     ).rejects.toThrow()
   },
 )
 
-it('blocks a different environment while an interrupted journal or unscoped state remains', async () => {
+it('blocks promotion while an orphan journal or unscoped state remains', async () => {
   const f = await fixture()
-  await fs.mkdir(resolve(f.root, 'state/production'), { recursive: true })
-  await fs.writeFile(resolve(f.root, 'state/production/pending.json'), '{}')
+  await fs.mkdir(resolve(f.root, 'state/retired'), { recursive: true })
+  await fs.writeFile(resolve(f.root, 'state/retired/pending.json'), '{}')
   await expect(
     deployOnHost(f.bundle, f.paths, f.run, f.request),
   ).rejects.toThrow('Unrecovered')
-  await fs.unlink(resolve(f.root, 'state/production/pending.json'))
+  await fs.unlink(resolve(f.root, 'state/retired/pending.json'))
   await fs.writeFile(resolve(f.root, 'state/current.json'), '{}')
   await expect(
     deployOnHost(f.bundle, f.paths, f.run, f.request),
@@ -708,11 +656,11 @@ it.each(['head', 'range', 'attachment', 'tls'])(
       deployOnHost(f.bundle, f.paths, f.run, f.request),
     ).rejects.toThrow('undeployed')
     await expect(
-      fs.access(resolve(f.root, 'state/preview/current.json')),
+      fs.access(resolve(f.root, 'state/production/current.json')),
     ).rejects.toThrow()
     await deployOnHost(f.bundle, f.paths, f.run, f.request)
     const accepted = await fs.readFile(
-      resolve(f.root, 'state/preview/current.json'),
+      resolve(f.root, 'state/production/current.json'),
       'utf8',
     )
     fail = true
@@ -720,7 +668,10 @@ it.each(['head', 'range', 'attachment', 'tls'])(
       deployOnHost(f.bundle, f.paths, f.run, f.request),
     ).rejects.toThrow('restored')
     expect(
-      await fs.readFile(resolve(f.root, 'state/preview/current.json'), 'utf8'),
+      await fs.readFile(
+        resolve(f.root, 'state/production/current.json'),
+        'utf8',
+      ),
     ).toBe(accepted)
   },
 )

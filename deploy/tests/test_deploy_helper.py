@@ -21,12 +21,12 @@ class DeployHelper(unittest.TestCase):
         script = textwrap.dedent(block)
         valid = {
             'RELEASE_COMMIT': 'a' * 40, 'VERIFY_RUN_ID': '12345',
-            'TARGET_ENVIRONMENT': 'preview', 'DEPLOYMENT_ENABLED': 'true',
-            'CUTOVER_ENABLED': 'false', 'HEADSCALE_URL': 'https://headscale.treyturner.info',
+            'TARGET_ENVIRONMENT': 'production', 'DEPLOYMENT_ENABLED': 'true',
+            'CUTOVER_ENABLED': 'true', 'HEADSCALE_URL': 'https://headscale.treyturner.info',
             'DEPLOY_HOST': '100.64.0.1',
         }
         cases = [({}, True), ({'HEADSCALE_URL': valid['HEADSCALE_URL'] + ':443'}, True),
-                 ({'TARGET_ENVIRONMENT': 'production', 'CUTOVER_ENABLED': 'true'}, True)]
+                 ({'TARGET_ENVIRONMENT': 'production'}, True)]
         cases += [({key: value}, False) for key, value in [
             ('DEPLOY_HOST', '159.89.86.21'), ('DEPLOY_HOST', '192.168.1.1'),
             ('DEPLOY_HOST', '127.0.0.1'), ('DEPLOY_HOST', '100.128.0.1'),
@@ -34,7 +34,7 @@ class DeployHelper(unittest.TestCase):
             ('DEPLOY_HOST', ''), ('HEADSCALE_URL', 'http://headscale.treyturner.info'),
             ('HEADSCALE_URL', valid['HEADSCALE_URL'] + ' --accept-routes'),
             ('HEADSCALE_URL', ''), ('RELEASE_COMMIT', 'main'), ('VERIFY_RUN_ID', '0'),
-            ('TARGET_ENVIRONMENT', 'production'), ('TARGET_ENVIRONMENT', 'unknown'),
+            ('CUTOVER_ENABLED', 'false'), ('TARGET_ENVIRONMENT', 'unknown'),
             ('DEPLOYMENT_ENABLED', 'false'),
         ]]
         for override, accepted in cases:
@@ -51,7 +51,8 @@ class DeployHelper(unittest.TestCase):
             root = Path(temp)
             (root / 'incoming').mkdir()
             (root / 'tooling').mkdir()
-            (root / 'profile.json').write_text('{"environment":"preview"}')
+            (root / 'production-enabled').touch()
+            (root / 'profile.json').write_text('{"environment":"production"}')
             (root / 'edge-container').write_text('test-edge')
             helper = root / 'helper'
             # Redirect only the fixed site root into this disposable fixture.
@@ -71,7 +72,7 @@ if (value.fail) process.exit(1);
                 incoming = root / 'incoming' / transfer
                 incoming.mkdir(mode=0o700)
                 (incoming / 'release.json').write_text(json.dumps({'fail': attempt == 1}))
-                result = subprocess.run(['bash', str(helper), 'preview', transfer],
+                result = subprocess.run(['bash', str(helper), 'production', transfer],
                                         capture_output=True, text=True, check=False)
                 self.assertEqual(result.returncode, 1 if attempt == 1 else 0, result.stderr)
                 self.assertEqual(result.stdout.strip(), str(incoming))
@@ -80,7 +81,7 @@ if (value.fail) process.exit(1);
             self.assertTrue(json.loads((attempts[0] / 'release.json').read_text())['fail'])
             for transfer in ('12345', '12345-0', '0-1', '../12345-1', '12345-1;true', ''):
                 with self.subTest(transfer=transfer):
-                    result = subprocess.run(['bash', str(helper), 'preview', transfer],
+                    result = subprocess.run(['bash', str(helper), 'production', transfer],
                                             capture_output=True, text=True, check=False)
                     self.assertNotEqual(result.returncode, 0)
                     self.assertEqual(result.stdout, '')

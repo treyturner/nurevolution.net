@@ -88,7 +88,7 @@ Keep shared pure domain logic and server logic separate when those areas are int
 
 ### 2. Build the minimal application shell
 
-- [x] Render a semantic main landmark, a Nurevolution heading, document language `en`, and a useful document title.
+- [x] Render a semantic main landmark, a nurevolution heading, document language `en`, and a useful document title.
 - [x] Start with a dark color scheme, readable contrast, and visible focus styling; defer final branding and layout decisions to M4.
 - [x] Provide correct unknown-route behavior with an HTTP 404 response.
 - [x] Keep the home page free of invented episodes, broken RSS links, placeholder player controls, and development diagnostics.

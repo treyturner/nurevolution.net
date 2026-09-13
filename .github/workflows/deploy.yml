@@ -3,11 +3,6 @@ name: Deploy verified release
 on:
   workflow_dispatch:
     inputs:
-      environment:
-        type: choice
-        options: [preview, production]
-        default: preview
-        required: true
       verify_run_id:
         description: Successful main Verify run containing the release bundle
         required: true
@@ -28,13 +23,13 @@ jobs:
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-24.04
     timeout-minutes: 15
-    environment: ${{ inputs.environment }}
+    environment: production
     steps:
       - name: Validate promotion inputs and environment readiness
         env:
           RELEASE_COMMIT: ${{ inputs.source_commit }}
           VERIFY_RUN_ID: ${{ inputs.verify_run_id }}
-          TARGET_ENVIRONMENT: ${{ inputs.environment }}
+          TARGET_ENVIRONMENT: production
           DEPLOYMENT_ENABLED: ${{ vars.DEPLOYMENT_ENABLED }}
           CUTOVER_ENABLED: ${{ vars.CUTOVER_ENABLED }}
           HEADSCALE_URL: ${{ vars.HEADSCALE_URL }}
@@ -42,9 +37,9 @@ jobs:
         run: |
           [[ "$RELEASE_COMMIT" =~ ^[a-f0-9]{40}$ ]]
           [[ "$VERIFY_RUN_ID" =~ ^[1-9][0-9]*$ ]]
-          [[ "$TARGET_ENVIRONMENT" == preview || "$TARGET_ENVIRONMENT" == production ]]
+          [[ "$TARGET_ENVIRONMENT" == production ]]
           [[ "$DEPLOYMENT_ENABLED" == true ]]
-          [[ "$TARGET_ENVIRONMENT" != production || "$CUTOVER_ENABLED" == true ]]
+          [[ "$CUTOVER_ENABLED" == true ]]
           [[ "$HEADSCALE_URL" =~ ^https://[a-zA-Z0-9][a-zA-Z0-9.-]*[a-zA-Z0-9](:443)?$ ]]
           python3 - <<'PY'
           import ipaddress, os
@@ -99,7 +94,7 @@ jobs:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
           SSH_KNOWN_HOSTS: ${{ secrets.SSH_KNOWN_HOSTS }}
           TRANSFER_ID: ${{ github.run_id }}-${{ github.run_attempt }}
-          TARGET_ENVIRONMENT: ${{ inputs.environment }}
+          TARGET_ENVIRONMENT: production
           HEADSCALE_PROXY_COMMAND: ${{ steps.headscale.outputs.proxy_command }}
         run: |
           [[ "$DEPLOY_HOST" =~ ^[a-zA-Z0-9][a-zA-Z0-9.-]+$ ]]

@@ -8,6 +8,12 @@ test('serves meaningful HTML before JavaScript runs', async ({ request }) => {
   const html = await response.text()
   expect(html).toMatch(/<html[^>]*lang="en"/)
   expect(html).toContain('<title>nurevolution studios</title>')
+  expect(html).toMatch(
+    /<meta[^>]*name="description"[^>]*content="[^"]*from nurevolution studios\."/,
+  )
+  expect(html).toMatch(
+    /<meta[^>]*property="og:site_name"[^>]*content="nurevolution studios"/,
+  )
   expect(html).toMatch(/<meta[^>]*name="color-scheme"[^>]*content="dark"/)
   expect(html).toMatch(
     /<main[^>]*>[\s\S]*<h1[^>]*>Ruminate<\/h1>[\s\S]*<\/main>/,
