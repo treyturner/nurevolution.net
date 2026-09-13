@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { PodcastPlayer } from '../composables/usePodcastPlayer'
 import { formatTime } from '../services/episode-page'
-const props = defineProps<{ player: PodcastPlayer }>()
+const props = defineProps<{ player: PodcastPlayer; sourceUrl?: string }>()
 const state = computed(() => props.player.state)
 const draft = ref<number | null>(null)
 const showPause = computed(
@@ -77,6 +77,7 @@ function key(event: KeyboardEvent) {
 watch(
   [
     () => state.value.sourceId,
+    () => props.sourceUrl,
     () => state.value.status === 'error' || state.value.status === 'ended',
   ],
   () => {

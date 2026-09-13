@@ -202,3 +202,20 @@ it('preserves a drag through buffering changes and cancels only on terminal stat
   expect(player.seek).toHaveBeenLastCalledWith(10)
   wrapper.unmount()
 })
+
+it('cancels a scrub when accepted audio changes under the same stable episode ID', async () => {
+  const { player } = fixture()
+  const wrapper = await mountSuspended(PlayerControls, {
+    props: { player, sourceUrl: '/original.mp3' },
+  })
+  const input = wrapper.get<HTMLInputElement>(
+    '[aria-label="Playback position"]',
+  )
+  input.element.value = '23'
+  await input.trigger('input')
+  await wrapper.setProps({ sourceUrl: '/replacement.mp3' })
+  await input.trigger('change')
+  expect(player.seek).not.toHaveBeenCalled()
+  expect(input.element.value).toBe('10')
+  wrapper.unmount()
+})

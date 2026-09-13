@@ -101,7 +101,11 @@ const messages = {
             : 'Episode audio'
         "
       />
-      <PlayerControls v-if="player.state.attached" :player="player" />
+      <PlayerControls
+        v-if="player.state.attached"
+        :player="player"
+        :source-url="episode?.audio.url"
+      />
       <p v-if="player.sequencing.failed" role="status">
         Episode could not be loaded. Choose an episode to try again.
       </p>
