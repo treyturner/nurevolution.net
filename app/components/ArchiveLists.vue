@@ -82,9 +82,50 @@ function key(event: KeyboardEvent) {
         :aria-labelledby="tabs ? 'episodes-tab' : 'episodes-heading'"
         :hidden="tabs && active !== 'episodes'"
       >
-        <h2 id="episodes-heading">
-          Episodes <span>{{ episodes.length }}</span>
-        </h2>
+        <div class="episode-list-heading">
+          <h2 id="episodes-heading">
+            Episodes <span>{{ episodes.length }}</span>
+          </h2>
+          <button
+            v-if="player"
+            type="button"
+            class="episode-sort"
+            :aria-label="
+              player.sortOrder === 'newest-first'
+                ? 'Newest first. Sort episodes oldest first'
+                : 'Oldest first. Sort episodes newest first'
+            "
+            :title="
+              player.sortOrder === 'newest-first'
+                ? 'Newest first. Sort oldest first'
+                : 'Oldest first. Sort newest first'
+            "
+            :aria-disabled="
+              !player.state.attached ||
+              player.state.restoring ||
+              player.sequencing.busy ||
+              episodes.length < 2
+            "
+            @click="player.toggleSort()"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+              focusable="false"
+            >
+              <path
+                v-if="player.sortOrder === 'newest-first'"
+                d="M12 4v16m-6-6 6 6 6-6"
+              />
+              <path v-else d="M12 20V4m-6 6 6-6 6 6" />
+            </svg>
+          </button>
+        </div>
         <EpisodeList
           :episodes="episodes"
           :site-url="siteUrl"

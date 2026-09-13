@@ -1,6 +1,10 @@
 import type { EpisodeSummary } from '../../shared/content/public'
-export type EpisodeDirection = 'older' | 'newer'
+export type EpisodeDirection = 'previous' | 'next'
+export type EpisodeSort = 'newest-first' | 'oldest-first'
 export type EpisodeMoveResult = 'committed' | 'failed' | 'cancelled'
+export function orderedEpisodes(episodes: EpisodeSummary[], sort: EpisodeSort) {
+  return sort === 'newest-first' ? episodes : [...episodes].reverse()
+}
 export function episodeNeighbor(
   episodes: EpisodeSummary[],
   id: string | null,
@@ -9,7 +13,7 @@ export function episodeNeighbor(
   const index = episodes.findIndex((episode) => episode.id === id)
   if (index < 0) return null
   return episodes[
-    (index + (direction === 'older' ? 1 : -1) + episodes.length) %
+    (index + (direction === 'next' ? 1 : -1) + episodes.length) %
       episodes.length
   ]!
 }
@@ -25,7 +29,6 @@ export function createEpisodeSequencer(
   host: SequenceHost,
   changed: () => void,
 ) {
-  let order: EpisodeDirection = 'older'
   let moving = false
   let continuing = false
   let disposed = false
@@ -64,24 +67,19 @@ export function createEpisodeSequencer(
   }
   return {
     snapshot: () => ({
-      order,
       failed,
       busy: moving || host.pending(),
       continuing,
-      available: host.neighbor('older') !== null,
+      available: host.neighbor('next') !== null,
     }),
     manual: (direction: EpisodeDirection) => go(direction, false),
-    ended: () => go(order, true),
+    ended: () => go('next', true),
     selected() {
       failed = false
       changed()
     },
     pause() {
       continuing = false
-      changed()
-    },
-    setOrder(direction: EpisodeDirection) {
-      order = direction
       changed()
     },
     dispose() {

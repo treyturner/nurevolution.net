@@ -2,17 +2,20 @@ import { expect, it, vi } from 'vitest'
 import {
   createEpisodeSequencer,
   episodeNeighbor,
+  orderedEpisodes,
+  type EpisodeSort,
   type EpisodeMoveResult,
 } from '../../../app/services/episode-sequencing'
 import { playerEpisodes } from '../../fixtures/media-app/data/player'
 const episodes = playerEpisodes('https://fixture.example')
 function fixture() {
   let id = episodes[0]!.id
+  let order: EpisodeSort = 'newest-first'
   let pending = false
   let finish!: (result: EpisodeMoveResult) => void
   const host = {
-    neighbor: (direction: 'older' | 'newer') =>
-      episodeNeighbor(episodes, id, direction),
+    neighbor: (direction: 'next' | 'previous') =>
+      episodeNeighbor(orderedEpisodes(episodes, order), id, direction),
     currentId: () => id,
     pending: () => pending,
     navigate: vi.fn(
@@ -30,6 +33,9 @@ function fixture() {
     sequence,
     host,
     changed,
+    sort: (value: EpisodeSort) => {
+      order = value
+    },
     select: (next: string) => {
       id = next
     },
@@ -39,32 +45,39 @@ function fixture() {
     finish: (success: boolean) => finish(success ? 'committed' : 'failed'),
   }
 }
-it('uses supplied newest-first order and wraps both directions, including one/empty/missing selections', () => {
-  for (let i = 0; i < episodes.length; i++) {
-    expect(episodeNeighbor(episodes, episodes[i]!.id, 'older')).toBe(
-      episodes[(i + 1) % 3],
+it('follows displayed order and wraps both ways without mutating canonical order', () => {
+  const original = [...episodes]
+  for (const sort of ['newest-first', 'oldest-first'] as const) {
+    const displayed = orderedEpisodes(episodes, sort)
+    expect(displayed).toEqual(
+      sort === 'newest-first' ? original : [...original].reverse(),
     )
-    expect(episodeNeighbor(episodes, episodes[i]!.id, 'newer')).toBe(
-      episodes[(i + 2) % 3],
-    )
+    for (let i = 0; i < displayed.length; i++) {
+      expect(episodeNeighbor(displayed, displayed[i]!.id, 'next')).toBe(
+        displayed[(i + 1) % 3],
+      )
+      expect(episodeNeighbor(displayed, displayed[i]!.id, 'previous')).toBe(
+        displayed[(i + 2) % 3],
+      )
+    }
   }
-  expect(episodeNeighbor([episodes[0]!], episodes[0]!.id, 'older')).toBe(
+  expect(episodes).toEqual(original)
+  expect(episodeNeighbor([episodes[0]!], episodes[0]!.id, 'next')).toBe(
     episodes[0],
   )
-  expect(episodeNeighbor([], null, 'older')).toBeNull()
-  expect(episodeNeighbor(episodes, 'missing', 'newer')).toBeNull()
+  expect(episodeNeighbor([], null, 'next')).toBeNull()
+  expect(episodeNeighbor(episodes, 'missing', 'previous')).toBeNull()
 })
-it('replaces on automatic progression, fixes its target before order changes, and ignores repeated actions', async () => {
+it('replaces on automatic progression, fixes its target before list order changes, and ignores repeated actions', async () => {
   const f = fixture()
   const completion = f.sequence.ended()
   expect(f.sequence.snapshot()).toMatchObject({
     busy: true,
     continuing: true,
-    order: 'older',
   })
   expect(f.host.navigate).toHaveBeenCalledWith(episodes[1], true)
-  f.sequence.setOrder('newer')
-  await f.sequence.manual('newer')
+  f.sort('oldest-first')
+  await f.sequence.manual('previous')
   expect(f.host.navigate).toHaveBeenCalledOnce()
   f.select(episodes[1]!.id)
   f.finish(true)
@@ -93,7 +106,7 @@ it('manual navigation pushes; manual pending navigation, failures, superseded ta
   await f.sequence.ended()
   expect(f.host.navigate).not.toHaveBeenCalled()
   f.pending(false)
-  const manual = f.sequence.manual('newer')
+  const manual = f.sequence.manual('previous')
   expect(f.host.navigate).toHaveBeenCalledWith(episodes[2], false)
   f.finish(true)
   await manual
@@ -114,7 +127,7 @@ it('manual navigation pushes; manual pending navigation, failures, superseded ta
 it('restarts one episode without routing and does nothing for a missing selection', async () => {
   const f = fixture()
   f.host.neighbor = () => episodes[0]!
-  await f.sequence.manual('older')
+  await f.sequence.manual('next')
   expect(f.host.restart).toHaveBeenCalledOnce()
   expect(f.host.play).not.toHaveBeenCalled()
   await f.sequence.ended()

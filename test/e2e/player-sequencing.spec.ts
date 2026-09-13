@@ -64,25 +64,109 @@ async function hold(page: Page, slug: string) {
   })
   return { release, request }
 }
-test('manual older/newer wrap independently of automatic order and use ordinary history', async ({
+test('the heading sort reverses the list and follows its top episode both ways before playback starts', async ({
+  page,
+}) => {
+  const episodes = await fixture(page)
+  await page.locator(`a[href="${episodes[0]!.path}"]`).click()
+  await expect(page).toHaveURL(new RegExp(episodes[0]!.path + '$'))
+  await ready(page)
+  const rows = page.locator('.episode-list li > a:first-child')
+  const paths = () =>
+    rows.evaluateAll((links) => links.map((a) => a.getAttribute('href')))
+  expect(await paths()).toEqual(episodes.map((e) => e.path))
+  await expect(
+    page.getByRole('combobox', { name: 'Automatic playback order' }),
+  ).toHaveCount(0)
+  const sort = page.getByRole('button', {
+    name: 'Newest first. Sort episodes oldest first',
+  })
+  await sort.focus()
+  await sort.press('Enter')
+  await expect(page).toHaveURL(new RegExp(episodes[2]!.path + '$'))
+  await ready(page)
+  expect(await paths()).toEqual([...episodes].reverse().map((e) => e.path))
+  await expect(rows.first()).toHaveAttribute('aria-current', 'page')
+  await expect(page.locator('audio')).toHaveJSProperty('paused', true)
+  expect(await page.locator('html').getAttribute('data-play-calls')).toBeNull()
+  const reverse = page.getByRole('button', {
+    name: 'Oldest first. Sort episodes newest first',
+  })
+  await expect(reverse).toBeFocused()
+  await reverse.press('Space')
+  await expect(page).toHaveURL(new RegExp(episodes[0]!.path + '$'))
+  await ready(page)
+  expect(await paths()).toEqual(episodes.map((e) => e.path))
+  await expect(rows.first()).toHaveAttribute('aria-current', 'page')
+  expect(await page.locator('html').getAttribute('data-play-calls')).toBeNull()
+  await expect(page.locator('audio')).toHaveCount(1)
+})
+
+for (const edge of ['newest', 'oldest'] as const) {
+  test(`sorting keeps the ${edge} episode after playback, even when paused back at zero`, async ({
+    page,
+  }) => {
+    const episodes = await fixture(page)
+    if (edge === 'oldest')
+      await page
+        .getByRole('button', {
+          name: 'Newest first. Sort episodes oldest first',
+        })
+        .click()
+    const selected = episodes[edge === 'newest' ? 0 : 2]!
+    const next = episodes[edge === 'newest' ? 2 : 0]!
+    await page.locator(`a[href="${selected.path}"]`).click()
+    await expect(page).toHaveURL(new RegExp(selected.path + '$'))
+    await ready(page)
+    await play(page)
+    await pause(page)
+    await page.getByRole('slider', { name: 'Playback position' }).press('Home')
+    await expect
+      .poll(() =>
+        page.locator('audio').evaluate((a: HTMLAudioElement) => a.currentTime),
+      )
+      .toBe(0)
+    const loads = await page.locator('html').getAttribute('data-loads')
+    await page
+      .getByRole('button', {
+        name:
+          edge === 'newest'
+            ? 'Newest first. Sort episodes oldest first'
+            : 'Oldest first. Sort episodes newest first',
+      })
+      .click()
+    await expect(page).toHaveURL(new RegExp(selected.path + '$'))
+    await expect(
+      page.locator('.episode-list li > a:first-child').last(),
+    ).toHaveAttribute('aria-current', 'page')
+    await expect(page.locator('audio')).toHaveJSProperty('paused', true)
+    expect(await page.locator('html').getAttribute('data-loads')).toBe(loads)
+    await page
+      .getByRole('button', { name: 'Next episode', exact: true })
+      .click()
+    await expect(page).toHaveURL(new RegExp(next.path + '$'))
+  })
+}
+
+test('manual next/previous follow displayed order, wrap, and use ordinary history', async ({
   page,
 }) => {
   const episodes = await fixture(page)
   const history = await page.evaluate(() => window.history.length)
   await page
-    .getByRole('combobox', { name: 'Automatic playback order' })
-    .selectOption('newer')
-  for (const index of [2, 0]) {
-    await page.getByRole('button', { name: 'Older episode' }).click()
+    .getByRole('button', { name: 'Newest first. Sort episodes oldest first' })
+    .click()
+  for (const index of [0, 2]) {
+    await page.getByRole('button', { name: 'Next episode' }).click()
     await expect(page).toHaveURL(new RegExp(episodes[index]!.path + '$'))
     await ready(page)
     await expect(page.locator('audio')).toHaveJSProperty('paused', true)
   }
-  await page.getByRole('button', { name: 'Newer episode' }).click()
-  await expect(page).toHaveURL(new RegExp(episodes[2]!.path + '$'))
+  await page.getByRole('button', { name: 'Previous episode' }).click()
+  await expect(page).toHaveURL(new RegExp(episodes[0]!.path + '$'))
   expect(await page.evaluate(() => window.history.length)).toBe(history + 3)
   await page.goBack()
-  await expect(page).toHaveURL(new RegExp(episodes[0]!.path + '$'))
+  await expect(page).toHaveURL(new RegExp(episodes[2]!.path + '$'))
   await expect(page.locator('audio')).toHaveCount(1)
 })
 test('actual natural completion advances in both directions and replaces history', async ({
@@ -96,8 +180,8 @@ test('actual natural completion advances in both directions and replaces history
   await pause(page)
   expect(await page.evaluate(() => window.history.length)).toBe(history)
   await page
-    .getByRole('combobox', { name: 'Automatic playback order' })
-    .selectOption('newer')
+    .getByRole('button', { name: 'Newest first. Sort episodes oldest first' })
+    .click()
   await play(page)
   await expect(page).toHaveURL(new RegExp(episodes[1]!.path + '$'))
   await expect(page.locator('.media-status')).toHaveText('Playing')
@@ -211,7 +295,7 @@ test('one episode restarts without source loads or route changes, manually and a
   await page
     .getByRole('slider', { name: 'Playback position' })
     .press('ArrowRight')
-  await page.getByRole('button', { name: 'Older episode' }).click()
+  await page.getByRole('button', { name: 'Next episode' }).click()
   await expect
     .poll(() =>
       page.locator('audio').evaluate((a: HTMLAudioElement) => a.currentTime),
