@@ -31,6 +31,22 @@ class ControlledAudio extends EventTarget implements AudioPort {
 }
 
 describe('audio adapter', () => {
+  it('does not read seekable ranges until metadata has a finite positive duration', () => {
+    const element = new ControlledAudio()
+    const ranges = vi.fn(() => ({ length: 0, start: () => 0, end: () => 0 }))
+    Object.defineProperty(element, 'seekable', { get: ranges })
+    const audio = createAudioAdapter(element)
+    for (const duration of [NaN, Infinity, 0]) {
+      element.readyState = 4
+      element.duration = duration
+      expect(audio.snapshot().seekable).toEqual([])
+    }
+    expect(ranges).not.toHaveBeenCalled()
+    element.duration = 120
+    audio.snapshot()
+    expect(ranges).toHaveBeenCalledOnce()
+  })
+
   it('seeks without playing and returns independent seekable range snapshots', () => {
     const element = new ControlledAudio()
     element.seekable = { length: 2, start: () => 5, end: () => 10 }

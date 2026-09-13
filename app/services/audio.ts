@@ -53,6 +53,8 @@ export function createAudioAdapter(element: AudioPort) {
         currentSrc: element.currentSrc,
         currentTime: element.currentTime,
         seeking: element.seeking,
+        // Reading seekable before a finite duration can pin WebKit's early
+        // metadata duration at zero. Leave ranges untouched until ready.
         seekable: Array.from(
           {
             length:

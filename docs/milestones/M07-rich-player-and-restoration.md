@@ -1,6 +1,6 @@
 # M7 — Rich player, interactive tracklists, and restoration
 
-Status: **Decision-complete implementation plan for owner review. Implementation has not started.** Prepared 2026-09-13 on `feat/m7-player-enhancements`, created from `main` at `f33d001a9427f35612ad1d2d3290929e2129ca0a` after fetching and confirming equality with `origin/main`.
+Status: **Partially implemented; the playback, seek, and storage foundations are under PR review.** The owner authorized implementation and sequential PR review/merge cycles on 2026-09-13, with production deployment expressly prohibited. Restoration wiring and subsequent UI/sequencing slices follow. Prepared 2026-09-13 on `feat/m7-player-enhancements`, created from `main` at `f33d001a9427f35612ad1d2d3290929e2129ca0a` after fetching and confirming equality with `origin/main`.
 
 Roadmap: [M7](../../ROADMAP.md#m7--rich-player-interactive-tracklists-and-restoration). Prerequisites: [M4 player](M04-archive-player.md), the existing [player guide](../PLAYER.md), and confirmed roadmap decisions D01/D02. The owner's request starts M7 planning while [M6 observation and retirement](M06-cutover-and-retirement.md) remain open. M6 retirement is not an implementation prerequisite; its unfinished checks remain in M6.
 
@@ -8,7 +8,7 @@ Roadmap: [M7](../../ROADMAP.md#m7--rich-player-interactive-tracklists-and-restor
 
 Deliver one persistent, accessible player with custom playback/seek/volume controls, seekable timed tracks, position-based highlighting, older/newer episode controls, automatic sequencing, and local restoration within a 24-hour visit window. Fresh documents always start paused, including restored positions and explicit episode links.
 
-The following choices are the proposed implementation contract for this review. Owner-confirmed behavior is identified separately; the other choices are resolved recommendations, not claims of prior approval. There are no unanswered product or architecture questions required to begin implementation after review.
+The following implementation contract was accepted by the owner's instruction to implement M7. Earlier owner-confirmed behavior is distinguished from the choices proposed in this plan. There are no unanswered product or architecture questions required to proceed.
 
 | Area            | Decision                                                                                                                                                                                                                                                               |
 | --------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -252,4 +252,4 @@ During implementation, update `docs/PLAYER.md`, the README's current behavior, t
 
 M7 implementation is complete when all four slices are implemented, the canonical gate passes, owner interface review is recorded, and device/accessibility results or explicitly accepted limitations are documented. Deployment uses the existing verified immutable application image and production promotion procedure; no media, Caddy, DNS, workflow, or host configuration change is expected. Production is the only hosted environment; review implementation through local/workspace servers. Publish only as a separately authorized release after that concrete result is ready. A same-environment rollback restores the prior application; the additive local keys are ignored by the older player and leave content/feed/media untouched.
 
-Planning acceptance is limited to a cleanly based feature branch, this reviewable plan, accurate navigation links, and documentation checks. Runtime implementation, commits, pushes, PR creation, deployment, and M6 retirement are not performed by this planning task.
+The initial planning task delivered the branch, plan, links, and documentation checks. Subsequent owner authorization covers implementation, commits, pushes, review cycles, and merging, with one open PR at a time. Production deployment and M6 retirement remain excluded. PR #20 adds the controller/seek/storage foundations; the visible native player behavior is unchanged until the restoration integration and custom-control slices follow.

@@ -746,3 +746,93 @@ describe('restored positions and explicit playback intent', () => {
     expect(media.load).toHaveBeenCalledOnce()
   })
 })
+
+describe('review regressions for queued playback', () => {
+  beforeEach(() => vi.useFakeTimers())
+  afterEach(() => {
+    vi.clearAllTimers()
+    vi.useRealTimers()
+  })
+  it('keeps queued restored Play visible and cancellable through a metadata retry', () => {
+    const { media, player } = setup()
+    player.select(a, { position: 10 })
+    player.play()
+    vi.advanceTimersByTime(10_000)
+    expect(media.load).toHaveBeenCalledTimes(2)
+    expect(player.snapshot()).toMatchObject({
+      wantsPlay: true,
+      pendingSeek: 10,
+    })
+    player.pause()
+    media.ready()
+    expect(media.currentTime).toBe(10)
+    expect(media.play).not.toHaveBeenCalled()
+    expect(player.snapshot().wantsPlay).toBe(false)
+  })
+  it('releases deferred Play on a seek timeout without requiring a later event', () => {
+    const { media, player } = setup()
+    player.select(a, { position: 10 })
+    player.play()
+    media.seeking = true
+    media.ready()
+    expect(media.play).not.toHaveBeenCalled()
+    vi.advanceTimersByTime(5000)
+    expect(media.play).toHaveBeenCalledOnce()
+    expect(player.snapshot()).toMatchObject({
+      pendingSeek: null,
+      seekMessage: 'Saved position could not be restored.',
+    })
+  })
+  it('does not label a pending seek request as a confirmed seeked event', () => {
+    const media = new Media()
+    const observed = vi.fn()
+    const player = createPlayer(createAudioAdapter(media), vi.fn(), observed)
+    player.select(a)
+    player.seek(20)
+    expect(observed.mock.calls.some((call) => call[1] === 'seeked')).toBe(false)
+    media.ready()
+    expect(observed.mock.calls.some((call) => call[1] === 'seeked')).toBe(false)
+    media.emit('seeked')
+    expect(observed).toHaveBeenLastCalledWith(
+      expect.objectContaining({ currentTime: 20, pendingSeek: null }),
+      'seeked',
+    )
+  })
+  it('native Pause cancels a Play promise that remains unresolved after playback starts', async () => {
+    const { media, player } = setup()
+    let finish!: () => void
+    media.play.mockImplementationOnce(() => {
+      media.paused = false
+      media.emit('play')
+      return new Promise<void>((resolve) => {
+        finish = resolve
+      })
+    })
+    player.select(a)
+    media.ready()
+    player.play()
+    media.emit('playing')
+    media.pause()
+    expect(player.snapshot().wantsPlay).toBe(false)
+    player.play()
+    expect(media.play).toHaveBeenCalledTimes(2)
+    finish()
+    await Promise.resolve()
+    expect(media.paused).toBe(false)
+  })
+  it('ignores a source-reset pause but honors a later real pause on the new source', async () => {
+    const { media, player } = setup()
+    player.select(a)
+    media.ready()
+    await media.play()
+    media.play.mockImplementationOnce(() => new Promise<void>(() => {}))
+    player.select(b)
+    media.emit('pause')
+    expect(player.snapshot().wantsPlay).toBe(true)
+    media.ready()
+    media.paused = false
+    media.emit('playing')
+    media.pause()
+    expect(player.snapshot().wantsPlay).toBe(false)
+  })
+})

@@ -48,7 +48,13 @@ export function createPlayer(
   const pendingPlays = new Set<number>()
   let deferredPlay = false
   let reconciling = false
-  const seek = createPlayerSeek(audio, () => publish())
+  let resetPausePending = false
+  let playObservedSinceLoad = false
+  const seek = createPlayerSeek(audio, () => {
+    publish()
+    // A timeout can settle a seek without another browser event.
+    if (!disposed && !reconciling && deferredPlay) requestPlay()
+  })
   function snapshot(): PlayerSnapshot {
     const actual = current()
     return {
@@ -177,6 +183,9 @@ export function createPlayer(
   function observe(event: AudioEvent) {
     const snapshot = current()
     if (!snapshot) return
+    const resetPause =
+      event === 'pause' && resetPausePending && !playObservedSinceLoad
+    if (event === 'pause') resetPausePending = false
     if (snapshot.error) {
       stopMetadataTimer()
       stopDurationTimer()
@@ -212,7 +221,7 @@ export function createPlayer(
       return
     }
     if (event === 'pause' && snapshot.paused) {
-      if (!pendingPlays.size && !deferredPlay) cancelPlay()
+      if (!resetPause) cancelPlay()
       // A queued source-reset pause must not erase an autoplay rejection.
       if (status !== 'blocked' && status !== 'error' && status !== 'delayed') {
         const ready = hasMetadata(snapshot)
@@ -230,6 +239,7 @@ export function createPlayer(
         return
       }
       wantsPlay = true
+      playObservedSinceLoad = true
       set(
         event === 'playing' && snapshot.readyState >= 3
           ? 'playing'
@@ -280,7 +290,10 @@ export function createPlayer(
     stopDurationTimer()
     generation++
     intent++
-    wantsPlay = continuePlaying
+    // A metadata-only retry must keep a queued Play cancellable in the UI.
+    wantsPlay = continuePlaying || deferredPlay
+    resetPausePending = resetPausePending || !audio.snapshot().paused
+    playObservedSinceLoad = false
     seek.reset(true)
     source = next
     set('loading')
@@ -350,7 +363,7 @@ export function createPlayer(
       seek.request(seconds)
       const actual = current()
       if (actual) seek.reconcile(actual)
-      publish('seeked')
+      publish()
     },
     retry() {
       if (disposed || !source) return
