@@ -159,6 +159,11 @@ export function usePodcastPlayer(
       () => {},
       (snapshot, event) => {
         Object.assign(state, snapshot)
+        if (
+          sequence.snapshot().continuing &&
+          (snapshot.status === 'error' || snapshot.status === 'blocked')
+        )
+          sequence.pause()
         capture(snapshot, event)
       },
       () => {
@@ -291,6 +296,7 @@ export function usePodcastPlayer(
     retry() {
       if (!controller || !state.sourceId) return
       pendingPauseAt = null
+      sequence.pause()
       if (element && !element.paused) pendingResetPauses++
       resetting = true
       try {

@@ -247,3 +247,42 @@ test('a rejected automatic Play stops on the new episode with an explicit contin
   )
   await expect(page.locator('audio')).toHaveJSProperty('paused', true)
 })
+
+test('a media failure during automatic detail loading cancels continuation on the committed target', async ({
+  page,
+}) => {
+  const episodes = await fixture(page)
+  const held = await hold(page, episodes[2]!.slug)
+  try {
+    await play(page)
+    await finish(page)
+    await held.request
+    await page.locator('audio').evaluate((audio: HTMLAudioElement) => {
+      const failedSource = audio.src
+      const original = Object.getOwnPropertyDescriptor(
+        HTMLMediaElement.prototype,
+        'error',
+      )!.get!
+      Object.defineProperty(audio, 'error', {
+        configurable: true,
+        get() {
+          return audio.src === failedSource ? { code: 2 } : original.call(audio)
+        },
+      })
+      audio.dispatchEvent(new Event('error'))
+    })
+    await expect(page.locator('.media-status')).toHaveText(
+      'Audio could not be loaded. Please try again.',
+    )
+    held.release()
+    await expect(page).toHaveURL(new RegExp(episodes[2]!.path + '$'))
+    await ready(page)
+    await expect(page.locator('audio')).toHaveJSProperty('paused', true)
+    await expect(
+      page.getByRole('button', { name: 'Play', exact: true }),
+    ).toBeVisible()
+    expect(await page.locator('html').getAttribute('data-play-calls')).toBe('1')
+  } finally {
+    held.release()
+  }
+})
