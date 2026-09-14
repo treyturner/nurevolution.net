@@ -17,6 +17,7 @@ import impulseTimings from '../../docs/content/impulse-track-timings.json' with 
 import bassFaceSpaceRaceTimings from '../../docs/content/bass-face-space-race-track-timings.json' with { type: 'json' }
 import lostInTranslationTimings from '../../docs/content/lost-in-translation-track-timings.json' with { type: 'json' }
 import offTheCuffTimings from '../../docs/content/off-the-cuff-track-timings.json' with { type: 'json' }
+import isThisThingOnTimings from '../../docs/content/is-this-thing-on-track-timings.json' with { type: 'json' }
 import { readCatalog } from '../../server/content/repository.ts'
 import { publicFeedArchive } from '../../server/content/feed.ts'
 import { fileReader } from '../../tools/content/files.ts'
@@ -112,6 +113,7 @@ test('serves the complete canonical archive with subscriber identities, track ti
       bassFaceSpaceRaceTimings,
       lostInTranslationTimings,
       offTheCuffTimings,
+      isThisThingOnTimings,
     ].find((e) => e.episodeId === raw.id)
     for (const [index, source] of raw.tracklist.tracks.entries()) {
       expect(detail.tracks[index]).toEqual({
@@ -137,7 +139,7 @@ test('serves the complete canonical archive with subscriber identities, track ti
       /sourceRoot|relativePath|sourceSnapshot|databaseGuid|sha256/,
     )
   }
-  expect({ tracks, starts }).toEqual({ tracks: 832, starts: 436 })
+  expect({ tracks, starts }).toEqual({ tracks: 832, starts: 455 })
   const showResponse = await request.get('/api/show')
   expect(showResponse.status()).toBe(200)
   expect(await showResponse.json()).toEqual({
