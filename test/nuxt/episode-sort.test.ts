@@ -68,7 +68,7 @@ it.each([0, 12])(
     expect(f.state.value.model!.selected!.id).toBe(newest.id)
     expect(f.paths()).toEqual(f.episodes.map((episode) => episode.path))
     expect(f.sort.attributes('aria-label')).toBe(
-      'Newest first. Sort episodes oldest first',
+      'Sort: Newest. Click for Oldest',
     )
     expect(f.wrapper.find('select').exists()).toBe(false)
     await f.sort.trigger('click')
@@ -79,7 +79,7 @@ it.each([0, 12])(
       [...f.episodes].reverse().map((episode) => episode.path),
     )
     expect(f.sort.attributes('aria-label')).toBe(
-      'Oldest first. Sort episodes newest first',
+      'Sort: Oldest. Click for Newest',
     )
     expect(f.play).not.toHaveBeenCalled()
     await f.sort.trigger('click')
@@ -118,7 +118,7 @@ it.each(['playing', 'paused-at-zero', 'middle'])(
     expect(f.audio.element.paused).toBe(paused)
     expect(f.load).toHaveBeenCalledTimes(loads)
     expect(f.sort.attributes('aria-label')).toBe(
-      'Oldest first. Sort episodes newest first',
+      'Sort: Oldest. Click for Newest',
     )
     await f.sort.trigger('click')
     expect(f.state.value.model!.selected!.id).toBe(id)

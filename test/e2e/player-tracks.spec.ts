@@ -37,6 +37,54 @@ async function at(page: Page, seconds: number) {
     )
     .toBeCloseTo(seconds, 1)
 }
+test('the current track plays and pauses in place with mouse and keyboard', async ({
+  page,
+}) => {
+  await fixture(page, [0, 8.25, 32])
+  const audio = page.locator('audio')
+  await audio.evaluate((element: HTMLAudioElement) => {
+    element.muted = true
+    element.currentTime = 12.345
+  })
+  await at(page, 12.345)
+  await expect(audio).toHaveJSProperty('seeking', false)
+  const current = page.locator('.track-list li[aria-current] button')
+  await expect(current).toHaveAccessibleName(/^Play track 2:/)
+  let seeks = 0
+  await page.exposeFunction('recordTrackSeek', () => {
+    seeks++
+  })
+  await audio.evaluate((element: HTMLAudioElement) => {
+    element.addEventListener('seeking', () => {
+      void (
+        window as typeof window & { recordTrackSeek: () => Promise<void> }
+      ).recordTrackSeek()
+    })
+  })
+  await current.click()
+  await expect(page.locator('.media-status')).toHaveText('Playing')
+  await expect(current).toHaveAccessibleName(/^Pause track 2:/)
+  await expect(current.locator('.track-current')).toHaveCSS(
+    'transition-duration',
+    '1s',
+  )
+  await current.click()
+  await expect(audio).toHaveJSProperty('paused', true)
+  const pausedAt = await audio.evaluate((a: HTMLAudioElement) => a.currentTime)
+  expect(pausedAt).toBeGreaterThanOrEqual(12.345)
+  expect(pausedAt).toBeLessThan(32)
+  await current.focus()
+  await current.press('Enter')
+  await expect(page.locator('.media-status')).toHaveText('Playing')
+  await current.press('Space')
+  await expect(audio).toHaveJSProperty('paused', true)
+  expect(
+    await audio.evaluate((a: HTMLAudioElement) => a.currentTime),
+  ).toBeGreaterThanOrEqual(pausedAt)
+  await expect(current).toBeFocused()
+  expect(seeks).toBe(0)
+})
+
 test('timed rows seek paused or active with supported highlights and exact fractional targets', async ({
   page,
 }) => {

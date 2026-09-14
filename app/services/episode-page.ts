@@ -44,9 +44,18 @@ export function createEpisodeNavigation(
 ) {
   let generation = 0
   let controller: AbortController | undefined
+  const guards = new Set<
+    (path: string, slug?: string) => boolean | Promise<boolean>
+  >()
   const preparing = new Set<(path: string, token: number) => void>()
   let staged: { path: string; model: EpisodePage } | undefined
   return {
+    onBeforePrepare(
+      guard: (path: string, slug?: string) => boolean | Promise<boolean>,
+    ) {
+      guards.add(guard)
+      return () => guards.delete(guard)
+    },
     onPrepare(listener: (path: string, token: number) => void) {
       preparing.add(listener)
       return () => preparing.delete(listener)
@@ -62,10 +71,22 @@ export function createEpisodeNavigation(
     async prepare(path: string, slug?: string) {
       const own = ++generation
       controller?.abort()
-      controller = new AbortController()
       staged = undefined
-      state.pendingPath = path
       state.failedPath = null
+      for (const guard of guards) {
+        let allowed = guard(path, slug)
+        if (typeof allowed !== 'boolean') {
+          state.pendingPath = null
+          allowed = await allowed
+        }
+        if (own !== generation) return false
+        if (!allowed) {
+          state.pendingPath = null
+          return false
+        }
+      }
+      controller = new AbortController()
+      state.pendingPath = path
       for (const listener of preparing) listener(path, own)
       try {
         const model = await load(path, slug, controller.signal)

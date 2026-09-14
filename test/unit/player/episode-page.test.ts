@@ -38,6 +38,56 @@ function deferred<T>() {
 }
 
 describe('episode page loading and navigation', () => {
+  it('waits for confirmation before loading and preserves the current page on cancellation', async () => {
+    const s = { ...state(), model, path: '/current' }
+    const decision = deferred<boolean>()
+    const load = vi.fn(async () => model)
+    const nav = createEpisodeNavigation(s, load)
+    const guard = vi.fn(() => decision.promise)
+    const stop = nav.onBeforePrepare(guard)
+    const prepared = vi.fn()
+    nav.onPrepare(prepared)
+    const pending = nav.prepare('/other', 'other')
+    expect(guard).toHaveBeenCalledWith('/other', 'other')
+    expect(load).not.toHaveBeenCalled()
+    expect(prepared).not.toHaveBeenCalled()
+    expect(s.pendingPath).toBeNull()
+    decision.resolve(false)
+    expect(await pending).toBe(false)
+    expect(s).toMatchObject({ model, path: '/current', failedPath: null })
+    stop()
+    const token = await nav.prepare('/unguarded')
+    expect(load).toHaveBeenCalledOnce()
+    nav.complete('/unguarded', Number(token))
+    expect(s.path).toBe('/unguarded')
+  })
+
+  it('loads only the latest confirmed target when decisions are superseded', async () => {
+    const s = state()
+    const first = deferred<boolean>(),
+      second = deferred<boolean>()
+    const load = vi.fn(async () => model)
+    const nav = createEpisodeNavigation(s, load)
+    nav.onBeforePrepare((path) =>
+      path === '/first' ? first.promise : second.promise,
+    )
+    const old = nav.prepare('/first')
+    const current = nav.prepare('/second')
+    first.resolve(true)
+    expect(await old).toBe(false)
+    expect(load).not.toHaveBeenCalled()
+    second.resolve(true)
+    const token = await current
+    expect(load).toHaveBeenCalledOnce()
+    expect(load).toHaveBeenCalledWith(
+      '/second',
+      undefined,
+      expect.any(AbortSignal),
+    )
+    nav.complete('/second', Number(token))
+    expect(s.path).toBe('/second')
+  })
+
   it('cancels an owned restore request and aborts superseded requests without cancelling a newer navigation', async () => {
     const s = state()
     const first = deferred<typeof model>()
@@ -46,6 +96,7 @@ describe('episode page loading and navigation', () => {
       signals.push(signal!)
       return first.promise
     })
+    nav.onBeforePrepare(() => true)
     const prepared = vi.fn()
     const unsubscribe = nav.onPrepare(prepared)
     const old = nav.prepare('/old')

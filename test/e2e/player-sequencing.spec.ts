@@ -79,8 +79,10 @@ test('the heading sort reverses the list and follows its top episode both ways b
     page.getByRole('combobox', { name: 'Automatic playback order' }),
   ).toHaveCount(0)
   const sort = page.getByRole('button', {
-    name: 'Newest first. Sort episodes oldest first',
+    name: 'Sort: Newest. Click for Oldest',
   })
+  await expect(sort).toHaveText('Sort: Newest')
+  await expect(sort).toHaveAttribute('title', 'Click for Oldest')
   await sort.focus()
   await sort.press('Enter')
   await expect(page).toHaveURL(new RegExp(episodes[2]!.path + '$'))
@@ -90,8 +92,10 @@ test('the heading sort reverses the list and follows its top episode both ways b
   await expect(page.locator('audio')).toHaveJSProperty('paused', true)
   expect(await page.locator('html').getAttribute('data-play-calls')).toBeNull()
   const reverse = page.getByRole('button', {
-    name: 'Oldest first. Sort episodes newest first',
+    name: 'Sort: Oldest. Click for Newest',
   })
+  await expect(reverse).toHaveText('Sort: Oldest')
+  await expect(reverse).toHaveAttribute('title', 'Click for Newest')
   await expect(reverse).toBeFocused()
   await reverse.press('Space')
   await expect(page).toHaveURL(new RegExp(episodes[0]!.path + '$'))
@@ -110,7 +114,7 @@ for (const edge of ['newest', 'oldest'] as const) {
     if (edge === 'oldest')
       await page
         .getByRole('button', {
-          name: 'Newest first. Sort episodes oldest first',
+          name: 'Sort: Newest. Click for Oldest',
         })
         .click()
     const selected = episodes[edge === 'newest' ? 0 : 2]!
@@ -131,8 +135,8 @@ for (const edge of ['newest', 'oldest'] as const) {
       .getByRole('button', {
         name:
           edge === 'newest'
-            ? 'Newest first. Sort episodes oldest first'
-            : 'Oldest first. Sort episodes newest first',
+            ? 'Sort: Newest. Click for Oldest'
+            : 'Sort: Oldest. Click for Newest',
       })
       .click()
     await expect(page).toHaveURL(new RegExp(selected.path + '$'))
@@ -154,7 +158,7 @@ test('manual next/previous follow displayed order, wrap, and use ordinary histor
   const episodes = await fixture(page)
   const history = await page.evaluate(() => window.history.length)
   await page
-    .getByRole('button', { name: 'Newest first. Sort episodes oldest first' })
+    .getByRole('button', { name: 'Sort: Newest. Click for Oldest' })
     .click()
   for (const index of [0, 2]) {
     await page.getByRole('button', { name: 'Next episode' }).click()
@@ -180,7 +184,7 @@ test('actual natural completion advances in both directions and replaces history
   await pause(page)
   expect(await page.evaluate(() => window.history.length)).toBe(history)
   await page
-    .getByRole('button', { name: 'Newest first. Sort episodes oldest first' })
+    .getByRole('button', { name: 'Sort: Newest. Click for Oldest' })
     .click()
   await play(page)
   await expect(page).toHaveURL(new RegExp(episodes[1]!.path + '$'))
@@ -253,6 +257,9 @@ test('an already pending manual request wins over a natural end', async ({
   try {
     await play(page)
     await page.locator(`a[href="${episodes[0]!.path}"]`).click()
+    await page
+      .getByRole('button', { name: 'Change episode', exact: true })
+      .click()
     await held.request
     await finish(page)
     await expect(page.locator('.media-status')).toHaveText('Episode finished.')

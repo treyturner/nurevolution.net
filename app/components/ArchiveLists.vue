@@ -92,13 +92,13 @@ function key(event: KeyboardEvent) {
             class="episode-sort"
             :aria-label="
               player.sortOrder === 'newest-first'
-                ? 'Newest first. Sort episodes oldest first'
-                : 'Oldest first. Sort episodes newest first'
+                ? 'Sort: Newest. Click for Oldest'
+                : 'Sort: Oldest. Click for Newest'
             "
             :title="
               player.sortOrder === 'newest-first'
-                ? 'Newest first. Sort oldest first'
-                : 'Oldest first. Sort newest first'
+                ? 'Click for Oldest'
+                : 'Click for Newest'
             "
             :aria-disabled="
               !player.state.attached ||
@@ -108,22 +108,8 @@ function key(event: KeyboardEvent) {
             "
             @click="player.toggleSort()"
           >
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              aria-hidden="true"
-              focusable="false"
-            >
-              <path
-                v-if="player.sortOrder === 'newest-first'"
-                d="M12 4v16m-6-6 6 6 6-6"
-              />
-              <path v-else d="M12 20V4m-6 6 6-6 6 6" />
-            </svg>
+            Sort:
+            {{ player.sortOrder === 'newest-first' ? 'Newest' : 'Oldest' }}
           </button>
         </div>
         <EpisodeList
