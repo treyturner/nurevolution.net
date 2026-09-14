@@ -6,6 +6,7 @@ const props = defineProps<{
   tracks: EpisodeDetail['tracks']
   player?: PodcastPlayer
 }>()
+const playing = computed(() => props.player?.state.status === 'playing')
 const timed = (position: number) =>
   props.player?.tracks.positions.includes(position) ?? false
 </script>
@@ -43,15 +44,29 @@ const timed = (position: number) =>
         <span>
           <span class="track-artist">{{ track.artist }}</span
           ><span class="track-title">{{ track.title }}</span>
+        </span>
+        <span v-if="track.startTime !== null" class="track-meta">
           <span
             v-if="player?.tracks.current === track.position"
             class="track-current"
-            >Current position</span
           >
+            <span>{{ playing ? 'now playing' : 'selected' }}</span>
+            <svg
+              class="track-equalizer"
+              :class="{ 'is-playing': playing }"
+              viewBox="0 0 18 16"
+              aria-hidden="true"
+              focusable="false"
+            >
+              <rect x="0" y="8" width="2" height="8" rx="0.5" />
+              <rect x="4" y="3" width="2" height="13" rx="0.5" />
+              <rect x="8" y="0" width="2" height="16" rx="0.5" />
+              <rect x="12" y="5" width="2" height="11" rx="0.5" />
+              <rect x="16" y="9" width="2" height="7" rx="0.5" />
+            </svg>
+          </span>
+          <span class="track-start">{{ formatTime(track.startTime) }}</span>
         </span>
-        <span v-if="track.startTime !== null" class="track-start">{{
-          formatTime(track.startTime)
-        }}</span>
       </component>
     </li>
   </ol>

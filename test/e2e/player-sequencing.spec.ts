@@ -214,7 +214,7 @@ test('Pause while the next detail is pending allows its commit but cancels conti
     await finish(page)
     await held.request
     await expect(
-      page.getByRole('group', { name: 'Episode navigation' }),
+      page.getByRole('button', { name: 'Next episode' }),
     ).toHaveAttribute('aria-busy', 'true')
     await pause(page)
     held.release()

@@ -93,10 +93,20 @@ test('volume keyboard and mute reflect native state; unsupported volume has an h
   await expect
     .poll(() => audio.evaluate((a: HTMLAudioElement) => a.volume))
     .toBeCloseTo(0.95, 3)
+  const box = (await volume.boundingBox())!
+  await volume.click({ position: { x: box.width / 2, y: box.height / 2 } })
+  await expect
+    .poll(() => audio.evaluate((a: HTMLAudioElement) => a.volume))
+    .toBeCloseTo(0.5, 1)
+  await expect(audio).toHaveJSProperty('muted', false)
+  await expect(page.locator('.volume-waves path')).toHaveCount(2)
   await page.getByRole('button', { name: 'Mute', exact: true }).click()
   await expect(audio).toHaveJSProperty('muted', true)
+  await expect(page.locator('.volume-muted')).toBeVisible()
+  await expect(page.locator('.volume-waves path')).toHaveCount(0)
   await page.getByRole('button', { name: 'Unmute', exact: true }).click()
   await expect(audio).toHaveJSProperty('muted', false)
+  await expect(page.locator('.volume-waves path')).toHaveCount(2)
   await page.addInitScript(() => {
     Object.defineProperty(HTMLMediaElement.prototype, 'volume', {
       configurable: true,

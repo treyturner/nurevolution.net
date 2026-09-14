@@ -149,15 +149,32 @@ it('provides exact keyboard seek operations without global shortcuts and speaks 
 it('wires volume and mute independently and leaves no slider space for device-owned volume', async () => {
   const { player, state } = fixture()
   const wrapper = await mountSuspended(PlayerControls, { props: { player } })
-  const input = wrapper.get<HTMLInputElement>('.volume-control input')
+  const input = wrapper.get<HTMLInputElement>('[aria-label="Volume"]')
   input.element.value = '0.35'
   await input.trigger('input')
   expect(player.setVolume).toHaveBeenCalledWith(0.35)
+  expect(player.toggleMute).not.toHaveBeenCalled()
+  for (const [volume, waves] of [
+    [0, 0],
+    [0.05, 1],
+    [1 / 3, 1],
+    [0.35, 2],
+    [2 / 3, 2],
+    [0.7, 3],
+    [1, 3],
+  ]) {
+    state.volume = volume!
+    await wrapper.vm.$nextTick()
+    expect(wrapper.findAll('.volume-waves path')).toHaveLength(waves!)
+    expect(wrapper.find('.volume-muted').exists()).toBe(false)
+  }
   await wrapper.get('[aria-label="Mute"]').trigger('click')
   expect(player.toggleMute).toHaveBeenCalledOnce()
   state.muted = true
   await wrapper.vm.$nextTick()
   expect(wrapper.find('[aria-label="Unmute"]').exists()).toBe(true)
+  expect(wrapper.find('.volume-muted').exists()).toBe(true)
+  expect(wrapper.find('.volume-waves').exists()).toBe(false)
   state.volumeSupported = false
   await wrapper.vm.$nextTick()
   expect(wrapper.find('.volume-control').exists()).toBe(false)
