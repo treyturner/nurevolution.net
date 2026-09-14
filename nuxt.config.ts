@@ -4,6 +4,9 @@ export default defineNuxtConfig({
   compatibilityDate: '2026-09-07',
   ssr: true,
   devtools: { enabled: false },
+  vite: {
+    server: { allowedHosts: ['.coder.treyturner.info'] },
+  },
   runtimeConfig: {
     public: { webOrigin: '', mediaOrigin: '' },
   },
