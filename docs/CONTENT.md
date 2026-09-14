@@ -1,6 +1,6 @@
 # Editing the podcast archive
 
-The canonical archive is in `content/`. It contains 55 historical episodes, 832 tracks, and 396 known track starts across 25 episodes: 338 precise imported starts, 20 whole-second estimates for Ruminate, 16 whole-second timestamps for Impulse, and 22 millisecond timestamps for Bass Face Space Race. Original audio and artwork remain URL references. The repository includes only small generated artwork thumbnails for the episode list. M3 serves the complete replacement RSS at `/feed/podcast`. The current page remains the M1 shell; M4 will build episode pages and the player from this archive.
+The canonical archive is in `content/`. It contains 55 historical episodes, 832 tracks, and 418 known track starts across 26 episodes: 338 precise imported starts, 20 whole-second estimates for Ruminate, 16 whole-second timestamps for Impulse, and 44 millisecond timestamps across Bass Face Space Race and Lost In Translation. Original audio and artwork remain URL references. The repository includes only small generated artwork thumbnails for the episode list. M3 serves the complete replacement RSS at `/feed/podcast`. The current page remains the M1 shell; M4 will build episode pages and the player from this archive.
 
 ## Files you edit
 
@@ -77,6 +77,8 @@ Ruminate (`wp-484`) has [20 authored timing estimates](content/ruminate-track-ti
 Impulse (`wp-459`) has [16 authored track starts](content/impulse-track-timings.json), supplied by the owner on 2026-09-14. Each displayed subclip start is converted directly from `HH:MM:SS` to seconds in canonical tracklist order, from `00:00:00` through `00:49:19`. These retain the screenshot's whole-second precision. The 3273-second episode duration, frozen migration evidence, and initial-import provenance remain unchanged.
 
 Bass Face Space Race (`wp-454`) has [22 authored track starts](content/bass-face-space-race-track-timings.json), supplied by the owner on 2026-09-14. Each displayed subclip start is converted directly from `M:SS.mmm` or `H:MM:SS.mmm` to seconds in canonical tracklist order, from `0:00.000` through `1:10:57.906`, preserving milliseconds. The 4508-second episode duration, frozen migration evidence, and initial-import provenance remain unchanged.
+
+Lost In Translation (`wp-444`) has [22 authored track starts](content/lost-in-translation-track-timings.json), supplied by the owner on 2026-09-14. Each displayed subclip start is converted directly from `M:SS.mmm` to seconds in canonical tracklist order, from `0:00.000` through `46:29.842`, preserving milliseconds. The 3035-second episode duration, frozen migration evidence, and initial-import provenance remain unchanged.
 
 ## Import and reconciliation
 
