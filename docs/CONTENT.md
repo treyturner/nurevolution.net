@@ -1,6 +1,6 @@
 # Editing the podcast archive
 
-The canonical archive is in `content/`. It contains 55 historical episodes, 832 tracks, and 548 known track starts across 31 episodes: 338 precise imported starts, 20 whole-second estimates for Ruminate, 16 whole-second timestamps for Impulse, and 174 millisecond timestamps across seven episodes (Bass Face Space Race, Lost In Translation, Off The Cuff, Is This Thing On?, Carrier Detect, Radio Silenced, and Dancefloor Oriented). Original audio and artwork remain URL references. The repository includes only small generated artwork thumbnails for the episode list. M3 serves the complete replacement RSS at `/feed/podcast`. The current page remains the M1 shell; M4 will build episode pages and the player from this archive.
+The canonical archive is in `content/`. It contains 55 historical episodes, 832 tracks, and 579 known track starts across 32 episodes: 338 precise imported starts, 20 whole-second estimates for Ruminate, 16 whole-second timestamps for Impulse, 31 sample-derived timestamps for View From A Vignette, and 174 millisecond timestamps across seven episodes (Bass Face Space Race, Lost In Translation, Off The Cuff, Is This Thing On?, Carrier Detect, Radio Silenced, and Dancefloor Oriented). Original audio and artwork remain URL references. The repository includes only small generated artwork thumbnails for the episode list. M3 serves the complete replacement RSS at `/feed/podcast`. The current page remains the M1 shell; M4 will build episode pages and the player from this archive.
 
 ## Files you edit
 
@@ -48,6 +48,8 @@ Imported IDs use `wp-<original post ID>`. A new episode may use another stable l
 
 For every episode, preserve all supplied fractional seconds in canonical `startTime` values and seek targets. Where a display or output format supports less precision, truncate toward the earlier time; never round a track timestamp up. For example, `190.458` seconds displays as `3:10` at whole-second resolution, while seeking retains `190.458`. This rule also applies to future timestamp sharing and feed chapters; lower-precision output must not replace the canonical value.
 
+For sample-based authoring, retain the exact integer `startSample` and `endSample` boundaries plus `sampleRate` in the authored timing evidence under `docs/content/`. Derive canonical `startTime` directly as `startSample / sampleRate`, preserving the full floating-point quotient rather than rounding to milliseconds. Boundaries describe sample frames from the beginning of the recording; an exclusive end sample may also be the next track's start sample. Keep the integer evidence for exact regeneration; browser seeking and future chapter output consume seconds.
+
 Validation permits additional valid episodes; the public repository has no permanent 55-episode limit. Lists and detail lookup use the same publication predicate and order: newest publication first, then ascending stable ID for ties. Drafts and future records are withheld defensively by every public consumer. Content committed to this public repository is visible in Git even when withheld from the application.
 
 ## Safe descriptions
@@ -89,6 +91,8 @@ Carrier Detect (`wp-421`) has [30 authored track starts](content/carrier-detect-
 Radio Silenced (`wp-197`) has [50 authored track starts](content/radio-silenced-track-timings.json), supplied by the owner on 2026-09-14. Each displayed subclip start is converted directly from `M:SS.mmm` or `H:MM:SS.mmm` to seconds in canonical tracklist order, from `0:00.000` through `1:56:07.068`, preserving milliseconds. The 7054-second episode duration, frozen migration evidence, and initial-import provenance remain unchanged.
 
 Dancefloor Oriented (`wp-278`) has [13 authored track starts](content/dancefloor-oriented-track-timings.json), supplied by the owner on 2026-09-14. Each displayed subclip start is converted directly from `M:SS.mmm` to seconds in canonical tracklist order, from `0:00.000` through `55:44.312`, preserving milliseconds. The 3714-second episode duration, frozen migration evidence, and initial-import provenance remain unchanged.
+
+View From A Vignette (`wp-283`) has [31 authored sample boundaries](content/view-from-a-vignette-track-timings.json), supplied by the owner on 2026-09-14 at 44,100 Hz. Each start sample is divided directly by 44,100 in canonical tracklist order, from sample `0` through `268417078`, without millisecond rounding. The evidence preserves all contiguous start/end ranges, ending at sample `279682931` (approximately 6342.016576 seconds). The existing 6342-second episode duration, audio asset, frozen migration evidence, and initial-import provenance remain unchanged.
 
 ## Import and reconciliation
 
