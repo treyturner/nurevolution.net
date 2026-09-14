@@ -20,6 +20,13 @@ const artworkUrl = computed(() =>
       )
     : '',
 )
+// Canonical HTML is sanitized to anchors with only href/title attributes.
+const descriptionHtml = computed(() =>
+  (props.episode?.descriptionHtml ?? '').replace(
+    /<a(?=[\s>])/g,
+    '<a target="_blank" rel="noopener noreferrer"',
+  ),
+)
 const status = computed(() => props.player.state.status)
 const retry = () => props.player.retry()
 const failedArtwork = ref(false)
@@ -138,11 +145,7 @@ const messages = {
       </div>
       <!-- The server validates and sanitizes canonical descriptions before this projection. -->
       <!-- eslint-disable vue/no-v-html -->
-      <div
-        v-if="episode"
-        class="description"
-        v-html="episode.descriptionHtml"
-      />
+      <div v-if="episode" class="description" v-html="descriptionHtml" />
       <!-- eslint-enable vue/no-v-html -->
     </div>
     <ArtworkDialog

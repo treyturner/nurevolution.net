@@ -93,10 +93,20 @@ test('volume keyboard and mute reflect native state; unsupported volume has an h
   await expect
     .poll(() => audio.evaluate((a: HTMLAudioElement) => a.volume))
     .toBeCloseTo(0.95, 3)
+  const box = (await volume.boundingBox())!
+  await volume.click({ position: { x: box.width / 2, y: box.height / 2 } })
+  await expect
+    .poll(() => audio.evaluate((a: HTMLAudioElement) => a.volume))
+    .toBeCloseTo(0.5, 1)
+  await expect(audio).toHaveJSProperty('muted', false)
+  await expect(page.locator('.volume-waves path')).toHaveCount(2)
   await page.getByRole('button', { name: 'Mute', exact: true }).click()
   await expect(audio).toHaveJSProperty('muted', true)
+  await expect(page.locator('.volume-muted')).toBeVisible()
+  await expect(page.locator('.volume-waves path')).toHaveCount(0)
   await page.getByRole('button', { name: 'Unmute', exact: true }).click()
   await expect(audio).toHaveJSProperty('muted', false)
+  await expect(page.locator('.volume-waves path')).toHaveCount(2)
   await page.addInitScript(() => {
     Object.defineProperty(HTMLMediaElement.prototype, 'volume', {
       configurable: true,
@@ -120,7 +130,22 @@ test('controls wrap at 320 pixels with enlarged text and retain keyboard focus',
   await page.setViewportSize({ width: 320, height: 800 })
   await page.goto('/')
   await ready(page)
+  const targetSizes = () =>
+    page.locator('.audio-controls button').evaluateAll((buttons) =>
+      buttons.map((button) => {
+        const { width, height } = button.getBoundingClientRect()
+        return { width, height }
+      }),
+    )
+  for (const { width, height } of await targetSizes()) {
+    expect(width).toBeGreaterThanOrEqual(44)
+    expect(height).toBeGreaterThanOrEqual(44)
+  }
   await page.addStyleTag({ content: ':root { font-size: 200%; }' })
+  for (const { width, height } of await targetSizes()) {
+    expect(width).toBeGreaterThanOrEqual(44)
+    expect(height).toBeGreaterThanOrEqual(44)
+  }
   expect(
     await page.evaluate(
       () => document.documentElement.scrollWidth <= innerWidth,

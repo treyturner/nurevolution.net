@@ -1,6 +1,6 @@
 # nurevolution roadmap
 
-Status: M0–M4 are implemented and merged. M5 delivery, rollback, capacity, and independent recovery are rehearsed. [M6 production cutover](docs/milestones/M06-cutover-and-retirement.md) completed on 2026-09-12 with the merged player refinements, artwork thumbnails, copy links, and branding. Production is the only hosted environment; development uses local/workspace servers. WordPress remains frozen and running for fallback; observation, retirement, and explicitly unperformed client/recovery checks remain open. [M7 player enhancements](docs/milestones/M07-rich-player-and-restoration.md) are implemented for development review and remain undeployed. M8–M9 remain future work.
+Status: M0–M4 are implemented and merged. M5 delivery, rollback, capacity, and independent recovery are rehearsed. [M6 production cutover](docs/milestones/M06-cutover-and-retirement.md) completed on 2026-09-12 with the merged player refinements, artwork thumbnails, copy links, and branding. Production is the only hosted environment; development uses local/workspace servers. WordPress remains frozen and running for fallback; observation, retirement, and explicitly unperformed client/recovery checks remain open. [M7 player enhancements](docs/milestones/M07-rich-player-and-restoration.md) and the owner's UI refinements are implemented, with production release requested on 2026-09-14 for further feedback. [Verified promotion runs](https://github.com/treyturner/nurevolution.net/actions/workflows/deploy.yml) record actual deployment. M8–M9 remain future work.
 
 Updated: 2026-09-13.
 
@@ -300,7 +300,7 @@ Run `pnpm verify`. External validator/client results are provisional until repea
 
 ### M7 — Rich player, interactive tracklists, and restoration
 
-**Implemented for development review; undeployed.** The [M7 implementation and verification record](docs/milestones/M07-rich-player-and-restoration.md) resolves route/restore precedence, visit expiry and tabs, custom seek/volume behavior, timed-track boundaries, playback/navigation races, and automatic sequence history. It defines four implementation slices and their acceptance evidence. The owner authorized implementation, one open PR at a time, review/merge cycles, and a development-server handoff. Production deployment is prohibited for this task. M6 observation and retirement remain separate open work.
+**Implemented; final UI review and production release requested.** The [M7 implementation and verification record](docs/milestones/M07-rich-player-and-restoration.md) resolves route/restore precedence, visit expiry and tabs, custom seek/volume behavior, timed-track boundaries, playback/navigation races, and automatic sequence history. It defines four implementation slices and their acceptance evidence. On 2026-09-14 the owner requested integrating all timestamp updates into the UI branch, a final interface check, and production release for further feedback. This supersedes the initial deployment prohibition; one open PR at a time, review acceptance, and verified production promotion still apply. Physical-device and assistive-technology observations remain pending. M6 observation and retirement remain separate open work.
 
 **Outcome:** deliver the full application-like listening experience using the established player/model boundaries.
 

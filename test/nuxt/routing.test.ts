@@ -151,8 +151,7 @@ it('connects manual sequencing, automatic completion, and single-source restart 
   })
   const nuxt = useNuxtApp()
   const state = await nuxt.runWithContext(useEpisodePage)
-  const button = (name: string) =>
-    wrapper.findAll('button').find((button) => button.text() === name)!
+  const button = (name: string) => wrapper.get(`[aria-label="${name}"]`)
   const selected = state.value.model!.selected!
   const index = state.value.model!.episodes.findIndex(
     (episode) => episode.id === selected.id,

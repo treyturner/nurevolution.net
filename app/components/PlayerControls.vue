@@ -20,6 +20,15 @@ const available = computed(
     !state.value.restoring &&
     state.value.status !== 'error',
 )
+const volumeWaves = computed(() => Math.ceil(state.value.volume * 3))
+const muteLabel = computed(() =>
+  state.value.muted || state.value.volume === 0 ? 'Unmute' : 'Mute',
+)
+const volumeDescription = computed(() =>
+  state.value.muted
+    ? 'Muted'
+    : `Volume ${Math.round(state.value.volume * 100)} percent`,
+)
 function spoken(seconds: number) {
   const whole = Math.floor(seconds)
   const hours = Math.floor(whole / 3600)
@@ -114,100 +123,171 @@ watch(
         state.duration === null ? '—:—' : formatTime(state.duration)
       }}</span>
     </div>
-    <div class="transport-row">
-      <button
-        type="button"
-        aria-label="Previous track"
-        :disabled="!available || player.tracks.previous === null"
-        @click="player.previousTrack()"
+    <div class="playback-row">
+      <div class="transport-row">
+        <button
+          type="button"
+          aria-label="Previous episode"
+          title="Previous episode"
+          :aria-busy="player.sequencing.busy"
+          :disabled="
+            state.restoring ||
+            !state.sourceId ||
+            !player.sequencing.available ||
+            player.sequencing.busy
+          "
+          @click="player.previousEpisode()"
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path d="M5 5h3v14H5zm14 0v14L9 12z" />
+          </svg>
+        </button>
+        <button
+          type="button"
+          aria-label="Previous track"
+          :title="
+            player.tracks.positions.length
+              ? 'Previous track'
+              : 'Unavailable for this episode'
+          "
+          :disabled="!available || player.tracks.previous === null"
+          @click="player.previousTrack()"
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path d="M11 5v14L1 12zm12 0v14l-10-7z" />
+          </svg>
+        </button>
+        <button
+          type="button"
+          aria-label="Back 30 seconds"
+          title="Back 30 seconds"
+          :disabled="!seekable || (state.pendingSeek ?? state.currentTime) <= 0"
+          @click="player.skip(-30)"
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path
+              d="m15 5-7 7 7 7"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </button>
+        <button
+          class="play-toggle"
+          type="button"
+          :aria-label="showPause ? 'Pause' : 'Play'"
+          :title="showPause ? 'Pause' : 'Play'"
+          :disabled="!available"
+          @click="showPause ? player.pause() : player.play()"
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path v-if="showPause" d="M6 4h4v16H6zm8 0h4v16h-4z" />
+            <path v-else d="M8 5v14l11-7z" />
+          </svg>
+        </button>
+        <button
+          type="button"
+          aria-label="Forward 30 seconds"
+          title="Forward 30 seconds"
+          :disabled="
+            !seekable ||
+            (state.pendingSeek ?? state.currentTime) >= (state.duration ?? 0)
+          "
+          @click="player.skip(30)"
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path
+              d="m9 5 7 7-7 7"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </button>
+        <button
+          type="button"
+          aria-label="Next track"
+          :title="
+            player.tracks.positions.length
+              ? 'Next track'
+              : 'Unavailable for this episode'
+          "
+          :disabled="!available || player.tracks.next === null"
+          @click="player.nextTrack()"
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path d="M1 5v14l10-7zm12 0v14l10-7z" />
+          </svg>
+        </button>
+        <button
+          type="button"
+          aria-label="Next episode"
+          title="Next episode"
+          :aria-busy="player.sequencing.busy"
+          :disabled="
+            state.restoring ||
+            !state.sourceId ||
+            !player.sequencing.available ||
+            player.sequencing.busy
+          "
+          @click="player.nextEpisode()"
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path d="M16 5h3v14h-3zM5 5v14l10-7z" />
+          </svg>
+        </button>
+      </div>
+      <div
+        v-if="state.muteSupported || state.volumeSupported"
+        class="volume-group"
+        role="group"
+        aria-label="Volume controls"
       >
-        Previous track
-      </button>
-      <button
-        type="button"
-        aria-label="Back 30 seconds"
-        :disabled="!seekable || (state.pendingSeek ?? state.currentTime) <= 0"
-        @click="player.skip(-30)"
-      >
-        −30<span class="seconds-label">s</span>
-      </button>
-      <button
-        class="play-toggle"
-        type="button"
-        :aria-label="showPause ? 'Pause' : 'Play'"
-        :disabled="!available"
-        @click="showPause ? player.pause() : player.play()"
-      >
-        <svg viewBox="0 0 24 24" aria-hidden="true">
-          <path v-if="showPause" d="M6 4h4v16H6zm8 0h4v16h-4z" />
-          <path v-else d="m7 3 15 9-15 9z" />
-        </svg>
-        <span>{{ showPause ? 'Pause' : 'Play' }}</span>
-      </button>
-      <button
-        type="button"
-        aria-label="Forward 30 seconds"
-        :disabled="
-          !seekable ||
-          (state.pendingSeek ?? state.currentTime) >= (state.duration ?? 0)
-        "
-        @click="player.skip(30)"
-      >
-        +30<span class="seconds-label">s</span>
-      </button>
-      <button
-        type="button"
-        aria-label="Next track"
-        :disabled="!available || player.tracks.next === null"
-        @click="player.nextTrack()"
-      >
-        Next track
-      </button>
-    </div>
-    <div
-      class="episode-controls"
-      role="group"
-      aria-label="Episode navigation"
-      :aria-busy="player.sequencing.busy"
-    >
-      <button
-        type="button"
-        :disabled="
-          state.restoring ||
-          !state.sourceId ||
-          !player.sequencing.available ||
-          player.sequencing.busy
-        "
-        @click="player.previousEpisode()"
-      >
-        Previous episode
-      </button>
-      <button
-        type="button"
-        :disabled="
-          state.restoring ||
-          !state.sourceId ||
-          !player.sequencing.available ||
-          player.sequencing.busy
-        "
-        @click="player.nextEpisode()"
-      >
-        Next episode
-      </button>
-    </div>
-    <div class="volume-row">
-      <button
-        v-if="state.muteSupported"
-        type="button"
-        :aria-label="state.muted || state.volume === 0 ? 'Unmute' : 'Mute'"
-        :disabled="!available"
-        @click="player.toggleMute()"
-      >
-        {{ state.muted || state.volume === 0 ? 'Unmute' : 'Mute' }}
-      </button>
-      <label v-if="state.volumeSupported" class="volume-control">
-        <span>Volume</span>
+        <button
+          v-if="state.muteSupported"
+          class="mute-toggle"
+          type="button"
+          :aria-label="muteLabel"
+          :title="`${muteLabel} (${volumeDescription})`"
+          :disabled="!available"
+          @click="player.toggleMute()"
+        >
+          <svg
+            class="volume-icon"
+            viewBox="0 0 32 32"
+            aria-hidden="true"
+            focusable="false"
+          >
+            <path d="M3 12h5l6-5v18l-6-5H3z" fill="currentColor" />
+            <g
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+            >
+              <path
+                v-if="state.muted"
+                class="volume-muted"
+                d="m20 12 8 8m0-8-8 8"
+              />
+              <g v-else class="volume-waves">
+                <path v-if="volumeWaves >= 1" d="M18 12a6 6 0 0 1 0 8" />
+                <path v-if="volumeWaves >= 2" d="M22 8a12 12 0 0 1 0 16" />
+                <path v-if="volumeWaves >= 3" d="M26 4a18 18 0 0 1 0 24" />
+              </g>
+            </g>
+          </svg>
+        </button>
         <input
+          v-if="state.volumeSupported"
+          class="volume-control"
+          aria-label="Volume"
+          :title="volumeDescription"
           type="range"
           min="0"
           max="1"
@@ -219,11 +299,10 @@ watch(
             player.setVolume(Number(($event.target as HTMLInputElement).value))
           "
         />
-        <span class="volume-value" aria-hidden="true"
-          >{{ Math.round(state.volume * 100) }}%</span
-        >
-      </label>
-      <p v-else class="device-volume">Use your device's volume buttons.</p>
+      </div>
+      <p v-if="!state.volumeSupported" class="device-volume">
+        Use your device's volume buttons.
+      </p>
     </div>
   </div>
 </template>
