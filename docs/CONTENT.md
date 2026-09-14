@@ -1,6 +1,6 @@
 # Editing the podcast archive
 
-The canonical archive is in `content/`. It contains 55 historical episodes, 832 tracks, and 338 precise track starts across 22 episodes. Original audio and artwork remain URL references. The repository includes only small generated artwork thumbnails for the episode list. M3 serves the complete replacement RSS at `/feed/podcast`. The current page remains the M1 shell; M4 will build episode pages and the player from this archive.
+The canonical archive is in `content/`. It contains 55 historical episodes, 832 tracks, and 358 known track starts across 23 episodes: 338 precise imported starts and 20 whole-second estimates for Ruminate. Original audio and artwork remain URL references. The repository includes only small generated artwork thumbnails for the episode list. M3 serves the complete replacement RSS at `/feed/podcast`. The current page remains the M1 shell; M4 will build episode pages and the player from this archive.
 
 ## Files you edit
 
@@ -69,6 +69,8 @@ Preserve the exact audited enclosure URL, including case, apostrophes, `%26`, an
 Historical IDs, slugs, publication instants, published status, GUIDs/permalink booleans, audio identities/hashes, enclosure URL/type/length tuples, and observed legacy URL mappings are protected. Changing them requires a separately documented migration decision and a corresponding compatibility-check update. Ordinary editorial edits do not require reimport.
 
 The initial import includes the [Praxis correction evidence](milestones/evidence/M02-praxis-duration.json): duration **3396.349388 seconds** and all 21 precise starts, copied from the original split listing. Rounded screenshot durations are not accumulated. Stale ACF byte counts for `wp-278` and `wp-340` remain provenance; the agreeing local/podPress/enclosure byte lengths are used.
+
+Ruminate (`wp-484`) has [20 authored timing estimates](content/ruminate-track-timings.json), supplied by the owner on 2026-09-14. Track 1 starts at zero; subsequent starts accumulate the displayed split durations in canonical tracklist order. These are whole-second estimates, not sample-accurate cue points. The displayed splits total 3609 seconds, one second less than the unchanged 3610-second episode duration. Frozen migration evidence and initial-import provenance remain unchanged.
 
 ## Import and reconciliation
 
