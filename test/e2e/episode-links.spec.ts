@@ -1,5 +1,6 @@
 import { expect, test } from '@playwright/test'
-import { ready, stubArchiveMedia } from './media'
+import { readFile } from 'node:fs/promises'
+import { fulfillAudio, ready, stubArchiveMedia } from './media'
 
 test.beforeEach(async ({ page }) => {
   await stubArchiveMedia(page)
@@ -13,6 +14,54 @@ test.beforeEach(async ({ page }) => {
       },
     })
   })
+})
+
+test('description links open a separate tab while the original episode keeps playing', async ({
+  page,
+  context,
+}) => {
+  const clip = await readFile(
+    new URL('../fixtures/media-app/public/long.wav', import.meta.url),
+  )
+  await page.route('https://podcast.nurevolution.net/**', (route) =>
+    fulfillAudio(route, clip, 'audio/wav'),
+  )
+  await context.route('https://open.spotify.com/**', (route) =>
+    route.fulfill({
+      contentType: 'text/html',
+      body: '<p>Playlist destination</p>',
+    }),
+  )
+  await page.goto('/episodes/trey-turner-the-dark-prophet')
+  await ready(page)
+  const originalUrl = page.url()
+  const audio = page.locator('audio')
+  const element = (await audio.elementHandle())!
+  await audio.evaluate((a: HTMLAudioElement) => {
+    a.muted = true
+  })
+  await page.getByRole('button', { name: 'Play', exact: true }).click()
+  await expect(page.locator('.media-status')).toHaveText('Playing')
+  const before = await audio.evaluate((a: HTMLAudioElement) => a.currentTime)
+  const playlist = page
+    .locator('.description')
+    .getByRole('link', { name: 'Spotify playlist' })
+  const destination = await playlist.getAttribute('href')
+  const opened = page.waitForEvent('popup')
+  await playlist.click()
+  const popup = await opened
+  try {
+    await expect(popup).toHaveURL(destination!)
+    expect(await popup.evaluate(() => window.opener === null)).toBe(true)
+    await expect(page).toHaveURL(originalUrl)
+    expect(await element.evaluate((a) => a.isConnected)).toBe(true)
+    await expect(audio).toHaveJSProperty('paused', false)
+    await expect
+      .poll(() => audio.evaluate((a: HTMLAudioElement) => a.currentTime))
+      .toBeGreaterThan(before)
+  } finally {
+    await popup.close()
+  }
 })
 
 test('keyboard copying preserves the selected player and shows temporary feedback beside the button', async ({

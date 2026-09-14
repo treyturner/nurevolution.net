@@ -102,9 +102,17 @@ describe('archive presentation and native media integration', () => {
       expect(wrapper.get('img').attributes('alt')).toContain(episode.artist)
       const expected = document.createElement('div')
       expected.innerHTML = episode.descriptionHtml
-      expect(wrapper.get('.description').element.innerHTML).toBe(
-        expected.innerHTML,
-      )
+      const rendered = wrapper
+        .get('.description')
+        .element.cloneNode(true) as HTMLElement
+      for (const link of rendered.querySelectorAll('a')) {
+        expect(link.target).toBe('_blank')
+        expect(link.relList.contains('noopener')).toBe(true)
+        expect(link.relList.contains('noreferrer')).toBe(true)
+        link.removeAttribute('target')
+        link.removeAttribute('rel')
+      }
+      expect(rendered.innerHTML).toBe(expected.innerHTML)
     }
     wrapper.unmount()
   })
