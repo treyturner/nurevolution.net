@@ -1,6 +1,6 @@
 # Editing the podcast archive
 
-The canonical archive is in `content/`. It contains 55 historical episodes, 832 tracks, and 374 known track starts across 24 episodes: 338 precise imported starts, 20 whole-second estimates for Ruminate, and 16 whole-second timestamps for Impulse. Original audio and artwork remain URL references. The repository includes only small generated artwork thumbnails for the episode list. M3 serves the complete replacement RSS at `/feed/podcast`. The current page remains the M1 shell; M4 will build episode pages and the player from this archive.
+The canonical archive is in `content/`. It contains 55 historical episodes, 832 tracks, and 396 known track starts across 25 episodes: 338 precise imported starts, 20 whole-second estimates for Ruminate, 16 whole-second timestamps for Impulse, and 22 millisecond timestamps for Bass Face Space Race. Original audio and artwork remain URL references. The repository includes only small generated artwork thumbnails for the episode list. M3 serves the complete replacement RSS at `/feed/podcast`. The current page remains the M1 shell; M4 will build episode pages and the player from this archive.
 
 ## Files you edit
 
@@ -46,6 +46,8 @@ Imported IDs use `wp-<original post ID>`. A new episode may use another stable l
 - `durationSeconds` is a positive finite number or `null`. Numeric seconds may retain fractional precision.
 - `tracks` contains ordered `position`, `artist`, `title`, and `startTime` fields. Positions start at 1 without gaps. Known starts are nonnegative and strictly increase even across untimed rows. They must precede a known episode duration. A start of `0` means the beginning of the recording. `null` means unknown. Partial timing is valid; do not sort, clamp, or discard rows to make validation pass.
 
+For every episode, preserve all supplied fractional seconds in canonical `startTime` values and seek targets. Where a display or output format supports less precision, truncate toward the earlier time; never round a track timestamp up. For example, `190.458` seconds displays as `3:10` at whole-second resolution, while seeking retains `190.458`. This rule also applies to future timestamp sharing and feed chapters; lower-precision output must not replace the canonical value.
+
 Validation permits additional valid episodes; the public repository has no permanent 55-episode limit. Lists and detail lookup use the same publication predicate and order: newest publication first, then ascending stable ID for ties. Drafts and future records are withheld defensively by every public consumer. Content committed to this public repository is visible in Git even when withheld from the application.
 
 ## Safe descriptions
@@ -73,6 +75,8 @@ The initial import includes the [Praxis correction evidence](milestones/evidence
 Ruminate (`wp-484`) has [20 authored timing estimates](content/ruminate-track-timings.json), supplied by the owner on 2026-09-14. Track 1 starts at zero; subsequent starts accumulate the displayed split durations in canonical tracklist order. These are whole-second estimates, not sample-accurate cue points. The displayed splits total 3609 seconds, one second less than the unchanged 3610-second episode duration. Frozen migration evidence and initial-import provenance remain unchanged.
 
 Impulse (`wp-459`) has [16 authored track starts](content/impulse-track-timings.json), supplied by the owner on 2026-09-14. Each displayed subclip start is converted directly from `HH:MM:SS` to seconds in canonical tracklist order, from `00:00:00` through `00:49:19`. These retain the screenshot's whole-second precision. The 3273-second episode duration, frozen migration evidence, and initial-import provenance remain unchanged.
+
+Bass Face Space Race (`wp-454`) has [22 authored track starts](content/bass-face-space-race-track-timings.json), supplied by the owner on 2026-09-14. Each displayed subclip start is converted directly from `M:SS.mmm` or `H:MM:SS.mmm` to seconds in canonical tracklist order, from `0:00.000` through `1:10:57.906`, preserving milliseconds. The 4508-second episode duration, frozen migration evidence, and initial-import provenance remain unchanged.
 
 ## Import and reconciliation
 

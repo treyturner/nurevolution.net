@@ -14,6 +14,7 @@ import inventory from '../../docs/migration/inventory.json' with { type: 'json' 
 import timings from '../../docs/migration/track-timings.json' with { type: 'json' }
 import ruminateTimings from '../../docs/content/ruminate-track-timings.json' with { type: 'json' }
 import impulseTimings from '../../docs/content/impulse-track-timings.json' with { type: 'json' }
+import bassFaceSpaceRaceTimings from '../../docs/content/bass-face-space-race-track-timings.json' with { type: 'json' }
 import { readCatalog } from '../../server/content/repository.ts'
 import { publicFeedArchive } from '../../server/content/feed.ts'
 import { fileReader } from '../../tools/content/files.ts'
@@ -103,9 +104,11 @@ test('serves the complete canonical archive with subscriber identities, track ti
     expect(Date.parse(detail.publishedAt)).toBe(
       Date.parse(raw.publication.feedRfc822),
     )
-    const authoredTimings = [ruminateTimings, impulseTimings].find(
-      (e) => e.episodeId === raw.id,
-    )
+    const authoredTimings = [
+      ruminateTimings,
+      impulseTimings,
+      bassFaceSpaceRaceTimings,
+    ].find((e) => e.episodeId === raw.id)
     for (const [index, source] of raw.tracklist.tracks.entries()) {
       expect(detail.tracks[index]).toEqual({
         ...source,
@@ -130,7 +133,7 @@ test('serves the complete canonical archive with subscriber identities, track ti
       /sourceRoot|relativePath|sourceSnapshot|databaseGuid|sha256/,
     )
   }
-  expect({ tracks, starts }).toEqual({ tracks: 832, starts: 374 })
+  expect({ tracks, starts }).toEqual({ tracks: 832, starts: 396 })
   const showResponse = await request.get('/api/show')
   expect(showResponse.status()).toBe(200)
   expect(await showResponse.json()).toEqual({

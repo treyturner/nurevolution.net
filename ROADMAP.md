@@ -338,6 +338,8 @@ Run `pnpm verify`. External validator/client results are provisional until repea
 
 Each item gets its own bounded plan and acceptance checks; there is no requirement to deliver them as one large batch.
 
+Timestamp sharing and feed chapters must follow the [archive timestamp precision rule](docs/CONTENT.md#episode-fields-and-new-episodes) for every episode: preserve canonical fractional seconds and truncate toward the earlier time whenever an output format requires lower precision.
+
 | Item                                          | Dependencies                    | Acceptance focus                                                                                                                                                                            |
 | --------------------------------------------- | ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Timestamp share links                         | M7 seeking and route precedence | Direct links load the specified position paused; malformed/out-of-bounds timestamps are handled; explicit timestamp overrides remembered position.                                          |

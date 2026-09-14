@@ -194,4 +194,11 @@ describe('episode page loading and navigation', () => {
       '1:00:01',
     ])
   })
+  it('truncates fractional timestamp displays without advancing seconds, minutes, or hours', () => {
+    expect(
+      [0.999, 59.999, 190.458, 208.794059, 3599.999, 3600.999, 4257.906].map(
+        formatTime,
+      ),
+    ).toEqual(['0:00', '0:59', '3:10', '3:28', '59:59', '1:00:00', '1:10:57'])
+  })
 })
