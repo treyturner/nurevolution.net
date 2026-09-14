@@ -1,6 +1,6 @@
 # Editing the podcast archive
 
-The canonical archive is in `content/`. It contains 55 historical episodes, 832 tracks, and 455 known track starts across 28 episodes: 338 precise imported starts, 20 whole-second estimates for Ruminate, 16 whole-second timestamps for Impulse, and 81 millisecond timestamps across four episodes (Bass Face Space Race, Lost In Translation, Off The Cuff, and Is This Thing On?). Original audio and artwork remain URL references. The repository includes only small generated artwork thumbnails for the episode list. M3 serves the complete replacement RSS at `/feed/podcast`. The current page remains the M1 shell; M4 will build episode pages and the player from this archive.
+The canonical archive is in `content/`. It contains 55 historical episodes, 832 tracks, and 485 known track starts across 29 episodes: 338 precise imported starts, 20 whole-second estimates for Ruminate, 16 whole-second timestamps for Impulse, and 111 millisecond timestamps across five episodes (Bass Face Space Race, Lost In Translation, Off The Cuff, Is This Thing On?, and Carrier Detect). Original audio and artwork remain URL references. The repository includes only small generated artwork thumbnails for the episode list. M3 serves the complete replacement RSS at `/feed/podcast`. The current page remains the M1 shell; M4 will build episode pages and the player from this archive.
 
 ## Files you edit
 
@@ -83,6 +83,8 @@ Lost In Translation (`wp-444`) has [22 authored track starts](content/lost-in-tr
 Off The Cuff (`wp-435`) has [18 authored track starts](content/off-the-cuff-track-timings.json), supplied by the owner on 2026-09-14. Each displayed subclip start is converted directly from `M:SS.mmm` to seconds in canonical tracklist order, from `0:00.000` through `41:30.668`, preserving milliseconds. The 2715-second episode duration, frozen migration evidence, and initial-import provenance remain unchanged.
 
 Is This Thing On? (`wp-431`) has [19 authored track starts](content/is-this-thing-on-track-timings.json), supplied by the owner on 2026-09-14. Each displayed subclip start is converted directly from `M:SS.mmm` to seconds in canonical tracklist order, from `0:00.000` through `46:47.029`, preserving milliseconds. The 2964-second episode duration, frozen migration evidence, and initial-import provenance remain unchanged.
+
+Carrier Detect (`wp-421`) has [30 authored track starts](content/carrier-detect-track-timings.json), supplied by the owner on 2026-09-14. Each displayed subclip start is converted directly from `M:SS.mmm` or `H:MM:SS.mmm` to seconds in canonical tracklist order, from `0:00.000` through `1:11:19.151`, preserving milliseconds. The 4428-second episode duration, frozen migration evidence, and initial-import provenance remain unchanged.
 
 ## Import and reconciliation
 
