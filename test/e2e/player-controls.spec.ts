@@ -130,7 +130,22 @@ test('controls wrap at 320 pixels with enlarged text and retain keyboard focus',
   await page.setViewportSize({ width: 320, height: 800 })
   await page.goto('/')
   await ready(page)
+  const targetSizes = () =>
+    page.locator('.audio-controls button').evaluateAll((buttons) =>
+      buttons.map((button) => {
+        const { width, height } = button.getBoundingClientRect()
+        return { width, height }
+      }),
+    )
+  for (const { width, height } of await targetSizes()) {
+    expect(width).toBeGreaterThanOrEqual(44)
+    expect(height).toBeGreaterThanOrEqual(44)
+  }
   await page.addStyleTag({ content: ':root { font-size: 200%; }' })
+  for (const { width, height } of await targetSizes()) {
+    expect(width).toBeGreaterThanOrEqual(44)
+    expect(height).toBeGreaterThanOrEqual(44)
+  }
   expect(
     await page.evaluate(
       () => document.documentElement.scrollWidth <= innerWidth,
