@@ -1,0 +1,136 @@
+{
+  "formatVersion": 1,
+  "episodeId": "wp-484",
+  "date": "2026-09-14",
+  "source": {
+    "type": "owner-supplied split-file duration screenshot",
+    "attachmentFileName": "codex-clipboard-c014496d-76b5-473c-9c95-e512c0605260.png",
+    "sha256": "6239ba6942bf3f6376245fb1a02ef97df1ec0274e53a455059c9beac5b6d2339"
+  },
+  "method": "Track 1 starts at zero; each later start is the sum of preceding displayed split durations in canonical tracklist order.",
+  "precision": "Whole-second estimates from displayed durations; no sample-accurate cue points or audio inspection are claimed.",
+  "displayedTotalSeconds": 3609,
+  "canonicalDurationSeconds": 3610,
+  "tracks": [
+    {
+      "position": 1,
+      "splitFile": "Untitled 1.wav",
+      "displayedDuration": "2:55",
+      "startTime": 0
+    },
+    {
+      "position": 2,
+      "splitFile": "Untitled 2.wav",
+      "displayedDuration": "2:45",
+      "startTime": 175
+    },
+    {
+      "position": 3,
+      "splitFile": "Untitled 3.wav",
+      "displayedDuration": "2:59",
+      "startTime": 340
+    },
+    {
+      "position": 4,
+      "splitFile": "Untitled 4.wav",
+      "displayedDuration": "1:53",
+      "startTime": 519
+    },
+    {
+      "position": 5,
+      "splitFile": "Untitled 5.wav",
+      "displayedDuration": "1:56",
+      "startTime": 632
+    },
+    {
+      "position": 6,
+      "splitFile": "Untitled 6.wav",
+      "displayedDuration": "4:43",
+      "startTime": 748
+    },
+    {
+      "position": 7,
+      "splitFile": "Untitled 7.wav",
+      "displayedDuration": "2:14",
+      "startTime": 1031
+    },
+    {
+      "position": 8,
+      "splitFile": "Untitled 8.wav",
+      "displayedDuration": "2:11",
+      "startTime": 1165
+    },
+    {
+      "position": 9,
+      "splitFile": "Untitled 9.wav",
+      "displayedDuration": "1:59",
+      "startTime": 1296
+    },
+    {
+      "position": 10,
+      "splitFile": "Untitled 10.wav",
+      "displayedDuration": "2:27",
+      "startTime": 1415
+    },
+    {
+      "position": 11,
+      "splitFile": "Untitled 11.wav",
+      "displayedDuration": "3:16",
+      "startTime": 1562
+    },
+    {
+      "position": 12,
+      "splitFile": "Untitled 12.wav",
+      "displayedDuration": "2:52",
+      "startTime": 1758
+    },
+    {
+      "position": 13,
+      "splitFile": "Untitled 13.wav",
+      "displayedDuration": "4:05",
+      "startTime": 1930
+    },
+    {
+      "position": 14,
+      "splitFile": "Untitled 14.wav",
+      "displayedDuration": "4:50",
+      "startTime": 2175
+    },
+    {
+      "position": 15,
+      "splitFile": "Untitled 15.wav",
+      "displayedDuration": "2:41",
+      "startTime": 2465
+    },
+    {
+      "position": 16,
+      "splitFile": "Untitled 16.wav",
+      "displayedDuration": "2:21",
+      "startTime": 2626
+    },
+    {
+      "position": 17,
+      "splitFile": "Untitled 17.wav",
+      "displayedDuration": "3:07",
+      "startTime": 2767
+    },
+    {
+      "position": 18,
+      "splitFile": "Untitled 18.wav",
+      "displayedDuration": "3:23",
+      "startTime": 2954
+    },
+    {
+      "position": 19,
+      "splitFile": "Untitled 19.wav",
+      "displayedDuration": "3:23",
+      "startTime": 3157
+    },
+    {
+      "position": 20,
+      "splitFile": "Untitled 20.wav",
+      "displayedDuration": "4:09",
+      "startTime": 3360
+    }
+  ]
+}

@@ -12,6 +12,7 @@ import {
 } from '../../shared/content/schema.ts'
 import inventory from '../../docs/migration/inventory.json' with { type: 'json' }
 import timings from '../../docs/migration/track-timings.json' with { type: 'json' }
+import ruminateTimings from '../../docs/content/ruminate-track-timings.json' with { type: 'json' }
 import { readCatalog } from '../../server/content/repository.ts'
 import { publicFeedArchive } from '../../server/content/feed.ts'
 import { fileReader } from '../../tools/content/files.ts'
@@ -109,11 +110,13 @@ test('serves the complete canonical archive with subscriber identities, precise 
             ? source.title.replace('\u0092', '’')
             : source.title,
         startTime:
-          raw.id === 'wp-417'
-            ? timings.episodes.find((e) => e.episodeId === 'wp-417')!.tracks[
-                index
-              ]!.startTime
-            : source.startTime,
+          raw.id === ruminateTimings.episodeId
+            ? ruminateTimings.tracks[index]!.startTime
+            : raw.id === 'wp-417'
+              ? timings.episodes.find((e) => e.episodeId === 'wp-417')!.tracks[
+                  index
+                ]!.startTime
+              : source.startTime,
       })
     }
     tracks += detail.tracks.length
@@ -124,7 +127,7 @@ test('serves the complete canonical archive with subscriber identities, precise 
       /sourceRoot|relativePath|sourceSnapshot|databaseGuid|sha256/,
     )
   }
-  expect({ tracks, starts }).toEqual({ tracks: 832, starts: 338 })
+  expect({ tracks, starts }).toEqual({ tracks: 832, starts: 358 })
   const showResponse = await request.get('/api/show')
   expect(showResponse.status()).toBe(200)
   expect(await showResponse.json()).toEqual({
