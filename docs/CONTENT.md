@@ -1,6 +1,6 @@
 # Editing the podcast archive
 
-The canonical archive is in `content/`. It contains 55 historical episodes, 832 tracks, and 358 known track starts across 23 episodes: 338 precise imported starts and 20 whole-second estimates for Ruminate. Original audio and artwork remain URL references. The repository includes only small generated artwork thumbnails for the episode list. M3 serves the complete replacement RSS at `/feed/podcast`. The current page remains the M1 shell; M4 will build episode pages and the player from this archive.
+The canonical archive is in `content/`. It contains 55 historical episodes, 832 tracks, and 374 known track starts across 24 episodes: 338 precise imported starts, 20 whole-second estimates for Ruminate, and 16 whole-second timestamps for Impulse. Original audio and artwork remain URL references. The repository includes only small generated artwork thumbnails for the episode list. M3 serves the complete replacement RSS at `/feed/podcast`. The current page remains the M1 shell; M4 will build episode pages and the player from this archive.
 
 ## Files you edit
 
@@ -71,6 +71,8 @@ Historical IDs, slugs, publication instants, published status, GUIDs/permalink b
 The initial import includes the [Praxis correction evidence](milestones/evidence/M02-praxis-duration.json): duration **3396.349388 seconds** and all 21 precise starts, copied from the original split listing. Rounded screenshot durations are not accumulated. Stale ACF byte counts for `wp-278` and `wp-340` remain provenance; the agreeing local/podPress/enclosure byte lengths are used.
 
 Ruminate (`wp-484`) has [20 authored timing estimates](content/ruminate-track-timings.json), supplied by the owner on 2026-09-14. Track 1 starts at zero; subsequent starts accumulate the displayed split durations in canonical tracklist order. These are whole-second estimates, not sample-accurate cue points. The displayed splits total 3609 seconds, one second less than the unchanged 3610-second episode duration. Frozen migration evidence and initial-import provenance remain unchanged.
+
+Impulse (`wp-459`) has [16 authored track starts](content/impulse-track-timings.json), supplied by the owner on 2026-09-14. Each displayed subclip start is converted directly from `HH:MM:SS` to seconds in canonical tracklist order, from `00:00:00` through `00:49:19`. These retain the screenshot's whole-second precision. The 3273-second episode duration, frozen migration evidence, and initial-import provenance remain unchanged.
 
 ## Import and reconciliation
 

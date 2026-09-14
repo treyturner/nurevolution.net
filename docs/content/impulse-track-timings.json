@@ -1,0 +1,111 @@
+{
+  "formatVersion": 1,
+  "episodeId": "wp-459",
+  "date": "2026-09-14",
+  "source": {
+    "type": "owner-supplied subclip start-time screenshot",
+    "attachmentFileName": "codex-clipboard-4d29f0d4-0809-4bcb-8a6c-5cd4f38eea0c.png",
+    "sha256": "e0297dbc42b46d0c68539603391f2acc91c4f26818fde2e1d762b6db09b8e4e6"
+  },
+  "method": "Convert each displayed HH:MM:SS subclip start directly to seconds in canonical tracklist order; no duration accumulation.",
+  "precision": "Whole-second timestamps as displayed; no subsecond precision or independent audio inspection is claimed.",
+  "canonicalDurationSeconds": 3273,
+  "tracks": [
+    {
+      "position": 1,
+      "splitFile": "Subclip 01.wav",
+      "displayedStartTime": "00:00:00",
+      "startTime": 0
+    },
+    {
+      "position": 2,
+      "splitFile": "Subclip 02.wav",
+      "displayedStartTime": "00:03:17",
+      "startTime": 197
+    },
+    {
+      "position": 3,
+      "splitFile": "Subclip 03.wav",
+      "displayedStartTime": "00:06:34",
+      "startTime": 394
+    },
+    {
+      "position": 4,
+      "splitFile": "Subclip 04.wav",
+      "displayedStartTime": "00:09:40",
+      "startTime": 580
+    },
+    {
+      "position": 5,
+      "splitFile": "Subclip 05.wav",
+      "displayedStartTime": "00:11:52",
+      "startTime": 712
+    },
+    {
+      "position": 6,
+      "splitFile": "Subclip 06.wav",
+      "displayedStartTime": "00:14:36",
+      "startTime": 876
+    },
+    {
+      "position": 7,
+      "splitFile": "Subclip 07.wav",
+      "displayedStartTime": "00:16:26",
+      "startTime": 986
+    },
+    {
+      "position": 8,
+      "splitFile": "Subclip 08.wav",
+      "displayedStartTime": "00:19:44",
+      "startTime": 1184
+    },
+    {
+      "position": 9,
+      "splitFile": "Subclip 09.wav",
+      "displayedStartTime": "00:23:02",
+      "startTime": 1382
+    },
+    {
+      "position": 10,
+      "splitFile": "Subclip 10.wav",
+      "displayedStartTime": "00:27:47",
+      "startTime": 1667
+    },
+    {
+      "position": 11,
+      "splitFile": "Subclip 11.wav",
+      "displayedStartTime": "00:31:19",
+      "startTime": 1879
+    },
+    {
+      "position": 12,
+      "splitFile": "Subclip 12.wav",
+      "displayedStartTime": "00:35:11",
+      "startTime": 2111
+    },
+    {
+      "position": 13,
+      "splitFile": "Subclip 13.wav",
+      "displayedStartTime": "00:38:32",
+      "startTime": 2312
+    },
+    {
+      "position": 14,
+      "splitFile": "Subclip 14.wav",
+      "displayedStartTime": "00:42:15",
+      "startTime": 2535
+    },
+    {
+      "position": 15,
+      "splitFile": "Subclip 15.wav",
+      "displayedStartTime": "00:45:58",
+      "startTime": 2758
+    },
+    {
+      "position": 16,
+      "splitFile": "Subclip 16.wav",
+      "displayedStartTime": "00:49:19",
+      "startTime": 2959
+    }
+  ]
+}

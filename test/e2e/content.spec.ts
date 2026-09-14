@@ -13,6 +13,7 @@ import {
 import inventory from '../../docs/migration/inventory.json' with { type: 'json' }
 import timings from '../../docs/migration/track-timings.json' with { type: 'json' }
 import ruminateTimings from '../../docs/content/ruminate-track-timings.json' with { type: 'json' }
+import impulseTimings from '../../docs/content/impulse-track-timings.json' with { type: 'json' }
 import { readCatalog } from '../../server/content/repository.ts'
 import { publicFeedArchive } from '../../server/content/feed.ts'
 import { fileReader } from '../../tools/content/files.ts'
@@ -33,7 +34,7 @@ const show = showSchema.parse(
   JSON.parse(await readFile('content/show.json', 'utf8')),
 )
 
-test('serves the complete canonical archive with subscriber identities, precise tracks and safe projections', async ({
+test('serves the complete canonical archive with subscriber identities, track timings and safe projections', async ({
   request,
 }) => {
   const response = await request.get('/api/episodes')
@@ -102,6 +103,9 @@ test('serves the complete canonical archive with subscriber identities, precise 
     expect(Date.parse(detail.publishedAt)).toBe(
       Date.parse(raw.publication.feedRfc822),
     )
+    const authoredTimings = [ruminateTimings, impulseTimings].find(
+      (e) => e.episodeId === raw.id,
+    )
     for (const [index, source] of raw.tracklist.tracks.entries()) {
       expect(detail.tracks[index]).toEqual({
         ...source,
@@ -109,14 +113,13 @@ test('serves the complete canonical archive with subscriber identities, precise 
           raw.id === 'wp-281' && source.position === 4
             ? source.title.replace('\u0092', '’')
             : source.title,
-        startTime:
-          raw.id === ruminateTimings.episodeId
-            ? ruminateTimings.tracks[index]!.startTime
-            : raw.id === 'wp-417'
-              ? timings.episodes.find((e) => e.episodeId === 'wp-417')!.tracks[
-                  index
-                ]!.startTime
-              : source.startTime,
+        startTime: authoredTimings
+          ? authoredTimings.tracks[index]!.startTime
+          : raw.id === 'wp-417'
+            ? timings.episodes.find((e) => e.episodeId === 'wp-417')!.tracks[
+                index
+              ]!.startTime
+            : source.startTime,
       })
     }
     tracks += detail.tracks.length
@@ -127,7 +130,7 @@ test('serves the complete canonical archive with subscriber identities, precise 
       /sourceRoot|relativePath|sourceSnapshot|databaseGuid|sha256/,
     )
   }
-  expect({ tracks, starts }).toEqual({ tracks: 832, starts: 358 })
+  expect({ tracks, starts }).toEqual({ tracks: 832, starts: 374 })
   const showResponse = await request.get('/api/show')
   expect(showResponse.status()).toBe(200)
   expect(await showResponse.json()).toEqual({
