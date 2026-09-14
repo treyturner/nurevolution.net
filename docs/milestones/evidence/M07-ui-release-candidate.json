@@ -1,0 +1,82 @@
+{
+  "schemaVersion": 1,
+  "observedAt": "2026-09-14T10:05:11.897396+00:00",
+  "scope": "M7 UI refinements with all timestamp updates through PR 34, verified locally before PR review and production promotion.",
+  "sourceCommit": "fe515c4efb6d3d7f3eaa27802866035e6eec7bac",
+  "command": "NUREVOLUTION_DOCKER_ADDRESS=172.18.0.2 corepack pnpm verify",
+  "environment": "Isolated local checkout with a separately addressed Docker service; primary and forward development previews remain running.",
+  "verification": {
+    "result": "passed",
+    "unitRuntimeTooling": {
+      "files": 41,
+      "passed": 437
+    },
+    "coveragePercent": {
+      "statements": 96.95,
+      "branches": 94.84,
+      "functions": 96.78,
+      "lines": 97.82
+    },
+    "browser": {
+      "passed": 211,
+      "skipped": 2,
+      "skipNote": "Duplicate Firefox/WebKit executions of the same Node-output portability check; Chromium performs it."
+    },
+    "otherPassed": [
+      "format",
+      "lint",
+      "strict types",
+      "migration and operations tests",
+      "migration inventory audit",
+      "content, thumbnails and feed validation",
+      "production and fixture builds",
+      "Docker runtime, proxy, ranges/resume, downloads, restart isolation and exact image export"
+    ],
+    "report": "/home/coder/dev/nurevolution-m7-release-check/.local/m7-release-verify.log"
+  },
+  "additionalDevelopmentChecks": {
+    "controlledMedia": {
+      "engines": ["Chromium", "Firefox", "WebKit"],
+      "result": "passed",
+      "checks": [
+        "Selected/playing labels and reserved equalizer space",
+        "Five animated bands at the requested rates",
+        "Pause and reduced-motion handling",
+        "320px viewport with 200% text and no page overflow"
+      ],
+      "report": ".local/m7-release-ui-browser.log"
+    },
+    "realRadioSilencedMedia": {
+      "result": "passed",
+      "timedButtons": 50,
+      "viewportWidths": [1440, 1100, 900, 768, 600, 390, 320],
+      "checks": [
+        "No horizontal page overflow",
+        "Usable volume slider width",
+        "Volume aligned right beside transport and left after wrapping",
+        "Desktop and mobile screenshots inspected"
+      ],
+      "report": ".local/m7-release-layout.log",
+      "screenshots": [".local/m7-release-1440.png", ".local/m7-release-390.png"]
+    }
+  },
+  "content": {
+    "episodes": 55,
+    "tracks": 832,
+    "timedEpisodes": 30,
+    "knownStarts": 535,
+    "precision": "Canonical fractional seconds are retained; lower-resolution seek-time displays truncate toward earlier times."
+  },
+  "releaseHandoff": {
+    "ownerRequested": "2026-09-14: integrate the merged cuesheets, perform a final UI check, and release to production for further feedback.",
+    "reviewAndCI": "The UI PR timeline records review acceptance, resolved discussions, CI and merge at the actual submitted head.",
+    "promotion": "https://github.com/treyturner/nurevolution.net/actions/workflows/deploy.yml",
+    "note": "This is candidate verification, not a claim that production promotion has already occurred. The successful trusted-main Verify run and production promotion identify the released commit."
+  },
+  "pendingObservations": [
+    "Physical Android/iPhone media, volume, background/cache-return behavior",
+    "Desktop screen reader and mobile VoiceOver/TalkBack observations",
+    "Further owner and listener feedback on production"
+  ],
+  "limitations": "Automated browser tests and desktop viewport checks do not establish physical-device or assistive-technology acceptance. Earlier M7 evidence remains a historical record of the initial undeployed handoff."
+}
