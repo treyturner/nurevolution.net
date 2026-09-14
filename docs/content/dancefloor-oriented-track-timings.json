@@ -1,0 +1,93 @@
+{
+  "formatVersion": 1,
+  "episodeId": "wp-278",
+  "date": "2026-09-14",
+  "source": {
+    "type": "owner-supplied subclip start-time screenshot",
+    "attachmentFileName": "codex-clipboard-86d7d77a-b0af-4f7d-82fe-2a8b6063a18d.png",
+    "sha256": "dcb18aaffc9cb3f9ad128368ec092bbed5307fa4c537185f60bce21d5a1becd4"
+  },
+  "method": "Convert each displayed M:SS.mmm subclip start directly to seconds in canonical tracklist order; no duration accumulation.",
+  "precision": "Millisecond timestamps as displayed; retain fractional seconds in canonical data and seeking, and truncate toward the earlier time wherever lower precision is required.",
+  "canonicalDurationSeconds": 3714,
+  "tracks": [
+    {
+      "position": 1,
+      "splitFile": "Subclip 01.wav",
+      "displayedStartTime": "0:00.000",
+      "startTime": 0
+    },
+    {
+      "position": 2,
+      "splitFile": "Subclip 02.wav",
+      "displayedStartTime": "6:42.267",
+      "startTime": 402.267
+    },
+    {
+      "position": 3,
+      "splitFile": "Subclip 03.wav",
+      "displayedStartTime": "11:12.691",
+      "startTime": 672.691
+    },
+    {
+      "position": 4,
+      "splitFile": "Subclip 04.wav",
+      "displayedStartTime": "15:50.150",
+      "startTime": 950.15
+    },
+    {
+      "position": 5,
+      "splitFile": "Subclip 05.wav",
+      "displayedStartTime": "18:57.473",
+      "startTime": 1137.473
+    },
+    {
+      "position": 6,
+      "splitFile": "Subclip 06.wav",
+      "displayedStartTime": "23:43.681",
+      "startTime": 1423.681
+    },
+    {
+      "position": 7,
+      "splitFile": "Subclip 07.wav",
+      "displayedStartTime": "28:32.263",
+      "startTime": 1712.263
+    },
+    {
+      "position": 8,
+      "splitFile": "Subclip 08.wav",
+      "displayedStartTime": "32:50.247",
+      "startTime": 1970.247
+    },
+    {
+      "position": 9,
+      "splitFile": "Subclip 09.wav",
+      "displayedStartTime": "35:35.001",
+      "startTime": 2135.001
+    },
+    {
+      "position": 10,
+      "splitFile": "Subclip 10.wav",
+      "displayedStartTime": "39:36.677",
+      "startTime": 2376.677
+    },
+    {
+      "position": 11,
+      "splitFile": "Subclip 11.wav",
+      "displayedStartTime": "46:47.369",
+      "startTime": 2807.369
+    },
+    {
+      "position": 12,
+      "splitFile": "Subclip 12.wav",
+      "displayedStartTime": "51:20.000",
+      "startTime": 3080
+    },
+    {
+      "position": 13,
+      "splitFile": "Subclip 13.wav",
+      "displayedStartTime": "55:44.312",
+      "startTime": 3344.312
+    }
+  ]
+}

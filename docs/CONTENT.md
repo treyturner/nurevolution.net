@@ -1,6 +1,6 @@
 # Editing the podcast archive
 
-The canonical archive is in `content/`. It contains 55 historical episodes, 832 tracks, and 535 known track starts across 30 episodes: 338 precise imported starts, 20 whole-second estimates for Ruminate, 16 whole-second timestamps for Impulse, and 161 millisecond timestamps across six episodes (Bass Face Space Race, Lost In Translation, Off The Cuff, Is This Thing On?, Carrier Detect, and Radio Silenced). Original audio and artwork remain URL references. The repository includes only small generated artwork thumbnails for the episode list. M3 serves the complete replacement RSS at `/feed/podcast`. The current page remains the M1 shell; M4 will build episode pages and the player from this archive.
+The canonical archive is in `content/`. It contains 55 historical episodes, 832 tracks, and 548 known track starts across 31 episodes: 338 precise imported starts, 20 whole-second estimates for Ruminate, 16 whole-second timestamps for Impulse, and 174 millisecond timestamps across seven episodes (Bass Face Space Race, Lost In Translation, Off The Cuff, Is This Thing On?, Carrier Detect, Radio Silenced, and Dancefloor Oriented). Original audio and artwork remain URL references. The repository includes only small generated artwork thumbnails for the episode list. M3 serves the complete replacement RSS at `/feed/podcast`. The current page remains the M1 shell; M4 will build episode pages and the player from this archive.
 
 ## Files you edit
 
@@ -87,6 +87,8 @@ Is This Thing On? (`wp-431`) has [19 authored track starts](content/is-this-thin
 Carrier Detect (`wp-421`) has [30 authored track starts](content/carrier-detect-track-timings.json), supplied by the owner on 2026-09-14. Each displayed subclip start is converted directly from `M:SS.mmm` or `H:MM:SS.mmm` to seconds in canonical tracklist order, from `0:00.000` through `1:11:19.151`, preserving milliseconds. The 4428-second episode duration, frozen migration evidence, and initial-import provenance remain unchanged.
 
 Radio Silenced (`wp-197`) has [50 authored track starts](content/radio-silenced-track-timings.json), supplied by the owner on 2026-09-14. Each displayed subclip start is converted directly from `M:SS.mmm` or `H:MM:SS.mmm` to seconds in canonical tracklist order, from `0:00.000` through `1:56:07.068`, preserving milliseconds. The 7054-second episode duration, frozen migration evidence, and initial-import provenance remain unchanged.
+
+Dancefloor Oriented (`wp-278`) has [13 authored track starts](content/dancefloor-oriented-track-timings.json), supplied by the owner on 2026-09-14. Each displayed subclip start is converted directly from `M:SS.mmm` to seconds in canonical tracklist order, from `0:00.000` through `55:44.312`, preserving milliseconds. The 3714-second episode duration, frozen migration evidence, and initial-import provenance remain unchanged.
 
 ## Import and reconciliation
 
