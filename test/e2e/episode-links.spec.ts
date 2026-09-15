@@ -220,38 +220,52 @@ for (const clipboard of ['unavailable', 'denied'] as const) {
   })
 }
 
-test('RSS retains a canonical link when JavaScript is disabled', async ({
-  browser,
-  baseURL,
-}) => {
-  const context = await browser.newContext({
-    javaScriptEnabled: false,
+for (const missing of ['JavaScript', 'Clipboard API']) {
+  test(`RSS announces its native fallback without ${missing}`, async ({
+    browser,
     baseURL,
+  }) => {
+    const context = await browser.newContext({
+      javaScriptEnabled: missing !== 'JavaScript',
+      baseURL,
+    })
+    try {
+      await context.addInitScript(() => {
+        Object.defineProperty(navigator, 'clipboard', {
+          configurable: true,
+          value: undefined,
+        })
+      })
+      const page = await context.newPage()
+      await stubArchiveMedia(page)
+      await context.route('https://nurevolution.net/feed/podcast', (route) =>
+        route.fulfill({
+          contentType: 'text/html',
+          body: '<p>Feed destination</p>',
+        }),
+      )
+      await page.goto('/episodes/trey-turner-ruminate')
+      if (missing !== 'JavaScript') await ready(page)
+      const originalUrl = page.url()
+      const link = page.getByRole('link', { name: /^Subscribe via RSS/ })
+      await expect(link).toHaveAccessibleName(
+        'Subscribe via RSS (opens in a new tab)',
+      )
+      await expect(link).toHaveAttribute('title', 'Open RSS feed in a new tab')
+      await expect(link).toHaveAttribute(
+        'href',
+        'https://nurevolution.net/feed/podcast',
+      )
+      const opened = page.waitForEvent('popup')
+      await link.click()
+      const popup = await opened
+      await expect(popup).toHaveURL('https://nurevolution.net/feed/podcast')
+      await expect(page).toHaveURL(originalUrl)
+    } finally {
+      await context.close()
+    }
   })
-  try {
-    const page = await context.newPage()
-    await context.route('https://nurevolution.net/feed/podcast', (route) =>
-      route.fulfill({
-        contentType: 'text/html',
-        body: '<p>Feed destination</p>',
-      }),
-    )
-    await page.goto('/episodes/trey-turner-ruminate')
-    const originalUrl = page.url()
-    const link = page.getByRole('link', { name: /^Subscribe via RSS/ })
-    await expect(link).toHaveAttribute(
-      'href',
-      'https://nurevolution.net/feed/podcast',
-    )
-    const opened = page.waitForEvent('popup')
-    await link.click()
-    const popup = await opened
-    await expect(popup).toHaveURL('https://nurevolution.net/feed/podcast')
-    await expect(page).toHaveURL(originalUrl)
-  } finally {
-    await context.close()
-  }
-})
+}
 
 test('keeps feedback inside a narrow viewport and falls back to top center after its button scrolls away', async ({
   page,

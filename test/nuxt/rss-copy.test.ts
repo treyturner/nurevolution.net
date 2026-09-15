@@ -102,6 +102,12 @@ it('allows native navigation when the Clipboard API is unavailable', async () =>
     undefined as unknown as Clipboard,
   )
   const wrapper = await mount()
+  expect(wrapper.get('a').attributes('aria-label')).toBe(
+    'Subscribe via RSS (opens in a new tab)',
+  )
+  expect(wrapper.get('a').attributes('title')).toBe(
+    'Open RSS feed in a new tab',
+  )
   expect(activate(wrapper)).toBe(false)
   expect(wrapper.get('[role="status"]').text()).toBe('')
 })

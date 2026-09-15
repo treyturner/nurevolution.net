@@ -3,16 +3,20 @@ import { useCopyLink } from '../composables/useCopyLink'
 
 const props = defineProps<{ feedUrl: string }>()
 const { toast, copyLink } = useCopyLink()
-const openFeed = ref(false)
+const openFeed = ref(true)
+const canCopy = () => typeof navigator.clipboard?.writeText === 'function'
+onMounted(() => {
+  openFeed.value = !canCopy()
+})
 async function copyFeed(event: MouseEvent) {
+  if (!canCopy()) openFeed.value = true
   if (
     event.button !== 0 ||
     event.metaKey ||
     event.ctrlKey ||
     event.shiftKey ||
     event.altKey ||
-    openFeed.value ||
-    !navigator.clipboard?.writeText
+    openFeed.value
   )
     return
   event.preventDefault()
