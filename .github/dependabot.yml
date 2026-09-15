@@ -1,0 +1,43 @@
+version: 2
+
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+      time: '09:00'
+      timezone: Etc/UTC
+    open-pull-requests-limit: 3
+    groups:
+      security-updates:
+        applies-to: security-updates
+        patterns: ['*']
+      nuxt-major:
+        patterns: [nuxt, '@nuxt/*', vue, vue-router]
+        update-types: [major]
+      vitest-major:
+        patterns: [vitest, '@vitest/*']
+        update-types: [major]
+      minor-and-patch:
+        patterns: ['*']
+        update-types: [minor, patch]
+    ignore:
+      # Keep Node type definitions aligned with the declared Node 22 runtime.
+      - dependency-name: '@types/node'
+        update-types: ['version-update:semver-major']
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+      time: '09:00'
+      timezone: Etc/UTC
+    open-pull-requests-limit: 1
+    groups:
+      security-updates:
+        applies-to: security-updates
+        patterns: ['*']
+      github-actions:
+        patterns: ['*']
