@@ -1,5 +1,10 @@
 import { expect, test, type Page } from '@playwright/test'
-import { ready, stubArchiveMedia } from './media'
+import { readFile } from 'node:fs/promises'
+import { fulfillAudio, ready, stubArchiveMedia } from './media'
+
+const long = await readFile(
+  new URL('../fixtures/media-app/public/long.wav', import.meta.url),
+)
 
 const praxis = '/episodes/trey-turner-praxis'
 const ruminate = '/episodes/trey-turner-ruminate'
@@ -10,6 +15,9 @@ const confirm = (page: Page) =>
 
 async function fixture(page: Page, playing = true) {
   await stubArchiveMedia(page)
+  await page.route('https://podcast.nurevolution.net/**', (route) =>
+    fulfillAudio(route, long, 'audio/wav'),
+  )
   await page.goto(praxis)
   await ready(page)
   await page.locator('audio').evaluate((audio: HTMLAudioElement) => {
