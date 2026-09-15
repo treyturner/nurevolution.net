@@ -122,6 +122,9 @@ test('keeps playback intact and closes obsolete artwork when history changes epi
     await audio!.evaluate((element: HTMLAudioElement) => element.paused),
   ).toBe(false)
   await page.goBack()
+  await page
+    .getByRole('button', { name: 'Change episode', exact: true })
+    .click()
   await expect(page.locator('h1')).toHaveText('Ruminate')
   await expect(page.getByRole('dialog')).toHaveCount(0)
   await ready(page)

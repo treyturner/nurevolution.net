@@ -25,6 +25,7 @@ export function useEpisodePlaybackNavigation() {
   function navigate(path: string, replace: boolean): Promise<RestoreResult> {
     return new Promise((resolve) => {
       let token: number | undefined
+      let timer: ReturnType<typeof setTimeout> | undefined
       let settled = false
       const done = (result: RestoreResult) => {
         if (settled) return
@@ -36,20 +37,29 @@ export function useEpisodePlaybackNavigation() {
       }
       const unsubscribe = nuxt.$episodeNavigation.onPrepare(
         (nextPath, next) => {
-          if (token === undefined && nextPath === path) token = next
-          else done('cancelled')
+          if (token === undefined && nextPath === path) {
+            token = next
+            // Time the request, not the listener's confirmation decision.
+            timer = setTimeout(() => {
+              nuxt.$episodeNavigation.cancel(next)
+              done('failed')
+            }, 5000)
+          } else done('cancelled')
         },
       )
-      const timer = setTimeout(() => {
-        if (token !== undefined) nuxt.$episodeNavigation.cancel(token)
-        done('failed')
-      }, 5000)
       stopMove = () => {
         if (token !== undefined) nuxt.$episodeNavigation.cancel(token)
         done('cancelled')
       }
       void (replace ? router.replace(path) : router.push(path)).then(
-        (failure) => done(failure ? 'failed' : 'restored'),
+        (failure) =>
+          done(
+            failure
+              ? state.value.failedPath === path
+                ? 'failed'
+                : 'cancelled'
+              : 'restored',
+          ),
         () => done('failed'),
       )
     })

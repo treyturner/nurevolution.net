@@ -359,6 +359,9 @@ test('keeps one native element through paused/active selection and Back/Forward'
   })
   await expect(page.locator('.media-status')).toHaveText('Playing')
   await page.locator('a[href="/episodes/trey-turner-ruminate"]').click()
+  await page
+    .getByRole('button', { name: 'Change episode', exact: true })
+    .click()
   await expect(page.locator('h1')).toHaveText('Ruminate')
   await expect
     .poll(() => audio!.evaluate((a: HTMLAudioElement) => a.paused))

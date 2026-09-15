@@ -186,7 +186,7 @@ button {
 .artwork-trigger:focus-visible {
   outline-offset: -4px;
 }
-html:has(.artwork-dialog[open]) {
+html:has(.artwork-dialog[open], .episode-change-dialog[open]) {
   overflow: hidden;
 }
 .artwork-dialog {
@@ -205,6 +205,34 @@ html:has(.artwork-dialog[open]) {
 }
 .artwork-dialog::backdrop {
   background: rgb(0 0 0 / 85%);
+}
+.episode-change-dialog {
+  width: min(28rem, calc(100% - 2rem));
+  padding: 1.5rem;
+  border: 1px solid var(--line);
+  border-radius: 0.5rem;
+  background: #171d26;
+  color: #f1f3f6;
+}
+.episode-change-dialog::backdrop {
+  background: rgb(0 0 0 / 65%);
+}
+.episode-change-dialog h2 {
+  margin-bottom: 0.75rem;
+}
+.episode-change-dialog p {
+  color: var(--muted);
+  overflow-wrap: anywhere;
+}
+.episode-change-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+.episode-change-actions button {
+  min-height: 44px;
 }
 .artwork-dialog-stage {
   display: grid;
@@ -475,7 +503,9 @@ audio.custom-audio {
 }
 .episode-list li.selected {
   background: #1c2533;
-  box-shadow: inset 2px 0 var(--focus-color);
+}
+.episode-list li.selected > a:first-child {
+  box-shadow: inset 3px 0 var(--focus-color);
 }
 .episode-list li > a:first-child {
   display: flex;
@@ -566,19 +596,19 @@ audio.custom-audio {
 .track-list li {
   border-bottom: 1px solid #222832;
   border-left: 3px solid transparent;
-  padding-left: 0.4rem;
 }
 .track-row {
   display: grid;
   grid-template-columns: 1.5rem minmax(0, 1fr) auto;
   align-items: start;
   gap: 0.7rem;
-  padding: 0.7rem 0;
+  padding: 0.7rem 0.65rem;
   width: 100%;
   text-align: left;
 }
 button.track-row {
   border: 0;
+  border-radius: 0;
   background: transparent;
   color: inherit;
   cursor: pointer;
@@ -610,6 +640,14 @@ button.track-row:disabled {
   gap: 0.35em;
   min-width: 0;
   color: #f1f3f6;
+}
+.track-current-enter-active,
+.track-current-leave-active {
+  transition: opacity 1s ease;
+}
+.track-current-enter-from,
+.track-current-leave-to {
+  opacity: 0;
 }
 .track-equalizer {
   flex: 0 0 auto;
@@ -653,6 +691,10 @@ button.track-row:disabled {
   }
 }
 @media (prefers-reduced-motion: reduce) {
+  .track-current-enter-active,
+  .track-current-leave-active {
+    transition: none;
+  }
   .track-equalizer.is-playing rect {
     animation: none;
   }
@@ -750,6 +792,7 @@ button.track-row:disabled {
 
 .episode-list-heading {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
@@ -762,12 +805,15 @@ button.track-row:disabled {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  flex: 0 0 44px;
-  width: 44px;
+  flex: 0 0 auto;
+  min-width: 44px;
   height: 44px;
   margin-block: -8px;
+  margin-inline-start: auto;
   font: inherit;
-  padding: 0;
+  font-size: 0.7rem;
+  white-space: nowrap;
+  padding: 0 11px;
   background: transparent;
   color: var(--muted);
   border: 0;
@@ -782,11 +828,6 @@ button.track-row:disabled {
   opacity: 0.45;
   cursor: default;
 }
-.episode-sort svg {
-  width: 22px;
-  height: 22px;
-}
-
 @media (max-width: 420px) {
   .seek-row {
     display: grid;
