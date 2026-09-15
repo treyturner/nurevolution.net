@@ -23,6 +23,7 @@ import radioSilencedTimings from '../../docs/content/radio-silenced-track-timing
 import dancefloorOrientedTimings from '../../docs/content/dancefloor-oriented-track-timings.json' with { type: 'json' }
 import vignetteTimings from '../../docs/content/view-from-a-vignette-track-timings.json' with { type: 'json' }
 import esotericTimings from '../../docs/content/the-further-esoteric-adventures-of-track-timings.json' with { type: 'json' }
+import plushSessionTimings from '../../docs/content/plush-session-track-timings.json' with { type: 'json' }
 import { readCatalog } from '../../server/content/repository.ts'
 import { publicFeedArchive } from '../../server/content/feed.ts'
 import { fileReader } from '../../tools/content/files.ts'
@@ -124,6 +125,7 @@ test('serves the complete canonical archive with subscriber identities, track ti
       dancefloorOrientedTimings,
       vignetteTimings,
       esotericTimings,
+      plushSessionTimings,
     ].find((e) => e.episodeId === raw.id)
     for (const [index, source] of raw.tracklist.tracks.entries()) {
       expect(detail.tracks[index]).toEqual({
@@ -149,7 +151,7 @@ test('serves the complete canonical archive with subscriber identities, track ti
       /sourceRoot|relativePath|sourceSnapshot|databaseGuid|sha256/,
     )
   }
-  expect({ tracks, starts }).toEqual({ tracks: 832, starts: 598 })
+  expect({ tracks, starts }).toEqual({ tracks: 832, starts: 626 })
   const showResponse = await request.get('/api/show')
   expect(showResponse.status()).toBe(200)
   expect(await showResponse.json()).toEqual({
