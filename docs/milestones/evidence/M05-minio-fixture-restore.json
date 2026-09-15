@@ -28,8 +28,7 @@
       "sha256": "cdfeb178c7a51553f7a9afc86bfb92b797f7e2a076de6e52e6cfec48e582602c"
     },
     {
-      "path": "nested/unicode - file.txt",
-      "pathNote": "Display spelling normalized to an ASCII hyphen; the original filename used Unicode U+2014.",
+      "path": "nested/unicode \u2014 file.txt",
       "bytes": 49,
       "sha256": "5c820b72da835a3c5cf456ec6642b5c7cf9fee12d432d0a598f6114c7ea14561"
     }

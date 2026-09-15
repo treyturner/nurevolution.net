@@ -66,7 +66,9 @@ test('dev renders and navigates with production media blocked and retains canoni
       },
     })
   })
-  await page.getByRole('button', { name: 'Copy RSS URL' }).click()
+  await page
+    .getByRole('link', { name: 'Subscribe via RSS (copy RSS URL)' })
+    .click()
   await expect(page.locator('.copy-link-toast')).toHaveText('RSS URL copied')
   await expect(page.locator('html')).toHaveAttribute(
     'data-copied-url',

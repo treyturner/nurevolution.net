@@ -26,8 +26,10 @@ it.each(['Desktop', 'Android'])(
     vi.spyOn(navigator, 'userAgent', 'get').mockReturnValue(agent)
     const write = vi.spyOn(navigator.clipboard, 'writeText').mockResolvedValue()
     const wrapper = await mount()
-    const button = wrapper.get('button[aria-label="Copy RSS URL"]')
-    ;(button.element as HTMLButtonElement).focus()
+    const button = wrapper.get(
+      'a[aria-label="Subscribe via RSS (copy RSS URL)"]',
+    )
+    ;(button.element as HTMLAnchorElement).focus()
     await button.trigger('click')
     await flushPromises()
     expect(write).toHaveBeenCalledWith(feedUrl)
@@ -42,22 +44,77 @@ it.each(['Desktop', 'Android'])(
   },
 )
 
-it('shows clipboard failure and permits another attempt', async () => {
+function activate(wrapper: VueWrapper, init: MouseEventInit = {}) {
+  const link = wrapper.get('a').element
+  const event = new MouseEvent('click', {
+    bubbles: true,
+    cancelable: true,
+    ...init,
+  })
+  let prevented = false
+  // Observe the component's decision, then suppress happy-dom navigation.
+  link.addEventListener(
+    'click',
+    (event) => {
+      prevented = event.defaultPrevented
+      event.preventDefault()
+    },
+    { once: true },
+  )
+  link.dispatchEvent(event)
+  return prevented
+}
+
+it('retains the visible subscription label and a safe canonical feed destination', async () => {
+  const wrapper = await mount()
+  expect(wrapper.get('a').attributes()).toMatchObject({
+    href: feedUrl,
+    target: '_blank',
+    rel: 'noopener noreferrer',
+    'aria-label': 'Subscribe via RSS (copy RSS URL)',
+  })
+})
+
+it('offers a native feed link after clipboard denial without claiming success', async () => {
   const write = vi
     .spyOn(navigator.clipboard, 'writeText')
-    .mockRejectedValueOnce(new DOMException('Denied', 'NotAllowedError'))
-    .mockResolvedValue()
+    .mockRejectedValue(new DOMException('Denied', 'NotAllowedError'))
   const wrapper = await mount()
-  await wrapper.get('button').trigger('click')
+  expect(activate(wrapper)).toBe(true)
   await flushPromises()
-  expect(wrapper.get('[role="status"]').text()).toBe(
-    'Couldn’t copy link. Please try again.',
+  const message =
+    'Couldn’t copy RSS URL. Click again to open the feed in a new tab.'
+  expect(wrapper.get('[role="status"]').text()).toBe(message)
+  expect(document.querySelector('.copy-link-toast')?.textContent).toBe(message)
+  expect(wrapper.get('a').attributes('aria-label')).toBe(
+    'Subscribe via RSS (opens in a new tab)',
   )
-  expect(document.querySelector('.copy-link-toast')?.textContent).toBe(
-    'Couldn’t copy link. Please try again.',
+  await vi.advanceTimersByTimeAsync(3000)
+  expect(wrapper.get('a').attributes('title')).toBe(
+    'Open RSS feed in a new tab',
   )
-  await wrapper.get('button').trigger('click')
-  await flushPromises()
-  expect(write).toHaveBeenCalledTimes(2)
-  expect(wrapper.get('[role="status"]').text()).toBe('RSS URL copied')
+  expect(activate(wrapper)).toBe(false)
+  expect(write).toHaveBeenCalledTimes(1)
+})
+
+it('allows native navigation when the Clipboard API is unavailable', async () => {
+  vi.spyOn(navigator, 'clipboard', 'get').mockReturnValue(
+    undefined as unknown as Clipboard,
+  )
+  const wrapper = await mount()
+  expect(activate(wrapper)).toBe(false)
+  expect(wrapper.get('[role="status"]').text()).toBe('')
+})
+
+it.each([
+  { ctrlKey: true },
+  { metaKey: true },
+  { shiftKey: true },
+  { altKey: true },
+  { button: 1 },
+])('preserves modified link activation: %j', async (init) => {
+  const write = vi.spyOn(navigator.clipboard, 'writeText')
+  const wrapper = await mount()
+  expect(activate(wrapper, init)).toBe(false)
+  expect(write).not.toHaveBeenCalled()
 })
