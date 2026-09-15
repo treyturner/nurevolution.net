@@ -1,11 +1,16 @@
 import type { EpisodeDetail } from '../../shared/content/public'
 type Tracks = EpisodeDetail['tracks']
 
+// Chromium can confirm a seek a few microseconds below its requested time.
+// Keep this smaller than one 44,100 Hz sample, and never alter seek targets.
+const boundaryTolerance = 0.00001
+
 export function trackNavigation(
   tracks: Tracks,
   time: number,
   duration: number | null,
 ) {
+  const reached = (start: number) => time >= start - boundaryTolerance
   const known = tracks.filter(
     (track) =>
       track.startTime !== null &&
@@ -13,7 +18,7 @@ export function trackNavigation(
       track.startTime >= 0 &&
       (duration === null || track.startTime < duration),
   )
-  const anchor = known.findLastIndex((track) => track.startTime! <= time)
+  const anchor = known.findLastIndex((track) => reached(track.startTime!))
   const previous =
     anchor < 0
       ? null
@@ -24,10 +29,10 @@ export function trackNavigation(
   // A timed row followed by an untimed row has no supported ending boundary.
   const current =
     tracks.find((track, index) => {
-      if (!known.includes(track) || time < track.startTime!) return false
+      if (!known.includes(track) || !reached(track.startTime!)) return false
       if (index === tracks.length - 1) return true
       const end = tracks[index + 1]!.startTime
-      return end !== null && Number.isFinite(end) && time < end
+      return end !== null && Number.isFinite(end) && !reached(end)
     })?.position ?? null
   return {
     previous,

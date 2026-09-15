@@ -27,6 +27,31 @@ it('uses exact fractional three-second boundaries and never wraps tracks', () =>
       current,
     })
 })
+it('recognizes sample boundaries despite browser clock rounding and preserves exact seek targets', () => {
+  const second = 363826 / 44100
+  const third = 1411201 / 44100
+  const source = tracks([0, second, third])
+  // Chromium can report a confirmed seek a few microseconds below its target.
+  expect(trackNavigation(source, 8.250021, 40)).toMatchObject({
+    previous: 0,
+    next: third,
+    current: 2,
+  })
+  expect(trackNavigation(source, 32.000021, 40)).toMatchObject({
+    previous: second,
+    next: null,
+    current: 3,
+  })
+  // A position one whole audio sample before a cue still belongs to its predecessor.
+  expect(trackNavigation(source, second - 1 / 44100, 40)).toMatchObject({
+    next: second,
+    current: 1,
+  })
+  expect(trackNavigation(source, third - 1 / 44100, 40)).toMatchObject({
+    next: third,
+    current: 2,
+  })
+})
 it('does not invent a track before the first start or across an untimed boundary', () => {
   const source = tracks([4, null, 8.25, 32, null])
   expect(trackNavigation(source, 0, null)).toEqual({
