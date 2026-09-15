@@ -137,6 +137,37 @@ test('timed rows seek paused or active with supported highlights and exact fract
   await expect(audio).toHaveJSProperty('paused', false)
   await expect(page.getByRole('button', { name: 'Next track' })).toBeDisabled()
 })
+
+test('sample-based track starts select the clicked row after a fresh paused load', async ({
+  page,
+}) => {
+  const starts = [0, 363826 / 44100, 1411201 / 44100]
+  await fixture(page, starts)
+  const audio = page.locator('audio')
+  await at(page, 0)
+  for (const position of [2, 3, 2]) {
+    await page
+      .getByRole('button', { name: new RegExp(`^Seek to track ${position}:`) })
+      .click()
+    await at(page, starts[position - 1]!)
+    await expect(audio).toHaveJSProperty('seeking', false)
+    await expect(audio).toHaveJSProperty('paused', true)
+    const actual = await audio.evaluate((a: HTMLAudioElement) => a.currentTime)
+    await expect(
+      page.locator('.track-list li[aria-current] .track-number'),
+      `Requested ${starts[position - 1]}, browser confirmed ${actual}`,
+    ).toHaveText(String(position).padStart(2, '0'))
+  }
+  await page.getByRole('button', { name: 'Next track' }).click()
+  await at(page, starts[2]!)
+  await expect(page.getByRole('button', { name: 'Next track' })).toBeDisabled()
+  await page.getByRole('button', { name: 'Previous track' }).click()
+  await at(page, starts[1]!)
+  await expect(
+    page.locator('.track-list li[aria-current] .track-number'),
+  ).toHaveText('02')
+})
+
 test('mobile keyboard track seeking preserves tabs and leaves uncertain gaps unhighlighted', async ({
   page,
 }) => {
