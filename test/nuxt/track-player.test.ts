@@ -82,6 +82,23 @@ it('toggles the current track without seeking, including a pending playback requ
     await wrapper.get('button[aria-label^="Seek to track 2:"]').trigger('click')
     expect(time).toBe(32)
     expect(paused).toBe(true)
+    time = 40
+    await audio.trigger('seeked')
+    expect(
+      wrapper.findAll('.track-list button')[1]!.attributes('aria-label'),
+    ).toMatch(/^Seek to track 2:/)
+    Object.defineProperty(audio.element, 'ended', {
+      configurable: true,
+      get: () => time === 40,
+    })
+    await audio.trigger('ended')
+    await wrapper.get('button[aria-label^="Seek to track 2:"]').trigger('click')
+    expect(time).toBe(32)
+    expect(paused).toBe(true)
+    await audio.trigger('seeked')
+    expect(
+      wrapper.findAll('.track-list button')[1]!.attributes('aria-label'),
+    ).toMatch(/^Play track 2:/)
   } finally {
     wrapper.unmount()
   }

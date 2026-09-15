@@ -95,7 +95,13 @@ it('skips paused and same-episode prompts and cancels pending navigation when th
   expect(router.currentRoute.value.path).toBe(ruminate)
   const backdrop = router.push(praxis)
   await vi.waitFor(() => expect(wrapper.find('dialog').exists()).toBe(true))
-  await wrapper.get('dialog').trigger('click')
+  vi.spyOn(
+    wrapper.get('dialog').element,
+    'getBoundingClientRect',
+  ).mockReturnValue(new DOMRect(100, 100, 400, 200))
+  await wrapper.get('dialog').trigger('click', { clientX: 110, clientY: 110 })
+  expect(wrapper.find('dialog').exists()).toBe(true)
+  await wrapper.get('dialog').trigger('click', { clientX: 10, clientY: 10 })
   await backdrop
   expect(router.currentRoute.value.path).toBe(ruminate)
   const disposed = router.push(praxis)

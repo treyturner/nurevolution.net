@@ -85,6 +85,31 @@ test('the current track plays and pauses in place with mouse and keyboard', asyn
   expect(seeks).toBe(0)
 })
 
+test('the final track offers a seek at the episode end instead of replaying the whole episode', async ({
+  page,
+}) => {
+  await fixture(page, [0, 8.25, 32])
+  const audio = page.locator('audio')
+  await audio.evaluate((element: HTMLAudioElement) => {
+    element.muted = true
+    element.currentTime = element.duration
+  })
+  await at(page, 40)
+  await expect(audio).toHaveJSProperty('seeking', false)
+  const final = page.locator('.track-list li[aria-current] button')
+  await expect(final).toHaveAccessibleName(/^Seek to track 3:/)
+  await final.click()
+  await at(page, 32)
+  await expect(audio).toHaveJSProperty('paused', true)
+  await expect(final).toHaveAccessibleName(/^Play track 3:/)
+  await final.click()
+  await expect(page.locator('.media-status')).toHaveText('Playing')
+  expect(
+    await audio.evaluate((a: HTMLAudioElement) => a.currentTime),
+  ).toBeGreaterThanOrEqual(32)
+  await expect(page).toHaveURL(/trey-turner-praxis$/)
+})
+
 test('timed rows seek paused or active with supported highlights and exact fractional targets', async ({
   page,
 }) => {

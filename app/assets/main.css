@@ -186,7 +186,7 @@ button {
 .artwork-trigger:focus-visible {
   outline-offset: -4px;
 }
-html:has(.artwork-dialog[open]) {
+html:has(.artwork-dialog[open], .episode-change-dialog[open]) {
   overflow: hidden;
 }
 .artwork-dialog {

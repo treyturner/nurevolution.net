@@ -25,16 +25,21 @@ watch(
 )
 const timed = (position: number) =>
   props.player?.tracks.positions.includes(position) ?? false
+const canToggle = (position: number) =>
+  props.player?.tracks.current === position &&
+  (props.player.state.duration === null
+    ? props.player.state.status !== 'ended'
+    : props.player.state.currentTime < props.player.state.duration)
 const action = (position: number) =>
-  props.player?.tracks.current === position
-    ? props.player.state.wantsPlay
+  canToggle(position)
+    ? props.player?.state.wantsPlay
       ? 'Pause'
       : 'Play'
     : 'Seek to'
 function activate(position: number) {
   const player = props.player
   if (!player || !timed(position)) return
-  if (player.tracks.current !== position) player.seekTrack(position)
+  if (!canToggle(position)) player.seekTrack(position)
   else if (player.state.wantsPlay) player.pause()
   else player.play()
 }

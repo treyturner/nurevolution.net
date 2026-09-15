@@ -42,8 +42,19 @@ test('cancelling an episode change keeps audio playing without a request, source
   await expect(page.locator('audio')).toHaveJSProperty('paused', false)
   expect(requested).toBe(0)
   await expect(page).toHaveURL(new RegExp(praxis + '$'))
+  await expect(page.locator('html')).toHaveCSS('overflow', 'hidden')
+  const bounds = (await dialog(page).boundingBox())!
+  await page.mouse.click(bounds.x + 4, bounds.y + 4)
+  await expect(dialog(page)).toBeVisible()
+  const scrollPosition = await page.evaluate(() => window.scrollY)
+  await page.mouse.move(2, 2)
+  await page.mouse.wheel(0, 500)
+  // Allow the browser to process the wheel gesture before checking the lock.
+  await page.waitForTimeout(150)
+  expect(await page.evaluate(() => window.scrollY)).toBe(scrollPosition)
   await page.keyboard.press('Escape')
   await expect(dialog(page)).toHaveCount(0)
+  await expect(page.locator('html')).not.toHaveCSS('overflow', 'hidden')
   await expect(link).toBeFocused()
   expect(
     await audio!.evaluate((el) => el === document.querySelector('audio')),
@@ -54,6 +65,10 @@ test('cancelling an episode change keeps audio playing without a request, source
   await expect(page.locator('audio')).toHaveJSProperty('paused', false)
   expect(requested).toBe(0)
   await page.locator(`.episode-list a[href="${praxis}"]`).click()
+  await expect(dialog(page)).toHaveCount(0)
+  await link.click()
+  await expect(dialog(page)).toBeVisible()
+  await page.mouse.click(2, 2)
   await expect(dialog(page)).toHaveCount(0)
   await page.getByRole('button', { name: 'Next episode', exact: true }).click()
   await expect(dialog(page)).toBeVisible()
