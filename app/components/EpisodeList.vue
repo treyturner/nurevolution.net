@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { EpisodeSummary } from '../../shared/content/public'
 import { formatDate } from '../services/episode-page'
+import { useCopyLink } from '../composables/useCopyLink'
 import DownloadIcon from './DownloadIcon.vue'
 import LinkIcon from './LinkIcon.vue'
 import CopyLinkToast from './CopyLinkToast.vue'
@@ -10,40 +11,15 @@ const props = defineProps<{
   selectedId?: string
   pendingPath?: string | null
 }>()
-const toast = shallowRef<{
-  target: HTMLElement
-  message: string
-  inlineEpisodeId?: string
-} | null>(null)
-let sequence = 0
-let timer: ReturnType<typeof setTimeout> | undefined
-async function copyLink(episode: EpisodeSummary, event: MouseEvent) {
-  const target = event.currentTarget as HTMLElement
-  const own = ++sequence
-  clearTimeout(timer)
-  toast.value = null
-  let message = 'Episode link copied'
-  let inlineEpisodeId: string | undefined
-  try {
-    await navigator.clipboard.writeText(
-      new URL(episode.path, props.siteUrl).href,
-    )
-    // Modern Android already confirms copies. An inline check also gives older
-    // Android versions feedback without relying on a reduced OS-version string.
-    if (/Android/i.test(navigator.userAgent)) inlineEpisodeId = episode.id
-  } catch {
-    message = 'Couldn’t copy link. Please try again.'
-  }
-  if (own !== sequence) return
-  toast.value = { target, message, inlineEpisodeId }
-  timer = setTimeout(() => {
-    toast.value = null
-  }, 3000)
+const { toast, copyLink } = useCopyLink()
+function copyEpisodeLink(episode: EpisodeSummary, event: MouseEvent) {
+  void copyLink({
+    url: new URL(episode.path, props.siteUrl).href,
+    target: event.currentTarget as HTMLElement,
+    message: 'Episode link copied',
+    androidInlineId: episode.id,
+  })
 }
-onBeforeUnmount(() => {
-  sequence++
-  clearTimeout(timer)
-})
 </script>
 
 <template>
@@ -85,15 +61,13 @@ onBeforeUnmount(() => {
         type="button"
         class="row-copy-link"
         :title="
-          toast?.inlineEpisodeId === episode.id
-            ? 'Link copied'
-            : 'Copy episode link'
+          toast?.inlineId === episode.id ? 'Link copied' : 'Copy episode link'
         "
         :aria-label="`Copy link to ${episode.artist} - ${episode.title}`"
-        @click="copyLink(episode, $event)"
+        @click="copyEpisodeLink(episode, $event)"
       >
         <svg
-          v-if="toast?.inlineEpisodeId === episode.id"
+          v-if="toast?.inlineId === episode.id"
           class="copy-link-confirmation"
           width="16"
           height="16"
@@ -124,7 +98,7 @@ onBeforeUnmount(() => {
     toast?.message
   }}</span>
   <CopyLinkToast
-    v-if="toast && !toast.inlineEpisodeId"
+    v-if="toast && !toast.inlineId"
     :target="toast.target"
     :message="toast.message"
   />

@@ -17,8 +17,11 @@ it('announces accepted navigation without remounting the player', async () => {
   expect(wrapper.get('#episode-selection-status').text()).toBe(
     'Selected Trey Turner - Praxis',
   )
-  expect(wrapper.findAll('[role="status"], [aria-live]')).toHaveLength(2)
-  expect(wrapper.findAll('[role="status"]')[1]!.text()).toBe('')
+  expect(
+    wrapper
+      .findAll('[role="status"], [aria-live]')
+      .map((region) => region.text()),
+  ).toEqual(['', 'Selected Trey Turner - Praxis', ''])
   expect(wrapper.get('audio').attributes('aria-describedby')).toBe(
     'playback-status',
   )

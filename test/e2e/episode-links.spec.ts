@@ -104,6 +104,51 @@ test('keyboard copying preserves the selected player and shows temporary feedbac
   await expect(toast).toBeHidden({ timeout: 6000 })
 })
 
+test('the compact RSS button copies the feed URL without interrupting playback', async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 320, height: 640 })
+  const clip = await readFile(
+    new URL('../fixtures/media-app/public/long.wav', import.meta.url),
+  )
+  await page.route('https://podcast.nurevolution.net/**', (route) =>
+    fulfillAudio(route, clip, 'audio/wav'),
+  )
+  await page.goto('/episodes/trey-turner-ruminate')
+  await ready(page)
+  const originalUrl = page.url()
+  const audio = page.locator('audio')
+  const element = (await audio.elementHandle())!
+  await audio.evaluate((a: HTMLAudioElement) => {
+    a.muted = true
+  })
+  await page.getByRole('button', { name: 'Play', exact: true }).click()
+  await expect(page.locator('.media-status')).toHaveText('Playing')
+  const before = await audio.evaluate((a: HTMLAudioElement) => a.currentTime)
+  const button = page.getByRole('button', { name: 'Copy RSS URL' })
+  await expect(button.locator('.rss-label')).toBeHidden()
+  await expect(button.locator('.rss-icon')).toBeVisible()
+  await button.focus()
+  await page.keyboard.press('Enter')
+  const toast = page.locator('.copy-link-toast')
+  await expect(toast).toHaveText('RSS URL copied')
+  await expect(page.locator('html')).toHaveAttribute(
+    'data-copied-url',
+    'https://nurevolution.net/feed/podcast',
+  )
+  const box = (await toast.boundingBox())!
+  expect(box.x).toBeGreaterThanOrEqual(12)
+  expect(box.x + box.width).toBeLessThanOrEqual(308)
+  await expect(button).toBeFocused()
+  await expect(page).toHaveURL(originalUrl)
+  expect(await element.evaluate((a) => a.isConnected)).toBe(true)
+  await expect(audio).toHaveJSProperty('paused', false)
+  await expect
+    .poll(() => audio.evaluate((a: HTMLAudioElement) => a.currentTime))
+    .toBeGreaterThan(before)
+  await expect(toast).toBeHidden({ timeout: 6000 })
+})
+
 test('keeps feedback inside a narrow viewport and falls back to top center after its button scrolls away', async ({
   page,
 }) => {

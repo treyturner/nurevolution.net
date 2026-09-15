@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { episodeHead } from '../services/episode-page'
-import RssIcon from '../components/RssIcon.vue'
 import type { EpisodeSummary } from '../../shared/content/public'
 const state = useEpisodePage()
 const navigation = useEpisodePlaybackNavigation()
@@ -70,10 +69,7 @@ useHead(() =>
         />
         <div class="wordmark">nurevolution studios<span>austin, tx</span></div>
       </div>
-      <a href="/feed/podcast" class="rss-link" aria-label="Subscribe via RSS"
-        ><span class="rss-label">Subscribe<br />via RSS</span
-        ><RssIcon class="rss-icon"
-      /></a>
+      <RssCopyButton :feed-url="state.model.show.feedUrl" />
     </header>
     <p v-if="state.failedPath" class="navigation-error" role="alert">
       Could not load this episode.
