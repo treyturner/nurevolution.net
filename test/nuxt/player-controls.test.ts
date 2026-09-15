@@ -70,7 +70,7 @@ it('exposes honest Play/Pause and skip actions with known/unknown duration', asy
   expect(
     wrapper.get('[aria-label="Playback position"]').attributes('disabled'),
   ).toBeDefined()
-  expect(wrapper.text()).toContain('—:—')
+  expect(wrapper.text()).toContain('-:-')
   expect(
     wrapper.get('[aria-label="Play"]').attributes('disabled'),
   ).toBeUndefined()

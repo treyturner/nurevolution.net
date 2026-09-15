@@ -1,12 +1,12 @@
-# M0 — Migration inventory and compatibility contract
+# M0 - Migration inventory and compatibility contract
 
 Status: **Completed locally on 2026-09-07; migration ready.** No production changes were made.
 
 Plan date: 2026-09-07.
 
-Roadmap: [M0 — Inventory and migration contract](../../ROADMAP.md#m0--inventory-and-migration-contract).
+Roadmap: [M0 - Inventory and migration contract](../../ROADMAP.md#m0---inventory-and-migration-contract).
 
-Project guidance: [BOOTSTRAP.md](../BOOTSTRAP.md). Companion plan: [M1 — Foundation and verification](M01-foundation-and-verification.md).
+Project guidance: [BOOTSTRAP.md](../BOOTSTRAP.md). Companion plan: [M1 - Foundation and verification](M01-foundation-and-verification.md).
 
 ## Outcome and scope
 
@@ -187,7 +187,7 @@ M0 may hand off a completed audit with content blockers if the evidence and bloc
 
 Do not mark these items complete while merely writing this plan. No commits, pushes, production changes, or deletion of original source material are included in the milestone's default workflow.
 
-## Completion evidence and handoff — 2026-09-07
+## Completion evidence and handoff - 2026-09-07
 
 M0 reconciled 55 published `one_page_portfolio` records, 55 frozen feed items, and 55 local MP3s. Every episode maps uniquely to one feed item, audio file, and verified artwork original. The audit found 832 ordered tracks across 50 episodes; five episodes legitimately have no tracklist. The owner-supplied split-FLAC listing provides 317 derived starts across 21 episodes. Album title, artist, track count, and numbered order drive matching; directory dates do not. All 55 feed GUIDs explicitly use `isPermaLink="false"`.
 

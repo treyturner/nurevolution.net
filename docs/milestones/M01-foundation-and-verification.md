@@ -1,12 +1,12 @@
-# M1 — Nuxt foundation and canonical verification
+# M1 - Nuxt foundation and canonical verification
 
 Status: **Implemented and locally verified** on 2026-09-07. The GitHub Actions workflow is written; a remote run has not been triggered.
 
 Plan date: 2026-09-07.
 
-Roadmap: [M1 — Foundation and verification](../../ROADMAP.md#m1--foundation-and-verification).
+Roadmap: [M1 - Foundation and verification](../../ROADMAP.md#m1---foundation-and-verification).
 
-Project guidance: [BOOTSTRAP.md](../BOOTSTRAP.md). Companion plan: [M0 — Migration audit](M00-migration-audit.md).
+Project guidance: [BOOTSTRAP.md](../BOOTSTRAP.md). Companion plan: [M0 - Migration audit](M00-migration-audit.md).
 
 ## Outcome and scope
 
@@ -214,7 +214,7 @@ Writing a workflow file is not evidence of a successful GitHub Actions run. Reco
 
 No production rollout is part of M1. Its changes are additive and can be revised locally without touching the existing WordPress site. The completed checklist is supported by the local evidence below; it does not imply deployment or a successful remote CI run.
 
-## Completion evidence and handoff — 2026-09-07
+## Completion evidence and handoff - 2026-09-07
 
 The implementation contains the semantic dark shell and a minimal injected audio adapter, isolated Node/Nuxt/browser tests, exact toolchain pins, formatting/lint/strict type checks, and a checks-only GitHub Actions workflow. The normal application has no episode data, player controls, or test fixture routes/assets.
 

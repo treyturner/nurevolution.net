@@ -48,7 +48,7 @@ watch(
   () => {
     const episode = state.value.model?.selected
     announcement.value = episode
-      ? `Selected ${episode.artist} — ${episode.title}`
+      ? `Selected ${episode.artist} - ${episode.title}`
       : 'No episodes are available.'
   },
 )

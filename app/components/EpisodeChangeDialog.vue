@@ -27,7 +27,7 @@ function backdropClick(event: MouseEvent) {
     @click.self="backdropClick"
   >
     <h2 id="episode-change-question">Stop playback to change episodes?</h2>
-    <p id="episode-change-target">{{ episode.artist }} — {{ episode.title }}</p>
+    <p id="episode-change-target">{{ episode.artist }} - {{ episode.title }}</p>
     <div class="episode-change-actions">
       <button type="button" autofocus @click="emit('answer', false)">
         Keep listening

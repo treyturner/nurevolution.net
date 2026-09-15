@@ -89,7 +89,7 @@ onBeforeUnmount(() => {
             ? 'Link copied'
             : 'Copy episode link'
         "
-        :aria-label="`Copy link to ${episode.artist} — ${episode.title}`"
+        :aria-label="`Copy link to ${episode.artist} - ${episode.title}`"
         @click="copyLink(episode, $event)"
       >
         <svg
@@ -115,7 +115,7 @@ onBeforeUnmount(() => {
         :href="`/downloads/${episode.slug}`"
         download
         title="Download MP3"
-        :aria-label="`Download ${episode.artist} — ${episode.title}`"
+        :aria-label="`Download ${episode.artist} - ${episode.title}`"
         ><DownloadIcon
       /></a>
     </li>

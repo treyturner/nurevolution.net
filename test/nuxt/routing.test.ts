@@ -15,7 +15,7 @@ it('announces accepted navigation without remounting the player', async () => {
   await nuxt.$router.push('/episodes/trey-turner-praxis')
   expect(wrapper.get('h1').text()).toBe('Praxis')
   expect(wrapper.get('#episode-selection-status').text()).toBe(
-    'Selected Trey Turner — Praxis',
+    'Selected Trey Turner - Praxis',
   )
   expect(wrapper.findAll('[role="status"], [aria-live]')).toHaveLength(2)
   expect(wrapper.findAll('[role="status"]')[1]!.text()).toBe('')

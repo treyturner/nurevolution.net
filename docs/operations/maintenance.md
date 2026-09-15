@@ -1,4 +1,4 @@
-# Production maintenance — 2026-09-13
+# Production maintenance - 2026-09-13
 
 The owner selected production plus local/workspace development, lowercase nurevolution branding, GitHub Actions uptime checks with the existing Discord destination, and routine droplet maintenance/reboots. M7 implementation has not started. Frozen WordPress and historical migration/cutover evidence remain available for fallback.
 

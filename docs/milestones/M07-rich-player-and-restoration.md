@@ -1,10 +1,10 @@
-# M7 — Rich player, interactive tracklists, and restoration
+# M7 - Rich player, interactive tracklists, and restoration
 
 Status: **All M7 behaviors and the owner's UI refinements are implemented; final UI review and production release are requested.** On 2026-09-14 the owner authorized bringing the merged timestamp updates into the UI branch and releasing the reviewed player to production for further feedback. This supersedes the initial deployment prohibition. Actual promotions are recorded by the [verified release workflow](https://github.com/treyturner/nurevolution.net/actions/workflows/deploy.yml); physical-device and assistive-technology observations remain pending.
 
 The original decision-complete plan below was prepared on `feat/m7-player-enhancements`, created from `main` at `f33d001a9427f35612ad1d2d3290929e2129ca0a` after fetching and confirming equality with `origin/main`. Its initial scope authorized sequential PR review/merge cycles and a complete development-server handoff without production deployment. The historical handoff evidence below describes that earlier scope.
 
-Roadmap: [M7](../../ROADMAP.md#m7--rich-player-interactive-tracklists-and-restoration). Prerequisites: [M4 player](M04-archive-player.md), the existing [player guide](../PLAYER.md), and confirmed roadmap decisions D01/D02. The owner's request starts M7 planning while [M6 observation and retirement](M06-cutover-and-retirement.md) remain open. M6 retirement is not an implementation prerequisite; its unfinished checks remain in M6.
+Roadmap: [M7](../../ROADMAP.md#m7---rich-player-interactive-tracklists-and-restoration). Prerequisites: [M4 player](M04-archive-player.md), the existing [player guide](../PLAYER.md), and confirmed roadmap decisions D01/D02. The owner's request starts M7 planning while [M6 observation and retirement](M06-cutover-and-retirement.md) remain open. M6 retirement is not an implementation prerequisite; its unfinished checks remain in M6.
 
 ## Outcome and review decisions
 
@@ -142,7 +142,7 @@ Use `currentTime` assignment through the adapter, not `fastSeek`, so precise imp
 - ±30 seconds is measured from actual current time or the latest pending seek target during repeated clicks. Clamp each result; preserve active/paused intent. Disable backward at zero and forward at duration. Invalid/nonfinite commands are no-ops with no media call.
 - Pointer scrubbing previews time and `aria-valuetext` without repeatedly seeking or pausing audio. Commit once on release/change; keyboard changes commit once per key operation. Escape/pointer cancellation reverts the preview. While scrubbing, incoming time ticks do not move the thumb. An accepted source change or error cancels the old scrub. A natural end may proceed normally and cancels any old-source preview.
 - Reconcile a successful seek from the current snapshot, allowing 250 ms position tolerance in integration checks. Unit navigation math uses exact values. Catch assignment errors; if a seek remains unconfirmed after five seconds, clear its pending UI and show “Could not seek. Try again.” A late actual seek result updates the real position and clears that message. Never reload or repeatedly seek on a timeout.
-- A duration change recomputes bounds, clamps any pending target once, and invalidates track starts outside the actual media. Unknown/zero/nonfinite duration means unavailable seek bounds; display `—:—` in the progress control and keep the existing loading/retry behavior. The separate publication metadata may still display catalog duration.
+- A duration change recomputes bounds, clamps any pending target once, and invalidates track starts outside the actual media. Unknown/zero/nonfinite duration means unavailable seek bounds; display `-:-` in the progress control and keep the existing loading/retry behavior. The separate publication metadata may still display catalog duration.
 
 Keep the progress view driven by native events; no animation-frame timer or simulated progress clock. Render elapsed and total time with the existing formatter, adding a spoken-time helper for accessible values. Seeking updates progress/highlighting from confirmed position, except for the slider's explicitly temporary preview.
 
@@ -258,7 +258,7 @@ The owner-requested implementation handoff requires all four slices, a passing c
 
 The initial planning task delivered the feature branch, plan, navigation links, and documentation checks without implementation. The subsequent owner instruction authorizes implementation, commits, pushes, PR review, and merging, with only one PR open at a time. Production deployment and M6 retirement remain outside this task.
 
-## Implementation progress — 2026-09-13
+## Implementation progress - 2026-09-13
 
 Slice 1 implements the layout-owned session, finite-duration restoration seek, explicit play/pause cancellation, versioned one-slot persistence, visit lifecycle, and bounded/cancellable root restoration. Existing native controls remain until slice 2. `player-seek.ts` isolates pending-seek handling from source transitions; this is a focused implementation refinement of the planned controller/navigation split.
 
@@ -304,7 +304,7 @@ The owner's final review still covers interface preferences and the physical And
 
 Final CI follow-up: run `34740159717` exposed a test-only WebKit startup race in the native paused-seek restoration check. The trace showed the test assigning time while the custom seek control was still disabled with duration unavailable; the pending initial zero restore then completed. The check now awaits the enabled seek control and an idle native seek before its separate 1.1-second assignment, retaining the same persistence/reload/no-Play assertions. Twenty consecutive focused WebKit runs passed after this readiness correction. The application code is unchanged from the locally verified implementation; final CI and renewed review are recorded in PR 24.
 
-## UI refinement and release candidate — 2026-09-14
+## UI refinement and release candidate - 2026-09-14
 
 The owner-refined player joins seven transport controls, retains a prominent Play/Pause icon, and places responsive volume controls beside them. Timed track rows keep their columns aligned and show “selected” or “now playing” with an equalizer that respects reduced motion. Description links open a separate tab to preserve playback. The [player guide](../PLAYER.md) records the detailed behavior.
 

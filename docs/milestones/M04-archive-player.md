@@ -1,8 +1,8 @@
-# M4 — Initial archive player and responsive dark design
+# M4 - Initial archive player and responsive dark design
 
 Status: **Implemented, rebased and merged, with passing main CI** on 2026-09-09, at `77448fd`. The original plan and local completion record are retained below; subsequent review fixes and CI results are recorded in [merged evidence](#merged-review-and-ci-evidence). The owner chose mobile tabs during implementation. Public deployment, real-device/screen-reader observations, and directory/client checks remain explicit M5/M6 work.
 
-Roadmap: [M4](../../ROADMAP.md#m4--initial-archive-player-and-responsive-dark-design). Prerequisites: [M2 canonical content](M02-canonical-content.md), [M3 RSS](M03-podcast-rss.md), and [BOOTSTRAP.md](../BOOTSTRAP.md), subject to the roadmap's newer owner decisions. Supplemental baseline and public media observations: [M04-planning-reference.json](evidence/M04-planning-reference.json).
+Roadmap: [M4](../../ROADMAP.md#m4---initial-archive-player-and-responsive-dark-design). Prerequisites: [M2 canonical content](M02-canonical-content.md), [M3 RSS](M03-podcast-rss.md), and [BOOTSTRAP.md](../BOOTSTRAP.md), subject to the roadmap's newer owner decisions. Supplemental baseline and public media observations: [M04-planning-reference.json](evidence/M04-planning-reference.json).
 
 ## Outcome and requirement mapping
 
@@ -71,7 +71,7 @@ All model and controller ownership must be per Nuxt application/request. Do not 
 
 ### SSR metadata and links
 
-- Root title: `nurevolution — Podcast archive`; episode title: `<artist> — <title> | nurevolution`. Use normal escaped head bindings, a plain-text description, and a canonical link resolved against validated `show.siteUrl`, never the request Host header.
+- Root title: `nurevolution - Podcast archive`; episode title: `<artist> - <title> | nurevolution`. Use normal escaped head bindings, a plain-text description, and a canonical link resolved against validated `show.siteUrl`, never the request Host header.
 - Include `link rel="alternate" type="application/rss+xml"` with `show.feedUrl`, and a visible “Subscribe via RSS” anchor. Do not replace it with an unsupported directory-subscription button.
 - Render actual episode links in the initial HTML. Use `NuxtLink` with each saved `path`, preserve modifier-click/new-tab semantics, and disable automatic prefetch of all episode details. Selecting the same episode may update `/` to its canonical path without reloading audio or resetting time.
 - Render one current-episode H1, labelled episode/tracklist regions, artist, publication date, and duration when known. Format dates explicitly in UTC so SSR and hydration agree; do not assume IDs/slugs encode presentation dates. Unknown duration gets an honest unavailable label, not `0:00` or `NaN`.

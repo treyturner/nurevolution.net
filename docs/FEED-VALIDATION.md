@@ -41,7 +41,7 @@ The channel's Atom self link always names the canonical production feed, includi
 
 The new feed uses complete sanitized descriptions and canonical artist/title data. The [M3 plan](milestones/M03-podcast-rss.md#reviewed-differences-from-the-legacy-feed) records the small title/author differences, duration formatting, clean-label spelling, and removed WordPress fields. Its [reference evidence](milestones/evidence/M03-feed-reference.json) matches M0's raw feed hash and retains all 55 legacy title/author/explicit values. Never regenerate those historical references to hide a regression.
 
-## Public delivery — evidence and reusable checks
+## Public delivery - evidence and reusable checks
 
 [M5 live evidence](milestones/evidence/M05-live-rehearsal.json) records public feed/media checks and W3C validation for its dated rehearsal release, including the expected preview canonical-self-URL warning. [M6 cutover evidence](milestones/evidence/M06-cutover.json) records the completed canonical production checks for release `cd96435205764c51771f4d49292df259adab89cd` after the 2026-09-12 cutover. Actual client-refresh and directory acceptance remain unverified, as detailed below.
 
@@ -53,11 +53,11 @@ Use the following procedure for future releases or delivery changes, repeating t
 - Under the M5 media plan, verify all enclosure URLs preserve their exact spelling and serve the audited byte lengths/media types. Check HEAD, range requests (206 and appropriate Content-Range), redirects, seeking and full downloads with representative clients, then complete the archive-wide delivery checks. Audio remains on droplet storage for R1; Spaces is post-release. [Apple delivery requirements](https://podcasters.apple.com/support/823-podcast-requirements)
 - Rehearse restoring the previous application/feed serving path at the same URL, preserving media and invalidating affected caches. Keep the prior working release until cutover acceptance and rollback readiness are established.
 
-## Canonical production delivery — completed M6 checks
+## Canonical production delivery - completed M6 checks
 
 After traffic switched on **2026-09-12 at 21:49 UTC**, checks against `https://nurevolution.net/feed/podcast` passed: GET/HEAD, canonical aliases, ETag revalidation, machine-client access, and equivalence of all 55 historical feed identities. The external W3C feed validator reported a valid feed with no warnings. All 55 historical page redirects and 156 public media assets passed the recorded delivery checks, including representative full and resumed downloads. See the [cutover record](milestones/evidence/M06-cutover.json) for the exact coverage and release identity. These production checks are complete; repeat relevant checks when the serving release or configuration changes.
 
-## Podcast clients and directories — outstanding observations
+## Podcast clients and directories - outstanding observations
 
 The owner loaded the new feed and reported that it looked as expected. There was no existing subscription available to refresh, and the client name/version and in-app playback/download results were not reported. This confirms the reported appearance only; it does not establish existing-subscription continuity or directory acceptance.
 

@@ -60,7 +60,7 @@ function activate(position: number) {
         :type="timed(track.position) ? 'button' : undefined"
         :aria-label="
           timed(track.position)
-            ? `${action(track.position)} track ${track.position}: ${track.artist} — ${track.title}, ${formatTime(track.startTime)}`
+            ? `${action(track.position)} track ${track.position}: ${track.artist} - ${track.title}, ${formatTime(track.startTime)}`
             : undefined
         "
         :disabled="

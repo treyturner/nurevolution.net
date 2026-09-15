@@ -1,18 +1,18 @@
-# M5 — Production delivery and operational rehearsal
+# M5 - Production delivery and operational rehearsal
 
 **Operating policy updated 2026-09-13:** production is the only hosted environment; local/workspace servers are used for development. Earlier rehearsal and cutover steps below are historical. Follow the current [deployment runbook](../DEPLOYMENT.md) and [maintenance record](../operations/maintenance.md).
 
 Status: **M5 core operational rehearsal passed; M6 production cutover completed, updated 2026-09-12.** Production now runs verified release `cd96435205764c51771f4d49292df259adab89cd`; preview and its promotion gate are disabled. The dated M5 records below preserve the original media/feed, desktop browser, capacity, rollback, MinIO application/certificate recovery, and Google Drive Headscale recovery evidence. Weekly backups remain configured. See [M6](M06-cutover-and-retirement.md) for production acceptance, the owner’s mobile/fresh-feed observations, remaining client/recovery checks, and observation/WordPress retirement. WordPress stays frozen and running for fallback.
 
-Roadmap: [M5](../../ROADMAP.md#m5--production-delivery-and-operational-rehearsal). Dependencies: [M4](M04-archive-player.md#merged-review-and-ci-evidence), [player delivery contract](../PLAYER.md), [feed validation](../FEED-VALIDATION.md), and the roadmap's D04/D08 decisions. Newer owner decisions take precedence over proposed defaults below.
+Roadmap: [M5](../../ROADMAP.md#m5---production-delivery-and-operational-rehearsal). Dependencies: [M4](M04-archive-player.md#merged-review-and-ci-evidence), [player delivery contract](../PLAYER.md), [feed validation](../FEED-VALIDATION.md), and the roadmap's D04/D08 decisions. Newer owner decisions take precedence over proposed defaults below.
 
-## Handoff to production — 2026-09-12
+## Handoff to production - 2026-09-12
 
 [Production deployment 34720835192](https://github.com/treyturner/nurevolution.net/actions/runs/34720835192) accepted `cd96435205764c51771f4d49292df259adab89cd`; [M6 evidence](evidence/M06-cutover.json) records the public switch, all 55 pages/legacy redirects, 156 public assets, compatible feed, resolver cleanup, and production backup. Preview app/history separation was rehearsed before conversion; preview history remains saved, but its app and promotion are disabled. The owner accepted the mobile corrections and loaded the new feed successfully; an existing-subscription comparison was unavailable.
 
 The dated rehearsal below remains the source for its resource, rollback, and restoration measurements; those were not all rerun for the latest UI release. [M6](M06-cutover-and-retirement.md) records refreshed candidate/production acceptance and retains the remaining observation, retirement, and owner/client decisions.
 
-## Latest live progress — 2026-09-11
+## Latest live progress - 2026-09-11
 
 - PR #7's squash commit `73919417de625582792ed9e5637176408a7329a6` passed [Verify/publication 34636424238](https://github.com/treyturner/nurevolution.net/actions/runs/34636424238). [Preview deployment 34637364338](https://github.com/treyturner/nurevolution.net/actions/runs/34637364338) succeeded through GitHub's actual userspace Headscale client and the pinned SSH identity. The complete release bundle is retained locally, on the droplet, and in the site backup. The earlier duplicated-flag failure is resolved; the public SSH source restriction remains `136.49.253.125/32`.
 - [Live rehearsal evidence](evidence/M05-live-rehearsal.json) binds the running release, image/configuration/manifest hashes, public endpoints, resource measurements, rollback, and restoration. All 156 public media assets and 55 attachment routes passed metadata/range checks. A complete interrupted/resumed Praxis transfer matched all 104,560,655 bytes and its canonical SHA-256. The public feed contains 55 items and returns 304 for its ETag. W3C reports valid RSS with the expected preview-versus-canonical self-URL warning.
@@ -238,7 +238,7 @@ Confirmed planning input: the owner's $8/month Basic Premium Intel tier, 1 vCPU 
 - The publication bundle is retained in Actions for 90 days; operators must preserve current/previous bundles independently and retain their GHCR images. Host tooling installation is explicit, and mismatched complete executable or renderer fingerprints block promotion.
 - M5 remains incomplete until the actual host, trusted TLS/media/client checks, rollback, and independent restore evidence are recorded. The owner provisioned the droplet and MinIO bucket/identity during handoff. Droplet backup tooling and credentials are installed; production DNS and application cutover remain M6 work.
 
-## Live MinIO fixture rehearsal — 2026-09-09
+## Live MinIO fixture rehearsal - 2026-09-09
 
 The NYC1 Ubuntu 26.04 droplet authenticated to the owner-hosted MinIO endpoint using the dedicated bucket identity and initialized an encrypted restic version-2 repository. [Recorded evidence](evidence/M05-minio-fixture-restore.json) covers five original fixture files totaling 4,456,551 bytes, complete repository data verification, restoration into an empty directory, exact file size/SHA-256 comparisons, and removal of the owned test snapshot/data. The successful cycle took 17.531 seconds with a 63,774,720-byte cgroup memory peak under a 192 MiB limit. No fixture snapshots remain.
 
@@ -246,7 +246,7 @@ Anonymous bucket listing and signed listing of an outside-scope probe bucket ret
 
 This establishes the initial backup connection and small-file recovery. The later full archive and notification results are recorded below; application/edge recovery, the four-hour host recovery target, and the weekly service still require acceptance. Cleanup initially found that `prune` requires two backend connections; the successful cycle used that limit for cleanup and one connection for its other operations.
 
-## Local verification record — 2026-09-09
+## Local verification record - 2026-09-09
 
 `CI=1 pnpm verify` passed with 257 application/tooling tests, 12 migration tests, 76 existing browser checks, and three additional browser delivery checks. The two existing portability skips remain unchanged. Coverage was 98.58% statements, 97.03% branches, 98.24% functions, and 98.87% lines. Subsequent focused deployment tests, strict types, and the delivery gate passed after adding the longer initial-backup timeout and explicit packaged-feed/conditional-request/invalid-edge checks. Actionlint 1.7.12 and all 58 checked local documentation links/anchors passed.
 
@@ -260,7 +260,7 @@ Independent testing also found that rebuilds can change Caddy image IDs while pr
 
 An [encrypted restic fixture restore](evidence/M05-local-restore.json) passed using the actual pinned binary, backup command, repository data check, and four restored file hashes. This uses a disposable local repository and synthetic content; the later MinIO archive result is recorded below, while complete host recovery remains pending.
 
-## Host bootstrap and account-token verification — 2026-09-09
+## Host bootstrap and account-token verification - 2026-09-09
 
 [Bootstrap evidence](evidence/M05-host-bootstrap.json) records Docker Engine 29.8.0 and Compose 5.5.1 from the official Ubuntu 26.04 repository, the checksum-verified Node 22.23.2 runtime at `/usr/local/bin/node`, and the dedicated `nurevolution-deploy` operator/network. Both root and operator SSH access use the independently pinned host identity. The runtime contains no application build dependencies. Application deployment and loaded resource measurements remain pending.
 
@@ -300,7 +300,7 @@ The regression checks exercise a real 0077 umask and the actual Caddy image with
 
 The full local `CI=1 pnpm verify` gate passed: 266 application/tooling tests, 12 migration tests, 10 operator tests, 76 browser checks with two unchanged portability skips, and the three-browser Docker delivery checks. Coverage is 98.55% statements, 96.99% branches, 98.28% functions, and 98.84% lines.
 
-## Full archive restore and Discord failure test — 2026-09-09
+## Full archive restore and Discord failure test - 2026-09-09
 
 The [full archive evidence](evidence/M05-minio-archive-restore.json) records a successful encrypted MinIO snapshot and restoration of all 156 assets (6,808,089,382 bytes) plus the frozen manifest. The repository passed a complete data read, restoration into an empty non-served directory, and independent byte-length/SHA-256 comparisons for every asset and the manifest. The temporary restored tree was removed; the staging-only snapshot is retained until a verified full application/edge backup replaces it.
 
