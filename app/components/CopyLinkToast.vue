@@ -3,13 +3,13 @@ const props = defineProps<{ target: HTMLElement; message: string }>()
 const element = ref<HTMLElement | null>(null)
 const position = ref<{ left: string; top: string } | null>(null)
 function place() {
-  const toast = element.value!
+  const toast = element.value!.getBoundingClientRect()
   const button = props.target.getBoundingClientRect()
   const width = window.innerWidth
   const height = window.innerHeight
   const margin = 12
   const gap = 8
-  let left = (width - toast.offsetWidth) / 2
+  let left = (width - toast.width) / 2
   let top = margin
   const visible =
     props.target.isConnected &&
@@ -18,15 +18,15 @@ function place() {
     button.right > 0 &&
     button.left < width
   if (visible) {
-    const above = button.top - toast.offsetHeight - gap
+    const above = button.top - toast.height - gap
     const below = button.bottom + gap
-    if (above >= margin || below + toast.offsetHeight <= height - margin) {
+    if (above >= margin || below + toast.height <= height - margin) {
       top = above >= margin ? above : below
       left = Math.max(
         margin,
         Math.min(
-          button.left + (button.width - toast.offsetWidth) / 2,
-          width - toast.offsetWidth - margin,
+          button.left + (button.width - toast.width) / 2,
+          width - toast.width - margin,
         ),
       )
     }

@@ -1,10 +1,10 @@
-# M6 — Cutover and WordPress retirement
+# M6 - Cutover and WordPress retirement
 
 **Operating policy updated 2026-09-13:** production is the only hosted environment; local/workspace servers are used for development. Earlier rehearsal and cutover steps below are historical. Follow the current [deployment runbook](../DEPLOYMENT.md) and [maintenance record](../operations/maintenance.md).
 
 Status: **Production cutover completed on 2026-09-12 at 21:49 UTC; observation and WordPress retirement remain open.** The accepted release is `cd96435205764c51771f4d49292df259adab89cd`. The website now uses the Cloudflare-proxied droplet and podcast audio uses its direct DNS-only host. Production promotion is enabled; preview promotion and its app are disabled. WordPress remains frozen and running for fallback. See the [cutover evidence](evidence/M06-cutover.json) for the exact release, routing, checks, backup, and remaining observations.
 
-Roadmap: [M6](../../ROADMAP.md#m6--cutover-and-wordpress-retirement). Dependencies: [M5 rehearsal](M05-production-delivery.md), [deployment operations](../DEPLOYMENT.md), [feed validation](../FEED-VALIDATION.md), and [rollback](../operations/rollback.md).
+Roadmap: [M6](../../ROADMAP.md#m6---cutover-and-wordpress-retirement). Dependencies: [M5 rehearsal](M05-production-delivery.md), [deployment operations](../DEPLOYMENT.md), [feed validation](../FEED-VALIDATION.md), and [rollback](../operations/rollback.md).
 
 ## Outcome and boundaries
 
@@ -21,7 +21,7 @@ Serve the replacement at the existing production domains, preserve subscribers' 
 
 The current player satisfies the intended R1 feature scope. The owner confirmed on 2026-09-12 that M7's custom controls, interactive tracklists, sequencing, and 24-hour restoration will follow cutover. M8 publishing, Spaces, new directory listings, analytics, and other sites are outside M6. Preserve compatibility with future sites and existing unrelated services.
 
-## Entry evidence and repository map — historical planning baseline
+## Entry evidence and repository map - historical planning baseline
 
 - Clean `main` at `daa7e7b93a210c76e022622c88f6fb8428639bd1` when planning began. PRs #13 and #14 are merged; no open PRs were returned by GitHub. [Main Verify/publication 34685197866](https://github.com/treyturner/nurevolution.net/actions/runs/34685197866) and [preview deployment 34685541203](https://github.com/treyturner/nurevolution.net/actions/runs/34685541203) succeeded for that exact commit. Preview's public health endpoint was rechecked during planning and reported the same healthy release. The accepted production release is the later `cd96435205764c51771f4d49292df259adab89cd` recorded above.
 - Canonical baseline: 55 episodes, 832 tracks, 338 known starts across 22 episodes, and 156 media assets. The 55 small artwork derivatives total 111,474 bytes; deployed thumbnail bytes and canonical clipboard links were checked after the latest deployment. Final counts must follow any explained legacy delta rather than conceal it.
@@ -50,7 +50,7 @@ The owner authorized cutover on 2026-09-12, and the traffic switch completed at 
 
 Slices 1–4 describe the completed first conversion and its original validation checklist. Their unperformed client/recovery checks remain open in the table above and slice 5; historical instructions are not a request to rerun them against production.
 
-### 1. Freeze and reconcile the final archive — historical first-conversion sequence
+### 1. Freeze and reconcile the final archive - historical first-conversion sequence
 
 Deliver `docs/milestones/evidence/M06-migration-delta.json` and the private rollback capture.
 
@@ -63,7 +63,7 @@ A [fresh live feed comparison](evidence/M06-feed-comparison.json) on 2026-09-12 
 
 If the archive changed, the release transaction's matching-subscriber-identity protection also applies. Prepare a content-compatible fallback and focused tests before publishing a new candidate; do not bypass that protection to force a deployment.
 
-### 2. Finish launch acceptance on preview — historical first-conversion sequence
+### 2. Finish launch acceptance on preview - historical first-conversion sequence
 
 Deliver `docs/milestones/evidence/M06-acceptance.json` with distinct pre-cutover and post-cutover observations.
 
@@ -73,7 +73,7 @@ Deliver `docs/milestones/evidence/M06-acceptance.json` with distinct pre-cutover
 4. Record screen-reader/keyboard checks for the episode list, selected status, player controls, modal focus/escape, copy status, and RSS link. Retain the existing enlarged-text/reflow checks. Repair demonstrated blocking issues with focused regressions.
 5. Record current backup completion/check status, Discord failure wiring evidence, available memory/disk, and DO transfer/account costs. Confirm password/key recovery locations without exposing values. Obtain the remaining operations decisions in the table above.
 
-### Historical link and feed-access audit — 2026-09-12
+### Historical link and feed-access audit - 2026-09-12
 
 The owner requested environment-local RSS navigation before cutover. The header link and browser RSS discovery were changed to `/feed/podcast`; that change was subsequently published and deployed through PR #15, as recorded below. Episode/home navigation and thumbnails use local paths. Browser artwork/audio and deployed download redirects use the accepted environment profile. A live preview Download HEAD check returned 307 to `https://podcast-preview.nurevolution.net/downloads/trey-turner-praxis`.
 
@@ -83,7 +83,7 @@ Canonical page metadata and copied episode URLs retain production URLs. RSS XML 
 
 **Resolved preview feed-access issue:** the public preview feed initially returned HTTP 200 to curl's default user agent, but HTTP 403 with body `error code: 1010` to `Python-urllib/3.14`. The same Python user agent received HTTP 200 when the HTTPS request was resolved directly to the droplet with hostname/TLS verification preserved. This isolates the observed denial to the Cloudflare path. Cloudflare documents [error 1010](https://developers.cloudflare.com/support/troubleshooting/http-status-codes/cloudflare-1xxx-errors/error-1010/) as a browser-signature denial and supports a [selective Browser Integrity Check exception](https://developers.cloudflare.com/waf/tools/browser-integrity-check/). The owner deployed a Configuration Rule disabling Browser Integrity Check only for GET/HEAD on the feed and its aliases on canonical/www/preview hosts. [Subsequent public probes](evidence/M06-feed-access.json) returned 200 for the unchanged 55-item feed and 301 for both aliases with the previously blocked user agent; the homepage control remains 403. The subsequent canonical-host checks passed in the cutover record. The DNS token cannot independently read the saved rule; its deployed scope is owner-confirmed and behavior is observed.
 
-### Historical mobile and host preparation — 2026-09-12
+### Historical mobile and host preparation - 2026-09-12
 
 The owner reports Brave 1.94.121 / Chromium 152.0.7977.83 on Android 16 (BP4A.251205.006). Android success feedback now uses a three-second inline checkmark on the clicked permalink button, preserving the accessible status and visible copy failures. This avoids duplicating Android's clipboard popup without guessing the OS version from its reduced user-agent string. The focused six-test clipboard suite passed. Phone acceptance was pending at that stage; the owner later accepted mobile testing for launch, as recorded below.
 
@@ -95,19 +95,19 @@ The owner created GitHub's `production` environment after the integration return
 
 The combined RSS, Android feedback, download regression, and `www` changes passed the full gate: 340 application/tooling tests, 121 browser checks (two existing skips), and Docker delivery including all five certificate hostnames, path/query-preserving `www` redirects, and saved downloads through all three browser engines. Coverage is 98.21% statements, 96.17% branches, 98.19% functions, and 98.54% lines. These were the local results before the preview promotions and owner acceptance recorded below.
 
-### Historical preview candidate and touch-volume follow-up — 2026-09-12
+### Historical preview candidate and touch-volume follow-up - 2026-09-12
 
 [PR #15](https://github.com/treyturner/nurevolution.net/pull/15) was squash-merged after green CI and two completed reviews without findings. Main `3da6c0b92d89b9335f5f947068563bc32ce2ad8f` passed [Verify/publication 34711080850](https://github.com/treyturner/nurevolution.net/actions/runs/34711080850) and [preview deployment 34711493329](https://github.com/treyturner/nurevolution.net/actions/runs/34711493329). Matching verified host tooling was installed before promotion. At that promotion, public preview health reported that exact commit; the direct-origin `www` redirect preserves encoded path/query values with trusted TLS. A Chromium touch/Android-user-agent check confirmed canonical clipboard contents, inline feedback without a floating success toast, three-second clearing, and navigation to the complete preview feed. This does not substitute for physical Brave acceptance. The external feed validator passes with only the expected preview self-URL recommendation; the unchanged 156-asset manifest passed the live HEAD/range/download-mapping audit before this promotion.
 
 The owner then reported empty space beside Android’s native mute button. The desktop CSS forced a 100-pixel volume container even when Chromium’s platform preference hid the slider. Restricting expansion to `(hover: hover) and (pointer: fine)` restores compact touch controls. A local Chromium check using `preferHiddenVolumeControls=true` and a 393-pixel touch viewport measured the container shrinking from 100 to 32 pixels and the seek bar growing from 138 to 206 pixels. Desktop retains its 100-pixel container and visible 52-pixel slider. [PR #16](https://github.com/treyturner/nurevolution.net/pull/16) was subsequently accepted and squash-merged as `a1bd8c497fefb034c1fb502d497622f5e85586ca`; [main Verify/publication 34712171664](https://github.com/treyturner/nurevolution.net/actions/runs/34712171664) and [preview deployment 34712566493](https://github.com/treyturner/nurevolution.net/actions/runs/34712566493) passed. Live touch/desktop measurements matched the local result, and post-deployment backup `851940771f79c4ba7157255ff3e303955d0a06f8663b1ea3d7b4fa857aabf0b4` passed its repository check. Native device-volume behavior remains platform-dependent; custom controls remain M7.
 
-### Historical final header review and mobile acceptance — 2026-09-12
+### Historical final header review and mobile acceptance - 2026-09-12
 
 The owner approved the local header revisions for PR review and merge, then explicitly requested continuing cutover: mobile testing is sufficiently complete for this release. The header uses the supplied temporary logo at the left of the title/subtitle and as its favicon, plus a recolored square RSS symbol with tighter inner padding and optical centering. Branding is plain text/image: clicking it no longer selects the latest episode. The original 300-pixel PNG is served locally and unchanged; its SHA-256 is `c83a5726124a11e55d1e66282673374e79bc9ca9e2a2b89c86fd97ade87fe84d`.
 
 The complete header revision passed `pnpm verify`: 340 application/tooling tests, 121 browser checks (two existing skips), and Docker delivery. Direct dev checks also confirmed favicon/image delivery, unchanged episode selection when branding is clicked, and narrow/enlarged-text reflow. The existing modal-focus test now targets the still-interactive RSS link. Additional physical-device testing is not a cutover blocker under the owner's acceptance; this does not mark unperformed iPhone/screen-reader or post-switch subscription checks as passed. [PR #17](https://github.com/treyturner/nurevolution.net/pull/17) passed CI and received the automated reviewer's thumbs-up with no findings, then was squash-merged as `cd96435205764c51771f4d49292df259adab89cd`. [Main Verify/publication 34720254236](https://github.com/treyturner/nurevolution.net/actions/runs/34720254236) and [preview deployment 34720616293](https://github.com/treyturner/nurevolution.net/actions/runs/34720616293) passed. The live preview audit checked all 55 pages and 156 public assets, the logo/favicon, feed aliases/ETag, and unchanged effective feed identities. Preview backup `b5e61a873a067154dd4ec8798d86b8212f5332e102d03ed4fb89a6e01fe60c96` passed its repository check before conversion.
 
-### Production acceptance and observation — 2026-09-12
+### Production acceptance and observation - 2026-09-12
 
 [Production deployment 34720835192](https://github.com/treyturner/nurevolution.net/actions/runs/34720835192) accepted the verified `cd96435205764c51771f4d49292df259adab89cd` release. Candidate and public-route checks passed all 55 episode pages, all 55 legacy episode redirects, and all 156 public assets/download mappings, unchanged feed identities and effective explicit/date fields, feed aliases and conditional requests, the supplied logo/favicon, and the path/query-preserving `www` redirect. Representative smallest/largest audio and artwork transfers matched their hashes; a resumed audio transfer reconstructed the expected bytes. The external validator reports a valid canonical RSS feed. The [cutover record](evidence/M06-cutover.json) distinguishes controlled candidate resolution, public DNS checks, ordinary droplet/LAN resolution, and fresh-browser observations.
 
@@ -117,7 +117,7 @@ The first accepted production backup is `b99da9023a404dc6611a6c86874a1fdab9ca745
 
 Keep WordPress frozen and running through observation. The 24-hour check, observation-end timing and retirement, unavailable client comparisons, Headscale reboot observation, and previously unconfirmed whole-host recovery/budget targets remain explicitly open. None is represented as a completed test or an authorized new purchase.
 
-### 3. Prepare and rehearse the one-slot transition — historical first-conversion sequence
+### 3. Prepare and rehearse the one-slot transition - historical first-conversion sequence
 
 The [operator cutover runbook](../operations/cutover.md) records the concrete host/DNS/profile/fallback sequence. The [transition rehearsal](evidence/M06-transition-rehearsal.json) passed on 2026-09-12 using published runtime images and disposable synthetic media. It exercised successful conversion, first-production acceptance failure and explicit preview restoration, an interrupted journal, and the host's preview prohibition after production. Preview history was preserved; media and an unrelated sentinel remained available without restarting the shared edge. This operator rehearsal uses the real transaction, renderer, and early host guards; the complete trust/image/capacity gate and live trusted-TLS checks remain separate evidence.
 
@@ -134,7 +134,7 @@ The following was the original preparation/recovery checklist, completed through
 
 Exercise the procedure with disposable projects, synthetic media, and the existing delivery fixture: preview-to-production success; occupied preview alias; interrupted transition; candidate acceptance failure with no production predecessor; restoration of preview; and attempted preview promotion after production is accepted. Assert media/shared-edge/sentinel continuity and correct environment history. Put necessary regression coverage in `test/unit/deployment/host.test.ts` and `test/delivery/run.ts`; change host/tooling only for a demonstrated missing guarantee. Any changed executable requires the matching verified installed host tooling before promotion.
 
-### 4. Switch traffic and validate canonical delivery — historical first-conversion sequence
+### 4. Switch traffic and validate canonical delivery - historical first-conversion sequence
 
 Deliver `docs/milestones/evidence/M06-cutover.json` containing the chosen release, operator, timestamps, sanitized before/after routing, checks, and rollback decision.
 
@@ -145,7 +145,7 @@ Deliver `docs/milestones/evidence/M06-cutover.json` containing the chosen releas
 5. Refresh an existing subscription in Apple Podcasts where available and at least one other client. Record versions, time, archive endpoints, duplicates/missing items, artwork/descriptions, streaming and downloads. Do not submit a new show or preview feed. If an account/device is unavailable, record the exact pending check and owner decision.
 6. Verify a new encrypted site backup after the accepted production state. Record selected snapshot and successful check. Preserve the legacy freeze during the observation period unless a separately reconciled publication/fallback is approved.
 
-### 5. Observe and retire WordPress — active follow-up
+### 5. Observe and retire WordPress - active follow-up
 
 The immediate production checks passed. The 24-hour observation is due on 2026-09-13 at 21:49 UTC; observation-end timing and retirement authorization remain open. Carry forward the outstanding client/directory, boot, and recovery/budget items from the table above. Retirement instructions below become actionable only after the owner accepts observation and authorizes stopping the legacy services.
 

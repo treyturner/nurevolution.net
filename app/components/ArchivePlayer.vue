@@ -64,12 +64,12 @@ const messages = {
         type="button"
         class="artwork-trigger"
         aria-haspopup="dialog"
-        :aria-label="`Enlarge ${episode.artist} — ${episode.title} cover art`"
+        :aria-label="`Enlarge ${episode.artist} - ${episode.title} cover art`"
         @click="artworkOpen = true"
       >
         <img
           :src="artworkUrl"
-          :alt="`${episode.artist} — ${episode.title} cover art`"
+          :alt="`${episode.artist} - ${episode.title} cover art`"
           width="480"
           height="480"
           @error="failedArtwork = true"
@@ -104,7 +104,7 @@ const messages = {
         aria-describedby="playback-status"
         :aria-label="
           episode
-            ? `Listen to ${episode.artist} — ${episode.title}`
+            ? `Listen to ${episode.artist} - ${episode.title}`
             : 'Episode audio'
         "
       />
@@ -151,7 +151,7 @@ const messages = {
     <ArtworkDialog
       v-if="artworkOpen && episode && !failedArtwork"
       :src="artworkUrl"
-      :alt="`${episode.artist} — ${episode.title} cover art`"
+      :alt="`${episode.artist} - ${episode.title} cover art`"
       @close="closeArtwork"
     />
   </section>

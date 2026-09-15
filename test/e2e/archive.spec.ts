@@ -149,7 +149,7 @@ test('mobile tabs keep both lists accessible, retain focus, and reflow with larg
   await expect(page.locator('h1')).toHaveText('Ruminate')
   await expect(link).toBeFocused()
   await expect(page.locator('#episode-selection-status')).toHaveText(
-    'Selected Trey Turner — Ruminate',
+    'Selected Trey Turner - Ruminate',
   )
   await page.setViewportSize({ width: 320, height: 740 })
   await page.evaluate(() => {

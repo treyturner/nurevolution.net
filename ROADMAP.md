@@ -143,7 +143,7 @@ Feed and media URLs must be usable by podcast clients without interactive browse
 
 M0–M4 are **implemented and merged**. M5 is **implemented with live rehearsal evidence and remaining acceptance items**. M6 **production cutover is complete, with observation and WordPress retirement open**; production is active. M7 is **in implementation and review**; M8–M9 implementation has not started. IDs remain stable.
 
-Plans and completion evidence are available for [M0 — Migration audit](docs/milestones/M00-migration-audit.md) and [M1 — Foundation and verification](docs/milestones/M01-foundation-and-verification.md). The [M2 — Canonical content record](docs/milestones/M02-canonical-content.md) documents schemas, faithful import, protected edits, public data access, and completed acceptance checks. The [M3 — Replacement RSS record](docs/milestones/M03-podcast-rss.md) documents implemented metadata, serialization, aliases, cache behavior, compatibility tests, and the public validation handoff. Owner instructions are in the [content authoring guide](docs/CONTENT.md) and [feed validation guide](docs/FEED-VALIDATION.md).
+Plans and completion evidence are available for [M0 - Migration audit](docs/milestones/M00-migration-audit.md) and [M1 - Foundation and verification](docs/milestones/M01-foundation-and-verification.md). The [M2 - Canonical content record](docs/milestones/M02-canonical-content.md) documents schemas, faithful import, protected edits, public data access, and completed acceptance checks. The [M3 - Replacement RSS record](docs/milestones/M03-podcast-rss.md) documents implemented metadata, serialization, aliases, cache behavior, compatibility tests, and the public validation handoff. Owner instructions are in the [content authoring guide](docs/CONTENT.md) and [feed validation guide](docs/FEED-VALIDATION.md).
 
 | ID  | Outcome                                                          | Dependencies                                        | Release role                       |
 | --- | ---------------------------------------------------------------- | --------------------------------------------------- | ---------------------------------- |
@@ -160,9 +160,9 @@ Plans and completion evidence are available for [M0 — Migration audit](docs/mi
 
 M0 and M1 can progress independently. M3 and M4 share M2's model. Infrastructure design can start early, but M5 is not complete until the actual player/feed/media release has passed its deployment rehearsal. Numbering does not force M7/M8 to wait for production cutover.
 
-### M0 — Inventory and migration contract
+### M0 - Inventory and migration contract
 
-**Completed locally on 2026-09-07.** The audit reconciled all 55 database episodes, frozen feed items, MP3s, and episode artwork with no migration blockers. Two stale ACF byte-length fields remain documented as non-blocking because local, podPress, and enclosure sizes agree. See the [M0 completion record](docs/milestones/M00-migration-audit.md#completion-evidence-and-handoff--2026-09-07) and [migration compatibility contract](docs/migration/MIGRATION-AUDIT.md).
+**Completed locally on 2026-09-07.** The audit reconciled all 55 database episodes, frozen feed items, MP3s, and episode artwork with no migration blockers. Two stale ACF byte-length fields remain documented as non-blocking because local, podPress, and enclosure sizes agree. See the [M0 completion record](docs/milestones/M00-migration-audit.md#completion-evidence-and-handoff---2026-09-07) and [migration compatibility contract](docs/migration/MIGRATION-AUDIT.md).
 
 **Outcome:** know exactly what must survive the WordPress replacement.
 
@@ -179,9 +179,9 @@ M0 and M1 can progress independently. M3 and M4 share M2's model. Infrastructure
 
 **Acceptance/verification:** every source episode has a documented disposition; every published episode maps to its audio/artwork or has a named blocking discrepancy; feed identity and legacy routing assertions are concrete. Record source checksums and a repeatable reconciliation procedure. Missing source access blocks the full audit, not M1 work with clearly labeled fixtures.
 
-### M1 — Foundation and verification
+### M1 - Foundation and verification
 
-**Completed locally on 2026-09-07.** After a clean frozen-lockfile install, `pnpm verify` passed: 14 application unit/runtime tests plus six M0 tooling unit tests, 100% statements/lines/functions/branches, both Node production builds, and 18 browser checks across Chromium, Firefox, and WebKit. The GitHub Actions workflow uses the same command; a remote run has not been triggered. See the [M1 completion record](docs/milestones/M01-foundation-and-verification.md#completion-evidence-and-handoff--2026-09-07) and [contributor instructions](README.md). M0 is complete, so both M2 prerequisites are available.
+**Completed locally on 2026-09-07.** After a clean frozen-lockfile install, `pnpm verify` passed: 14 application unit/runtime tests plus six M0 tooling unit tests, 100% statements/lines/functions/branches, both Node production builds, and 18 browser checks across Chromium, Firefox, and WebKit. The GitHub Actions workflow uses the same command; a remote run has not been triggered. See the [M1 completion record](docs/milestones/M01-foundation-and-verification.md#completion-evidence-and-handoff---2026-09-07) and [contributor instructions](README.md). M0 is complete, so both M2 prerequisites are available.
 
 **Outcome:** a small, idiomatic Nuxt application whose meaningful changes can be checked consistently.
 
@@ -197,9 +197,9 @@ M0 and M1 can progress independently. M3 and M4 share M2's model. Infrastructure
 
 **Acceptance/verification:** a fresh checkout can install with the locked dependency graph and pass the documented canonical command; CI runs the same entry point; a test exercises actual behavior rather than importing configuration merely for coverage. Initial SSR and client hydration succeed without accessing browser media/storage on the server.
 
-### M2 — Canonical content and complete archive
+### M2 - Canonical content and complete archive
 
-**Completed locally on 2026-09-08:** [M02-canonical-content.md](docs/milestones/M02-canonical-content.md#completion-evidence--2026-09-08). The canonical archive contains all 55 episodes, 832 tracks, 338 starts across 22 episodes, 156 assets, and 55 legacy mappings. JSON authoring, create-only imports, historical identity protections, and shared public content APIs are implemented. Praxis uses its verified duration and precise splits; one legacy track apostrophe is corrected with provenance, while the original M0 inputs remain unchanged. `pnpm verify` passed with 111 application/content tests, 12 migration tests, 25 browser checks, and coverage above the existing thresholds. Fresh installation/build and portable server-asset loading passed. M3 and M4 can consume the same public repository; no feed or player UI is claimed complete.
+**Completed locally on 2026-09-08:** [M02-canonical-content.md](docs/milestones/M02-canonical-content.md#completion-evidence---2026-09-08). The canonical archive contains all 55 episodes, 832 tracks, 338 starts across 22 episodes, 156 assets, and 55 legacy mappings. JSON authoring, create-only imports, historical identity protections, and shared public content APIs are implemented. Praxis uses its verified duration and precise splits; one legacy track apostrophe is corrected with provenance, while the original M0 inputs remain unchanged. `pnpm verify` passed with 111 application/content tests, 12 migration tests, 25 browser checks, and coverage above the existing thresholds. Fresh installation/build and portable server-asset loading passed. M3 and M4 can consume the same public repository; no feed or player UI is claimed complete.
 
 **Outcome:** the frontend and feed can consume the same complete, validated archive.
 
@@ -216,7 +216,7 @@ M0 and M1 can progress independently. M3 and M4 share M2's model. Infrastructure
 
 **Acceptance/verification:** normalized published count and identities match M0; no unexplained discarded episodes, tracks, or descriptions; all artwork/audio references reconcile. Tests cover malformed content, duplicates, date/timezone handling, ordering ties, empty/untimed lists, escaping/sanitization, and public-content filtering. Import rerun evidence proves reproducibility. Run the canonical verification command.
 
-### M3 — Replacement podcast RSS
+### M3 - Replacement podcast RSS
 
 **Completed and merged on 2026-09-08:** [M03-podcast-rss.md](docs/milestones/M03-podcast-rss.md#completion-evidence). PR [#2](https://github.com/treyturner/nurevolution.net/pull/2) was rebased and merged to `main` at `fc0f261`; [main CI passed](https://github.com/treyturner/nurevolution.net/actions/runs/34289605132). The complete 55-item RSS, verified show settings, both legacy aliases, GET/HEAD/304 behavior, stable weak ETags, and independent offline feed gate are implemented. A fresh merged-main `CI=1 pnpm verify` passed with 187 application tests, 12 migration tests, and 37 browser checks; coverage exceeds all existing thresholds. Historical episode/media identities and frozen source/report hashes remain unchanged. Public validator/client and media-delivery acceptance remain M5/M6 work; M4 can use the feed and must supply historical page redirects.
 
@@ -236,7 +236,7 @@ M0 and M1 can progress independently. M3 and M4 share M2's model. Infrastructure
 
 Run `pnpm verify`. External validator/client results are provisional until repeated against the public M5/M6 deployment; never report automated XML tests as directory acceptance.
 
-### M4 — Initial archive player and responsive dark design
+### M4 - Initial archive player and responsive dark design
 
 **Merged on 2026-09-09:** [PR #3](https://github.com/treyturner/nurevolution.net/pull/3), rebased main commit `77448fd`, with [passing main CI](https://github.com/treyturner/nurevolution.net/actions/runs/34308879714). The shared persistent native player, canonical SSR episode URLs, owner-selected mobile tabs, complete static tracklists, streaming attachment downloads, RSS link, and historical redirects are implemented. Review fixes cover encoded URLs, canonical paths, media error/continuation behavior, one live announcement, and byte-range-capable test media. Verification passed with 231 application tests, 12 migration tests, and 76 browser checks; thresholds and the two existing portability skips are unchanged. Canonical/source hashes still match. See [merged evidence](docs/milestones/M04-archive-player.md#merged-review-and-ci-evidence) and the [player guide](docs/PLAYER.md). Real-device/screen-reader observations and public delivery acceptance remain M5/M6 checks.
 
@@ -258,7 +258,7 @@ Run `pnpm verify`. External validator/client results are provisional until repea
 
 **Acceptance/verification:** every R1 website requirement maps to a browser test or an archive-wide data/link check. Assert no play call on fresh load, hydration, direct episode links, or refresh. Test keyboard operation, focus visibility, responsive layouts, route back/forward, rapid episode changes, a failed media request, correct downloads, and SSR metadata. Use deterministic media controls plus a real short audio playback smoke test. Run `pnpm verify`; record manual device/accessibility observations and the mobile choice.
 
-### M5 — Production delivery and operational rehearsal
+### M5 - Production delivery and operational rehearsal
 
 **Implemented and rehearsed; production active, updated 2026-09-12:** [M05-production-delivery.md](docs/milestones/M05-production-delivery.md) records the earlier GitHub/Headscale preview promotion, public feed/media delivery, loaded capacity, rollback, trusted certificate recovery, MinIO archive/application restore, and Google Drive Headscale restore. Both weekly backup schedules and Headscale retention reports are confirmed. Following [M6 cutover](docs/milestones/evidence/M06-cutover.json), production now serves `cd96435205764c51771f4d49292df259adab89cd`, with successful [main Verify/publication](https://github.com/treyturner/nurevolution.net/actions/runs/34720254236) and [production deployment](https://github.com/treyturner/nurevolution.net/actions/runs/34720835192); the hosted rehearsal environment has been retired. The owner accepted mobile testing as sufficient for cutover. Screen-reader and unavailable podcast-client observations, owner-managed Unraid boot verification, and final traffic/budget/whole-host recovery acceptance remain recorded handoff items. WordPress stays frozen and running for fallback during M6 observation; retirement remains open.
 
@@ -279,7 +279,7 @@ Run `pnpm verify`. External validator/client results are provisional until repea
 
 **Acceptance/verification:** rehearse an actual deployment and application rollback in the preview environment; restore required persistent state from a backup; validate all media mappings and a representative full transfer; demonstrate working HTTPS after a restart; validate the feed externally and in a real podcast client. Record tested image digest, configuration version, media manifest, costs, and unresolved issues. Run canonical verification for code/config changes plus the documented environment checks.
 
-### M6 — Cutover and WordPress retirement
+### M6 - Cutover and WordPress retirement
 
 **Production cutover completed on 2026-09-12; observation and retirement remain open:** [M06-cutover-and-retirement.md](docs/milestones/M06-cutover-and-retirement.md). Release `cd96435205764c51771f4d49292df259adab89cd` now serves the public website and canonical feed/media hosts. Candidate/public audits, the external RSS validator, and the production backup passed. WordPress stays frozen and running for fallback; the existing-subscription comparison was unavailable, and observation/retirement are not marked complete. The owner chose to proceed with the current player; M7 follows production cutover.
 
@@ -298,7 +298,7 @@ Run `pnpm verify`. External validator/client results are provisional until repea
 
 **Acceptance/verification:** all five R1 requirements have current production evidence, verification is green, no unexplained archive or identity differences remain, and no active service depends on WordPress, podPress, or home pfSense certificate renewal. Record any gaps explicitly rather than marking the milestone complete. Do not delete historical backups as part of normal retirement.
 
-### M7 — Rich player, interactive tracklists, and restoration
+### M7 - Rich player, interactive tracklists, and restoration
 
 **Implemented; final UI review and production release requested.** The [M7 implementation and verification record](docs/milestones/M07-rich-player-and-restoration.md) resolves route/restore precedence, visit expiry and tabs, custom seek/volume behavior, timed-track boundaries, playback/navigation races, and automatic sequence history. It defines four implementation slices and their acceptance evidence. On 2026-09-14 the owner requested integrating all timestamp updates into the UI branch, a final interface check, and production release for further feedback. This supersedes the initial deployment prohibition; one open PR at a time, review acceptance, and verified production promotion still apply. Physical-device and assistive-technology observations remain pending. M6 observation and retirement remain separate open work.
 
@@ -317,7 +317,7 @@ Run `pnpm verify`. External validator/client results are provisional until repea
 
 **Acceptance/verification:** unit tests cover navigation tables, exactly/just before/just after three seconds, oldest/newest wrap, single/empty eligible collection, clamping, and timestamp gaps. Use a fake clock for the 24-hour boundary and fake media events for loading/error/race behavior. Browser tests cover paused versus active episode/track clicks, refresh restoration without play, route history, keyboard sliders, and unsupported volume behavior. Run `pnpm verify` and real-device media checks.
 
-### M8 — Drafts and scheduled repository publishing
+### M8 - Drafts and scheduled repository publishing
 
 **Outcome:** the owner can prepare an episode, validate it, and publish now or at a specified time without editing independent website/feed copies.
 
@@ -334,7 +334,7 @@ Run `pnpm verify`. External validator/client results are provisional until repea
 
 **Acceptance/verification:** fake-clock tests cover before/at/after publication time, timezone equivalence, drafts, invalid schedules, ordering changes, and feed/cache validators. Deployed tests confirm visibility within the agreed tolerance without a rebuild, no future/draft metadata in any public app response, and correct behavior after restart/rollback. Run `pnpm verify`; the owner can follow the instructions to prepare and schedule a test episode.
 
-### M9 — Individually scoped polish
+### M9 - Individually scoped polish
 
 Each item gets its own bounded plan and acceptance checks; there is no requirement to deliver them as one large batch.
 

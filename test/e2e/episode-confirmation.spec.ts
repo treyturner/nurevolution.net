@@ -43,7 +43,7 @@ test('cancelling an episode change keeps audio playing without a request, source
   await link.focus()
   await link.press('Enter')
   await expect(dialog(page)).toBeVisible()
-  await expect(dialog(page)).toContainText('Trey Turner — Ruminate')
+  await expect(dialog(page)).toContainText('Trey Turner - Ruminate')
   await expect(
     page.getByRole('button', { name: 'Keep listening' }),
   ).toBeFocused()

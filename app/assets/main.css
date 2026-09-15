@@ -91,13 +91,6 @@ button {
   padding-bottom: 2rem;
   border-bottom: 1px solid var(--line);
 }
-.site-header > a {
-  display: inline-flex;
-  min-height: 44px;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 0.85rem;
-}
 .site-brand {
   display: flex;
   align-items: center;
@@ -134,8 +127,18 @@ button {
   text-transform: uppercase;
 }
 .site-header .rss-link {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  font-size: 0.85rem;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--focus-color);
   margin-inline-start: auto;
   align-self: center;
+  justify-content: flex-end;
+  min-width: 44px;
   /* Balance the visible lettering, rather than the fonts' unequal line boxes. */
   transform: translateY(0.1rem);
   flex-shrink: 0;
@@ -771,9 +774,10 @@ button.track-row:disabled {
     padding-block: 1.25rem;
   }
   .site-header {
-    align-items: flex-start;
-    flex-wrap: wrap;
     padding-bottom: 1rem;
+  }
+  .rss-label {
+    display: none;
   }
   .player {
     grid-template-columns: minmax(0, 1fr);

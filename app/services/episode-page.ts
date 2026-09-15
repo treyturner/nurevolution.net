@@ -116,7 +116,7 @@ export function episodeHead(model: EpisodePage, path: string) {
   const episode = model.selected
   const title = 'nurevolution studios'
   const description = episode
-    ? `Listen to ${episode.artist} — ${episode.title}. Episode audio, artwork, and tracklist from nurevolution studios.`
+    ? `Listen to ${episode.artist} - ${episode.title}. Episode audio, artwork, and tracklist from nurevolution studios.`
     : model.show.descriptionText
   return {
     title,

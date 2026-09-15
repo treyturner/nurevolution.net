@@ -1,5 +1,4 @@
 import { expect, test } from '@playwright/test'
-import { readFile } from 'node:fs/promises'
 import {
   devBaseURL,
   devWebOrigin,
@@ -10,7 +9,6 @@ import { ready, stubArchiveMedia } from './media'
 test('dev renders and navigates with production media blocked and retains canonical RSS identity', async ({
   page,
   request,
-  browserName,
 }) => {
   const legacyRequests: string[] = []
   await page.route(/^https:\/\/(podcast\.)?nurevolution\.net\//, (route) => {
@@ -58,25 +56,24 @@ test('dev renders and navigates with production media blocked and retains canoni
   await expect(
     page.locator('link[rel="alternate"][type="application/rss+xml"]'),
   ).toHaveAttribute('href', '/feed/podcast')
-  const rssLink = page.getByRole('link', { name: 'Subscribe via RSS' })
-  await expect(rssLink).toHaveAttribute('href', '/feed/podcast')
-  const feedUrl = devBaseURL + '/feed/podcast'
-  const [openedFeed, download] = await Promise.all([
-    page.waitForResponse(
-      (response) =>
-        response.url() === feedUrl && response.request().isNavigationRequest(),
-    ),
-    // Firefox saves RSS; Chromium/WebKit render the XML document.
-    browserName === 'firefox'
-      ? page.waitForEvent('download')
-      : page.waitForURL(feedUrl),
-    rssLink.click(),
-  ])
-  expect(openedFeed.status()).toBe(200)
-  if (download) {
-    expect(download.url()).toBe(feedUrl)
-    expect(await download.failure()).toBeNull()
-    expect(await readFile((await download.path())!, 'utf8')).toBe(feed)
-  } else expect(await openedFeed.text()).toBe(feed)
+  await page.evaluate(() => {
+    Object.defineProperty(navigator, 'clipboard', {
+      configurable: true,
+      value: {
+        writeText: async (text: string) => {
+          document.documentElement.dataset.copiedUrl = text
+        },
+      },
+    })
+  })
+  await page
+    .getByRole('link', { name: 'Subscribe via RSS (copy RSS URL)' })
+    .click()
+  await expect(page.locator('.copy-link-toast')).toHaveText('RSS URL copied')
+  await expect(page.locator('html')).toHaveAttribute(
+    'data-copied-url',
+    'https://nurevolution.net/feed/podcast',
+  )
+  await expect(page).toHaveURL(devBaseURL + selected)
   expect(legacyRequests).toEqual([])
 })

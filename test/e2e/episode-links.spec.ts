@@ -104,6 +104,169 @@ test('keyboard copying preserves the selected player and shows temporary feedbac
   await expect(toast).toBeHidden({ timeout: 6000 })
 })
 
+test('the compact RSS button copies the feed URL without interrupting playback', async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 320, height: 640 })
+  const clip = await readFile(
+    new URL('../fixtures/media-app/public/long.wav', import.meta.url),
+  )
+  await page.route('https://podcast.nurevolution.net/**', (route) =>
+    fulfillAudio(route, clip, 'audio/wav'),
+  )
+  await page.goto('/episodes/trey-turner-ruminate')
+  await ready(page)
+  // Fractional text widths vary across system fonts. Keep a non-integer width
+  // so rounding the toast's dimensions cannot silently pass on some runners.
+  await page.addStyleTag({ content: '.copy-link-toast { width: 137.25px; }' })
+  const originalUrl = page.url()
+  const audio = page.locator('audio')
+  const element = (await audio.elementHandle())!
+  await audio.evaluate((a: HTMLAudioElement) => {
+    a.muted = true
+  })
+  await page.getByRole('button', { name: 'Play', exact: true }).click()
+  await expect(page.locator('.media-status')).toHaveText('Playing')
+  const before = await audio.evaluate((a: HTMLAudioElement) => a.currentTime)
+  const button = page.getByRole('link', {
+    name: 'Subscribe via RSS (copy RSS URL)',
+  })
+  await expect(button.locator('.rss-label')).toBeHidden()
+  await expect(button.locator('.rss-icon')).toBeVisible()
+  await button.focus()
+  await page.keyboard.press('Enter')
+  const toast = page.locator('.copy-link-toast')
+  await expect(toast).toHaveText('RSS URL copied')
+  await expect(page.locator('html')).toHaveAttribute(
+    'data-copied-url',
+    'https://nurevolution.net/feed/podcast',
+  )
+  const box = (await toast.boundingBox())!
+  expect(box.x).toBeGreaterThanOrEqual(12)
+  expect(box.x + box.width).toBeLessThanOrEqual(308)
+  await expect(button).toBeFocused()
+  await expect(page).toHaveURL(originalUrl)
+  expect(await element.evaluate((a) => a.isConnected)).toBe(true)
+  await expect(audio).toHaveJSProperty('paused', false)
+  await expect
+    .poll(() => audio.evaluate((a: HTMLAudioElement) => a.currentTime))
+    .toBeGreaterThan(before)
+  await expect(toast).toBeHidden({ timeout: 6000 })
+})
+
+for (const clipboard of ['unavailable', 'denied'] as const) {
+  test(`RSS remains usable with clipboard ${clipboard}, keeping playback in the original tab`, async ({
+    page,
+    context,
+  }) => {
+    const clip = await readFile(
+      new URL('../fixtures/media-app/public/long.wav', import.meta.url),
+    )
+    await page.route('https://podcast.nurevolution.net/**', (route) =>
+      fulfillAudio(route, clip, 'audio/wav'),
+    )
+    await context.route('https://nurevolution.net/feed/podcast', (route) =>
+      route.fulfill({
+        contentType: 'text/html',
+        body: '<p>Feed destination</p>',
+      }),
+    )
+    await page.goto('/episodes/trey-turner-ruminate')
+    await ready(page)
+    const originalUrl = page.url()
+    const audio = page.locator('audio')
+    await audio.evaluate((a: HTMLAudioElement) => {
+      a.muted = true
+    })
+    await page.getByRole('button', { name: 'Play', exact: true }).click()
+    await expect(page.locator('.media-status')).toHaveText('Playing')
+    await page.evaluate((clipboard) => {
+      Object.defineProperty(navigator, 'clipboard', {
+        configurable: true,
+        value:
+          clipboard === 'unavailable'
+            ? undefined
+            : {
+                writeText: async () => {
+                  throw new DOMException('Denied', 'NotAllowedError')
+                },
+              },
+      })
+    }, clipboard)
+    const link = page.getByRole('link', { name: /^Subscribe via RSS/ })
+    await expect(link).toHaveAccessibleName('Subscribe via RSS (copy RSS URL)')
+    await expect(link.locator('.rss-label')).toBeVisible()
+    if (clipboard === 'denied') {
+      await link.click()
+      await expect(page.locator('.copy-link-toast')).toHaveText(
+        'Couldn’t copy RSS URL. Click again to open the feed in a new tab.',
+      )
+      await expect(link).toHaveAccessibleName(
+        'Subscribe via RSS (opens in a new tab)',
+      )
+      expect(context.pages()).toHaveLength(1)
+    }
+    const opened = page.waitForEvent('popup')
+    await link.click()
+    const popup = await opened
+    try {
+      await expect(popup).toHaveURL('https://nurevolution.net/feed/podcast')
+      expect(await popup.evaluate(() => window.opener === null)).toBe(true)
+      await expect(page).toHaveURL(originalUrl)
+      await expect(audio).toHaveJSProperty('paused', false)
+    } finally {
+      await popup.close()
+    }
+  })
+}
+
+for (const missing of ['JavaScript', 'Clipboard API']) {
+  test(`RSS announces its native fallback without ${missing}`, async ({
+    browser,
+    baseURL,
+  }) => {
+    const context = await browser.newContext({
+      javaScriptEnabled: missing !== 'JavaScript',
+      baseURL,
+    })
+    try {
+      await context.addInitScript(() => {
+        Object.defineProperty(navigator, 'clipboard', {
+          configurable: true,
+          value: undefined,
+        })
+      })
+      const page = await context.newPage()
+      await stubArchiveMedia(page)
+      await context.route('https://nurevolution.net/feed/podcast', (route) =>
+        route.fulfill({
+          contentType: 'text/html',
+          body: '<p>Feed destination</p>',
+        }),
+      )
+      await page.goto('/episodes/trey-turner-ruminate')
+      if (missing !== 'JavaScript') await ready(page)
+      const originalUrl = page.url()
+      const link = page.getByRole('link', { name: /^Subscribe via RSS/ })
+      await expect(link).toHaveAccessibleName(
+        'Subscribe via RSS (opens in a new tab)',
+      )
+      await expect(link).toHaveAttribute('title', 'Open RSS feed in a new tab')
+      await expect(link).toHaveAttribute(
+        'href',
+        'https://nurevolution.net/feed/podcast',
+      )
+      const opened = page.waitForEvent('popup')
+      await link.click()
+      const popup = await opened
+      await expect(popup).toHaveURL('https://nurevolution.net/feed/podcast')
+      await expect(page).toHaveURL(originalUrl)
+    } finally {
+      await context.close()
+    }
+  })
+}
+
 test('keeps feedback inside a narrow viewport and falls back to top center after its button scrolls away', async ({
   page,
 }) => {

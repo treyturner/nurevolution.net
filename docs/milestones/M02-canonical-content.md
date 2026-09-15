@@ -1,8 +1,8 @@
-# M2 — Canonical content and complete archive
+# M2 - Canonical content and complete archive
 
 Status: **Implemented and locally verified** on 2026-09-08. The original plan is retained below with completed steps; actual results and bounded implementation corrections are recorded in the completion evidence.
 
-Plan date: 2026-09-08. Roadmap: [M2](../../ROADMAP.md#m2--canonical-content-and-complete-archive). Prerequisites: [M0 audit](../migration/MIGRATION-AUDIT.md) and [M1 foundation](M01-foundation-and-verification.md). Project guidance: [BOOTSTRAP.md](../BOOTSTRAP.md).
+Plan date: 2026-09-08. Roadmap: [M2](../../ROADMAP.md#m2---canonical-content-and-complete-archive). Prerequisites: [M0 audit](../migration/MIGRATION-AUDIT.md) and [M1 foundation](M01-foundation-and-verification.md). Project guidance: [BOOTSTRAP.md](../BOOTSTRAP.md).
 
 ## Outcome and boundaries
 
@@ -251,7 +251,7 @@ Use disposable copies for conflict/failure tests. Checks and builds must not alt
 
 M2 makes no production changes. Its canonical metadata can be regenerated into a fresh candidate directory while the original archive and frozen evidence remain intact. Full MP3 decode/listening, remote range/download behavior, artwork delivery, feed-client validation, redirects, and cutover remain their assigned later milestones; this plan does not mark them complete.
 
-## Completion evidence — 2026-09-08
+## Completion evidence - 2026-09-08
 
 The existing M0/M1/planning baseline was committed to `main` as `b7ad63f` after its verification passed. M2 was implemented on `feat/m2-canonical-content` under the owner's subsequent Git instruction. No remote push or deployment was performed.
 

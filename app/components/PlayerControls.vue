@@ -120,7 +120,7 @@ watch(
         @blur="draft = null"
       />
       <span class="player-time" aria-hidden="true">{{
-        state.duration === null ? '—:—' : formatTime(state.duration)
+        state.duration === null ? '-:-' : formatTime(state.duration)
       }}</span>
     </div>
     <div class="playback-row">
