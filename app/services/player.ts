@@ -57,6 +57,7 @@ export function createPlayer(
   let reconciling = false
   let resetPausePending = false
   let playObservedSinceLoad = false
+  let playbackTime: number | null = null
   const seek = createPlayerSeek(audio, () => {
     publish()
     // A timeout can settle a seek without another browser event.
@@ -81,6 +82,7 @@ export function createPlayer(
     if (!disposed) observed(snapshot(), event)
   }
   function cancelPlay() {
+    playbackTime = null
     wantsPlay = false
     deferredPlay = false
     intent++
@@ -194,6 +196,15 @@ export function createPlayer(
   function observe(event: AudioEvent) {
     const snapshot = current()
     if (!snapshot) return
+    if (
+      event === 'play' ||
+      event === 'pause' ||
+      event === 'waiting' ||
+      event === 'seeking' ||
+      event === 'seeked'
+    ) {
+      playbackTime = null
+    }
     const resetPause =
       event === 'pause' && resetPausePending && !playObservedSinceLoad
     if (event === 'pause') resetPausePending = false
@@ -277,6 +288,29 @@ export function createPlayer(
     ) {
       set('paused')
     }
+    if (event === 'timeupdate') {
+      const previousTime = playbackTime
+      playbackTime =
+        wantsPlay &&
+        !snapshot.paused &&
+        !snapshot.seeking &&
+        snapshot.readyState >= 2 &&
+        Number.isFinite(snapshot.currentTime)
+          ? snapshot.currentTime
+          : null
+      // WebKit can resume its clock after a seek without another playing
+      // event. Require consecutive advancing updates from an already-playing
+      // source; a seek jump or an unchanged buffering clock is not playback.
+      if (
+        status === 'buffering' &&
+        endArmed &&
+        previousTime !== null &&
+        playbackTime !== null &&
+        playbackTime > previousTime
+      ) {
+        set('playing')
+      }
+    }
   }
   const unsubscribe = (
     [
@@ -317,6 +351,7 @@ export function createPlayer(
   )
   function load(next: PlayerSource, continuePlaying: boolean) {
     stopDurationTimer()
+    playbackTime = null
     endArmed = false
     generation++
     // Only unresolved requests from this source can guard its native events.
@@ -394,6 +429,7 @@ export function createPlayer(
         !Number.isFinite(seconds)
       )
         return
+      playbackTime = null
       seek.request(seconds)
       const actual = current()
       if (actual) seek.reconcile(actual)

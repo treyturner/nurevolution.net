@@ -422,6 +422,86 @@ describe('persistent episode controller', () => {
     player.select(c)
     expect(media.play).toHaveBeenCalledTimes(2)
   })
+  it('recovers the playing status from advancing native updates after a seek without a playing event', () => {
+    const { media, changed, player } = setup()
+    player.select(a)
+    media.ready()
+    player.play()
+    media.emit('playing')
+    media.currentTime = 8.5
+    media.emit('timeupdate')
+
+    player.seek(32)
+    media.seeking = true
+    media.emit('seeking')
+    media.readyState = 2
+    media.emit('waiting')
+    media.emit('timeupdate')
+    media.seeking = false
+    media.emit('seeked')
+    media.emit('timeupdate')
+    expect(changed).toHaveBeenLastCalledWith('buffering')
+    media.currentTime = 32.25
+    media.emit('timeupdate')
+    expect(changed).toHaveBeenLastCalledWith('playing')
+    expect(media.play).toHaveBeenCalledOnce()
+    expect(media.pause).not.toHaveBeenCalled()
+
+    // A later real stall must clear the earlier progress evidence.
+    media.emit('waiting')
+    media.currentTime = 32.5
+    media.emit('timeupdate')
+    media.emit('timeupdate')
+    expect(changed).toHaveBeenLastCalledWith('buffering')
+    player.dispose()
+  })
+  it('does not mistake paused seeks, seeking updates, or insufficient data for resumed playback', () => {
+    const { media, changed, player } = setup()
+    player.select(a)
+    media.ready()
+    player.play()
+    media.emit('playing')
+    media.emit('waiting')
+    for (const state of [
+      { seeking: true, readyState: 4 },
+      { seeking: false, readyState: 1 },
+    ]) {
+      Object.assign(media, state)
+      for (const time of [10, 20, 30]) {
+        media.currentTime = time
+        media.emit('timeupdate')
+      }
+      expect(changed).toHaveBeenLastCalledWith('buffering')
+    }
+    player.pause()
+    media.readyState = 4
+    for (const time of [40, 50]) {
+      media.currentTime = time
+      media.emit('timeupdate')
+    }
+    expect(changed).toHaveBeenLastCalledWith('paused')
+    expect(media.play).toHaveBeenCalledOnce()
+    player.dispose()
+  })
+  it('does not carry playback evidence into a replacement source', () => {
+    const { media, changed, player } = setup()
+    player.select(a)
+    media.ready()
+    player.play()
+    media.emit('playing')
+    media.emit('waiting')
+    media.currentTime = 1
+    media.emit('timeupdate')
+    player.select(b)
+    media.ready()
+    media.readyState = 2
+    for (const time of [2, 3]) {
+      media.currentTime = time
+      media.emit('timeupdate')
+    }
+    expect(changed).toHaveBeenLastCalledWith('buffering')
+    player.dispose()
+  })
   it('keeps continuation through rapid selections and ignores obsolete play rejection', async () => {
     const { media, changed, player } = setup()
     player.select(a)
