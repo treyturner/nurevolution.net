@@ -9,7 +9,8 @@
   "scripts": {
     "dev": "nuxt dev",
     "prepare": "nuxt prepare",
-    "build": "pnpm check:content && pnpm check:thumbnails && pnpm check:feed && nuxt build",
+    "build": "pnpm check:content && pnpm check:thumbnails && pnpm check:feed && pnpm check:playback && nuxt build",
+    "check:playback": "node tools/playback/check.ts",
     "build:fixture": "nuxt build test/fixtures/media-app",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
