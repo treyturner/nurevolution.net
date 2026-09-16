@@ -1,5 +1,6 @@
 import type { Asset, Catalog, Episode } from './schema.ts'
 import { artworkThumbnailPath } from './artwork.ts'
+import type { PlaybackDescriptor } from '../playback/schema.ts'
 
 export function selectPublic(catalog: Catalog, asOf: number): Episode[] {
   if (!Number.isFinite(asOf))
@@ -76,4 +77,6 @@ export function episodeDetail(catalog: Catalog, episode: Episode) {
 
 export type PublicShow = ReturnType<typeof showPublic>
 export type EpisodeSummary = ReturnType<typeof episodeSummary>
-export type EpisodeDetail = ReturnType<typeof episodeDetail>
+export type EpisodeDetail = ReturnType<typeof episodeDetail> & {
+  audio: { playback?: PlaybackDescriptor }
+}

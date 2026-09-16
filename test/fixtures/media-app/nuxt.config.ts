@@ -8,10 +8,14 @@ export default defineNuxtConfig({
     fileURLToPath(new URL('../../../app/assets/main.css', import.meta.url)),
   ],
   devtools: { enabled: false },
-  runtimeConfig: { public: { webOrigin: '', mediaOrigin: '' } },
+  runtimeConfig: { audioRoot: '', public: { webOrigin: '', mediaOrigin: '' } },
   nitro: {
     preset: 'node-server',
     serverAssets: [
+      {
+        baseName: 'playback-test',
+        dir: fileURLToPath(new URL('../playback', import.meta.url)),
+      },
       {
         baseName: 'media',
         dir: fileURLToPath(new URL('./public', import.meta.url)),

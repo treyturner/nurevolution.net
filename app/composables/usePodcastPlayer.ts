@@ -7,7 +7,7 @@ import {
   createPlaybackStorage,
   type ResumeRecord,
 } from '../services/playback-storage'
-import { deliveryAssetUrl } from '../services/delivery-assets'
+import { playerSource } from '../services/playback-source'
 import type { EpisodeDetail } from '../../shared/content/public'
 import type { useEpisodePlaybackNavigation } from './useEpisodePlaybackNavigation'
 
@@ -116,14 +116,13 @@ export function usePodcastPlayer(
     const current = episode()
     controller?.select(
       current
-        ? {
-            id: current.id,
-            url: deliveryAssetUrl(
-              current.audio.url,
-              'audio',
-              config.public.mediaOrigin,
-            ),
-          }
+        ? playerSource(
+            current,
+            config.public.mediaOrigin,
+            navigator.userAgent,
+            (type) => element?.canPlayType(type) ?? '',
+            window.location.href,
+          )
         : null,
       saved?.episodeId === current?.id && saved
         ? { position: saved.positionSeconds, paused: true }

@@ -22,6 +22,7 @@ export const profileSchema = z
     reserveMemoryMiB: z.int().min(128),
     minimumFreeDiskMiB: z.int().min(1024),
     readinessSeconds: z.int().min(10).max(120),
+    virtualPlayback: z.boolean().optional(),
   })
   .refine(
     (p) => p.webOrigin !== p.mediaOrigin,
@@ -139,6 +140,14 @@ export function renderSite(manifest: MediaManifest, profile: Profile) {
   )
   routes.push(
     route({ host: webHosts }, [
+      {
+        handler: 'reverse_proxy',
+        upstreams: [{ dial: `nurevolution-${profile.environment}:3000` }],
+      },
+    ]),
+  )
+  routes.push(
+    route({ host: mediaHosts, path: ['/playback/*'] }, [
       {
         handler: 'reverse_proxy',
         upstreams: [{ dial: `nurevolution-${profile.environment}:3000` }],

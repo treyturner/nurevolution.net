@@ -7,6 +7,7 @@ import { setTimeout as delay } from 'node:timers/promises'
 import { assertNoSymlinks } from '../content/files.ts'
 import { checkAssets } from './stage-assets.ts'
 import { checkMediaHttp } from './check-media.ts'
+import { checkVirtualPlayback } from './check-playback.ts'
 import { imageConfigDigest } from './image-identity.ts'
 import {
   atomicWrite,
@@ -224,6 +225,8 @@ export async function deployOnHost(
         DEPLOY_ENVIRONMENT: r.profile.environment,
         WEB_ORIGIN: r.profile.webOrigin,
         MEDIA_ORIGIN: r.profile.mediaOrigin,
+        VIRTUAL_PLAYBACK: String(r.profile.virtualPlayback ?? false),
+        MEDIA_AUDIO_ROOT: resolve(paths.root, 'media/audio'),
       })
       const compose = (
         r: DeploymentRecord,
@@ -378,6 +381,11 @@ export async function deployOnHost(
           await activate(serialize(rendered))
         },
         async accept(r) {
+          if (r.profile.virtualPlayback)
+            await checkVirtualPlayback(
+              { web: r.profile.webOrigin, media: r.profile.mediaOrigin },
+              request,
+            )
           for (const path of [
             '/api/health',
             '/',

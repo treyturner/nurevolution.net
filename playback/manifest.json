@@ -1,0 +1,973 @@
+{
+  "schemaVersion": 1,
+  "generator": "PyAV 16.1.0 / libavformat 62.3.100",
+  "entries": [
+    {
+      "assetId": "asset-10be1117a35208e7",
+      "sourceSha256": "45312d0756a4d19738d81cba30891c156cc84dcdc05199eb4f1a66a884d8cd34",
+      "sourceByteLength": 191942428,
+      "mode": "VBR",
+      "bitrates": [32, 192, 224, 256, 320],
+      "frameCount": 242782,
+      "virtual": {
+        "sha256": "9fa1e69f9c2ba48433db81629bbe0273794782367f482cda4b2101ea9a6bffa5",
+        "headerSha256": "9bf737aae874be40de7d5833ddb00f99933b6cb2a686961fde14125fa26911bb",
+        "headerByteLength": 974818,
+        "byteLength": 192833597,
+        "audioOffset": 83521,
+        "audioByteLength": 191858779,
+        "samples": 279682931,
+        "sampleRate": 44100,
+        "pcmSha256": [
+          "f7401c483f1c8c02614b2def21f3828744abb42f46870a483cbca330023e01fc",
+          "d7c0b12d4b8e1d1c5fb60ff64872760acb2c692f0fa9492a4246ec1b46dfc573"
+        ]
+      }
+    },
+    {
+      "assetId": "asset-192ba9e6e4d8bc7c",
+      "sourceSha256": "022df5b20c2d68056af36ce1aa03b1ba0635e962a277ba5ba030ca56cbbb93f3",
+      "sourceByteLength": 138363524,
+      "mode": "VBR",
+      "bitrates": [32, 192, 224, 256, 320],
+      "frameCount": 164544,
+      "virtual": {
+        "sha256": "183cd1ddf86d1d19e3aed9b40feb410ba22502c4be0d047cdd283f9bd41e3b4b",
+        "headerSha256": "cde20ecb48d3c4f3f7e4f8aee2bdc27d400ee6797d2fee793f59141e93f0aae8",
+        "headerByteLength": 661026,
+        "byteLength": 138033105,
+        "audioOffset": 991317,
+        "audioByteLength": 137372079,
+        "samples": 189552075,
+        "sampleRate": 44100,
+        "pcmSha256": [
+          "c4c92d2cd1eb586c57fedc5acb5febc4542e9e16b99c67b9c628014370c9bb97",
+          "057624735ca03c9da80e74af40e5df5ab415704b409d365932af511a1908d686"
+        ]
+      }
+    },
+    {
+      "assetId": "asset-20c29632c840c485",
+      "sourceSha256": "da4eacc72c82dedc9ab2df38c92b3272cce5afbc3a6680173ba7c658ec17f916",
+      "sourceByteLength": 149130776,
+      "mode": "VBR",
+      "bitrates": [32, 192, 224, 256, 320],
+      "frameCount": 182692,
+      "virtual": {
+        "sha256": "66a29d8ed0d105be05a20b04705992f67817028b051c966e2fdd48a56b4c9a12",
+        "headerSha256": "4b83a9cc058948c47e476b15be8ea71aa7653396923d2f28879156f1cf7d424a",
+        "headerByteLength": 733790,
+        "byteLength": 149861973,
+        "audioOffset": 2465,
+        "audioByteLength": 149128183,
+        "samples": 210459185,
+        "sampleRate": 44100,
+        "pcmSha256": [
+          "9c00b2c33ec0583d5cb2c14e49a6027b06aef9da039f5406dd5b696b9a087e85",
+          "7e79b81abc6612d719b7bae68eda36216b93838e585a9fbb69e19a745a609a66"
+        ]
+      }
+    },
+    {
+      "assetId": "asset-22e61b6a576f3ecf",
+      "sourceSha256": "566e455a49b52dc7692b9b39cf3941429f504f7938b670e33ba5183e203db726",
+      "sourceByteLength": 131974356,
+      "mode": "CBR",
+      "bitrates": [320],
+      "frameCount": 125308
+    },
+    {
+      "assetId": "asset-27f168df9ffe8484",
+      "sourceSha256": "63326a3c5c3efd52c8847a7e0f772246fc5322a3ed7936d798c0f3c2abcb3af0",
+      "sourceByteLength": 71215416,
+      "mode": "CBR",
+      "bitrates": [192],
+      "frameCount": 113589
+    },
+    {
+      "assetId": "asset-2a7d87d1472c9f8d",
+      "sourceSha256": "baf7405098d56c1ee406c39797f87136c62f95842ac6f7dbe4b7fb3bdbfc6480",
+      "sourceByteLength": 117730918,
+      "mode": "VBR",
+      "bitrates": [96, 112, 128, 160, 192, 224, 256, 320],
+      "frameCount": 139951,
+      "virtual": {
+        "sha256": "090c01e64dc469b8c36456585b5d23fd2b6dd6365f63ed77d99a24437ec5e164",
+        "headerSha256": "6c8e57de2f53a53a434be05c40548f5f02b7208f98c55aa0054743019380f332",
+        "headerByteLength": 562322,
+        "byteLength": 118253961,
+        "audioOffset": 39151,
+        "audioByteLength": 117691639,
+        "samples": 161222278,
+        "sampleRate": 44100,
+        "pcmSha256": [
+          "e3cd246bb6ecec9758acb5554e9a3c9741b71b1e192c2e78d09dbd18465f7b5f",
+          "9ccad32a75da76c38e20b1fb47fca44bacd7eb652094623bb48cdfc1afa9e109"
+        ]
+      }
+    },
+    {
+      "assetId": "asset-2a98e5e36daa0f0d",
+      "sourceSha256": "2c8c51bc4065c482b73e258090cfc5f559d3f9500c7835fa20b13a643c5504d4",
+      "sourceByteLength": 200152077,
+      "mode": "VBR",
+      "bitrates": [32, 192, 224, 256, 320],
+      "frameCount": 261293,
+      "virtual": {
+        "sha256": "1b199dfce1c2ec28c5a092d83f302b084c052faaf568d622a16810c971432a77",
+        "headerSha256": "199dced25b4d983bee95c4732df4c51e18860efb1ba094f5417f263a72f4119b",
+        "headerByteLength": 1048966,
+        "byteLength": 200782071,
+        "audioOffset": 418844,
+        "audioByteLength": 199733105,
+        "samples": 301006823,
+        "sampleRate": 44100,
+        "pcmSha256": [
+          "cab26a48b4e6803459c73ee87325b85a4ace02d0cfdc1db4e978321ff43c5e58",
+          "70d62d57e5ef74c96f8293e5f4abe287b3fb7378dcd05bbf254558784a14ed96"
+        ]
+      }
+    },
+    {
+      "assetId": "asset-2d938ca4211a912e",
+      "sourceSha256": "993083837889cc251902710a05b203ebafdfa6e1e015d6e42cd8fa8e3eea4f8c",
+      "sourceByteLength": 90550452,
+      "mode": "VBR",
+      "bitrates": [32, 192, 224, 256, 320],
+      "frameCount": 106037,
+      "virtual": {
+        "sha256": "6b08d5da755d73eadaca2209907c4184445ef99c9da25149f5dd4175851669ed",
+        "headerSha256": "f0c3cc185bf7bf3459ea3459891b0cb5b12e4d88eac891dae63e591b69cbd997",
+        "headerByteLength": 426266,
+        "byteLength": 90893071,
+        "audioOffset": 83519,
+        "audioByteLength": 90466805,
+        "samples": 122151938,
+        "sampleRate": 44100,
+        "pcmSha256": [
+          "97b8cdb351beac9da4c00cf3a618e846979b24b93de1f1525c94abb84808911d",
+          "ecf74637f00c8ae3083f21aa4ca5665fc00827bcc8819775aecaf94b54b69540"
+        ]
+      }
+    },
+    {
+      "assetId": "asset-2e7c79fcf44d6c67",
+      "sourceSha256": "0e4e12b89245ba76ceabd62bf6ccdc29b3b9913bed0b9dfc0008f630ffbdd9d8",
+      "sourceByteLength": 138051394,
+      "mode": "VBR",
+      "bitrates": [32, 192, 224, 256, 320],
+      "frameCount": 177733,
+      "virtual": {
+        "sha256": "cdd75c3e346c954289430934152cfc9e8e36d3895ffaa756f491e8a32000e3f5",
+        "headerSha256": "2019890a1d6a278234ea86b51733c17769243cb31c75441ebe510159f0922956",
+        "headerByteLength": 713766,
+        "byteLength": 138762567,
+        "audioOffset": 2465,
+        "audioByteLength": 138048801,
+        "samples": 204746304,
+        "sampleRate": 44100,
+        "pcmSha256": [
+          "2f17c0fd20e0f63bec96df8422bb3d0ebc19adf4d7a092a49f9286977081f9e3",
+          "5aba10fe5bc9fccaf3052165634fa0a3e635114625a806cf33a92bf790664ae7"
+        ]
+      }
+    },
+    {
+      "assetId": "asset-30d12a72b047a3d3",
+      "sourceSha256": "9bc9104128d09b25a4ab71b5837ea96f0907f3e45de3de7a4395aede1725df38",
+      "sourceByteLength": 112402133,
+      "mode": "VBR",
+      "bitrates": [32, 192, 224, 256, 320],
+      "frameCount": 133587,
+      "virtual": {
+        "sha256": "5fb8366239173bef8312244b43a1707e82e9c760b1f68b2860a5aa45dc8694ae",
+        "headerSha256": "298cf5a8cd763d4d05b11063b4e20693d14b4119f127ebfaadddb792603e9479",
+        "headerByteLength": 536798,
+        "byteLength": 111725467,
+        "audioOffset": 1213336,
+        "audioByteLength": 111188669,
+        "samples": 153889656,
+        "sampleRate": 44100,
+        "pcmSha256": [
+          "6463f0fe76d0f864619d32ae8b032e293f01944f94ea3b55cf7b3e91661fdcec",
+          "bbbb86a4e4d21f78a9d7170d5de65c290a50017413e2f7222497bd4d3316f676"
+        ]
+      }
+    },
+    {
+      "assetId": "asset-37787c9351c33879",
+      "sourceSha256": "347cae6157563241c8efb20aa9a4c7aa96f9f5e7b9c4973028d396de2bb68d95",
+      "sourceByteLength": 140169960,
+      "mode": "VBR",
+      "bitrates": [192, 224, 256, 320],
+      "frameCount": 168262,
+      "virtual": {
+        "sha256": "ec6dda0872cafd4746ed5bdb2d215e7862703c01484b2f8eae438f3b5878fb23",
+        "headerSha256": "55f675205163339528490bcff1ab03d1c1861e9674b692fa95af45fd6b091d58",
+        "headerByteLength": 675938,
+        "byteLength": 140843305,
+        "audioOffset": 2465,
+        "audioByteLength": 140167367,
+        "samples": 193835964,
+        "sampleRate": 44100,
+        "pcmSha256": [
+          "d28b85498a9dd497ef148e99f93980915bb78fe9233d98359bf067705f5cbb03",
+          "d701514cbc35e4f303c1b81474ee29e1dd134b2e15802a2becc324b4fff4d946"
+        ]
+      }
+    },
+    {
+      "assetId": "asset-3f430484c0c8acb0",
+      "sourceSha256": "3b2a632e2b06bcffcd0ace3370298d9d5291a5e43f2a61afcbc07a4f7cb2dec9",
+      "sourceByteLength": 117608357,
+      "mode": "VBR",
+      "bitrates": [32, 64, 80, 96, 112, 128, 160, 192, 224, 256, 320],
+      "frameCount": 137339,
+      "virtual": {
+        "sha256": "882d4f4ad108cb6d29aeee5d3c8471c5aac3e06e5772f6514137bf1793b3d850",
+        "headerSha256": "cd6284012a96c4e51a4464c3d6ebf0c41b6cf749f8597903a31535500d7e62c8",
+        "headerByteLength": 551878,
+        "byteLength": 115852430,
+        "audioOffset": 2307677,
+        "audioByteLength": 115300552,
+        "samples": 158213036,
+        "sampleRate": 44100,
+        "pcmSha256": [
+          "adb2659d758aa3fc285a1bac5cd59be25ac0d43a189c948b2af9f2b482fded6f",
+          "1484b9949fba06a536cb32f5d416cdfa7c81e41fbab55fbbdaf80e4e02635918"
+        ]
+      }
+    },
+    {
+      "assetId": "asset-450a528e2fedc035",
+      "sourceSha256": "a5b7fa6d5e31a96f172e39583b518d33eeaa19f53149788b48baef80de054dee",
+      "sourceByteLength": 112950027,
+      "mode": "CBR",
+      "bitrates": [256],
+      "frameCount": 134925
+    },
+    {
+      "assetId": "asset-4528e80f69f5822a",
+      "sourceSha256": "0420d44b0e99249aaa6b122b1eeedd9483c0ae72a9dcd0dacc4a114d824449e5",
+      "sourceByteLength": 77177208,
+      "mode": "VBR",
+      "bitrates": [32, 192, 224, 256, 320],
+      "frameCount": 92869,
+      "virtual": {
+        "sha256": "d27fcf811c9f77de5fbbe23abfab6e9680236b58b1889eaed6b4783f0164fba8",
+        "headerSha256": "e805b94462d060a2682651dd4d14f52d5e847a04e2347b796df1462bfc0eb36b",
+        "headerByteLength": 373406,
+        "byteLength": 76970280,
+        "audioOffset": 580206,
+        "audioByteLength": 76596874,
+        "samples": 106983001,
+        "sampleRate": 44100,
+        "pcmSha256": [
+          "e9bafc74efb988ac7b2482c5e658e8424420b2f3dfc7b2c2abff476681e97ca0",
+          "1ac49681ab29963875fd4226751b92a8513e06654b14c95a13e0f647ea6a0eac"
+        ]
+      }
+    },
+    {
+      "assetId": "asset-45d62250e6619caf",
+      "sourceSha256": "5782b39c4e58fac853ac325d35a7b29a0f7d6acafe74f5f839bc74835f419924",
+      "sourceByteLength": 102817433,
+      "mode": "VBR",
+      "bitrates": [32, 192, 224, 256, 320],
+      "frameCount": 143597,
+      "virtual": {
+        "sha256": "f133387532aca006a2a6cf1dfc165a2e3912d0d356e99d6a7c55bc3cb8817e3e",
+        "headerSha256": "7f7ece1572d714acb781ca26f23b82e13d5d6ef9128765733257a50599296b59",
+        "headerByteLength": 576622,
+        "byteLength": 103391878,
+        "audioOffset": 2049,
+        "audioByteLength": 102815256,
+        "samples": 165421598,
+        "sampleRate": 44100,
+        "pcmSha256": [
+          "755999271f159c18b93bbb9a05f8dcc2bf0445f66ef2ddd3a75bb363ca13b3c4",
+          "7890e62a10061aee4a1400cb54525cc4e96d8b3baa640e7b43061f273aedb9c2"
+        ]
+      }
+    },
+    {
+      "assetId": "asset-46f23dd6c7e52d10",
+      "sourceSha256": "96edc74e49f08489aa346f8deee36994788ba487ebd964af93af26787d473afe",
+      "sourceByteLength": 94843513,
+      "mode": "CBR",
+      "bitrates": [224],
+      "frameCount": 129476
+    },
+    {
+      "assetId": "asset-48228cdc82a08b46",
+      "sourceSha256": "bde290f723bf51304ae1fd5e09e82d9066902bea400d0055acb1e98c03c04019",
+      "sourceByteLength": 116405379,
+      "mode": "VBR",
+      "bitrates": [32, 40, 56, 64, 80, 96, 112, 128, 160, 192, 224, 256, 320],
+      "frameCount": 139417,
+      "virtual": {
+        "sha256": "bdd56b1f1d064cb4901acbdc04164872cc6d27ff8399146ecf12817dde4d1f5f",
+        "headerSha256": "54e25babad74cbf2b57ffd7208e7a02239e7798b21b67b5a73e10c9d00a19585",
+        "headerByteLength": 560190,
+        "byteLength": 116293449,
+        "audioOffset": 671992,
+        "audioByteLength": 115733259,
+        "samples": 160606160,
+        "sampleRate": 44100,
+        "pcmSha256": [
+          "fcc7fd08fa9a95f534858d2f03ba41f58b2c263942508fabb987e5b1154edd47",
+          "5f169d001c889eb6521f748bf642bc2805328edeb0abb816a533b3313367f30e"
+        ]
+      }
+    },
+    {
+      "assetId": "asset-486937c569bbbf76",
+      "sourceSha256": "c3bc8bedf4991363b1d66ad8b69b30a49604447ac00d2917cdb58a8b3363e129",
+      "sourceByteLength": 123889586,
+      "mode": "CBR",
+      "bitrates": [320],
+      "frameCount": 116177
+    },
+    {
+      "assetId": "asset-4d1ddf13eda772f7",
+      "sourceSha256": "2e3ab70751bd05cd9c6f2d9a5dc440289958b79370180355846166ac1adb0d75",
+      "sourceByteLength": 195297097,
+      "mode": "CBR",
+      "bitrates": [320],
+      "frameCount": 184406
+    },
+    {
+      "assetId": "asset-53645f107ecc3374",
+      "sourceSha256": "dd37e9333b3a5fe6a89636e21ce0d622cf9b4910e37ea96bd727ed7207caed00",
+      "sourceByteLength": 110893305,
+      "mode": "CBR",
+      "bitrates": [320],
+      "frameCount": 103940
+    },
+    {
+      "assetId": "asset-5653f296481726c2",
+      "sourceSha256": "e921bc736e4e8bd37ec16debf59c11a8a9e4062cfbefc08850e214f7a9d595cd",
+      "sourceByteLength": 80973406,
+      "mode": "VBR",
+      "bitrates": [32, 192, 224, 256, 320],
+      "frameCount": 96981,
+      "virtual": {
+        "sha256": "62b3d0495a798cc9818d844c73bb5f1eded3c6de8853d27ae6b24f1a47faefc3",
+        "headerSha256": "4ae21cac31ce5edc2884e94776bfbb5ff9526e30a5f6c8f16f32bbb48a5b0c15",
+        "headerByteLength": 389918,
+        "byteLength": 81123653,
+        "audioOffset": 239543,
+        "audioByteLength": 80733735,
+        "samples": 111720000,
+        "sampleRate": 44100,
+        "pcmSha256": [
+          "4853d2a60a9c6fc342427c869a048ca8e51180c55aa443411ef2fb7fcce05857",
+          "16587845afb44d58f28897f9df6222774f4fbab7509a948c6903be4291ea1a2b"
+        ]
+      }
+    },
+    {
+      "assetId": "asset-58818eef16928111",
+      "sourceSha256": "ed7f1db5065eda59fd494dfea8007d1d2254495c0a9698365350fb10ef715dbb",
+      "sourceByteLength": 165911340,
+      "mode": "CBR",
+      "bitrates": [320],
+      "frameCount": 158438
+    },
+    {
+      "assetId": "asset-5a017a042ed0d2fe",
+      "sourceSha256": "f2698ef8aa1efa3d4ea1f9acdd9ce9cde4a38996526d9ddfa8ebf456d0f4ca46",
+      "sourceByteLength": 282596110,
+      "mode": "VBR",
+      "bitrates": [128, 160, 192, 224, 256, 320],
+      "frameCount": 322307,
+      "virtual": {
+        "sha256": "01db0845959e17a129651247922b442f4f10c2663dcb8f599b167afb41d8849d",
+        "headerSha256": "ce3a1d256b0c5a9c30df3025738d4565ac2356ce82fd2c287029af4c7ce8220a",
+        "headerByteLength": 1294222,
+        "byteLength": 283809822,
+        "audioOffset": 80382,
+        "audioByteLength": 282515600,
+        "samples": 371296090,
+        "sampleRate": 44100,
+        "pcmSha256": [
+          "4ccc668bcda9ff24275d6b5d1e29985d9107988e451b425b33e358030b58b386",
+          "53c11750d35bfa5d5d9c84452a81e330ab36042546ceee46b92af9ed18959275"
+        ]
+      }
+    },
+    {
+      "assetId": "asset-5df28ae03c827b0f",
+      "sourceSha256": "6e3c6ba6c9689ab2acc3727f3e7e3fe3598d19520c0af127742f7fe7525ee507",
+      "sourceByteLength": 145672454,
+      "mode": "CBR",
+      "bitrates": [320],
+      "frameCount": 138198
+    },
+    {
+      "assetId": "asset-611f6cbae600362e",
+      "sourceSha256": "d054867603bf3f0bc20d5327aea1579f4fb1c6661c406ff129fe221290a9f862",
+      "sourceByteLength": 63375706,
+      "mode": "VBR",
+      "bitrates": [
+        32, 40, 48, 56, 64, 80, 96, 112, 128, 160, 192, 224, 256, 320
+      ],
+      "frameCount": 90253,
+      "virtual": {
+        "sha256": "bdc90bba638e528d4825cfe5969f9752e529bc3d1eb184c97d30dc572cccc50c",
+        "headerSha256": "2a47b6f86ac4ba086cb5986f9fbcff441213bf58acabf28f1b78ccd0ae4c83fe",
+        "headerByteLength": 362714,
+        "byteLength": 63736746,
+        "audioOffset": 1546,
+        "audioByteLength": 63374032,
+        "samples": 103971456,
+        "sampleRate": 44100,
+        "pcmSha256": [
+          "deed001631ae815f76eeb35e7d5a21c02b95c136a7cd45e8a15c82bb9a41a355",
+          "4147a6bae99402c8567a0026253ea1e68364a65145eab14834b302f6d2b9692d"
+        ]
+      }
+    },
+    {
+      "assetId": "asset-64aad6f047990931",
+      "sourceSha256": "48165f5309abff0f4e9c15d92e5510ef02c1f992e5bdeb680415187ed71ac79b",
+      "sourceByteLength": 119087339,
+      "mode": "VBR",
+      "bitrates": [32, 192, 224, 256, 320],
+      "frameCount": 148540,
+      "virtual": {
+        "sha256": "751eba5b8d722fff4c3c9dff9416bce49cbd2b21b7c025976b21b8c64117a5e7",
+        "headerSha256": "8d4e6544f404fa4234ac4531f65c51fcf31ec179884a8486fc7f76489742022f",
+        "headerByteLength": 596710,
+        "byteLength": 119681456,
+        "audioOffset": 2465,
+        "audioByteLength": 119084746,
+        "samples": 171115425,
+        "sampleRate": 44100,
+        "pcmSha256": [
+          "90f8bb8d6e0d1966ccc828b145b38883745e227a8cccfa1a632699e2645ce1b6",
+          "158afe39cf1d5dd223e5547af2c3d2697a184876206ec087d3c216201a7bf02f"
+        ]
+      }
+    },
+    {
+      "assetId": "asset-65db4c3e4ea878a2",
+      "sourceSha256": "f1d7d49c82f7086938f8529262eb7f1a731729c60e5c34ed7528027f6ff7a5ae",
+      "sourceByteLength": 71285336,
+      "mode": "CBR",
+      "bitrates": [320],
+      "frameCount": 68172
+    },
+    {
+      "assetId": "asset-6b1ea0e20c5d1824",
+      "sourceSha256": "b16b89f0842339e71bf43e51fec726a6e874ed39a7af0a71d18d13c79feddd70",
+      "sourceByteLength": 85184681,
+      "mode": "VBR",
+      "bitrates": [32, 40, 48, 56, 64, 192, 224, 256, 320],
+      "frameCount": 105765,
+      "virtual": {
+        "sha256": "29c0dfcf29e0c288b4430c5335349f8747dab5433eedeb500ea41143a8ab463e",
+        "headerSha256": "43bbb7ad27816bf0ce471ce8691ae6bbf705b51087bde4308262422d0cda5264",
+        "headerByteLength": 425086,
+        "byteLength": 85570420,
+        "audioOffset": 39219,
+        "audioByteLength": 85145334,
+        "samples": 121838885,
+        "sampleRate": 44100,
+        "pcmSha256": [
+          "9bbea535f22dbbd5d808b98e62ca84f3c03cf9fafdb361ac19d5f8f18f4d850f",
+          "013f448a0904181a462ed057c43001ca2105008d55f0125569f43357db755642"
+        ]
+      }
+    },
+    {
+      "assetId": "asset-6c2d1686c644b906",
+      "sourceSha256": "9a5010bf141d6a724953bf408fc36ec06c962984c952989caa37917db2ceb833",
+      "sourceByteLength": 120512693,
+      "mode": "VBR",
+      "bitrates": [32, 192, 224, 256, 320],
+      "frameCount": 157186,
+      "virtual": {
+        "sha256": "cea6eee418a1e34d7f315c1e44c992a161a16bd614ab20342388f4cc319ec573",
+        "headerSha256": "24e0b67bd438664e96d15ea66093ac85c2d3b4719f18745081638da4d0cb306e",
+        "headerByteLength": 631318,
+        "byteLength": 121141418,
+        "audioOffset": 2465,
+        "audioByteLength": 120510100,
+        "samples": 181076364,
+        "sampleRate": 44100,
+        "pcmSha256": [
+          "147d16217618742c008bc89552ef42d68c9d5b7bf4eb1eba028158e22742eb07",
+          "698b3561d5c121c0abe73a988a66d22b8720b367904a0d178890625ad3deef0a"
+        ]
+      }
+    },
+    {
+      "assetId": "asset-72b4fd53c6f0a410",
+      "sourceSha256": "408bdff3847fb295e4e682816ed06b66f1ddfc3af72709d1b3a4b1f4341eb5fc",
+      "sourceByteLength": 121716216,
+      "mode": "VBR",
+      "bitrates": [32, 192, 224, 256, 320],
+      "frameCount": 157718,
+      "virtual": {
+        "sha256": "0372ecab7ecdd664985f1dae9f5d0d2eea12c9f639e41fecc6ab79f3a42b0679",
+        "headerSha256": "cd1789c7f281a06ce401c8af07a789e6400242418920f40a356d65c91a380b1c",
+        "headerByteLength": 633446,
+        "byteLength": 122347069,
+        "audioOffset": 2465,
+        "audioByteLength": 121713623,
+        "samples": 181688472,
+        "sampleRate": 44100,
+        "pcmSha256": [
+          "162103873f2db40ef03821303290572f5fc4165b50c2b34b13eb8966dc04195d",
+          "59554abd7256c906d97cad10cd5f70a7274910e872d0bf32330b2c2d30afb257"
+        ]
+      }
+    },
+    {
+      "assetId": "asset-766efa297d3c341c",
+      "sourceSha256": "a820e34676ec51318ec9de8b0979d15576272dd1af15b9df68ded4c7c02ead2f",
+      "sourceByteLength": 221848218,
+      "mode": "VBR",
+      "bitrates": [
+        32, 40, 48, 56, 64, 80, 96, 112, 128, 160, 192, 224, 256, 320
+      ],
+      "frameCount": 270024,
+      "virtual": {
+        "sha256": "24d744ed2150973437bc5a196d5164b2651d9fbc410806c3b8b9b610aa384585",
+        "headerSha256": "889b25ac0c71c0f7ae44d8592dd322d5e72ce3f4846d4751449ab9860d0ded51",
+        "headerByteLength": 1084234,
+        "byteLength": 222302640,
+        "audioOffset": 629684,
+        "audioByteLength": 221218406,
+        "samples": 311065685,
+        "sampleRate": 44100,
+        "pcmSha256": [
+          "46074a82868b5aed55bd885021003125157a350e06fbaadc8ee3b625c7064a2d",
+          "f58a95c758576fad3c3991c89e6c07bb544575b7c2901afa6f2d7059f6949eb5"
+        ]
+      }
+    },
+    {
+      "assetId": "asset-76e7493aa6a8caa1",
+      "sourceSha256": "5d3d34cc1af69171106e0964fb672e4066f15a1f12591c603e3b2bf08434a888",
+      "sourceByteLength": 117345591,
+      "mode": "VBR",
+      "bitrates": [80, 96, 112, 128, 160, 192, 224, 256, 320],
+      "frameCount": 142181,
+      "virtual": {
+        "sha256": "aa5c65c950963097b6ccde0181254ab2ba6f60549605bc0f26ec0a122971db87",
+        "headerSha256": "d644c252fd5f4be05b29c20e3892b5196d2702fae5ebbec4401ba8a586757351",
+        "headerByteLength": 571250,
+        "byteLength": 117876271,
+        "audioOffset": 40442,
+        "audioByteLength": 117305021,
+        "samples": 163791308,
+        "sampleRate": 44100,
+        "pcmSha256": [
+          "9f071eb8a7a1e9d371d254ac121c86463d1c378a5131b63e374654c49c61155a",
+          "8c1643ec941f91ef27922607b38c69ebb824a77a4ae04b2b9aaf4e8ff785ff2a"
+        ]
+      }
+    },
+    {
+      "assetId": "asset-7ada051307c78688",
+      "sourceSha256": "5c57c42d4405217351eca266e2d16d0fe7534c07b61fb36fa4587b5ced3ef786",
+      "sourceByteLength": 51594198,
+      "mode": "CBR",
+      "bitrates": [192],
+      "frameCount": 82207
+    },
+    {
+      "assetId": "asset-8ae53574f84681bc",
+      "sourceSha256": "8f0aa6ff58df47bdfd5f786ae6fe989e60aefc15b9ae974ec534a6c4a51dd173",
+      "sourceByteLength": 133149980,
+      "mode": "VBR",
+      "bitrates": [32, 192, 224, 256, 320],
+      "frameCount": 177151,
+      "virtual": {
+        "sha256": "3d41acf0f3c29a5f3ce4cc0a4eea353658b313223f444c5b5c827ccbdf626162",
+        "headerSha256": "72460c8532c97886d5c2a2b493f8abe0ab4bb2e16a8dff3d5c2eb48c4db21bd8",
+        "headerByteLength": 711398,
+        "byteLength": 133858785,
+        "audioOffset": 2465,
+        "audioByteLength": 133147387,
+        "samples": 204075984,
+        "sampleRate": 44100,
+        "pcmSha256": [
+          "38cd187af4924356c66bbd2fd7efebc07e1bae0b50898a051628ede7e5698064",
+          "6756b68a4bacf3c54a610b99d6c12531f3b2ee97256c03b33e91732b1cfb2bae"
+        ]
+      }
+    },
+    {
+      "assetId": "asset-9344649bc27ef8ce",
+      "sourceSha256": "6a229323a5a082d8d59e8155a0bc9929a970ffcc082ae8cfc4d6628baf14d4d5",
+      "sourceByteLength": 286927439,
+      "mode": "CBR",
+      "bitrates": [320],
+      "frameCount": 272921
+    },
+    {
+      "assetId": "asset-9c9a6aa865a8d23d",
+      "sourceSha256": "862f8c62e43fab16c80c35b575ccfb58acd0bddabd28844e14fcd16efcec126a",
+      "sourceByteLength": 103299755,
+      "mode": "VBR",
+      "bitrates": [
+        32, 40, 48, 56, 64, 80, 96, 112, 128, 160, 192, 224, 256, 320
+      ],
+      "frameCount": 139481,
+      "virtual": {
+        "sha256": "5fb7a68ddf739082efee607d43904afe0e13ad6c871e04626c138955f2c63128",
+        "headerSha256": "2e604c4fa574f0fa1eda903cc66659354ffc1ce3ecf4f2310566ebdb18fe3e50",
+        "headerByteLength": 560222,
+        "byteLength": 103687474,
+        "audioOffset": 172375,
+        "audioByteLength": 103127252,
+        "samples": 160682112,
+        "sampleRate": 44100,
+        "pcmSha256": [
+          "3bf22d5cb35f26fdc1b21e09dfbb95efc59d63d081db9acc40290a62878297e5",
+          "a1e17dfca1d23b18e2a0933568e8deb7a49dcc0760b667697d6daacb0f922594"
+        ]
+      }
+    },
+    {
+      "assetId": "asset-a73fe4f80b864589",
+      "sourceSha256": "c954c8aa722f4edeae0079ac7277f3755aea796032e67689daa4771583bca18b",
+      "sourceByteLength": 128762894,
+      "mode": "VBR",
+      "bitrates": [32, 192, 224, 256, 320],
+      "frameCount": 170888,
+      "virtual": {
+        "sha256": "4cad18111918c16b52ff8e1c3513f82540fc5e73bf73fbd3274c249fa12fd3ad",
+        "headerSha256": "5aa6b238895e26d8d4f053d8e9feb73eb2b253c35180d3998924d91e3d05e76f",
+        "headerByteLength": 686234,
+        "byteLength": 129446535,
+        "audioOffset": 2465,
+        "audioByteLength": 128760301,
+        "samples": 196860636,
+        "sampleRate": 44100,
+        "pcmSha256": [
+          "3acd1d9062ee18dfbc46ac420b5dac44a161f241ec21510fc69b40bf73fefe9b",
+          "9a296a0ac19055ef1f30eccb6a26a912cdd9c664ae7828cdd94f31f95d4d2218"
+        ]
+      }
+    },
+    {
+      "assetId": "asset-a8bdef3a4271db43",
+      "sourceSha256": "5e4f1ca774d7ec1338d3d1877cc4015aaa50ab4b57e239910e8098c4e9a01cb8",
+      "sourceByteLength": 181221040,
+      "mode": "CBR",
+      "bitrates": [320],
+      "frameCount": 172561
+    },
+    {
+      "assetId": "asset-b7f477175bd4b06f",
+      "sourceSha256": "4fee5a703e72b93213c0e5e22f928e342d2ccb3970e450d08abf9fe0a681d2c2",
+      "sourceByteLength": 102561731,
+      "mode": "VBR",
+      "bitrates": [32, 192, 224, 256, 320],
+      "frameCount": 135705,
+      "virtual": {
+        "sha256": "0b7ebfb0152bfa5b20d3df992701e4147db6bf1453a6d53eff82d4ff24395e0f",
+        "headerSha256": "09b3e6f0252d3fb4c8975ab7814aa3c1311c1f84fcd8e9734c000dd5ef1a6d50",
+        "headerByteLength": 545134,
+        "byteLength": 102919329,
+        "audioOffset": 187408,
+        "audioByteLength": 102374195,
+        "samples": 156330065,
+        "sampleRate": 44100,
+        "pcmSha256": [
+          "10946023cd05e8b8d30597728f5ddb097222766bcf5bb9ba1778e81719d663e8",
+          "0821799df797fcb6e02f515f19d7ba97c39d5c3995e59e5b357c03fade34e7ac"
+        ]
+      }
+    },
+    {
+      "assetId": "asset-c1941d585fb2d88c",
+      "sourceSha256": "8555f7453808ff403bf0123759f56bcecff7643f05fdbfb0cbb288bb664b1a3b",
+      "sourceByteLength": 178778236,
+      "mode": "CBR",
+      "bitrates": [320],
+      "frameCount": 169496
+    },
+    {
+      "assetId": "asset-c495a02dc94d23d4",
+      "sourceSha256": "41164ad16e41158afc55b106fc10eb0127a055286312305c0fb9d25273b0ded9",
+      "sourceByteLength": 101514979,
+      "mode": "VBR",
+      "bitrates": [32, 192, 224, 256, 320],
+      "frameCount": 130061,
+      "virtual": {
+        "sha256": "73ee336e8236459245a474d3eba3896603409b4adb6a2f7642184526c717221b",
+        "headerSha256": "3a5392ddfa433acd8651f7720a4af9825862c2b69955dc47333de5e7e602e6eb",
+        "headerByteLength": 522542,
+        "byteLength": 102032040,
+        "audioOffset": 5353,
+        "audioByteLength": 101509498,
+        "samples": 149828100,
+        "sampleRate": 44100,
+        "pcmSha256": [
+          "f14a3ce3d957184fc40673d3e188407f27066bd38e64976793174f2ed3749599",
+          "5c476fd57dd21373527e9da1ba9b94d78f0697e0e9587faf8c4d4a4f76644b3d"
+        ]
+      }
+    },
+    {
+      "assetId": "asset-c57974e04aade227",
+      "sourceSha256": "65dafa4b5817319c6f0c242ed649171059f613fb0b0a84deb76ee4d2e0acca34",
+      "sourceByteLength": 41697124,
+      "mode": "CBR",
+      "bitrates": [192],
+      "frameCount": 66506
+    },
+    {
+      "assetId": "asset-c828f22321a3b059",
+      "sourceSha256": "2e00dff489799ff7a70f2d0ea83deca884f17e8cc531c361a5aa67139ba6547e",
+      "sourceByteLength": 120192396,
+      "mode": "CBR",
+      "bitrates": [320],
+      "frameCount": 113453
+    },
+    {
+      "assetId": "asset-cb30481ecf597f7d",
+      "sourceSha256": "595b3a43fa94b9fb6e7bfb9e7e11e2d4e29675d55d2fe7651474ab9337978407",
+      "sourceByteLength": 82757266,
+      "mode": "VBR",
+      "bitrates": [32, 192, 224, 256, 320],
+      "frameCount": 101970,
+      "virtual": {
+        "sha256": "f590b9ef5f5952bbf0ef35c80c11f3dd8fa6d014e940d5dd493bd76b4cbd4541",
+        "headerSha256": "3cb857199fd6223a4f258255bdd73a11e313f0e2fb7bd1a655aa98355f979a16",
+        "headerByteLength": 409870,
+        "byteLength": 82649841,
+        "audioOffset": 517167,
+        "audioByteLength": 82239971,
+        "samples": 117467055,
+        "sampleRate": 44100,
+        "pcmSha256": [
+          "da89be030427e7b6ca25844f468b2488221768dbae8668236fca2655626381bc",
+          "3d79fdfee22586382fe7af17b696751bbe621392812505b11c11c3841e33edab"
+        ]
+      }
+    },
+    {
+      "assetId": "asset-cf2e97ad88f166bc",
+      "sourceSha256": "eab828a0f76e6f666f6d476540ff3d26bf73bce28ae5cc5dd2507ad1ac9a8627",
+      "sourceByteLength": 114112500,
+      "mode": "VBR",
+      "bitrates": [32, 192, 224, 256, 320],
+      "frameCount": 143678,
+      "virtual": {
+        "sha256": "b62ac6e3e8b091fc29fc93c76ed5ebf31eff404cb383f8797f110880c41cd7d9",
+        "headerSha256": "308f1434e0b0be75241bb636bc28c1073ba69e926568d974252fa1cb22aa0b87",
+        "headerByteLength": 577182,
+        "byteLength": 114462207,
+        "audioOffset": 227347,
+        "audioByteLength": 113885025,
+        "samples": 165514679,
+        "sampleRate": 44100,
+        "pcmSha256": [
+          "4a33125b60a74cbd5f0286b31fb5350c001edd27526f8481ae7c7dcc9174772b",
+          "2d0d25bca879649d058fc853f80ceb4d0904b88464bf9be93cd219100fea5d81"
+        ]
+      }
+    },
+    {
+      "assetId": "asset-cfd112ac1a267eb8",
+      "sourceSha256": "03b4cb9a682b02711095cf7543b48a31a8f08e4155a4aa68b9632921c7e5f227",
+      "sourceByteLength": 104560655,
+      "mode": "VBR",
+      "bitrates": [32, 48, 56, 64, 80, 96, 112, 128, 160, 192, 224, 256, 320],
+      "frameCount": 130018,
+      "virtual": {
+        "sha256": "2281ab3cc90fcd1378c5130e7f9f2c686d8c5ef024c928fa6ea33abac1c008c2",
+        "headerSha256": "4cb442ca14a0f45fccf35ce68ff916514c742a8f1c1215d6ceb0c2f7090c85bc",
+        "headerByteLength": 522406,
+        "byteLength": 104482178,
+        "audioOffset": 600755,
+        "audioByteLength": 103959772,
+        "samples": 149779008,
+        "sampleRate": 44100,
+        "pcmSha256": [
+          "8655dcef7ef19e42245422733bebee07469eb5f29abe1021fe9ac673f26a7789",
+          "9aaac8f1421ea3adef0167f6e5947a1e7a034e257109fb46b0126ff521201338"
+        ]
+      }
+    },
+    {
+      "assetId": "asset-e09ee0651ac26b3a",
+      "sourceSha256": "e2fd925bd0d753d90ff7f027099f900d255af82dbe38c9aaf8b4b825e44c79bc",
+      "sourceByteLength": 112826876,
+      "mode": "VBR",
+      "bitrates": [32, 48, 64, 80, 96, 112, 128, 160, 192, 224, 256, 320],
+      "frameCount": 139504,
+      "virtual": {
+        "sha256": "b2396addc74a94c14ed4bb3f1b3f8e37ee1fe42b539b999f33c1deb9b4345351",
+        "headerSha256": "1ed9c0280f8edcbf89a442e2240347668b4f9edd06af4bf872f11c4cb82e0538",
+        "headerByteLength": 560474,
+        "byteLength": 112589799,
+        "audioOffset": 797423,
+        "audioByteLength": 112029325,
+        "samples": 160706381,
+        "sampleRate": 44100,
+        "pcmSha256": [
+          "9a263914afb9ef9945b6d975b1d63751fc8cf98ccfa20c9ce16b737fd8a34dc0",
+          "87957ead53083e01d88ad55c3cebfae4bf830a83ee17d83f1b1176f80afb3238"
+        ]
+      }
+    },
+    {
+      "assetId": "asset-e3ae0e57cae4eef4",
+      "sourceSha256": "0da7ee2500d2a6c7f9f8f575f0baea3a33232d566e502bb45629584d55566487",
+      "sourceByteLength": 44030050,
+      "mode": "VBR",
+      "bitrates": [
+        32, 40, 48, 56, 64, 80, 96, 112, 128, 160, 192, 224, 256, 320
+      ],
+      "frameCount": 112086,
+      "virtual": {
+        "sha256": "c113dcb247d9d4122bd24ffa7aa73bffc7933528a96551712e8a988dcfb87116",
+        "headerSha256": "5e73be19a00ae7e5b5c598ad1efc9c94f107a2820936d34a331cc6c29275f550",
+        "headerByteLength": 449754,
+        "byteLength": 44474520,
+        "audioOffset": 5156,
+        "audioByteLength": 44024766,
+        "samples": 129123072,
+        "sampleRate": 44100,
+        "pcmSha256": [
+          "ac14351c44eb1ac67bb40c10e6ea9a245775dc88137daeaa6a7758cc7bd4dc97"
+        ]
+      }
+    },
+    {
+      "assetId": "asset-e48b7cae2a462fe7",
+      "sourceSha256": "a7c7fe3c913725ab940887c923eed0d96c1e15f4c199ea23c6b764321336953a",
+      "sourceByteLength": 48977394,
+      "mode": "VBR",
+      "bitrates": [32, 192, 224, 256, 320],
+      "frameCount": 64400,
+      "virtual": {
+        "sha256": "95e5c38efebc41be77c03c08d9ea4341c60a1333637fb7bfec85a8788fb2e2c8",
+        "headerSha256": "864faae54e7a811360d1f01f174c80f1ed952baa863caf95c0255708850f0b14",
+        "headerByteLength": 259098,
+        "byteLength": 49233899,
+        "audioOffset": 2465,
+        "audioByteLength": 48974801,
+        "samples": 74187045,
+        "sampleRate": 44100,
+        "pcmSha256": [
+          "41d1eda1af64e7cce306d8eea8fd0833d8fe294a0b0020485cf27f7b28d92237",
+          "016be5ba66a33c29f79e7ce1340a7ab32575c47e1df06a118bf92a36d4acf183"
+        ]
+      }
+    },
+    {
+      "assetId": "asset-ec66a266ab6606bd",
+      "sourceSha256": "5b5ea24abb71834679110b002112dbd12718a08728b5a8de879ea70e63c5f4ec",
+      "sourceByteLength": 136614893,
+      "mode": "VBR",
+      "bitrates": [32, 192, 224, 256, 320],
+      "frameCount": 183540,
+      "virtual": {
+        "sha256": "5f056c01505ece968168d76dbb8c7ae2eb9f0deb6574ed9a7047cdf4d3e00c9b",
+        "headerSha256": "457bc8710f1fefbd55b22da4e3d67c5773a8db012505909ce2a248d57653e16c",
+        "headerByteLength": 736994,
+        "byteLength": 137349294,
+        "audioOffset": 2465,
+        "audioByteLength": 136612300,
+        "samples": 211435392,
+        "sampleRate": 44100,
+        "pcmSha256": [
+          "56dd1ee063a5dfdfff5bcb8c37258fba0160e9ac799edbc32ee8b18b5f026053",
+          "7abdf2279a8f7d7efa7b1c5645212496aa40e239fc1bb48681c99fea0cb1f819"
+        ]
+      }
+    },
+    {
+      "assetId": "asset-ed214e146163878c",
+      "sourceSha256": "771d84bc2cc4e6c5ab8d1703c13bc5a0e4bcad9524d77da1b742bd33739b25ad",
+      "sourceByteLength": 134966954,
+      "mode": "VBR",
+      "bitrates": [32, 192, 224, 256, 320],
+      "frameCount": 181763,
+      "virtual": {
+        "sha256": "7be9c6361539a86705e0323fcbe58a519b85d95411ff829a1f9379919a73a762",
+        "headerSha256": "53c5875de833561d062f13bc67a92bdd75c64cb89d2740da5c40626b0ff5dcfd",
+        "headerByteLength": 729730,
+        "byteLength": 135694091,
+        "audioOffset": 2465,
+        "audioByteLength": 134964361,
+        "samples": 209389152,
+        "sampleRate": 44100,
+        "pcmSha256": [
+          "c06158fcd1bc2ba853e27aadb9217c659fb5fb939fa8236237282aca5752509d",
+          "fda398a3a50ebd0ba8ad78f193c317b459b8089b6f17813e8793e237ccac22bb"
+        ]
+      }
+    },
+    {
+      "assetId": "asset-f066b52dbbab369e",
+      "sourceSha256": "9dd6d7f809f7efe5e79cbdb96230ce716f036f1af6484aa2ae23d38dc88e3847",
+      "sourceByteLength": 108312711,
+      "mode": "VBR",
+      "bitrates": [
+        32, 40, 48, 56, 64, 80, 96, 112, 128, 160, 192, 224, 256, 320
+      ],
+      "frameCount": 129935,
+      "virtual": {
+        "sha256": "4890d01d68b88b31340a953a96baf945badf2f4fbd17c518a61501570cd515a3",
+        "headerSha256": "45c2430402960a3b36cf5849907fb32aae381f1ac59a5006686dd3b7cbb0f37a",
+        "headerByteLength": 522098,
+        "byteLength": 108231813,
+        "audioOffset": 602996,
+        "audioByteLength": 107709715,
+        "samples": 149683936,
+        "sampleRate": 44100,
+        "pcmSha256": [
+          "8163f3873d08294f8d52b14bde3e3d42c18c51ee5782b88c8d5c3e2de58f1f45",
+          "8d8ecd2ae7985a8801e6a682e28587c56a70b44ff120e8e809acdcfc0d53dd6f"
+        ]
+      }
+    },
+    {
+      "assetId": "asset-f47b47e3fbf09500",
+      "sourceSha256": "153ab259468fbcb429d75c76acf79f77c89475d8d4b425e4475997ba99753e22",
+      "sourceByteLength": 58630247,
+      "mode": "CBR",
+      "bitrates": [192],
+      "frameCount": 93515
+    },
+    {
+      "assetId": "asset-f72dfc422712dcb0",
+      "sourceSha256": "4cc7eb59cb6a04995eca2338ebbde55d37e397de2f4d95b3755c3b972c8ca9f4",
+      "sourceByteLength": 129448564,
+      "mode": "VBR",
+      "bitrates": [32, 192, 224, 256, 320],
+      "frameCount": 161901,
+      "virtual": {
+        "sha256": "51b15e4fb80d593a3db8890d34cbf954d670819f1d854fab88dd23ab4974ab2e",
+        "headerSha256": "063437afd69652898d97bc08ebe9e757bceb8eec5c93a2962e7ca647a7deab53",
+        "headerByteLength": 650310,
+        "byteLength": 130096281,
+        "audioOffset": 2465,
+        "audioByteLength": 129445971,
+        "samples": 186507720,
+        "sampleRate": 44100,
+        "pcmSha256": [
+          "8375615a81ab09b1914332dae2cd9bb3d755c1c20179ba770aa66162dacddccb",
+          "386066d01761b15901c9193b6f447c07c16696c488ad3189ff65882c624dc27e"
+        ]
+      }
+    },
+    {
+      "assetId": "asset-f861b34eac38c3bb",
+      "sourceSha256": "f0c70d87606a56356239e0fa3fbd03ebfcc63b0f1d362586b51b9c705851c539",
+      "sourceByteLength": 133906379,
+      "mode": "CBR",
+      "bitrates": [320],
+      "frameCount": 127250
+    }
+  ]
+}
