@@ -136,16 +136,20 @@ test('paused selections and automatic advancement need no confirmation, and the 
   page,
 }) => {
   await fixture(page, false)
+  // Let the short MP3 finish naturally. Seeking into the final 150 ms of
+  // a just-started WAV can strand WebKit's decoder before it emits ended.
+  await page.route('https://podcast.nurevolution.net/**Ruminate**', (route) =>
+    fulfillAudio(route),
+  )
   await page.locator(`.episode-list a[href="${ruminate}"]`).click()
   await expect(page).toHaveURL(new RegExp(ruminate + '$'))
   await expect(dialog(page)).toHaveCount(0)
   await ready(page)
-  await page.getByRole('button', { name: 'Play', exact: true }).click()
-  await expect(page.locator('.media-status')).toHaveText(/^Playing\b/)
   await page.locator('audio').evaluate((audio: HTMLAudioElement) => {
     audio.loop = false
-    audio.currentTime = audio.duration - 0.15
   })
+  await page.getByRole('button', { name: 'Play', exact: true }).click()
+  await expect(page.locator('.media-status')).toHaveText(/^Playing\b/)
   await expect(page).not.toHaveURL(new RegExp(ruminate + '$'))
   await expect(dialog(page)).toHaveCount(0)
   await expect(page.locator('.media-status')).toHaveText(/^Playing\b/)
