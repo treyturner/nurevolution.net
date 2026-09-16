@@ -44,47 +44,78 @@ class DeployHelper(unittest.TestCase):
                                         capture_output=True, text=True, check=False)
                 self.assertEqual(result.returncode == 0, accepted, result.stderr)
 
-    def test_workflow_attempts_use_distinct_bundles_and_keep_failed_attempt(self):
-        workflow = (REPO / '.github/workflows/deploy.yml').read_text()
-        template = re.search(r'^\s+TRANSFER_ID: (.+)$', workflow, re.MULTILINE).group(1)
+    def test_wrapper_validates_protocol_arguments_and_keeps_token_on_stdin(self):
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)
-            (root / 'incoming').mkdir()
-            (root / 'tooling').mkdir()
-            (root / 'production-enabled').touch()
-            (root / 'profile.json').write_text('{"environment":"production"}')
-            (root / 'edge-container').write_text('test-edge')
+            bootstrap = root / 'bootstrap.py'
+            bootstrap.write_text('import json, sys; print(json.dumps(sys.argv[1:])); '
+                                 'assert sys.stdin.read() == "temporary-token"')
             helper = root / 'helper'
-            # Redirect only the fixed site root into this disposable fixture.
             helper.write_text((REPO / 'deploy/nurevolution-deploy').read_text().replace(
-                '/srv/nurevolution', str(root)))
-            (root / 'tooling/deploy.mjs').write_text('''
-import * as fs from 'node:fs';
-const bundle = process.argv[process.argv.indexOf('--bundle') + 1];
-const value = JSON.parse(fs.readFileSync(bundle + '/release.json'));
-console.log(bundle);
-if (value.fail) process.exit(1);
-''')
-            attempts = []
-            for attempt in (1, 2):
-                transfer = template.replace('${{ github.run_id }}', '12345').replace(
-                    '${{ github.run_attempt }}', str(attempt))
-                incoming = root / 'incoming' / transfer
-                incoming.mkdir(mode=0o700)
-                (incoming / 'release.json').write_text(json.dumps({'fail': attempt == 1}))
-                result = subprocess.run(['bash', str(helper), 'production', transfer],
-                                        capture_output=True, text=True, check=False)
-                self.assertEqual(result.returncode, 1 if attempt == 1 else 0, result.stderr)
-                self.assertEqual(result.stdout.strip(), str(incoming))
-                attempts.append(incoming)
-            self.assertNotEqual(*attempts)
-            self.assertTrue(json.loads((attempts[0] / 'release.json').read_text())['fail'])
-            for transfer in ('12345', '12345-0', '0-1', '../12345-1', '12345-1;true', ''):
-                with self.subTest(transfer=transfer):
-                    result = subprocess.run(['bash', str(helper), 'production', transfer],
+                '/usr/local/lib/nurevolution/bootstrap.py', str(bootstrap)))
+            valid = ['production', '12345-2', '6789', 'a' * 40]
+            result = subprocess.run(['bash', str(helper), *valid], input='temporary-token',
+                                    capture_output=True, text=True, check=False)
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertEqual(json.loads(result.stdout), ['promote', *valid[1:]])
+            for index, value in [(0, 'staging'), (1, '12345'), (1, '12345-0'),
+                                 (1, '0-1'), (1, '../12345-1'), (1, '12345-1;true'),
+                                 (2, '0'), (2, '1;true'), (3, 'main'), (3, 'a' * 39)]:
+                with self.subTest(index=index, value=value):
+                    arguments = valid.copy()
+                    arguments[index] = value
+                    result = subprocess.run(['bash', str(helper), *arguments],
                                             capture_output=True, text=True, check=False)
                     self.assertNotEqual(result.returncode, 0)
                     self.assertEqual(result.stdout, '')
+            version = subprocess.run(['bash', str(helper), '--version'], input='temporary-token',
+                                     capture_output=True, text=True, check=False)
+            self.assertEqual(json.loads(version.stdout), ['version'])
+
+    def test_workflow_sends_run_commit_and_token_only_after_protocol_check(self):
+        workflow = (REPO / '.github/workflows/deploy.yml').read_text()
+        block = re.search(
+            r'      - name: Promote with independently verified release tooling\n'
+            r'.*?        run: \|\n(.*?)(?=      - )', workflow, re.DOTALL
+        ).group(1)
+        template = re.search(r'^\s+TRANSFER_ID: (.+)$', workflow, re.MULTILINE).group(1)
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            ssh = root / 'ssh'
+            ssh.write_text('''#!/usr/bin/env python3
+import json, os, pathlib, sys
+command = sys.argv[-1]
+if command == 'id -un':
+    print('nurevolution-deploy')
+elif command == 'nurevolution-deploy --version':
+    print(os.environ['TEST_PROTOCOL'])
+else:
+    pathlib.Path(os.environ['TEST_RECEIPT']).write_text(json.dumps([command, sys.stdin.read()]))
+''')
+            ssh.chmod(0o700)
+            receipt = root / 'receipt'
+            environment = {**os.environ, 'PATH': str(root) + os.pathsep + os.environ['PATH'],
+                           'DEPLOY_HOST': '100.64.0.1', 'DEPLOY_USER': 'nurevolution-deploy',
+                           'SSH_PRIVATE_KEY': 'dummy', 'SSH_KNOWN_HOSTS': 'dummy',
+                           'TARGET_ENVIRONMENT': 'production', 'HEADSCALE_PROXY_COMMAND': 'dummy',
+                           'VERIFY_RUN_ID': '6789', 'RELEASE_COMMIT': 'a' * 40,
+                           'GH_TOKEN': 'temporary-token', 'RUNNER_TEMP': str(root / 'runner'),
+                           'TEST_RECEIPT': str(receipt)}
+            for attempt, protocol in [(1, 'nurevolution-deploy 1'), (2, 'nurevolution-deploy 2')]:
+                transfer = template.replace('${{ github.run_id }}', '12345').replace(
+                    '${{ github.run_attempt }}', str(attempt))
+                result = subprocess.run(['bash', '-euo', 'pipefail', '-c', textwrap.dedent(block)],
+                                        env={**environment, 'TRANSFER_ID': transfer, 'TEST_PROTOCOL': protocol},
+                                        capture_output=True, text=True, check=False)
+                if attempt == 1:
+                    self.assertNotEqual(result.returncode, 0)
+                    self.assertIn('Install the versioned tooling bootstrap', result.stderr)
+                    self.assertFalse(receipt.exists())
+                else:
+                    self.assertEqual(result.returncode, 0, result.stderr)
+                    self.assertEqual(json.loads(receipt.read_text()),
+                                     ['nurevolution-deploy production 12345-2 6789 ' + 'a' * 40, 'temporary-token'])
+                self.assertNotIn('temporary-token', result.stdout + result.stderr)
 
 
 if __name__ == '__main__':

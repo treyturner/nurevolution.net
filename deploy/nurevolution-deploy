@@ -1,11 +1,16 @@
 #!/usr/bin/env bash
 set -euo pipefail
-[[ $# == 2 ]]
+bootstrap=/usr/local/lib/nurevolution/bootstrap.py
+if [[ ! -f "$bootstrap" ]]; then
+  echo 'Install the versioned tooling bootstrap: docs/operations/tooling-bootstrap.md' >&2
+  exit 1
+fi
+if [[ $# == 1 && "$1" == --version ]]; then
+  exec python3 "$bootstrap" version
+fi
+[[ $# == 4 ]]
 [[ "$1" == production ]]
 [[ "$2" =~ ^[1-9][0-9]*-[1-9][0-9]*$ ]]
-test -f /srv/nurevolution/production-enabled
-test "$(node -p 'JSON.parse(require("fs").readFileSync("/srv/nurevolution/profile.json")).environment')" = "$1"
-exec node /srv/nurevolution/tooling/deploy.mjs deploy \
-  --bundle "/srv/nurevolution/incoming/$2" \
-  --root /srv/nurevolution --edge-directory /srv/edge/config \
-  --edge-container "$(cat /srv/nurevolution/edge-container)"
+[[ "$3" =~ ^[1-9][0-9]*$ ]]
+[[ "$4" =~ ^[a-f0-9]{40}$ ]]
+exec python3 "$bootstrap" promote "$2" "$3" "$4"
