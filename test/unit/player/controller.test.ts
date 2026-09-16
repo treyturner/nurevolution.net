@@ -1172,3 +1172,86 @@ it('keeps an immediate continuation rejection visible before currentSrc catches 
   expect(player.snapshot().wantsPlay).toBe(false)
   player.dispose()
 })
+
+describe('virtual playback recovery', () => {
+  beforeEach(() => vi.useFakeTimers())
+  afterEach(() => {
+    vi.clearAllTimers()
+    vi.useRealTimers()
+  })
+  const virtual = {
+    ...a,
+    url: 'https://media.example/a.m4a',
+    fallbackUrl: a.url,
+  }
+  it.each([2, 3, 4])(
+    'falls back once on media error %s, retaining a paused queued seek and session choice',
+    (code) => {
+      const { media, player } = setup()
+      player.select(virtual, { position: 45, paused: true })
+      media.error = { code } as MediaError
+      media.emit('error')
+      expect(media.src).toBe(a.url)
+      expect(player.snapshot().pendingSeek).toBe(45)
+      media.ready()
+      media.emit('seeked')
+      expect(media.currentTime).toBe(45)
+      expect(media.paused).toBe(true)
+      expect(media.play).not.toHaveBeenCalled()
+      player.select(b)
+      player.select(virtual)
+      expect(media.src).toBe(a.url)
+      media.error = { code } as MediaError
+      media.emit('error')
+      expect(player.snapshot().status).toBe('error')
+      player.dispose()
+    },
+  )
+  it('retains active intent, position and volume without allowing an old error to reset the fallback', async () => {
+    const { media, player } = setup()
+    player.select(virtual)
+    media.ready()
+    player.play()
+    await Promise.resolve()
+    media.emit('playing')
+    media.currentTime = 36
+    player.setVolume(0.4)
+    player.toggleMute()
+    media.error = { code: 2 } as MediaError
+    media.emit('error')
+    expect(player.snapshot().wantsPlay).toBe(true)
+    expect(player.snapshot().pendingSeek).toBe(36)
+    expect(media.volume).toBe(0.4)
+    expect(media.muted).toBe(true)
+    media.currentSrc = virtual.url
+    media.emit('error')
+    expect(player.snapshot().status).toBe('loading')
+    media.ready()
+    media.emit('seeked')
+    await Promise.resolve()
+    media.emit('playing')
+    expect(media.currentTime).toBe(36)
+    expect(player.snapshot().status).toBe('playing')
+    player.dispose()
+  })
+  it('does not switch sources for buffering, cancelled media, or autoplay rejection', async () => {
+    const { media, player } = setup()
+    player.select(virtual)
+    media.ready()
+    media.emit('waiting')
+    expect(media.src).toBe(virtual.url)
+    media.play.mockRejectedValueOnce(
+      new DOMException('blocked', 'NotAllowedError'),
+    )
+    player.play()
+    await Promise.resolve()
+    await Promise.resolve()
+    expect(player.snapshot().status).toBe('blocked')
+    expect(media.src).toBe(virtual.url)
+    media.error = { code: 1 } as MediaError
+    media.emit('error')
+    expect(player.snapshot().status).toBe('error')
+    expect(media.src).toBe(virtual.url)
+    player.dispose()
+  })
+})

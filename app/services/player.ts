@@ -15,6 +15,7 @@ export type PlayerStatus =
 export interface PlayerSource {
   id: string
   url: string
+  fallbackUrl?: string
 }
 export interface PlayerSnapshot {
   sourceId: string | null
@@ -58,6 +59,7 @@ export function createPlayer(
   let resetPausePending = false
   let playObservedSinceLoad = false
   let playbackTime: number | null = null
+  const failedSources = new Set<string>()
   const seek = createPlayerSeek(audio, () => {
     publish()
     // A timeout can settle a seek without another browser event.
@@ -209,6 +211,18 @@ export function createPlayer(
       event === 'pause' && resetPausePending && !playObservedSinceLoad
     if (event === 'pause') resetPausePending = false
     if (snapshot.error) {
+      if (source?.fallbackUrl && [2, 3, 4].includes(snapshot.error.code)) {
+        failedSources.add(source.url)
+        const position = seek.snapshot().pendingSeek ?? snapshot.currentTime
+        const playing = wantsPlay
+        const next = { id: source.id, url: source.fallbackUrl }
+        seek.request(position, true)
+        // Preserve intent before the ordinary error path clears it. load()
+        // invalidates old promises/events and reconciles the pending seek.
+        metadataRetries = 0
+        load(next, playing)
+        return
+      }
       stopMetadataTimer()
       stopDurationTimer()
       audio.setPreload('metadata')
@@ -376,6 +390,8 @@ export function createPlayer(
   return {
     snapshot,
     select(next: PlayerSource | null, options: PlayerSelection = {}) {
+      if (next?.fallbackUrl && failedSources.has(next.url))
+        next = { id: next.id, url: next.fallbackUrl }
       if (disposed || (next?.id === source?.id && next?.url === source?.url))
         return
       if (options.paused) cancelPlay()
