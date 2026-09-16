@@ -78,8 +78,10 @@ def feed_and_audio():
 
 
 def certificate(host, address=None):
+    context = ssl.create_default_context()
+    context.minimum_version = ssl.TLSVersion.TLSv1_2
     with socket.create_connection((address or host, 443), timeout=15) as connection:
-        with ssl.create_default_context().wrap_socket(connection, server_hostname=host) as tls:
+        with context.wrap_socket(connection, server_hostname=host) as tls:
             expiry = ssl.cert_time_to_seconds(tls.getpeercert()['notAfter'])
     if expiry - time.time() < 14 * 86400:
         raise ValueError('Certificate expires within 14 days')

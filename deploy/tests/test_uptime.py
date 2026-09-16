@@ -3,7 +3,7 @@ import json
 from pathlib import Path
 import tempfile
 import unittest
-from unittest.mock import patch
+from unittest.mock import MagicMock, patch
 
 spec = importlib.util.spec_from_file_location('uptime', Path(__file__).parents[1] / 'uptime.py')
 monitor = importlib.util.module_from_spec(spec)
@@ -11,6 +11,35 @@ spec.loader.exec_module(monitor)
 
 
 class UptimeTests(unittest.TestCase):
+    def test_certificate_policy_preserves_verification_sni_and_expiry_checks(self):
+        host = 'nurevolution.net'
+        connection = MagicMock()
+        tls = MagicMock()
+        expiry = 'Jan 31 12:00:00 2030 GMT'
+        tls.__enter__.return_value.getpeercert.return_value = {'notAfter': expiry}
+
+        def wrap(context, raw_socket, *, server_hostname):
+            self.assertEqual(context.minimum_version, monitor.ssl.TLSVersion.TLSv1_2)
+            self.assertEqual(context.verify_mode, monitor.ssl.CERT_REQUIRED)
+            self.assertTrue(context.check_hostname)
+            self.assertIs(raw_socket, connection.__enter__.return_value)
+            self.assertEqual(server_hostname, host)
+            return tls
+
+        for address in [None, '192.0.2.1']:
+            with self.subTest(address=address), patch.object(
+                monitor.socket, 'create_connection', return_value=connection
+            ) as connect, patch.object(monitor.ssl.SSLContext, 'wrap_socket', new=wrap):
+                for days in [15, 13]:
+                    now = monitor.ssl.cert_time_to_seconds(expiry) - days * 86400
+                    with patch.object(monitor.time, 'time', return_value=now):
+                        if days == 15:
+                            monitor.certificate(host, address)
+                        else:
+                            with self.assertRaisesRegex(ValueError, 'expires within 14 days'):
+                                monitor.certificate(host, address)
+                connect.assert_called_with((address or host, 443), timeout=15)
+
     def test_virtual_playback_validates_identity_and_bounded_range(self):
         url = monitor.MEDIA + '/playback/' + 'a' * 64 + '/' + 'b' * 64 + '.m4a'
         detail = (200, {}, json.dumps({'audio': {'playback': {'url': url}}}).encode())
