@@ -50,8 +50,11 @@ export function renderSite(manifest: MediaManifest, profile: Profile) {
   const mediaHosts = [...new Set([media, 'podcast.nurevolution.net'])]
   const www = 'www.nurevolution.net'
   if (
-    webHosts.some((host) => mediaHosts.includes(host)) ||
-    [...webHosts, ...mediaHosts].includes(www)
+    webHosts.some((host) =>
+      mediaHosts.some((mediaHost) => mediaHost === host),
+    ) ||
+    web === www ||
+    media === www
   )
     throw new Error('Host mappings overlap')
   const routes: JsonObject[] = []
