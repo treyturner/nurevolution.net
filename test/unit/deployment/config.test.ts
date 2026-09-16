@@ -38,6 +38,50 @@ it('renders exact public routes, attachment redirects and a complete download fa
     expect(() => profileSchema.parse({ ...p, webOrigin: url })).toThrow()
 })
 
+it('compares complete parsed hostnames when rejecting overlapping routes', () => {
+  const catalog = runnableCatalog()
+  const manifest = createManifest(
+    catalog,
+    'a'.repeat(40),
+    '2026-09-09T00:00:00.000Z',
+    catalog.assets,
+  )
+  const p = profileSchema.parse(profile)
+  for (const origins of [
+    { webOrigin: 'https://www.nurevolution.net:8443' },
+    { mediaOrigin: 'https://www.nurevolution.net:8443' },
+    { mediaOrigin: 'https://nurevolution.net:8443' },
+    { webOrigin: 'https://podcast.nurevolution.net:8443' },
+    {
+      webOrigin: 'https://preview.example:8443',
+      mediaOrigin: 'https://preview.example:9443',
+    },
+  ])
+    expect(() => renderSite(manifest, { ...p, ...origins })).toThrow(
+      'Host mappings overlap',
+    )
+
+  // Operator-configured alternate hosts remain supported. Text within a
+  // different hostname must not be mistaken for the reserved www hostname.
+  for (const hostname of [
+    'www.nurevolution.net.example.org',
+    'prefix-www.nurevolution.net',
+    'nurevolution.net.example.org',
+    'podcast.nurevolution.net.example.org',
+  ])
+    for (const field of ['webOrigin', 'mediaOrigin']) {
+      const site = renderSite(manifest, {
+        ...p,
+        [field]: 'https://' + hostname,
+      })
+      expect(site.match[0]!.host).toContain(hostname)
+      expect(site.handle[0]!.routes[0]).toMatchObject({
+        match: [{ host: ['www.nurevolution.net'] }],
+        handle: [{ status_code: 301 }],
+      })
+    }
+})
+
 it('replaces only the owned route while retaining other sites and TLS configuration', () => {
   const config = structuredClone(initial) as unknown as Parameters<
     typeof replaceSite
