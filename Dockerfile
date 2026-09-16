@@ -1,4 +1,4 @@
-FROM node:22.23.2-bookworm-slim@sha256:83f487e0a63425e5b4d146fb5e5be574bcbe1b7b843d3ebafdd95eaf7767a7e5
+FROM node:24.21.0-bookworm-slim@sha256:2fe369e969550cde8e867afc3fe370b260140cab4a23d467074295b42163d553
 ARG RELEASE_COMMIT
 RUN node -e 'if (!/^[a-f0-9]{40}$/.test(process.argv[1])) process.exit(1)' "$RELEASE_COMMIT"
 LABEL org.opencontainers.image.source="https://github.com/treyturner/nurevolution.net" \
