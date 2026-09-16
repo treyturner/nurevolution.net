@@ -9,15 +9,9 @@ const exec = promisify(execFile)
 const root = '.local/playback/references/'
 const cases = JSON.parse(fs.readFileSync(root + 'cases.json'))
 const mediaOrigin = process.argv[2] || 'http://localhost:3000'
-const server = http.createServer((req, res) => {
-  const name = decodeURIComponent(req.url.slice(1))
-  if (cases.some((c) => c.reference === name)) {
-    res.setHeader('Content-Type', 'audio/wav')
-    fs.createReadStream(root + name).pipe(res)
-  } else {
-    res.setHeader('Content-Type', 'text/html')
-    res.end('<title>Local audible seek verification</title>')
-  }
+const server = http.createServer((_req, res) => {
+  res.setHeader('Content-Type', 'text/html')
+  res.end('<title>Local audible seek verification</title>')
 })
 await new Promise((r) => server.listen(0, '127.0.0.1', r))
 const browser = await chromium.launch({
