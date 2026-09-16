@@ -1,4 +1,5 @@
 import { defineConfig, devices } from '@playwright/test'
+import { resolve } from 'node:path'
 
 const appPort = process.env.NUREVOLUTION_TEST_PORT ?? '3100'
 const mediaPort = process.env.NUREVOLUTION_MEDIA_TEST_PORT ?? '3101'
@@ -49,7 +50,11 @@ export default defineConfig({
     {
       command: 'node test/fixtures/media-app/.output/server/index.mjs',
       url: `${mediaBaseURL}/media-test`,
-      env: { HOST: '127.0.0.1', PORT: mediaPort },
+      env: {
+        HOST: '127.0.0.1',
+        PORT: mediaPort,
+        NUXT_AUDIO_ROOT: resolve('test/fixtures/playback'),
+      },
       reuseExistingServer: false,
       gracefulShutdown: { signal: 'SIGTERM', timeout: 5_000 },
     },

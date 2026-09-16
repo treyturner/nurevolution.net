@@ -8,6 +8,7 @@ import {
   episodeSummary,
   selectPublic,
   showPublic,
+  type EpisodeDetail,
 } from '../../shared/content/public.ts'
 import {
   parseContentFile,
@@ -85,6 +86,15 @@ export function createContentRepository(
     return cached
   }
   return {
+    async audioAssets(asOf: number) {
+      const catalog = await load()
+      const ids = new Set(
+        selectPublic(catalog, asOf).map((episode) => episode.audioAssetId),
+      )
+      return catalog.assets.filter(
+        (asset) => asset.kind === 'audio' && ids.has(asset.id),
+      )
+    },
     async show() {
       return showPublic(await load())
     },
@@ -92,7 +102,7 @@ export function createContentRepository(
       const catalog = await load()
       return selectPublic(catalog, asOf).map((e) => episodeSummary(catalog, e))
     },
-    async find(slug: string, asOf: number) {
+    async find(slug: string, asOf: number): Promise<EpisodeDetail | undefined> {
       const catalog = await load()
       const episode = selectPublic(catalog, asOf).find((e) => e.slug === slug)
       return episode ? episodeDetail(catalog, episode) : undefined

@@ -1,0 +1,157 @@
+{
+  "auditedOn": "2026-09-16",
+  "classification": {
+    "episodes": 55,
+    "VBR": 37,
+    "CBR": 18,
+    "compressedHeaderBytes": 1859368,
+    "allVbrCompressedPayloadsAndPresentedPcmVerified": true
+  },
+  "capacity": {
+    "listeners": 16,
+    "seconds": 120,
+    "memoryLimitMiB": 256,
+    "peakRssMiB": 139.36328125,
+    "requests": 64,
+    "pageChecks": 333,
+    "virtualEpisodes": 37,
+    "oomKilled": false
+  },
+  "audible": {
+    "browser": "153.0.8010.12",
+    "results": [
+      {
+        "episode": "Praxis",
+        "requested": 208.794059,
+        "duration": 3396.349388,
+        "firstMediaTime": 208.79190608163265,
+        "firstContextTime": 0.1509297052154195,
+        "referenceStart": 188.7940589569161,
+        "sourceTime": 208.7940589569161,
+        "sourceAheadSeconds": 0.0021528752834569787,
+        "correlation": 0.9999999999994479
+      },
+      {
+        "episode": "Praxis",
+        "requested": 180,
+        "duration": 3396.349388,
+        "firstMediaTime": 179.99786608163265,
+        "firstContextTime": 0.10158730158730159,
+        "referenceStart": 160,
+        "sourceTime": 180,
+        "sourceAheadSeconds": 0.002133918367348997,
+        "correlation": 0.9999999999993232
+      },
+      {
+        "episode": "Praxis",
+        "requested": 240,
+        "duration": 3396.349388,
+        "firstMediaTime": 239.99774708163267,
+        "firstContextTime": 0.10158730158730159,
+        "referenceStart": 220,
+        "sourceTime": 240,
+        "sourceAheadSeconds": 0.002252918367332768,
+        "correlation": 0.9999999999995837
+      },
+      {
+        "episode": "Praxis",
+        "requested": 2000,
+        "duration": 3396.349388,
+        "firstMediaTime": 1999.9978110816328,
+        "firstContextTime": 0.10158730158730159,
+        "referenceStart": 1980,
+        "sourceTime": 2000,
+        "sourceAheadSeconds": 0.0021889183672101353,
+        "correlation": 0.999999999999452
+      },
+      {
+        "episode": "Radio_Silenced",
+        "requested": 360,
+        "duration": 7053.643651,
+        "firstMediaTime": 359.9978580816326,
+        "firstContextTime": 0.1306122448979592,
+        "referenceStart": 340,
+        "sourceTime": 360,
+        "sourceAheadSeconds": 0.0021419183673856423,
+        "correlation": 0.9999999999994911
+      },
+      {
+        "episode": "Radio_Silenced",
+        "requested": 240,
+        "duration": 7053.643651,
+        "firstMediaTime": 239.99796208163266,
+        "firstContextTime": 0.1219047619047619,
+        "referenceStart": 220,
+        "sourceTime": 240,
+        "sourceAheadSeconds": 0.0020379183673355783,
+        "correlation": 0.9999999999994876
+      },
+      {
+        "episode": "Radio_Silenced",
+        "requested": 450,
+        "duration": 7053.643651,
+        "firstMediaTime": 449.9977190816326,
+        "firstContextTime": 0.1219047619047619,
+        "referenceStart": 430,
+        "sourceTime": 450,
+        "sourceAheadSeconds": 0.0022809183673757616,
+        "correlation": 0.9999999999993259
+      },
+      {
+        "episode": "Radio_Silenced",
+        "requested": 6000,
+        "duration": 7053.643651,
+        "firstMediaTime": 5999.997774081633,
+        "firstContextTime": 0.1306122448979592,
+        "referenceStart": 5980,
+        "sourceTime": 6000,
+        "sourceAheadSeconds": 0.0022259183670030325,
+        "correlation": 0.9999999881404337
+      },
+      {
+        "episode": "2005_11_12-Cody",
+        "requested": 340,
+        "duration": 2357.629388,
+        "firstMediaTime": 339.99829508163265,
+        "firstContextTime": 0.1219047619047619,
+        "referenceStart": 320,
+        "sourceTime": 340,
+        "sourceAheadSeconds": 0.001704918367352093,
+        "correlation": 0.9999999999994291
+      },
+      {
+        "episode": "2005_11_12-Cody",
+        "requested": 900,
+        "duration": 2357.629388,
+        "firstMediaTime": 900.0065935873016,
+        "firstContextTime": 0.11900226757369614,
+        "referenceStart": 880,
+        "sourceTime": 900.0087074829931,
+        "sourceAheadSeconds": 0.002113895691536527,
+        "correlation": 0.9999999999995607
+      },
+      {
+        "episode": "Bizarre_NYE",
+        "requested": 210,
+        "duration": 8419.412472,
+        "firstMediaTime": 209.99783308163265,
+        "firstContextTime": 0.1509297052154195,
+        "referenceStart": 190,
+        "sourceTime": 210,
+        "sourceAheadSeconds": 0.002166918367350945,
+        "correlation": 0.9999999999993454
+      },
+      {
+        "episode": "Bizarre_NYE",
+        "requested": 360,
+        "duration": 8419.412472,
+        "firstMediaTime": 359.99784708163264,
+        "firstContextTime": 0.1306122448979592,
+        "referenceStart": 340,
+        "sourceTime": 360,
+        "sourceAheadSeconds": 0.00215291836735787,
+        "correlation": 0.9999999999994806
+      }
+    ]
+  }
+}

@@ -10,6 +10,7 @@ import { serialize } from '../../tools/deploy/manifest.ts'
 import { renderSite, profileSchema } from '../../tools/deploy/render-config.ts'
 import { deliveryFixture } from './fixture.ts'
 import { archiveConfigDigest } from '../../tools/deploy/image-identity.ts'
+import { verifyVirtualProxy } from './virtual.ts'
 
 const root = resolve('.local/delivery'),
   artifacts = resolve(root, 'artifacts')
@@ -256,6 +257,9 @@ try {
     resolve(fixtureSources, 'private.json'),
     resolve(fixtureDirectory, 'private.json'),
   )
+  await fs.cp('test/fixtures/playback', resolve(fixtureDirectory, 'playback'), {
+    recursive: true,
+  })
   const context = resolve(local, 'fixture-context')
   await fs.mkdir(context, { recursive: true })
   await fs.cp('test/fixtures/media-app/.output', resolve(context, '.output'), {
@@ -273,6 +277,15 @@ try {
     context,
   ])
   const fixtureApp = await create(prefix + '-fixture', [
+    '--read-only',
+    '--memory',
+    '256m',
+    '--memory-swap',
+    '256m',
+    '-v',
+    volume + ':/media:ro',
+    '-e',
+    'NUXT_AUDIO_ROOT=/media/playback',
     '--network',
     network,
     '--network-alias',
@@ -463,6 +476,7 @@ try {
     30,
   )
   const mp3Url = mediaOrigin + '/' + encodeURI(fixture.names[1]!)
+  await verifyVirtualProxy(mediaOrigin)
   const head = await get(mp3Url, { method: 'HEAD' })
   assert.equal(head.status, 200)
   assert.equal(head.headers.get('content-length'), String(fixture.mp3.length))

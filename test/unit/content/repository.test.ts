@@ -91,6 +91,7 @@ describe('content document loading and public repository', () => {
 
 it('binds Nitro assets and thin handlers to the real repository, including uniform 404s', async () => {
   vi.resetModules()
+  vi.stubGlobal('useRuntimeConfig', () => ({ virtualPlayback: false }))
   vi.stubGlobal('useStorage', (name: string) => {
     expect(name).toBe('assets:content')
     return {

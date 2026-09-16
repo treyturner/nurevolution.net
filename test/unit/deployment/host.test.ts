@@ -18,6 +18,7 @@ import {
 } from './fixtures.ts'
 import profile from '../../../deploy/profile.example.json'
 import edge from '../../../deploy/caddy/initial.example.json'
+import * as playbackAudit from '../../../tools/deploy/check-playback'
 
 vi.mock('../../../tools/deploy/stage-assets.ts', () => ({
   checkAssets: vi.fn(async () => ({ files: 156 })),
@@ -217,6 +218,37 @@ it('validates/pulls the exact image and deploys only the owned app and site rout
       'utf8',
     ),
   ).toContain(f.record.release.imageDigest)
+})
+
+it('restores the disabled profile if virtual playback acceptance fails, then enables a verified retry', async () => {
+  const f = await fixture()
+  await deployOnHost(f.bundle, f.paths, f.run, f.request)
+  const probe = vi
+    .spyOn(playbackAudit, 'checkVirtualPlayback')
+    .mockRejectedValueOnce(Error('Virtual playback range mismatch'))
+  await fs.writeFile(
+    resolve(f.root, 'profile.json'),
+    serialize({ ...profile, virtualPlayback: true }),
+  )
+  await expect(
+    deployOnHost(f.bundle, f.paths, f.run, f.request),
+  ).rejects.toThrow('Deployment failed; restored')
+  const current = JSON.parse(
+    await fs.readFile(resolve(f.root, 'state/production/current.json'), 'utf8'),
+  )
+  expect(current.profile.virtualPlayback).toBeUndefined()
+  probe.mockResolvedValue(undefined)
+  await deployOnHost(f.bundle, f.paths, f.run, f.request)
+  expect(probe).toHaveBeenCalledTimes(2)
+  const activations = f.run.mock.calls.filter(
+    ([, args]) => args[0] === 'compose' && args.includes('up'),
+  )
+  expect(
+    activations.map(([, , environment]) => environment!.VIRTUAL_PLAYBACK),
+  ).toEqual(['false', 'true', 'false', 'true'])
+  expect(activations.at(-1)![2]!.MEDIA_AUDIO_ROOT).toBe(
+    resolve(f.root, 'media/audio'),
+  )
 })
 
 it('accepts registry-pulled containerd images whose display IDs are manifest digests', async () => {

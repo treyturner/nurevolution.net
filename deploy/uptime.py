@@ -85,11 +85,30 @@ def certificate(host, address=None):
         raise ValueError('Certificate expires within 14 days')
 
 
+def virtual_playback():
+    status, _, body = fetch(WEB + '/api/episodes/trey-turner-praxis', 262144)
+    if status != 200:
+        raise ValueError('Episode response invalid')
+    playback = json.loads(body)['audio'].get('playback')
+    if playback is None:
+        return  # The deployment switch can deliberately disable virtual playback.
+    url = playback.get('url', '')
+    if not re.fullmatch(re.escape(MEDIA) + r'/playback/[a-f0-9]{64}/[a-f0-9]{64}\.m4a', url):
+        raise ValueError('Unexpected playback URL')
+    status, headers, body = fetch(url, 8, {'Range': 'bytes=0-7'})
+    if (status != 206 or len(body) != 8 or body[4:] != b'ftyp'
+            or headers.get('Content-Type', '').split(';')[0] != 'audio/mp4'
+            or not re.fullmatch(r'bytes 0-7/[1-9][0-9]+', headers.get('Content-Range', ''))
+            or headers.get('ETag') != '"' + url.rsplit('/', 1)[1][:-4] + '"'):
+        raise ValueError('Virtual playback range response invalid')
+
+
 def probe():
     checks = {
         'website': page,
         'application': health,
         'feed/audio': feed_and_audio,
+        'virtual playback': virtual_playback,
         'website origin certificate': lambda: certificate('nurevolution.net', '159.89.86.21'),
         'audio certificate': lambda: certificate('podcast.nurevolution.net'),
         'Headscale certificate': lambda: certificate('headscale.treyturner.info'),

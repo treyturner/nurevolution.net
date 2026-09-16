@@ -8,6 +8,8 @@ export default defineNuxtConfig({
     server: { allowedHosts: ['.coder.treyturner.info'] },
   },
   runtimeConfig: {
+    virtualPlayback: false,
+    audioRoot: '',
     public: { webOrigin: '', mediaOrigin: '' },
   },
   modules: ['@nuxt/eslint'],
@@ -31,6 +33,10 @@ export default defineNuxtConfig({
   nitro: {
     preset: 'node-server',
     serverAssets: [
+      {
+        baseName: 'playback',
+        dir: fileURLToPath(new URL('./playback', import.meta.url)),
+      },
       {
         baseName: 'content',
         dir: fileURLToPath(new URL('./content', import.meta.url)),

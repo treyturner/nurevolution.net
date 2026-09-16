@@ -11,6 +11,27 @@ spec.loader.exec_module(monitor)
 
 
 class UptimeTests(unittest.TestCase):
+    def test_virtual_playback_validates_identity_and_bounded_range(self):
+        url = monitor.MEDIA + '/playback/' + 'a' * 64 + '/' + 'b' * 64 + '.m4a'
+        detail = (200, {}, json.dumps({'audio': {'playback': {'url': url}}}).encode())
+        valid = (206, {'Content-Type': 'audio/mp4', 'Content-Range': 'bytes 0-7/1000',
+                       'ETag': '"' + 'b' * 64 + '"'}, b'\x00\x00\x00\x20ftyp')
+        with patch.object(monitor, 'fetch', side_effect=[detail, valid]) as fetch:
+            monitor.virtual_playback()
+            self.assertEqual(fetch.call_args.args, (url, 8, {'Range': 'bytes=0-7'}))
+        for response in [(200, {}, valid[2]), (206, {}, valid[2]), (206, valid[1], b'bad')]:
+            with patch.object(monitor, 'fetch', side_effect=[detail, response]):
+                with self.assertRaises(ValueError):
+                    monitor.virtual_playback()
+        for body in [{'audio': {}}, {'audio': {'playback': {'url': 'https://evil.test/a'}}}]:
+            with patch.object(monitor, 'fetch', return_value=(200, {}, json.dumps(body).encode())) as fetch:
+                if body['audio']:
+                    with self.assertRaises(ValueError):
+                        monitor.virtual_playback()
+                else:
+                    monitor.virtual_playback()
+                self.assertEqual(fetch.call_count, 1)
+
     def test_incident_and_recovery_once(self):
         with tempfile.TemporaryDirectory() as directory, patch.object(monitor, 'notify') as notify:
             path = Path(directory) / 'state.json'
@@ -47,11 +68,11 @@ class UptimeTests(unittest.TestCase):
             monitor.feed_and_audio()
 
     def test_second_attempt_recovers_transient_failure(self):
-        with patch.object(monitor, 'page', side_effect=[ValueError('secret'), None]), patch.object(monitor, 'health'), patch.object(monitor, 'feed_and_audio'), patch.object(monitor, 'certificate'), patch.object(monitor.time, 'sleep'):
+        with patch.object(monitor, 'page', side_effect=[ValueError('secret'), None]), patch.object(monitor, 'health'), patch.object(monitor, 'feed_and_audio'), patch.object(monitor, 'certificate'), patch.object(monitor, 'virtual_playback'), patch.object(monitor.time, 'sleep'):
             self.assertEqual(monitor.probe(), [])
 
     def test_failures_contain_only_fixed_labels(self):
-        with patch.object(monitor, 'page', side_effect=ValueError('secret')), patch.object(monitor, 'health'), patch.object(monitor, 'feed_and_audio'), patch.object(monitor, 'certificate'), patch.object(monitor.time, 'sleep'):
+        with patch.object(monitor, 'page', side_effect=ValueError('secret')), patch.object(monitor, 'health'), patch.object(monitor, 'feed_and_audio'), patch.object(monitor, 'certificate'), patch.object(monitor, 'virtual_playback'), patch.object(monitor.time, 'sleep'):
             self.assertEqual(monitor.probe(), ['website'])
 
     def test_no_redirects(self):
