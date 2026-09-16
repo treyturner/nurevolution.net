@@ -23,7 +23,7 @@ updates:
         patterns: ['*']
         update-types: [minor, patch]
     ignore:
-      # Keep Node type definitions aligned with the declared Node 22 runtime.
+      # Keep Node type definitions aligned with the declared Node 24 runtime.
       - dependency-name: '@types/node'
         update-types: ['version-update:semver-major']
 

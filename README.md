@@ -6,7 +6,7 @@ See the [roadmap](ROADMAP.md), [M0 audit plan and evidence](docs/milestones/M00-
 
 ## Setup
 
-Use Node.js **22.23.2** from `.node-version`, pnpm **12.3.4** from `package.json`, and Python **3.14.4** from `.python-version`. Python runs the existing M0 audit unit tests using only its standard library; no pip dependencies are needed. With Node selected through your runtime manager:
+Use Node.js **24.21.0** from `.node-version`, pnpm **12.3.4** from `package.json`, and Python **3.14.4** from `.python-version`. Python runs the existing M0 audit unit tests using only its standard library; no pip dependencies are needed. With Node selected through your runtime manager:
 
 ```sh
 corepack enable

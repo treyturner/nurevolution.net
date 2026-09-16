@@ -204,6 +204,12 @@ try {
     appImage,
   ])
   await start(app)
+  const nodeVersion = (await fs.readFile('.node-version', 'utf8')).trim()
+  assert.equal(
+    await docker(['exec', app, 'node', '--version']),
+    'v' + nodeVersion,
+    'The application image must use the declared Node runtime',
+  )
   const appOrigin = 'http://' + address + ':' + (await port(app, '3000/tcp'))
   await waitReady(
     async () =>
