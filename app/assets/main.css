@@ -462,9 +462,11 @@ audio.custom-audio {
 }
 .media-status {
   flex: 1;
+  min-width: 0;
   margin: 0;
   font-size: 0.75rem;
   color: var(--muted);
+  overflow-wrap: anywhere;
 }
 .download-link {
   display: inline-flex;

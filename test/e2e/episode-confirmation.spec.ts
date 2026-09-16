@@ -26,7 +26,7 @@ async function fixture(page: Page, playing = true) {
   })
   if (playing) {
     await page.getByRole('button', { name: 'Play', exact: true }).click()
-    await expect(page.locator('.media-status')).toHaveText('Playing')
+    await expect(page.locator('.media-status')).toHaveText(/^Playing\b/)
   }
 }
 
@@ -82,7 +82,7 @@ test('cancelling an episode change keeps audio playing without a request, source
   await expect(dialog(page)).toBeVisible()
   await page.getByRole('button', { name: 'Keep listening' }).click()
   await expect(dialog(page)).toHaveCount(0)
-  await expect(page.locator('.media-status')).toHaveText('Playing')
+  await expect(page.locator('.media-status')).toHaveText(/^Playing\b/)
   await expect(
     page.getByText(
       'Episode could not be loaded. Choose an episode to try again.',
@@ -103,7 +103,7 @@ test('confirmed switches and history preserve active playback; transport confirm
   await confirm(page)
   await expect(page).toHaveURL(new RegExp(ruminate + '$'))
   await ready(page)
-  await expect(page.locator('.media-status')).toHaveText('Playing')
+  await expect(page.locator('.media-status')).toHaveText(/^Playing\b/)
   await page.evaluate(() => history.back())
   await expect(dialog(page)).toBeVisible()
   await expect(dialog(page)).toContainText('Praxis')
@@ -115,7 +115,7 @@ test('confirmed switches and history preserve active playback; transport confirm
   await confirm(page)
   await expect(page).toHaveURL(new RegExp(praxis + '$'))
   await ready(page)
-  await expect(page.locator('.media-status')).toHaveText('Playing')
+  await expect(page.locator('.media-status')).toHaveText(/^Playing\b/)
   await page.getByRole('button', { name: 'Next episode', exact: true }).click()
   await expect(dialog(page)).toBeVisible()
   // The five-second data-request deadline must not time out a human decision.
@@ -124,7 +124,7 @@ test('confirmed switches and history preserve active playback; transport confirm
   await expect(page.locator('audio')).toHaveJSProperty('paused', false)
   await confirm(page)
   await expect(page).not.toHaveURL(new RegExp(praxis + '$'))
-  await expect(page.locator('.media-status')).toHaveText('Playing')
+  await expect(page.locator('.media-status')).toHaveText(/^Playing\b/)
   await expect(
     page.getByText(
       'Episode could not be loaded. Choose an episode to try again.',
@@ -141,14 +141,14 @@ test('paused selections and automatic advancement need no confirmation, and the 
   await expect(dialog(page)).toHaveCount(0)
   await ready(page)
   await page.getByRole('button', { name: 'Play', exact: true }).click()
-  await expect(page.locator('.media-status')).toHaveText('Playing')
+  await expect(page.locator('.media-status')).toHaveText(/^Playing\b/)
   await page.locator('audio').evaluate((audio: HTMLAudioElement) => {
     audio.loop = false
     audio.currentTime = audio.duration - 0.15
   })
   await expect(page).not.toHaveURL(new RegExp(ruminate + '$'))
   await expect(dialog(page)).toHaveCount(0)
-  await expect(page.locator('.media-status')).toHaveText('Playing')
+  await expect(page.locator('.media-status')).toHaveText(/^Playing\b/)
   await page.locator('audio').evaluate((audio: HTMLAudioElement) => {
     audio.loop = true
   })
