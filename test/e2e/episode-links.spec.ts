@@ -41,7 +41,7 @@ test('description links open a separate tab while the original episode keeps pla
     a.muted = true
   })
   await page.getByRole('button', { name: 'Play', exact: true }).click()
-  await expect(page.locator('.media-status')).toHaveText('Playing')
+  await expect(page.locator('.media-status')).toHaveText(/^Playing\b/)
   const before = await audio.evaluate((a: HTMLAudioElement) => a.currentTime)
   const playlist = page
     .locator('.description')
@@ -126,7 +126,7 @@ test('the compact RSS button copies the feed URL without interrupting playback',
     a.muted = true
   })
   await page.getByRole('button', { name: 'Play', exact: true }).click()
-  await expect(page.locator('.media-status')).toHaveText('Playing')
+  await expect(page.locator('.media-status')).toHaveText(/^Playing\b/)
   const before = await audio.evaluate((a: HTMLAudioElement) => a.currentTime)
   const button = page.getByRole('link', {
     name: 'Subscribe via RSS (copy RSS URL)',
@@ -179,7 +179,7 @@ for (const clipboard of ['unavailable', 'denied'] as const) {
       a.muted = true
     })
     await page.getByRole('button', { name: 'Play', exact: true }).click()
-    await expect(page.locator('.media-status')).toHaveText('Playing')
+    await expect(page.locator('.media-status')).toHaveText(/^Playing\b/)
     await page.evaluate((clipboard) => {
       Object.defineProperty(navigator, 'clipboard', {
         configurable: true,

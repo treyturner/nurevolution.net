@@ -107,7 +107,7 @@ test('keeps loading until metadata arrives, with playback still paused', async (
       a.loop = true
       void a.play()
     })
-    await expect(page.locator('.media-status')).toHaveText('Playing')
+    await expect(page.locator('.media-status')).toHaveText(/^Playing\b/)
     await audio.evaluate((a: HTMLAudioElement) => a.pause())
     await expect(page.locator('.media-status')).toHaveText(
       'Press Play to listen.',
@@ -290,7 +290,7 @@ for (const recovery of ['late metadata', 'Play', 'Play then pause']) {
       release()
       await ready(page)
       await expect(page.locator('.media-status')).toHaveText(
-        startPlayback ? 'Playing' : 'Press Play to listen.',
+        startPlayback ? /^Playing\b/ : 'Press Play to listen.',
       )
       await expect(
         page.getByRole('button', { name: 'Retry audio' }),
@@ -357,7 +357,7 @@ test('keeps one native element through paused/active selection and Back/Forward'
     a.loop = true
     await a.play()
   })
-  await expect(page.locator('.media-status')).toHaveText('Playing')
+  await expect(page.locator('.media-status')).toHaveText(/^Playing\b/)
   await page.locator('a[href="/episodes/trey-turner-ruminate"]').click()
   await page
     .getByRole('button', { name: 'Change episode', exact: true })
@@ -453,7 +453,7 @@ test('production player decodes the local MP3, plays to its natural end, and dis
     a.muted = true
   })
   await page.getByRole('button', { name: 'Play fixture' }).click()
-  await expect(page.locator('.media-status')).toHaveText('Playing')
+  await expect(page.locator('.media-status')).toHaveText(/^Playing\b/)
   await expect(page.locator('.media-status')).toHaveText('Episode finished.')
   expect(
     await page.locator('audio').evaluate((a: HTMLAudioElement) => a.ended),

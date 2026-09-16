@@ -22,6 +22,57 @@ afterEach(() => {
 })
 
 describe('archive presentation and native media integration', () => {
+  it('shows the confirmed playing track, follows progress, and falls back when track timing is unavailable', async () => {
+    const episode = {
+      ...detail('wp-417'),
+      tracks: [0, 8.25, 32].map((startTime, index) => ({
+        position: index + 1,
+        artist: `Artist ${index + 1}`,
+        title: `Song ${index + 1}`,
+        startTime,
+      })),
+    }
+    const wrapper = await mountSuspended(ArchivePlayer, {
+      props: { episode },
+    })
+    try {
+      const audio = wrapper.get('audio')
+      Object.defineProperties(audio.element, {
+        currentTime: { configurable: true, writable: true, value: 0 },
+        duration: { configurable: true, value: 40 },
+        readyState: { configurable: true, value: 4 },
+        paused: { configurable: true, writable: true, value: true },
+        seeking: { configurable: true, value: false },
+      })
+      await audio.trigger('loadedmetadata')
+      const status = wrapper.get('.media-status')
+      expect(status.text()).toBe('Press Play to listen.')
+      Object.assign(audio.element, { paused: false })
+      await audio.trigger('play')
+      await audio.trigger('playing')
+      expect(status.text()).toBe('Playing 1/3: Artist 1 - Song 1')
+      Object.assign(audio.element, { currentTime: 8.25 })
+      await audio.trigger('timeupdate')
+      expect(status.text()).toBe('Playing 2/3: Artist 2 - Song 2')
+      Object.assign(audio.element, { paused: true })
+      await audio.trigger('pause')
+      expect(status.text()).toBe('Press Play to listen.')
+      Object.assign(audio.element, { currentTime: 32, paused: false })
+      await audio.trigger('play')
+      await audio.trigger('playing')
+      expect(status.text()).toBe('Playing 3/3: Artist 3 - Song 3')
+      for (const tracks of [
+        [],
+        episode.tracks.map((track) => ({ ...track, startTime: null })),
+        [episode.tracks[0]!, { ...episode.tracks[1]!, startTime: null }],
+      ]) {
+        await wrapper.setProps({ episode: { ...episode, tracks } })
+        expect(status.text()).toBe('Playing')
+      }
+    } finally {
+      wrapper.unmount()
+    }
+  })
   it('renders every canonical track in order, including all empty lists, without track controls', async () => {
     let count = 0
     const wrapper = await mountSuspended(EpisodeTracklist, {

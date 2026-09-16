@@ -37,7 +37,7 @@ async function fixture(page: Page, single = false) {
 }
 async function play(page: Page) {
   await page.getByRole('button', { name: 'Play', exact: true }).click()
-  await expect(page.locator('.media-status')).toHaveText('Playing')
+  await expect(page.locator('.media-status')).toHaveText(/^Playing\b/)
 }
 async function pause(page: Page) {
   await page.getByRole('button', { name: 'Pause', exact: true }).click()
@@ -180,7 +180,7 @@ test('actual natural completion advances in both directions and replaces history
   const history = await page.evaluate(() => window.history.length)
   await play(page)
   await expect(page).toHaveURL(new RegExp(episodes[2]!.path + '$'))
-  await expect(page.locator('.media-status')).toHaveText('Playing')
+  await expect(page.locator('.media-status')).toHaveText(/^Playing\b/)
   await pause(page)
   expect(await page.evaluate(() => window.history.length)).toBe(history)
   await page
@@ -188,7 +188,7 @@ test('actual natural completion advances in both directions and replaces history
     .click()
   await play(page)
   await expect(page).toHaveURL(new RegExp(episodes[1]!.path + '$'))
-  await expect(page.locator('.media-status')).toHaveText('Playing')
+  await expect(page.locator('.media-status')).toHaveText(/^Playing\b/)
   await pause(page)
   expect(await page.evaluate(() => window.history.length)).toBe(history)
   await expect(page.locator('audio')).toHaveCount(1)
@@ -312,7 +312,7 @@ test('one episode restarts without source loads or route changes, manually and a
   await expect
     .poll(() => page.locator('html').getAttribute('data-play-calls'))
     .toBe('2')
-  await expect(page.locator('.media-status')).toHaveText('Playing')
+  await expect(page.locator('.media-status')).toHaveText(/^Playing\b/)
   await pause(page)
   await expect(page).toHaveURL(new RegExp(episodes[0]!.path + '$'))
   expect(await page.locator('html').getAttribute('data-loads')).toBe(loads)

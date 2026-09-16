@@ -62,7 +62,9 @@ test('the current track plays and pauses in place with mouse and keyboard', asyn
     })
   })
   await current.click()
-  await expect(page.locator('.media-status')).toHaveText('Playing')
+  await expect(page.locator('.media-status')).toHaveText(
+    'Playing 2/3: Test tone - Track 2',
+  )
   await expect(current).toHaveAccessibleName(/^Pause track 2:/)
   await expect(current.locator('.track-current')).toHaveCSS(
     'transition-duration',
@@ -75,7 +77,9 @@ test('the current track plays and pauses in place with mouse and keyboard', asyn
   expect(pausedAt).toBeLessThan(32)
   await current.focus()
   await current.press('Enter')
-  await expect(page.locator('.media-status')).toHaveText('Playing')
+  await expect(page.locator('.media-status')).toHaveText(
+    'Playing 2/3: Test tone - Track 2',
+  )
   await current.press('Space')
   await expect(audio).toHaveJSProperty('paused', true)
   expect(
@@ -103,7 +107,9 @@ test('the final track offers a seek at the episode end instead of replaying the 
   await expect(audio).toHaveJSProperty('paused', true)
   await expect(final).toHaveAccessibleName(/^Play track 3:/)
   await final.click()
-  await expect(page.locator('.media-status')).toHaveText('Playing')
+  await expect(page.locator('.media-status')).toHaveText(
+    'Playing 3/3: Test tone - Track 3',
+  )
   expect(
     await audio.evaluate((a: HTMLAudioElement) => a.currentTime),
   ).toBeGreaterThanOrEqual(32)
@@ -129,12 +135,24 @@ test('timed rows seek paused or active with supported highlights and exact fract
     a.muted = true
   })
   await page.getByRole('button', { name: 'Play', exact: true }).click()
-  await expect(page.locator('.media-status')).toHaveText('Playing')
+  await expect(page.locator('.media-status')).toHaveText(
+    'Playing 2/3: Test tone - Track 2',
+  )
+  await expect
+    .poll(() => audio.evaluate((a: HTMLAudioElement) => a.currentTime))
+    .toBeGreaterThan(8.25)
   await page.getByRole('button', { name: /^Seek to track 3:/ }).click()
   await expect
     .poll(() => audio.evaluate((a: HTMLAudioElement) => a.currentTime))
     .toBeGreaterThanOrEqual(32)
   await expect(audio).toHaveJSProperty('paused', false)
+  await expect(audio).toHaveJSProperty('seeking', false)
+  await expect
+    .poll(() => audio.evaluate((a: HTMLAudioElement) => a.currentTime))
+    .toBeGreaterThan(32.1)
+  await expect(page.locator('.media-status')).toHaveText(
+    'Playing 3/3: Test tone - Track 3',
+  )
   await expect(page.getByRole('button', { name: 'Next track' })).toBeDisabled()
 })
 

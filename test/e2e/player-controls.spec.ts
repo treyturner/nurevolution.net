@@ -33,7 +33,7 @@ test('custom controls seek and skip while paused and active through the same rea
     a.muted = true
   })
   await page.getByRole('button', { name: 'Play', exact: true }).click()
-  await expect(page.locator('.media-status')).toHaveText('Playing')
+  await expect(page.locator('.media-status')).toHaveText(/^Playing\b/)
   await page.getByRole('button', { name: 'Forward 30 seconds' }).click()
   await expect
     .poll(() => audio.evaluate((a: HTMLAudioElement) => a.currentTime))

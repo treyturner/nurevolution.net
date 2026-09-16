@@ -53,6 +53,18 @@ const messages = {
   error: 'Audio could not be loaded. Please try again.',
   blocked: 'Press Play to continue.',
 }
+const statusMessage = computed(() => {
+  if (props.player.state.restoring) return 'Restoring your place…'
+  if (status.value === 'playing') {
+    const tracks = props.episode?.tracks ?? []
+    const current = tracks.find(
+      (track) => track.position === props.player.tracks.current,
+    )
+    if (current)
+      return `Playing ${current.position}/${tracks.length}: ${current.artist} - ${current.title}`
+  }
+  return messages[status.value]
+})
 </script>
 
 <template>
@@ -118,9 +130,7 @@ const messages = {
       </p>
       <div class="player-actions">
         <p id="playback-status" class="media-status">
-          {{
-            player.state.restoring ? 'Restoring your place…' : messages[status]
-          }}
+          {{ statusMessage }}
         </p>
         <p
           v-if="player.state.restoreMessage || player.state.seekMessage"
