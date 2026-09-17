@@ -261,10 +261,10 @@ it('persists zero when Retry discards a pending restore and when the same ID rec
       },
     }),
   )
-  await vi.advanceTimersByTimeAsync(20_000)
+  await vi.advanceTimersByTimeAsync(30_000)
   await wrapper
     .findAll('button')
-    .find((button) => button.text() === 'Retry audio')!
+    .find((button) => button.attributes('aria-label') === 'Retry audio')!
     .trigger('click')
   expect(JSON.parse(localStorage.getItem(resumeKey)!)).toMatchObject({
     episodeId: episode.id,
@@ -313,7 +313,8 @@ it('keeps saving actual activity after a seek times out with a visible error', a
   await audio.trigger('playing')
   wrapper.findComponent(ArchivePlayer).props('player').seek(30)
   await vi.advanceTimersByTimeAsync(5000)
-  expect(wrapper.text()).toContain('Could not seek. Try again.')
+  expect(wrapper.get('.media-status').text()).toBe('Could not seek. Try again.')
+  expect(wrapper.find('.player-feedback-error').exists()).toBe(true)
   position = 12
   await audio.trigger('timeupdate')
   expect(JSON.parse(localStorage.getItem(resumeKey)!).positionSeconds).toBe(12)
@@ -377,7 +378,9 @@ it.each([false, true])(
         }),
       )
     await vi.advanceTimersByTimeAsync(4000)
-    expect(wrapper.text()).toContain('Could not seek. Try again.')
+    expect(wrapper.get('.media-status').text()).toBe(
+      'Could not seek. Try again.',
+    )
     expect(JSON.parse(localStorage.getItem(resumeKey)!)).toMatchObject(
       newerTab
         ? {

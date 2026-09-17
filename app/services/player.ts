@@ -180,7 +180,7 @@ export function createPlayer(
       } else {
         set('delayed')
       }
-    }, 10_000)
+    }, 15_000)
   }
   function set(next: PlayerStatus) {
     status = next

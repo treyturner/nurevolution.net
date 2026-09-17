@@ -153,9 +153,10 @@ test('failed saved detail leaves root usable and does not overwrite its resume p
     route.fulfill({ status: 503, json: { statusCode: 503 } }),
   )
   await page.goto('/')
-  await expect(
-    page.getByText('Saved episode could not be restored.'),
-  ).toBeVisible()
+  await expect(page.locator('.media-status')).toHaveText(
+    'Saved episode could not be restored.',
+  )
+  await expect(page.locator('.player-feedback-error')).toBeVisible()
   await position(page, 0)
   await expect(page).toHaveURL(/\/$/)
   expect(
@@ -293,9 +294,9 @@ for (const accepted of [true, false])
       releaseManual()
       if (accepted) await expect(page).toHaveURL(new RegExp(target + '$'))
       else
-        await expect(
-          page.getByText('Saved episode could not be restored.'),
-        ).toBeVisible()
+        await expect(page.locator('.media-status')).toHaveText(
+          'Saved episode could not be restored.',
+        )
       await ready(page)
       expect(await page.locator('html').getAttribute('data-loads')).toBe('1')
       await expect(page.locator('audio')).toHaveJSProperty('paused', true)

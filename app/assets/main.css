@@ -7,6 +7,7 @@
   line-height: 1.6;
   --focus-color: #a5c7ff;
   --muted: #a3acbb;
+  --error-color: #ffb4ab;
   --line: #2a303a;
 }
 * {
@@ -456,17 +457,43 @@ audio.custom-audio {
 .player-actions {
   display: flex;
   flex-wrap: wrap;
-  align-items: baseline;
+  align-items: center;
   gap: 0.5rem 1rem;
   margin-top: 0.35rem;
 }
+.player-feedback {
+  display: grid;
+  grid-template-columns: minmax(0, max-content) 3rem;
+  align-items: center;
+  gap: 0.5rem;
+  flex: 1 1 10rem;
+  min-width: min(100%, 10rem);
+  /* Reserve three status lines and the action slot in every state. */
+  min-height: max(44px, 3.6rem);
+  color: var(--muted);
+  font-size: 0.75rem;
+}
+.player-feedback-error {
+  color: var(--error-color);
+}
 .media-status {
-  flex: 1;
   min-width: 0;
   margin: 0;
-  font-size: 0.75rem;
-  color: var(--muted);
   overflow-wrap: anywhere;
+}
+.status-retry {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
 }
 .download-link {
   display: inline-flex;
@@ -718,7 +745,7 @@ button.track-row:disabled {
   border-left-color: var(--focus-color);
 }
 .track-number,
-.track-start {
+.track-time {
   font-size: 0.7rem;
   color: var(--muted);
   font-variant-numeric: tabular-nums;
@@ -757,10 +784,6 @@ button.track-row:disabled {
   border-color: var(--focus-color);
   color: var(--focus-color);
 }
-.navigation-error {
-  border: 1px solid var(--line);
-  padding: 1rem;
-}
 .site-footer {
   margin-top: 3rem;
   padding-block: 1.5rem;
@@ -796,7 +819,8 @@ button.track-row:disabled {
   }
 }
 
-.episode-list-heading {
+.episode-list-heading,
+.track-list-heading {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -804,10 +828,12 @@ button.track-row:disabled {
   gap: 1rem;
   margin-bottom: 1.25rem;
 }
-.episode-list-heading h2 {
+.episode-list-heading h2,
+.track-list-heading h2 {
   margin: 0;
 }
-.episode-sort {
+.episode-sort,
+.track-time-toggle {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -826,7 +852,8 @@ button.track-row:disabled {
   border-radius: 0.3rem;
   cursor: pointer;
 }
-.episode-sort:hover {
+.episode-sort:hover,
+.track-time-toggle:hover {
   color: var(--focus-color);
   background: #202630;
 }

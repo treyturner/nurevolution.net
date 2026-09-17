@@ -21,16 +21,19 @@ it('announces accepted navigation without remounting the player', async () => {
     wrapper
       .findAll('[role="status"], [aria-live]')
       .map((region) => region.text()),
-  ).toEqual(['', 'Selected Trey Turner - Praxis', ''])
+  ).toEqual(['', 'Selected Trey Turner - Praxis', 'Loading audio…', ''])
   expect(wrapper.get('audio').attributes('aria-describedby')).toBe(
     'playback-status',
   )
-  expect(wrapper.get('#playback-status').attributes('role')).toBeUndefined()
+  expect(wrapper.get('#playback-status').attributes('role')).toBe('status')
   expect(wrapper.get('audio').element).toBe(audio)
   const state = await nuxt.runWithContext(useEpisodePage)
   state.value.failedPath = '/episodes/unknown'
   await wrapper.vm.$nextTick()
-  expect(wrapper.get('[role="alert"]').text()).toContain('Could not load')
+  expect(wrapper.get('.media-status').text()).toBe(
+    'Episode could not be loaded.',
+  )
+  expect(wrapper.find('.navigation-error').exists()).toBe(false)
   state.value.model = { ...state.value.model!, selected: null }
   await wrapper.vm.$nextTick()
   expect(wrapper.get('#episode-selection-status').text()).toBe(
@@ -55,8 +58,10 @@ it('rejects encoded delimiters during navigation while preserving the current pl
     expect(nuxt.$router.currentRoute.value.path).toBe(path)
     expect(wrapper.get('h1').text()).toBe('Praxis')
     expect(wrapper.get('audio').element).toBe(audio)
-    expect(wrapper.get('[role="alert"]').text()).toContain('Could not load')
-    expect(wrapper.get('[role="alert"] a').attributes('href')).toBe(
+    expect(wrapper.get('.media-status').text()).toBe(
+      'Episode could not be loaded.',
+    )
+    expect(wrapper.get('[aria-label="Retry episode"]').attributes('href')).toBe(
       `/episodes/${slug}`,
     )
   }
