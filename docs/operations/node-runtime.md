@@ -111,10 +111,11 @@ The block below pauses the backup timer, acquires the same lock as deployments/b
 systemctl start nurevolution-backup.service
 systemctl show -p Result -p ExecMainStatus nurevolution-backup.service
 journalctl -u nurevolution-backup.service -n 25 --no-pager
+cat /srv/nurevolution/state/backup.json
 printf 'Saved installation files: %s\n' "$install_dir"
 ```
 
-Both runtime checks must print the expected mise-managed executable; the backup must finish with `Result=success`, `ExecMainStatus=0`, and a new snapshot in `/srv/nurevolution/state/backups/latest.json`. This exercises the current release's existing helper under Node 24 and the real systemd sandbox before promotion. If the timer started that same backup first, wait for it to finish and inspect its result; do not force a concurrent backup or remove a live lock.
+Both runtime checks must print the expected mise-managed executable; the backup must finish with `Result=success`, `ExecMainStatus=0`, and a new snapshot recorded in `/srv/nurevolution/state/backup.json`. Check that its `at` timestamp matches this backup and `repositoryCheck` is `passed`. This exercises the current release's existing helper under Node 24 and the real systemd sandbox before promotion. If the timer started that same backup first, wait for it to finish and inspect its result; do not force a concurrent backup or remove a live lock.
 
 If installation or this backup fails, **do not merge or deploy**. Inspect the error. With no active backup/deployment, pause the timer and acquire `tooling/deploy.lock` as above, restore the saved `.before` bootstrap/wrapper/service and runtime configuration if one existed, then reload systemd and restore the timer state. On this first migration there is no previous runtime JSON; the restored protocol-2 bootstrap ignores the new file. Keep both Node installations and the saved files. A fresh host without a prior bootstrap needs its installation completed, not a protocol rollback.
 
