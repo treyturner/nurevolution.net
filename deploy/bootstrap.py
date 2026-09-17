@@ -28,6 +28,7 @@ API = 'https://api.github.com/repos/' + REPOSITORY
 FILES = ('release.json', 'manifest.json', 'configuration.json', 'deploy.mjs',
          'renderer.sha256', 'delivery-evidence.json')
 LIMIT = 32 * 1024 * 1024
+RUNTIME_CONFIG = Path('/usr/local/lib/nurevolution/node-runtime.json')
 
 
 def require(condition, message):
@@ -267,14 +268,40 @@ def settled(root, edge):
             'Unrecovered deployment journal; follow the recovery runbook')
 
 
-def invoke(root, edge, tool, command, bundle=None):
-    arguments = ['node', str(tool), command, '--root', str(root), '--edge-directory', str(edge)]
+def node_runtime():
+    # The operator provisions this runtime with mise and records its absolute
+    # executable. Never fall back to PATH, activate a shell, or install at runtime.
+    config = json.loads(regular(RUNTIME_CONFIG))
+    require(isinstance(config, dict) and set(config) == {'version', 'executable'},
+            'Invalid Node runtime configuration')
+    version, executable = config['version'], config['executable']
+    require(isinstance(version, str) and re.fullmatch(r'24\.\d+\.\d+', version),
+            'Provision an exact Node 24 version: docs/operations/node-runtime.md')
+    require(isinstance(executable, str) and Path(executable).is_absolute(),
+            'Expected an absolute Node executable')
+    node = Path(executable).resolve(strict=True)
+    environment = dict(os.environ)
+    # Keep deployment/backup credentials, but do not inherit Node code injection
+    # or a different runtime for child processes.
+    for name in ('NODE_OPTIONS', 'NODE_PATH'):
+        environment.pop(name, None)
+    environment['PATH'] = str(node.parent) + os.pathsep + os.defpath + ':/usr/local/bin'
+    result = subprocess.run([str(node), '--version'], stdin=subprocess.DEVNULL,
+                            capture_output=True, text=True, env=environment, timeout=15, check=False)
+    require(result.returncode == 0 and result.stdout.strip() == 'v' + version,
+            'Installed Node does not match the runtime pin: docs/operations/node-runtime.md')
+    return node, environment
+
+
+def invoke(root, edge, tool, command, runtime, bundle=None):
+    node, environment = runtime
+    arguments = [str(node), str(tool), command, '--root', str(root), '--edge-directory', str(edge)]
     if command == 'deploy':
         container = regular(root / 'edge-container').decode().strip()
         require(re.fullmatch(r'[a-zA-Z0-9][a-zA-Z0-9_.-]+', container), 'Invalid edge container')
         arguments += ['--bundle', str(bundle), '--edge-container', container]
     # stdin never reaches release code: it carried the temporary GitHub token.
-    return subprocess.run(arguments, stdin=subprocess.DEVNULL, check=False).returncode
+    return subprocess.run(arguments, stdin=subprocess.DEVNULL, env=environment, check=False).returncode
 
 
 def operate(root, edge, command, arguments, token=''):
@@ -285,6 +312,9 @@ def operate(root, edge, command, arguments, token=''):
             return stage(root, run_id, commit, token)
         if command == 'check':
             return cached(root, arguments[0])
+        # Fail before downloading or activating tooling, including offline backup
+        # and rollback. Read-only staging and cache checks do not need Node.
+        runtime = node_runtime()
         current = record(root, 'current')
         if command == 'backup':
             require(current, 'No current production release to back up')
@@ -298,7 +328,7 @@ def operate(root, edge, command, arguments, token=''):
                 tool = root / 'tooling/deploy.mjs'
                 require(digest(regular(tool)) == current['configuration']['toolingSha256'],
                         'Installed legacy backup tooling does not match the current release')
-            return invoke(root, edge, tool, 'backup')
+            return invoke(root, edge, tool, 'backup', runtime)
         require((root / 'production-enabled').is_file(), 'Production is not enabled')
         require(json.loads(regular(root / 'profile.json')).get('environment') == 'production',
                 'Host profile must select production')
@@ -327,7 +357,7 @@ def operate(root, edge, command, arguments, token=''):
             for_record(root, current)
         candidate = activate(root, commit)
         try:
-            result = invoke(root, edge, candidate / 'deploy.mjs', 'deploy', incoming)
+            result = invoke(root, edge, candidate / 'deploy.mjs', 'deploy', runtime, incoming)
         finally:
             # Successful deploys and handled failures leave an authoritative
             # current record. An interrupted transaction requires manual recovery.
@@ -345,6 +375,7 @@ def main():
     parser.add_argument('--edge-directory', type=Path, default=Path('/srv/edge/config'))
     commands = parser.add_subparsers(dest='command', required=True)
     commands.add_parser('version')
+    commands.add_parser('runtime')
     for name in ('backup', 'rollback'):
         commands.add_parser(name)
     commands.add_parser('check').add_argument('commit')
@@ -356,7 +387,11 @@ def main():
         sub.add_argument('commit')
     args = parser.parse_args()
     if args.command == 'version':
-        print('nurevolution-deploy 2')
+        print('nurevolution-deploy 3')
+        return 0
+    if args.command == 'runtime':
+        node, _ = node_runtime()
+        print(node)
         return 0
     arguments = [getattr(args, field) for field in ('transfer', 'run_id', 'commit') if hasattr(args, field)]
     token = sys.stdin.read(4097).strip() if args.command in ('stage', 'promote') else ''
@@ -370,6 +405,6 @@ def main():
 if __name__ == '__main__':
     try:
         sys.exit(main())
-    except (ValueError, KeyError, OSError, zipfile.BadZipFile) as error:
+    except (ValueError, KeyError, OSError, subprocess.TimeoutExpired, zipfile.BadZipFile) as error:
         print('Release bootstrap failed: ' + str(error), file=sys.stderr)
         sys.exit(1)

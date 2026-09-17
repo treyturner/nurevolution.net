@@ -21,59 +21,11 @@ Before changing tools or app, promotion also retains the currently deployed rele
 
 The bootstrap, promotion, offline rollback, and backup share `tooling/deploy.lock`. The release tool still holds the existing site/edge locks during its transaction. Use the bootstrap for all three entry points; raw `node deploy.mjs` operations bypass tooling coordination. Existing backup tooling already excludes `**/deploy.lock`, including this additional lock.
 
-## One-time installation on the existing host
+## Host installation
 
-This installation changes deployment entry points and the backup unit. It does **not** replace or restart the running app, shared edge, or Docker. Install it before dispatching the first deployment with the updated workflow. Merging still only verifies and publishes a release; production promotion remains manual.
+Follow the [Node runtime and bootstrap installation](node-runtime.md) to provision mise-managed Node 24 and install the protocol-3 entry point. The bootstrap never updates itself; an existing protocol-2 host must complete that operator migration before promoting a new release. The deployment workflow rejects the old protocol.
 
-Requirements: the existing Node installation, Python 3 (already included with Ubuntu 26.04), root access for the three installed files and systemd reload, and no running or queued deployment. The existing `/srv/nurevolution` ownership, production profile, marker, and secrets remain in place. The reviewed revision must contain this bootstrap and protocol-2 wrapper.
-
-From the owner's root SSH session, set `BOOTSTRAP_REV` to the full reviewed commit SHA containing this change, then run this block. It saves the old files, pauses the timer during installation, refuses a running backup or unresolved deployment, and restores the timer's prior active state on exit. Stop on failure and inspect the saved files before retrying.
-
-```bash
-BOOTSTRAP_REV=REPLACE_WITH_REVIEWED_FULL_COMMIT_SHA
-(
-  set -euo pipefail
-  test "$(id -u)" = 0
-  [[ "$BOOTSTRAP_REV" =~ ^[a-f0-9]{40}$ ]]
-  install_dir=$(mktemp -d /root/nurevolution-bootstrap.XXXXXX)
-  for file in bootstrap.py nurevolution-deploy backup.service; do
-    curl --fail --silent --show-error \
-      "https://raw.githubusercontent.com/treyturner/nurevolution.net/$BOOTSTRAP_REV/deploy/$file" \
-      --output "$install_dir/$file"
-  done
-  test "$(python3 "$install_dir/bootstrap.py" version)" = 'nurevolution-deploy 2'
-  bash -n "$install_dir/nurevolution-deploy"
-
-  timer_was_active=false
-  if systemctl is-active --quiet nurevolution-backup.timer; then
-    timer_was_active=true
-  fi
-  trap 'if $timer_was_active; then systemctl start nurevolution-backup.timer; fi' EXIT
-  systemctl stop nurevolution-backup.timer
-  test "$(systemctl show -p ActiveState --value nurevolution-backup.service)" = inactive
-  for lock in /srv/nurevolution/tooling/deploy.lock /srv/nurevolution/state/deploy.lock /srv/edge/config/deploy.lock; do
-    test ! -e "$lock"
-  done
-  test -z "$(find /srv/nurevolution/state -maxdepth 2 -name pending.json -print)"
-
-  cp -a /usr/local/bin/nurevolution-deploy "$install_dir/nurevolution-deploy.before"
-  cp -a /etc/systemd/system/nurevolution-backup.service "$install_dir/backup.service.before"
-  if test -f /usr/local/lib/nurevolution/bootstrap.py; then
-    cp -a /usr/local/lib/nurevolution/bootstrap.py "$install_dir/bootstrap.py.before"
-  fi
-  install -d -o root -g root -m 0755 /usr/local/lib/nurevolution
-  install -o root -g root -m 0644 "$install_dir/bootstrap.py" /usr/local/lib/nurevolution/bootstrap.py
-  install -o root -g root -m 0755 "$install_dir/nurevolution-deploy" /usr/local/bin/nurevolution-deploy
-  install -o root -g root -m 0644 "$install_dir/backup.service" /etc/systemd/system/nurevolution-backup.service
-  systemctl daemon-reload
-  test "$(runuser -u nurevolution-deploy -- /usr/local/bin/nurevolution-deploy --version)" = 'nurevolution-deploy 2'
-  printf 'Bootstrap installed; previous files saved in %s\n' "$install_dir"
-)
-```
-
-The timer's enabled-on-boot setting is unchanged. The installed backup entry point can use the old regular helper before the first migration, provided its hash matches the current deployment record. After the first promotion it uses the verified cached release. The unit grants write access to `tooling/` for its lock and selector as well as the existing backup paths; memory, concurrency, credentials, and restic retention settings are unchanged.
-
-If installation must be undone before the first promotion, restore the `.before` wrapper and service, reload systemd, and retain any saved bootstrap file. After versioned tools have been activated, keep the bootstrap and use its rollback procedure; reverting only the wrapper would leave the old workflow protocol and tool selection assumptions in conflict.
+The runtime configuration is root-owned alongside the bootstrap. Promotion, backup, and rollback verify the configured executable/version before changing tooling; staging and cached-bundle inspection need only Python. The bootstrap executes Node directly, without shell activation, automatic installation, or a PATH fallback. The existing backup unit retains its systemd write restrictions and can execute both the previous helper and the new Node 24 bundle. Test an ordinary backup before merging/promoting, then again after promotion.
 
 ## Promotion, rollback, and recovery
 

@@ -101,7 +101,7 @@ else:
                            'VERIFY_RUN_ID': '6789', 'RELEASE_COMMIT': 'a' * 40,
                            'GH_TOKEN': 'temporary-token', 'RUNNER_TEMP': str(root / 'runner'),
                            'TEST_RECEIPT': str(receipt)}
-            for attempt, protocol in [(1, 'nurevolution-deploy 1'), (2, 'nurevolution-deploy 2')]:
+            for attempt, protocol in [(1, 'nurevolution-deploy 2'), (2, 'nurevolution-deploy 3')]:
                 transfer = template.replace('${{ github.run_id }}', '12345').replace(
                     '${{ github.run_attempt }}', str(attempt))
                 result = subprocess.run(['bash', '-euo', 'pipefail', '-c', textwrap.dedent(block)],

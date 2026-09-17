@@ -114,8 +114,8 @@ jobs:
           printf '%s\n' "$SSH_KNOWN_HOSTS" > "$RUNNER_TEMP/ssh/known_hosts"
           ssh_args=(-i "$RUNNER_TEMP/ssh/key" -o IdentitiesOnly=yes -o BatchMode=yes -o StrictHostKeyChecking=yes -o "UserKnownHostsFile=$RUNNER_TEMP/ssh/known_hosts" -o "ProxyCommand=$HEADSCALE_PROXY_COMMAND" -o ConnectTimeout=15)
           test "$(ssh "${ssh_args[@]}" "$DEPLOY_USER@$DEPLOY_HOST" 'id -un')" = "$DEPLOY_USER"
-          if [[ "$(ssh "${ssh_args[@]}" "$DEPLOY_USER@$DEPLOY_HOST" 'nurevolution-deploy --version')" != 'nurevolution-deploy 2' ]]; then
-            echo 'Install the versioned tooling bootstrap before promoting: docs/operations/tooling-bootstrap.md' >&2
+          if [[ "$(ssh "${ssh_args[@]}" "$DEPLOY_USER@$DEPLOY_HOST" 'nurevolution-deploy --version')" != 'nurevolution-deploy 3' ]]; then
+            echo 'Install the versioned tooling bootstrap and mise runtime before promoting: docs/operations/node-runtime.md' >&2
             exit 1
           fi
           printf '%s' "$GH_TOKEN" | ssh "${ssh_args[@]}" "$DEPLOY_USER@$DEPLOY_HOST" "nurevolution-deploy $TARGET_ENVIRONMENT $TRANSFER_ID $VERIFY_RUN_ID $RELEASE_COMMIT"
