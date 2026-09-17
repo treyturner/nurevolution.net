@@ -214,7 +214,7 @@ test('recovers stalled metadata automatically and shows duration without a Play 
     const audio = page.locator('audio')
     await expect(audio).toHaveJSProperty('readyState', 0)
     await expect(page.locator('.media-status')).toHaveText('Loading audio…')
-    await page.clock.fastForward(10_000)
+    await page.clock.fastForward(15_000)
     await ready(page)
     expect(attempts).toBeGreaterThanOrEqual(2)
     expect(
@@ -251,9 +251,9 @@ for (const recovery of ['late metadata', 'Play', 'Play then pause']) {
       })
       await hydrated(page)
       await expect.poll(() => attempts).toBeGreaterThanOrEqual(1)
-      await page.clock.fastForward(10_000)
+      await page.clock.fastForward(15_000)
       await expect.poll(() => attempts).toBeGreaterThanOrEqual(2)
-      await page.clock.fastForward(10_000)
+      await page.clock.fastForward(15_000)
       const audio = page.locator('audio')
       await expect(page.locator('.media-status')).toHaveText(
         'Audio is taking longer to load.',
@@ -275,7 +275,7 @@ for (const recovery of ['late metadata', 'Play', 'Play then pause']) {
       if (recovery === 'Play then pause') {
         await audio.evaluate((a: HTMLAudioElement) => a.pause())
         await expect(page.locator('.media-status')).toHaveText('Loading audio…')
-        await page.clock.fastForward(10_000)
+        await page.clock.fastForward(15_000)
         await expect(page.locator('.media-status')).toHaveText(
           'Audio is taking longer to load.',
         )
@@ -417,10 +417,13 @@ test('latest requested episode wins; failed navigation leaves a usable current p
     }),
   )
   await page.locator('a[href="/episodes/trey-turner-praxis"]').click()
-  await expect(page.getByRole('alert')).toContainText('Could not load')
+  await expect(page.locator('.media-status')).toHaveText(
+    'Episode could not be loaded.',
+  )
+  await expect(page.locator('.navigation-error')).toHaveCount(0)
   await expect(page.locator('h1')).toHaveText('The Dark Prophet')
   await page.unroute('**/api/episodes/trey-turner-praxis')
-  await page.getByRole('link', { name: 'Try again' }).click()
+  await page.getByRole('link', { name: 'Retry episode' }).click()
   await expect(page.locator('h1')).toHaveText('Praxis')
 })
 

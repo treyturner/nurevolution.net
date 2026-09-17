@@ -15,6 +15,7 @@ async function fixture(page: Page, starts: (number | null)[]) {
     await route.fulfill({
       json: {
         ...detail,
+        durationSeconds: 40,
         tracks: starts.map((startTime, i) => ({
           position: i + 1,
           artist: 'Test tone',
@@ -37,6 +38,37 @@ async function at(page: Page, seconds: number) {
     )
     .toBeCloseTo(seconds, 1)
 }
+test('track time display switches without seeking and resets to duration on reload', async ({
+  page,
+}) => {
+  await fixture(page, [0, 8.25, 32])
+  const toggle = page.locator('.track-time-toggle')
+  const times = page.locator('.track-time')
+  await expect(toggle).toHaveText('Show: Duration')
+  await expect(toggle).toHaveAttribute('title', 'Click for Timestamp')
+  await expect(times).toHaveText(['0:08', '0:23', '0:08'])
+  await page.getByRole('button', { name: /^Seek to track 2:/ }).click()
+  await at(page, 8.25)
+  await toggle.focus()
+  await toggle.press('Enter')
+  await expect(toggle).toHaveText('Show: Timestamp')
+  await expect(toggle).toHaveAttribute('title', 'Click for Duration')
+  await expect(times).toHaveText(['0:00', '0:08', '0:32'])
+  await at(page, 8.25)
+  await expect(page.locator('audio')).toHaveJSProperty('paused', true)
+  await expect(
+    page.locator('.track-list li[aria-current] .track-number'),
+  ).toHaveText('02')
+  await toggle.press('Space')
+  await expect(times).toHaveText(['0:08', '0:23', '0:08'])
+  await page.getByRole('button', { name: /^Seek to track 3:/ }).click()
+  await at(page, 32)
+  await toggle.click()
+  await page.reload()
+  await ready(page)
+  await expect(toggle).toHaveText('Show: Duration')
+})
+
 test('the current track plays and pauses in place with mouse and keyboard', async ({
   page,
 }) => {

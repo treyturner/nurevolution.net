@@ -12,6 +12,13 @@ defineProps<{
 }>()
 const narrow = ref(false)
 const active = ref<'episodes' | 'tracks'>('episodes')
+const trackTimeDisplay = ref<'timestamp' | 'duration'>('duration')
+const trackTimeLabel = computed(() =>
+  trackTimeDisplay.value === 'duration' ? 'Duration' : 'Timestamp',
+)
+const otherTrackTimeLabel = computed(() =>
+  trackTimeDisplay.value === 'duration' ? 'Timestamp' : 'Duration',
+)
 const tabs = narrow
 let media: MediaQueryList | undefined
 const resize = () => {
@@ -125,12 +132,29 @@ function key(event: KeyboardEvent) {
         :aria-labelledby="tabs ? 'tracks-tab' : 'tracks-heading'"
         :hidden="tabs && active !== 'tracks'"
       >
-        <h2 id="tracks-heading">
-          Tracklist <span v-if="selected">{{ selected.tracks.length }}</span>
-        </h2>
+        <div class="track-list-heading">
+          <h2 id="tracks-heading">
+            Tracklist <span v-if="selected">{{ selected.tracks.length }}</span>
+          </h2>
+          <button
+            v-if="selected?.tracks.length"
+            type="button"
+            class="track-time-toggle"
+            :aria-label="`Show: ${trackTimeLabel}. Click for ${otherTrackTimeLabel}`"
+            :title="`Click for ${otherTrackTimeLabel}`"
+            @click="
+              trackTimeDisplay =
+                trackTimeDisplay === 'duration' ? 'timestamp' : 'duration'
+            "
+          >
+            Show: {{ trackTimeLabel }}
+          </button>
+        </div>
         <EpisodeTracklist
           v-if="selected"
           :tracks="selected.tracks"
+          :duration-seconds="selected.durationSeconds"
+          :time-display="trackTimeDisplay"
           :player="player"
         />
         <p v-else class="empty-tracks">

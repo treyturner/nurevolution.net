@@ -71,14 +71,14 @@ useHead(() =>
       </div>
       <RssCopyButton :feed-url="state.model.show.feedUrl" />
     </header>
-    <p v-if="state.failedPath" class="navigation-error" role="alert">
-      Could not load this episode.
-      <NuxtLink :to="state.failedPath" :prefetch="false">Try again</NuxtLink>
-    </p>
     <p id="episode-selection-status" class="sr-only" role="status">
       {{ announcement }}
     </p>
-    <ArchivePlayer :episode="state.model.selected" :player="player" />
+    <ArchivePlayer
+      :episode="state.model.selected"
+      :player="player"
+      :failed-path="state.failedPath"
+    />
     <ArchiveLists
       :player="player"
       :episodes="navigation.episodes"

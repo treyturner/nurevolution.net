@@ -282,13 +282,10 @@ test('a failed automatic target stops without a retry loop and leaves manual rec
   })
   await play(page)
   await finish(page)
-  await expect(
-    page.getByText(
-      'Episode could not be loaded. Choose an episode to try again.',
-    ),
-  ).toBeVisible()
+  await expect(page.locator('.media-status')).toHaveText(
+    'Episode could not be loaded.',
+  )
   await expect(page).toHaveURL(new RegExp(episodes[1]!.path + '$'))
-  await expect(page.locator('.media-status')).toHaveText('Episode finished.')
   await expect(
     page.getByRole('button', { name: 'Play', exact: true }),
   ).toBeEnabled()
@@ -363,7 +360,7 @@ test('a media failure during automatic detail loading cancels continuation on th
       audio.dispatchEvent(new Event('error'))
     })
     await expect(page.locator('.media-status')).toHaveText(
-      'Audio could not be loaded. Please try again.',
+      'Audio could not be loaded.',
     )
     held.release()
     await expect(page).toHaveURL(new RegExp(episodes[2]!.path + '$'))

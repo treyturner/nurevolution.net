@@ -9,6 +9,7 @@ import PlayerControls from './PlayerControls.vue'
 const props = defineProps<{
   episode: EpisodeDetail | null
   player: PodcastPlayer
+  failedPath?: string | null
 }>()
 const config = useRuntimeConfig()
 const artworkUrl = computed(() =>
@@ -50,7 +51,7 @@ const messages = {
   playing: 'Playing',
   buffering: 'Buffering…',
   ended: 'Episode finished.',
-  error: 'Audio could not be loaded. Please try again.',
+  error: 'Audio could not be loaded.',
   blocked: 'Press Play to continue.',
 }
 const statusMessage = computed(() => {
@@ -64,6 +65,25 @@ const statusMessage = computed(() => {
       return `Playing ${current.position}/${tracks.length}: ${current.artist} - ${current.title}`
   }
   return messages[status.value]
+})
+const feedback = computed(() => {
+  if (props.failedPath || props.player.sequencing.failed)
+    return {
+      message:
+        props.player.state.restoreMessage || 'Episode could not be loaded.',
+      error: true,
+      retry: props.failedPath ? 'episode' : null,
+    }
+  if (status.value === 'error')
+    return { message: messages.error, error: true, retry: 'audio' }
+  const message =
+    props.player.state.restoreMessage || props.player.state.seekMessage
+  if (message) return { message, error: true, retry: null }
+  return {
+    message: statusMessage.value,
+    error: false,
+    retry: status.value === 'delayed' ? 'audio' : null,
+  }
 })
 </script>
 
@@ -125,26 +145,39 @@ const statusMessage = computed(() => {
         :player="player"
         :source-url="episode?.audio.url"
       />
-      <p v-if="player.sequencing.failed" role="status">
-        Episode could not be loaded. Choose an episode to try again.
-      </p>
       <div class="player-actions">
-        <p id="playback-status" class="media-status">
-          {{ statusMessage }}
-        </p>
-        <p
-          v-if="player.state.restoreMessage || player.state.seekMessage"
-          role="status"
+        <div
+          class="player-feedback"
+          :class="{ 'player-feedback-error': feedback.error }"
         >
-          {{ player.state.restoreMessage || player.state.seekMessage }}
-        </p>
-        <button
-          v-if="status === 'error' || status === 'delayed'"
-          type="button"
-          @click="retry"
-        >
-          Retry audio
-        </button>
+          <p
+            id="playback-status"
+            class="media-status"
+            role="status"
+            aria-atomic="true"
+          >
+            {{ feedback.message }}
+          </p>
+          <span class="player-status-action">
+            <NuxtLink
+              v-if="feedback.retry === 'episode'"
+              class="status-retry"
+              :to="failedPath!"
+              :prefetch="false"
+              aria-label="Retry episode"
+              >Retry</NuxtLink
+            >
+            <button
+              v-else-if="feedback.retry === 'audio'"
+              class="status-retry"
+              type="button"
+              aria-label="Retry audio"
+              @click="retry"
+            >
+              Retry
+            </button>
+          </span>
+        </div>
         <a
           v-if="episode"
           class="download-link"

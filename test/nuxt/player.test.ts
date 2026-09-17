@@ -22,6 +22,79 @@ afterEach(() => {
 })
 
 describe('archive presentation and native media integration', () => {
+  it('defaults to track durations and switches the displayed times and opposite tooltip together', async () => {
+    const selected = {
+      ...detail('wp-417'),
+      durationSeconds: 3786.99,
+      tracks: [0, 65.75, 126.25].map((startTime, index) => ({
+        position: index + 1,
+        artist: 'Artist',
+        title: `Track ${index + 1}`,
+        startTime,
+      })),
+    }
+    const wrapper = await mountSuspended(ArchiveLists, {
+      props: { episodes: [], siteUrl: catalog.show.siteUrl, selected },
+    })
+    try {
+      const toggle = wrapper.get('.track-time-toggle')
+      const times = () =>
+        wrapper.findAll('.track-time').map((time) => time.text())
+      expect(toggle.text()).toBe('Show: Duration')
+      expect(toggle.attributes('title')).toBe('Click for Timestamp')
+      // Subtract the exact boundaries before truncating, and keep long tracks in m:ss.
+      expect(times()).toEqual(['1:05', '1:00', '61:00'])
+      await toggle.trigger('click')
+      expect(toggle.text()).toBe('Show: Timestamp')
+      expect(toggle.attributes('title')).toBe('Click for Duration')
+      expect(toggle.attributes('aria-label')).toBe(
+        'Show: Timestamp. Click for Duration',
+      )
+      expect(times()).toEqual(['0:00', '1:05', '2:06'])
+      await wrapper.setProps({
+        selected: { ...selected, tracks: selected.tracks.slice(0, 2) },
+      })
+      expect(toggle.text()).toBe('Show: Timestamp')
+      expect(times()).toEqual(['0:00', '1:05'])
+      await toggle.trigger('click')
+      expect(toggle.text()).toBe('Show: Duration')
+      expect(times()).toEqual(['1:05', '62:01'])
+      await wrapper.setProps({ selected: { ...selected, tracks: [] } })
+      expect(wrapper.find('.track-time-toggle').exists()).toBe(false)
+      await wrapper.setProps({ selected: null })
+      expect(wrapper.find('.track-time-toggle').exists()).toBe(false)
+    } finally {
+      wrapper.unmount()
+    }
+  })
+  it('leaves durations unavailable when adjacent boundaries or the episode end are unknown', async () => {
+    const tracks = [0, null, 90.75, 150.25].map((startTime, index) => ({
+      position: index + 1,
+      artist: 'Artist',
+      title: `Track ${index + 1}`,
+      startTime,
+    }))
+    const wrapper = await mountSuspended(EpisodeTracklist, {
+      props: { tracks, durationSeconds: 180.9 },
+    })
+    try {
+      const times = () =>
+        wrapper.findAll('.track-time').map((time) => time.text())
+      expect(times()).toEqual(['-:-', '0:59', '0:30'])
+      expect(wrapper.get('.track-time').attributes('title')).toBe(
+        'Duration unavailable',
+      )
+      expect(wrapper.findAll('li')[1]!.find('.track-time').exists()).toBe(false)
+      await wrapper.setProps({ durationSeconds: null })
+      expect(times()).toEqual(['-:-', '0:59', '-:-'])
+      await wrapper.setProps({ durationSeconds: 150 })
+      expect(times()).toEqual(['-:-', '0:59', '-:-'])
+      await wrapper.setProps({ timeDisplay: 'timestamp' })
+      expect(times()).toEqual(['0:00', '1:30', '2:30'])
+    } finally {
+      wrapper.unmount()
+    }
+  })
   it('shows the confirmed playing track, follows progress, and falls back when track timing is unavailable', async () => {
     const episode = {
       ...detail('wp-417'),
@@ -126,7 +199,7 @@ describe('archive presentation and native media integration', () => {
     expect(wrapper.text()).toContain('Audio could not be loaded')
     await wrapper
       .findAll('button')
-      .find((button) => button.text() === 'Retry audio')!
+      .find((button) => button.attributes('aria-label') === 'Retry audio')!
       .trigger('click')
     expect(load).toHaveBeenCalledTimes(2)
     expect(play).not.toHaveBeenCalled()

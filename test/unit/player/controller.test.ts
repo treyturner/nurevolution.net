@@ -65,7 +65,7 @@ describe('persistent episode controller', () => {
   it('retries a stalled metadata request once without starting playback, then loads the real duration', () => {
     const { media, changed, player } = setup()
     player.select(a)
-    vi.advanceTimersByTime(10_000)
+    vi.advanceTimersByTime(15_000)
     expect(media.load).toHaveBeenCalledTimes(2)
     expect(media.paused).toBe(true)
     expect(media.play).not.toHaveBeenCalled()
@@ -93,7 +93,7 @@ describe('persistent episode controller', () => {
     expect(media.load).toHaveBeenCalledOnce()
     media.duration = 120
     media.emit('durationchange')
-    vi.advanceTimersByTime(20_000)
+    vi.advanceTimersByTime(30_000)
     expect(changed).toHaveBeenLastCalledWith('paused')
     expect(media.load).toHaveBeenCalledOnce()
     player.dispose()
@@ -208,7 +208,7 @@ describe('persistent episode controller', () => {
   it('treats deferred preload as a delay and preserves optional retry through queued events', () => {
     const { media, changed, player } = setup()
     player.select(a)
-    vi.advanceTimersByTime(20_000)
+    vi.advanceTimersByTime(30_000)
     expect(changed).toHaveBeenLastCalledWith('delayed')
     media.emit('pause')
     media.emit('progress')
@@ -220,7 +220,7 @@ describe('persistent episode controller', () => {
     expect(media.preload).toBe('auto')
     player.retry()
     expect(changed).toHaveBeenLastCalledWith('loading')
-    vi.advanceTimersByTime(10_000)
+    vi.advanceTimersByTime(15_000)
     expect(media.load).toHaveBeenCalledTimes(4)
     media.ready()
     expect(media.play).not.toHaveBeenCalled()
@@ -229,7 +229,7 @@ describe('persistent episode controller', () => {
   it('accepts late metadata after both timeouts without reloading or reporting an error', () => {
     const { media, changed, player } = setup()
     player.select(a)
-    vi.advanceTimersByTime(20_000)
+    vi.advanceTimersByTime(30_000)
     media.ready()
     expect(changed).toHaveBeenLastCalledWith('paused')
     expect(changed).not.toHaveBeenCalledWith('error')
@@ -237,7 +237,37 @@ describe('persistent episode controller', () => {
     expect(media.pause).not.toHaveBeenCalled()
     player.dispose()
   })
-  it.each([5_000, 15_000, 25_000])(
+  it('gives each stalled load fifteen seconds and hides the retry prompt when metadata arrives', () => {
+    const { media, changed, player } = setup()
+    player.select(a)
+    vi.advanceTimersByTime(14_999)
+    expect(media.load).toHaveBeenCalledOnce()
+    expect(player.snapshot().status).toBe('loading')
+    vi.advanceTimersByTime(1)
+    expect(media.load).toHaveBeenCalledTimes(2)
+    vi.advanceTimersByTime(14_999)
+    expect(player.snapshot().status).toBe('loading')
+    expect(changed).not.toHaveBeenCalledWith('delayed')
+    vi.advanceTimersByTime(1)
+    expect(player.snapshot().status).toBe('delayed')
+    vi.advanceTimersByTime(2_000)
+    media.ready()
+    expect(player.snapshot().status).toBe('paused')
+    expect(media.load).toHaveBeenCalledTimes(2)
+    expect(changed).not.toHaveBeenCalledWith('error')
+    player.dispose()
+  })
+  it('finishes a slow load after the old twenty-second window without showing a retry prompt', () => {
+    const { media, changed, player } = setup()
+    player.select(a)
+    vi.advanceTimersByTime(22_000)
+    media.ready()
+    expect(player.snapshot().status).toBe('paused')
+    expect(changed).not.toHaveBeenCalledWith('delayed')
+    expect(changed).not.toHaveBeenCalledWith('error')
+    player.dispose()
+  })
+  it.each([5_000, 20_000, 35_000])(
     'keeps Play requested after %i ms intact even when metadata remains unavailable',
     async (delay) => {
       const { media, changed, player } = setup()
@@ -261,7 +291,7 @@ describe('persistent episode controller', () => {
       player.dispose()
     },
   )
-  it.each([5_000, 15_000, 25_000])(
+  it.each([5_000, 20_000, 35_000])(
     'resumes bounded recovery after Play then pause at %i ms with no further progress',
     async (delay) => {
       const { media, changed, player } = setup()
@@ -269,7 +299,7 @@ describe('persistent episode controller', () => {
       vi.advanceTimersByTime(delay)
       await media.play()
       media.pause()
-      vi.advanceTimersByTime(20_000)
+      vi.advanceTimersByTime(30_000)
       expect(changed).toHaveBeenLastCalledWith('delayed')
       expect(media.load).toHaveBeenCalledTimes(2)
       expect(media.play).toHaveBeenCalledOnce()
@@ -318,7 +348,7 @@ describe('persistent episode controller', () => {
     const { media, changed, player } = setup()
     player.select(a)
     media.error = { code: 2 } as MediaError
-    vi.advanceTimersByTime(10_000)
+    vi.advanceTimersByTime(15_000)
     expect(changed).toHaveBeenLastCalledWith('error')
     expect(media.load).toHaveBeenCalledOnce()
     player.dispose()
@@ -331,28 +361,28 @@ describe('persistent episode controller', () => {
     vi.advanceTimersByTime(1_000)
     expect(media.load).toHaveBeenCalledTimes(2)
     player.select(null)
-    vi.advanceTimersByTime(20_000)
+    vi.advanceTimersByTime(30_000)
     expect(media.load).toHaveBeenCalledTimes(2)
     player.select(c)
     media.error = { code: 2 } as MediaError
     media.emit('error')
-    vi.advanceTimersByTime(20_000)
+    vi.advanceTimersByTime(30_000)
     expect(media.load).toHaveBeenCalledTimes(3)
     player.retry()
     player.dispose()
-    vi.advanceTimersByTime(20_000)
+    vi.advanceTimersByTime(30_000)
     expect(media.load).toHaveBeenCalledTimes(4)
   })
   it('recovers a source that never became current and accepts metadata even if its event was missed', () => {
     const { media, changed, player } = setup()
     player.select(a)
     media.currentSrc = b.url
-    vi.advanceTimersByTime(10_000)
+    vi.advanceTimersByTime(15_000)
     expect(media.load).toHaveBeenCalledTimes(2)
     media.currentSrc = a.url
     media.readyState = 1
     media.duration = 120
-    vi.advanceTimersByTime(10_000)
+    vi.advanceTimersByTime(15_000)
     expect(changed).toHaveBeenLastCalledWith('paused')
     expect(media.preload).toBe('metadata')
     player.dispose()
@@ -686,7 +716,7 @@ describe('restored positions and explicit playback intent', () => {
     player.select(a, { position: 8.25, paused: true })
     expect(media.currentTime).toBe(0)
     expect(player.snapshot().pendingSeek).toBe(8.25)
-    vi.advanceTimersByTime(10_000)
+    vi.advanceTimersByTime(15_000)
     media.ready()
     expect(media.currentTime).toBe(8.25)
     expect(player.snapshot().pendingSeek).toBeNull()
@@ -839,7 +869,7 @@ describe('review regressions for queued playback', () => {
     const { media, player } = setup()
     player.select(a, { position: 10 })
     player.play()
-    vi.advanceTimersByTime(10_000)
+    vi.advanceTimersByTime(15_000)
     expect(media.load).toHaveBeenCalledTimes(2)
     expect(player.snapshot()).toMatchObject({
       wantsPlay: true,

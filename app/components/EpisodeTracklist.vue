@@ -4,8 +4,21 @@ import type { PodcastPlayer } from '../composables/usePodcastPlayer'
 import { formatTime } from '../services/episode-page'
 const props = defineProps<{
   tracks: EpisodeDetail['tracks']
+  durationSeconds?: number | null
+  timeDisplay?: 'timestamp' | 'duration'
   player?: PodcastPlayer
 }>()
+function displayTime(index: number) {
+  const start = props.tracks[index]!.startTime
+  if (props.timeDisplay === 'timestamp') return formatTime(start)
+  const end =
+    index + 1 < props.tracks.length
+      ? props.tracks[index + 1]!.startTime
+      : props.durationSeconds
+  if (start === null || end == null || end <= start) return '-:-'
+  const seconds = Math.floor(end - start)
+  return `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, '0')}`
+}
 const playing = ref(false)
 watch(
   () =>
@@ -48,7 +61,7 @@ function activate(position: number) {
 <template>
   <ol v-if="tracks.length" class="track-list">
     <li
-      v-for="track in tracks"
+      v-for="(track, index) in tracks"
       :key="track.position"
       :aria-current="
         player?.tracks.current === track.position ? 'true' : undefined
@@ -101,7 +114,13 @@ function activate(position: number) {
               </svg>
             </span>
           </Transition>
-          <span class="track-start">{{ formatTime(track.startTime) }}</span>
+          <span
+            class="track-time"
+            :title="
+              displayTime(index) === '-:-' ? 'Duration unavailable' : undefined
+            "
+            >{{ displayTime(index) }}</span
+          >
         </span>
       </component>
     </li>
