@@ -2,8 +2,12 @@ import copy
 import importlib.util
 import io
 import json
+import os
 from pathlib import Path
+import shutil
+import subprocess
 import tempfile
+import tomllib
 import unittest
 from unittest.mock import patch
 import urllib.error
@@ -66,6 +70,12 @@ class Bootstrap(unittest.TestCase):
         self.temp = tempfile.TemporaryDirectory()
         self.addCleanup(self.temp.cleanup)
         self.root = Path(self.temp.name)
+        self.runtime_config = self.root / 'node-runtime.json'
+        self.node = str(Path(shutil.which('node')).resolve())
+        self.version = (Path(__file__).parents[2] / '.node-version').read_text().strip()
+        self.runtime_config.write_bytes(encode({'version': self.version, 'executable': self.node}))
+        patch.object(b, 'RUNTIME_CONFIG', self.runtime_config).start()
+        self.addCleanup(patch.stopall)
         self.edge = self.root / 'edge'
         self.edge.mkdir()
         (self.root / 'profile.json').write_text('{"environment":"production"}')
@@ -115,6 +125,59 @@ class Bootstrap(unittest.TestCase):
         self.assert_active(self.old)
         self.assertEqual((self.root / 'executed').read_text().splitlines(), ['b' * 40, 'a' * 40])
         self.assertTrue(b.cached(self.root, 'b' * 40).is_dir())
+
+    def test_runtime_ignores_path_node_and_node_options_but_preserves_backup_environment(self):
+        fake_bin = self.root / 'bin'
+        fake_bin.mkdir()
+        (fake_bin / 'node').write_text('#!/bin/sh\nexit 99\n')
+        (fake_bin / 'node').chmod(0o700)
+        with patch.dict(os.environ, {'PATH': str(fake_bin), 'NODE_OPTIONS': '--require=/nonexistent',
+                                     'NODE_PATH': '/nonexistent', 'RESTIC_PASSWORD': 'test-only'}):
+            node, environment = b.node_runtime()
+            self.assertEqual(str(node), self.node)
+            # Both direct and child Node execution use the selected runtime.
+            result = subprocess.run([str(node), '-e',
+                                     "const c = require('node:child_process'); "
+                                     "console.log(c.execFileSync('node', ['--version'], {encoding: 'utf8'}).trim()); "
+                                     "if (process.env.RESTIC_PASSWORD !== 'test-only') process.exit(2)"],
+                                    env=environment, capture_output=True, text=True, check=False)
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertEqual(result.stdout.strip(), 'v' + self.version)
+            self.assertNotIn('NODE_OPTIONS', environment)
+            self.assertNotIn('NODE_PATH', environment)
+            self.assertEqual(self.operate('backup'), 0)
+
+    def test_bad_runtime_stops_every_executing_entrypoint_before_changes(self):
+        for config in ({'version': '22.23.2', 'executable': self.node},
+                       {'version': self.version, 'executable': 'node'},
+                       {'version': self.version, 'executable': str(self.root / 'missing-node')},
+                       {'version': '24.0.0', 'executable': self.node}):
+            self.runtime_config.write_bytes(encode(config))
+            for command, args in [('promote', ['900-1', '202', 'b' * 40]),
+                                  ('backup', []), ('rollback', [])]:
+                with self.subTest(config=config, command=command):
+                    with self.assertRaises((ValueError, FileNotFoundError)):
+                        self.operate(command, args)
+                    self.assert_active(self.old)
+                    self.assertFalse((self.root / 'incoming').exists())
+                    self.assertFalse((self.root / 'executed').exists())
+                    self.assertFalse((self.root / 'tooling/deploy.lock').exists())
+                    self.downloader.assert_not_called()
+
+    def test_staging_and_cache_check_do_not_require_a_runtime(self):
+        self.runtime_config.unlink()
+        self.operate('stage', ['202', 'b' * 40])
+        self.assertTrue(self.operate('check', ['b' * 40]).is_dir())
+        with self.assertRaises(FileNotFoundError):
+            self.operate('backup')
+
+    def test_development_and_bundle_runtime_pins_agree(self):
+        repo = Path(__file__).parents[2]
+        mise = tomllib.loads((repo / 'mise.toml').read_text())
+        package = json.loads((repo / 'package.json').read_text())
+        self.assertEqual(mise['tools']['node'], self.version)
+        self.assertEqual(package['engines']['node'], self.version)
+        self.assertIn('--target=node' + self.version.split('.')[0] + ' ', package['scripts']['build:deploy'])
 
     def test_failed_upgrade_restores_tooling_and_attempt_retry_keeps_evidence(self):
         self.assertEqual(self.promote(self.failed), 12)

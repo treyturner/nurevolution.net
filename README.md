@@ -6,14 +6,17 @@ See the [roadmap](ROADMAP.md), [M0 audit plan and evidence](docs/milestones/M00-
 
 ## Setup
 
-Use Node.js **24.21.0** from `.node-version`, pnpm **12.3.4** from `package.json`, and Python **3.14.4** from `.python-version`. Python runs the existing M0 audit unit tests using only its standard library; no pip dependencies are needed. With Node selected through your runtime manager:
+Use Node.js **24.21.0** from `mise.toml` and `.node-version`, pnpm **12.3.4** from `package.json`, and Python **3.14.4** from `.python-version`. Python runs the existing M0 audit unit tests using only its standard library; no pip dependencies are needed. The repository's mise configuration selects Node without changing other projects' defaults:
 
 ```sh
-corepack enable
-pnpm install --frozen-lockfile
-pnpm exec playwright install --with-deps chromium firefox webkit
-pnpm verify
+mise install
+mise exec -- corepack enable
+mise exec -- pnpm install --frozen-lockfile
+mise exec -- pnpm exec playwright install --with-deps chromium firefox webkit
+mise exec -- pnpm verify
 ```
+
+With [mise shell activation](https://mise.jdx.dev/cli/activate.html) or its shims already configured, the ordinary `node` and `pnpm` commands below use the project pin. Otherwise prefix them with `mise exec --`. Python remains separately pinned; mise does not replace the system Python used by host services. CI reads `.node-version` with `setup-node`, and the application image uses its pinned Node base image. Neither depends on an interactive shell.
 
 Browser installation is a one-time environment setup step; repeat it after changing Playwright versions. Linux system dependency installation may need elevated privileges. If Corepack shims are unavailable on your PATH, invoke pnpm as `corepack pnpm`, or install shims in a writable directory with `corepack enable --install-directory <directory>` and add that directory to PATH.
 

@@ -5,10 +5,10 @@ The manifest derives from the validated catalog and frozen historical artwork al
 Use the manifest from the exact verified release bundle. From the source workspace:
 
 ```sh
-node tools/deploy/cli.ts scan --manifest .local/delivery/artifacts/manifest.json \
+mise exec -- node tools/deploy/cli.ts scan --manifest .local/delivery/artifacts/manifest.json \
   --audio /home/coder/dev/net.nurevolution.podcast \
   --uploads /home/coder/dev/net.nurevolution/wp/wp-content/uploads --decode
-node tools/deploy/cli.ts stage --manifest .local/delivery/artifacts/manifest.json \
+mise exec -- node tools/deploy/cli.ts stage --manifest .local/delivery/artifacts/manifest.json \
   --audio /home/coder/dev/net.nurevolution.podcast \
   --uploads /home/coder/dev/net.nurevolution/wp/wp-content/uploads \
   --destination .local/media-stage
@@ -16,12 +16,14 @@ node tools/deploy/cli.ts stage --manifest .local/delivery/artifacts/manifest.jso
 
 `scan --decode` requires FFmpeg on the source workstation. It hashes every file and decodes all audio with explicit failure reporting; do not run the decode pass on the 1 GB droplet. A checksum-only scan omits `--decode`. The stage command checks all sources before copying, streams hashing, rejects symlinks and overlapping roots, verifies staged bytes, and creates destination files exclusively. It resumes identical files and refuses conflicting destination bytes. Staging explicitly sets the destination root and asset directories to mode 0755 and verified files to mode 0444, including on a resumed copy under umask 0077. Host directories above the destination and temporary staging directories keep their private permissions; Caddy only needs to traverse the tree mounted at `/media`. No sync deletes old assets.
 
-Transfer the staged `audio/` and `uploads/` directories to a **non-served** host staging directory using the operator's pinned SSH connection, then run:
+Transfer the staged `audio/` and `uploads/` directories to a **non-served** host staging directory using the operator's pinned SSH connection, then run. The [runtime installation](node-runtime.md) must be complete; `bootstrap.py runtime` verifies and returns the configured absolute Node executable instead of the host's global Node:
 
 ```sh
-node /srv/nurevolution/tooling/deploy.mjs check-assets \
+host_node=$(python3 /usr/local/lib/nurevolution/bootstrap.py runtime) || exit 1
+unset NODE_OPTIONS NODE_PATH
+"$host_node" /srv/nurevolution/tooling/deploy.mjs check-assets \
   --manifest RELEASE_BUNDLE/manifest.json --destination HOST_STAGING
-node /srv/nurevolution/tooling/deploy.mjs stage \
+"$host_node" /srv/nurevolution/tooling/deploy.mjs stage \
   --manifest RELEASE_BUNDLE/manifest.json \
   --audio HOST_STAGING/audio --uploads HOST_STAGING/uploads \
   --destination /srv/nurevolution/media
@@ -34,7 +36,9 @@ The website `/downloads/<slug>` returns a no-store 307 to the DNS-only media hos
 Run the explicit HTTP audit against the production hosts:
 
 ```sh
-node /srv/nurevolution/tooling/deploy.mjs audit-http \
+host_node=$(python3 /usr/local/lib/nurevolution/bootstrap.py runtime) || exit 1
+unset NODE_OPTIONS NODE_PATH
+"$host_node" /srv/nurevolution/tooling/deploy.mjs audit-http \
   --manifest RELEASE_BUNDLE/manifest.json \
   --web https://nurevolution.net \
   --media https://podcast.nurevolution.net
