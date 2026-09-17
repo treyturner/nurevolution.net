@@ -1,136 +1,156 @@
 {
   "formatVersion": 1,
   "episodeId": "wp-484",
-  "date": "2026-09-14",
+  "date": "2026-09-17",
   "source": {
-    "type": "owner-supplied split-file duration screenshot",
-    "attachmentFileName": "codex-clipboard-c014496d-76b5-473c-9c95-e512c0605260.png",
-    "sha256": "6239ba6942bf3f6376245fb1a02ef97df1ec0274e53a455059c9beac5b6d2339"
+    "type": "owner-supplied subclip sample-boundary screenshot",
+    "attachmentFileName": "codex-clipboard-e754970c-a02f-45aa-8082-3033526a457d.png",
+    "sha256": "f3ed7d84bab7560bd732b6968b72efcb6d0139f6608384aa557754f22ef186f6"
   },
-  "method": "Track 1 starts at zero; each later start is the sum of preceding displayed split durations in canonical tracklist order.",
-  "precision": "Whole-second estimates from displayed durations; no sample-accurate cue points or audio inspection are claimed.",
-  "displayedTotalSeconds": 3609,
+  "sampleRate": 44100,
+  "method": "Preserve each displayed integer start and end sample in canonical tracklist order. Calculate startTime directly as startSample / sampleRate, without accumulating durations or rounding to milliseconds. End samples are exclusive; each end equals the next start.",
+  "precision": "Integer samples at 44100 Hz are the exact timing evidence. Canonical seconds retain the full floating-point quotient; truncate toward the earlier time wherever an output requires lower precision.",
   "canonicalDurationSeconds": 3610,
   "tracks": [
     {
       "position": 1,
-      "splitFile": "Untitled 1.wav",
-      "displayedDuration": "2:55",
+      "splitFile": "Subclip 01.wav",
+      "startSample": 0,
+      "endSample": 7695011,
       "startTime": 0
     },
     {
       "position": 2,
-      "splitFile": "Untitled 2.wav",
-      "displayedDuration": "2:45",
-      "startTime": 175
+      "splitFile": "Subclip 02.wav",
+      "startSample": 7695011,
+      "endSample": 15128565,
+      "startTime": 174.49004535147392
     },
     {
       "position": 3,
-      "splitFile": "Untitled 3.wav",
-      "displayedDuration": "2:59",
-      "startTime": 340
+      "splitFile": "Subclip 03.wav",
+      "startSample": 15128565,
+      "endSample": 22920827,
+      "startTime": 343.0513605442177
     },
     {
       "position": 4,
-      "splitFile": "Untitled 4.wav",
-      "displayedDuration": "1:53",
-      "startTime": 519
+      "splitFile": "Subclip 04.wav",
+      "startSample": 22920827,
+      "endSample": 27890067,
+      "startTime": 519.7466439909297
     },
     {
       "position": 5,
-      "splitFile": "Untitled 5.wav",
-      "displayedDuration": "1:56",
-      "startTime": 632
+      "splitFile": "Subclip 05.wav",
+      "startSample": 27890067,
+      "endSample": 33019949,
+      "startTime": 632.4278231292517
     },
     {
       "position": 6,
-      "splitFile": "Untitled 6.wav",
-      "displayedDuration": "4:43",
-      "startTime": 748
+      "splitFile": "Subclip 06.wav",
+      "startSample": 33019949,
+      "endSample": 45478838,
+      "startTime": 748.7516780045352
     },
     {
       "position": 7,
-      "splitFile": "Untitled 7.wav",
-      "displayedDuration": "2:14",
-      "startTime": 1031
+      "splitFile": "Subclip 07.wav",
+      "startSample": 45478838,
+      "endSample": 51410165,
+      "startTime": 1031.2661678004536
     },
     {
       "position": 8,
-      "splitFile": "Untitled 8.wav",
-      "displayedDuration": "2:11",
-      "startTime": 1165
+      "splitFile": "Subclip 08.wav",
+      "startSample": 51410165,
+      "endSample": 57153015,
+      "startTime": 1165.7633786848073
     },
     {
       "position": 9,
-      "splitFile": "Untitled 9.wav",
-      "displayedDuration": "1:59",
-      "startTime": 1296
+      "splitFile": "Subclip 09.wav",
+      "startSample": 57153015,
+      "endSample": 62612737,
+      "startTime": 1295.9867346938775
     },
     {
       "position": 10,
-      "splitFile": "Untitled 10.wav",
-      "displayedDuration": "2:27",
-      "startTime": 1415
+      "splitFile": "Subclip 10.wav",
+      "startSample": 62612737,
+      "endSample": 68866665,
+      "startTime": 1419.789954648526
     },
     {
       "position": 11,
-      "splitFile": "Untitled 11.wav",
-      "displayedDuration": "3:16",
-      "startTime": 1562
+      "splitFile": "Subclip 11.wav",
+      "startSample": 68866665,
+      "endSample": 77517852,
+      "startTime": 1561.602380952381
     },
     {
       "position": 12,
-      "splitFile": "Untitled 12.wav",
-      "displayedDuration": "2:52",
-      "startTime": 1758
+      "splitFile": "Subclip 12.wav",
+      "startSample": 77517852,
+      "endSample": 85099031,
+      "startTime": 1757.7744217687075
     },
     {
       "position": 13,
-      "splitFile": "Untitled 13.wav",
-      "displayedDuration": "4:05",
-      "startTime": 1930
+      "splitFile": "Subclip 13.wav",
+      "startSample": 85099031,
+      "endSample": 95917949,
+      "startTime": 1929.6832426303854
     },
     {
       "position": 14,
-      "splitFile": "Untitled 14.wav",
-      "displayedDuration": "4:50",
-      "startTime": 2175
+      "splitFile": "Subclip 14.wav",
+      "startSample": 95917949,
+      "endSample": 108717406,
+      "startTime": 2175.0101814058958
     },
     {
       "position": 15,
-      "splitFile": "Untitled 15.wav",
-      "displayedDuration": "2:41",
-      "startTime": 2465
+      "splitFile": "Subclip 15.wav",
+      "startSample": 108717406,
+      "endSample": 115837720,
+      "startTime": 2465.2473015873015
     },
     {
       "position": 16,
-      "splitFile": "Untitled 16.wav",
-      "displayedDuration": "2:21",
-      "startTime": 2626
+      "splitFile": "Subclip 16.wav",
+      "startSample": 115837720,
+      "endSample": 122039450,
+      "startTime": 2626.7056689342403
     },
     {
       "position": 17,
-      "splitFile": "Untitled 17.wav",
-      "displayedDuration": "3:07",
-      "startTime": 2767
+      "splitFile": "Subclip 17.wav",
+      "startSample": 122039450,
+      "endSample": 130300331,
+      "startTime": 2767.334467120181
     },
     {
       "position": 18,
-      "splitFile": "Untitled 18.wav",
-      "displayedDuration": "3:23",
-      "startTime": 2954
+      "splitFile": "Subclip 18.wav",
+      "startSample": 130300331,
+      "endSample": 139256953,
+      "startTime": 2954.6560317460317
     },
     {
       "position": 19,
-      "splitFile": "Untitled 19.wav",
-      "displayedDuration": "3:23",
-      "startTime": 3157
+      "splitFile": "Subclip 19.wav",
+      "startSample": 139256953,
+      "endSample": 147876609,
+      "startTime": 3157.754036281179
     },
     {
       "position": 20,
-      "splitFile": "Untitled 20.wav",
-      "displayedDuration": "4:09",
-      "startTime": 3360
+      "splitFile": "Subclip 20.wav",
+      "startSample": 147876609,
+      "endSample": 159202834,
+      "startTime": 3353.211088435374
     }
   ]
 }
