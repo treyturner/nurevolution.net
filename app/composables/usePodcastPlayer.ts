@@ -9,6 +9,8 @@ import {
   type ResumeRecord,
 } from '../services/playback-storage'
 import { playerSource } from '../services/playback-source'
+import { createMediaSession } from '../services/media-session'
+import { deliveryAssetUrl } from '../services/delivery-assets'
 import type { EpisodeDetail } from '../../shared/content/public'
 import type { useEpisodePlaybackNavigation } from './useEpisodePlaybackNavigation'
 
@@ -47,6 +49,7 @@ export function usePodcastPlayer(
   let element: HTMLAudioElement | null = null
   let controller: ReturnType<typeof createPlayer> | undefined
   let storage: ReturnType<typeof createPlaybackStorage> | undefined
+  let mediaSession: ReturnType<typeof createMediaSession> | undefined
   let bootstrapped = false
   let playbackStarted = false
   let disposed = false
@@ -191,6 +194,12 @@ export function usePodcastPlayer(
       (snapshot, event) => {
         Object.assign(state, snapshot)
         trackTime.value = trackClock(snapshot, event)
+        mediaSession?.update(
+          event === 'seeked' ||
+            event === 'play' ||
+            event === 'pause' ||
+            event === 'ended',
+        )
         if (snapshot.wantsPlay) clearTimestampMessage()
         if (snapshot.status === 'playing') playbackStarted = true
         if (
@@ -250,6 +259,43 @@ export function usePodcastPlayer(
     controller?.pause()
   }
   onMounted(() => {
+    // Optional platform APIs are accessed only by the mounted player owner.
+    try {
+      mediaSession = createMediaSession(
+        navigator.mediaSession,
+        typeof MediaMetadata === 'function'
+          ? (data) => new MediaMetadata(data)
+          : undefined,
+        {
+          snapshot: () => ({
+            ...state,
+            episode: episode(),
+            showTitle: navigation?.showTitle ?? '',
+            artworkUrl: deliveryAssetUrl(
+              episode()?.artworkUrl ?? '',
+              'artwork',
+              config.public.webOrigin,
+            ),
+            busy:
+              !state.initialized ||
+              state.restoring ||
+              Boolean(navigation?.pending) ||
+              sequence.snapshot().busy,
+            track: currentTrack.value,
+            previous: tracks.value.previous,
+            next: tracks.value.next,
+          }),
+          play: () => player.play(),
+          pause: () => player.pause(),
+          seek: (seconds) => player.seek(seconds),
+          skip: (seconds) => player.skip(seconds),
+          previousTrack: () => player.previousTrack(),
+          nextTrack: () => player.nextTrack(),
+        },
+      )
+    } catch {
+      // Some engines expose an API property that cannot be read in this context.
+    }
     listen(document, 'visibilitychange', () => {
       if (document.visibilityState === 'hidden') storage?.flush()
     })
@@ -257,15 +303,27 @@ export function usePodcastPlayer(
       storage?.flush()
       suspended = true
       pauseForLifecycle()
+      mediaSession?.suspend()
     })
     listen(window, 'pageshow', (event) => {
       if (!(event as PageTransitionEvent).persisted) return
       pauseForLifecycle()
       suspended = false
       storage?.visit(false)
+      mediaSession?.resume()
     })
     void initialize()
   })
+  watch(
+    [
+      episode,
+      () => state.initialized,
+      () => state.restoring,
+      () => navigation?.pending,
+      sequenceRevision,
+    ],
+    () => mediaSession?.update(),
+  )
   watch([episode, () => navigation?.timestamp], () => {
     if (!bootstrapped) return
     state.restoreMessage = null
@@ -279,6 +337,7 @@ export function usePodcastPlayer(
   })
   onBeforeUnmount(() => {
     disposed = true
+    mediaSession?.dispose()
     sequence.dispose()
     storage?.flush()
     suspended = true
@@ -297,7 +356,7 @@ export function usePodcastPlayer(
       trackNavigation(episode()?.tracks ?? [], trackTime.value, state.duration)
         .current,
   )
-  return {
+  const player = {
     state: readonly(state),
     get sequencing() {
       void sequenceRevision.value
@@ -398,5 +457,6 @@ export function usePodcastPlayer(
     setVolume: (value: number) => controller?.setVolume(value),
     toggleMute: () => controller?.toggleMute(),
   }
+  return player
 }
 export type PodcastPlayer = ReturnType<typeof usePodcastPlayer>

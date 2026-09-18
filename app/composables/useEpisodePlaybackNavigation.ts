@@ -65,6 +65,9 @@ export function useEpisodePlaybackNavigation() {
     })
   }
   return {
+    get showTitle() {
+      return state.value.model?.show.title ?? ''
+    },
     get timestamp() {
       return state.value.timestamp
     },

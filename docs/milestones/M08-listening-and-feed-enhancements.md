@@ -4,7 +4,9 @@ Status: **Implementation in progress; Safari compatibility is the first review s
 
 Roadmap: [M8](../../ROADMAP.md#m8---listening-and-feed-enhancements). Baseline: [current status](../STATUS.md), [player behavior](../PLAYER.md), [content](../CONTENT.md), and [feed validation](../FEED-VALIDATION.md). M0-M7 keep their numbers. Drafts and scheduled repository publishing are now M9. Older milestone documents retain their original numbering as historical evidence.
 
-The Safari slice is open as [PR #56](https://github.com/treyturner/nurevolution.net/pull/56). Timestamp sharing is implemented on the local forward branch `feat/m8-timestamp-sharing`, including route transactions, saved-position precedence, copy controls, and automated browser regressions. It is awaiting its own review slot and owner layout acceptance. Device controls and feed work remain to be implemented; this progress does not close any outstanding physical-device requirements.
+The Safari slice is open as [PR #56](https://github.com/treyturner/nurevolution.net/pull/56). Timestamp sharing is implemented on the local forward branch `feat/m8-timestamp-sharing`, including route transactions, saved-position precedence, copy controls, and automated browser regressions. It is awaiting its own review slot and owner layout acceptance. Media Session progress is recorded below; feed resources and RSS advertisement remain to be implemented; this progress does not close any outstanding physical-device requirements.
+
+The Media Session slice is implemented on local `feat/m8-media-session`, stacked after timestamp sharing. System actions use the existing controller, metadata and confirmed position state follow playback, and missing/unsupported APIs are isolated. Device media-control acceptance and the feed slices remain pending.
 
 ## Outcome and scope boundary
 
