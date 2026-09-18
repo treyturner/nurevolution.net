@@ -73,3 +73,74 @@ test('built attachment handler implements HEAD, method rejection, and unknown fi
   )
   expect((await request.get('/downloads/unknown')).status()).toBe(404)
 })
+
+test('download URLs support native media probes, seeking ranges, and safe full fallbacks', async ({
+  request,
+}) => {
+  const url = `${mediaBaseURL}/downloads/first`
+  for (const [range, start, end] of [
+    ['bytes=0-1', 0, 1],
+    ['bytes=10-99', 10, 99],
+    ['bytes=100-', 100, mp3.length - 1],
+    ['bytes=-100', mp3.length - 100, mp3.length - 1],
+  ] as const) {
+    const response = await request.get(url, { headers: { range } })
+    expect(response.status()).toBe(206)
+    expect(response.headers()['content-range']).toBe(
+      `bytes ${start}-${end}/${mp3.length}`,
+    )
+    expect(response.headers()['content-length']).toBe(String(end - start + 1))
+    expect(response.headers()['accept-ranges']).toBe('bytes')
+    expect(response.headers()['content-type']).toBe('audio/mpeg')
+    expect(await response.body()).toEqual(mp3.subarray(start, end + 1))
+  }
+  const invalid = await request.get(url, {
+    headers: { range: `bytes=${mp3.length}-` },
+  })
+  expect(invalid.status()).toBe(416)
+  expect(invalid.headers()['content-range']).toBe(`bytes */${mp3.length}`)
+  const head = await request.head(url, { headers: { range: 'bytes=0-1' } })
+  expect(head.status()).toBe(200)
+  expect(head.headers()['content-length']).toBe(String(mp3.length))
+  expect(head.headers()['accept-ranges']).toBe('bytes')
+  const conditional = await request.get(url, {
+    headers: { range: 'bytes=0-1', 'if-range': '"old"' },
+  })
+  expect(conditional.status()).toBe(200)
+  expect(await conditional.body()).toEqual(mp3)
+})
+
+test('the download URL can load, seek, and play through a native media element', async ({
+  page,
+}) => {
+  await page.goto(`${mediaBaseURL}/player-test`)
+  await page.evaluate(() => {
+    const audio = document.createElement('audio')
+    audio.id = 'download-preview'
+    audio.controls = true
+    audio.muted = true
+    audio.preload = 'auto'
+    audio.src = '/downloads/first'
+    document.body.append(audio)
+    audio.load()
+  })
+  const audio = page.locator('#download-preview')
+  await expect
+    .poll(() =>
+      audio.evaluate(
+        (a: HTMLAudioElement) => Number.isFinite(a.duration) && a.duration > 1,
+      ),
+    )
+    .toBe(true)
+  await audio.evaluate((a: HTMLAudioElement) => {
+    a.currentTime = 0.5
+  })
+  await expect
+    .poll(() => audio.evaluate((a: HTMLAudioElement) => a.seeking))
+    .toBe(false)
+  await audio.evaluate((a: HTMLAudioElement) => a.play())
+  await expect
+    .poll(() => audio.evaluate((a: HTMLAudioElement) => a.currentTime))
+    .toBeGreaterThan(0.5)
+  expect(await audio.evaluate((a: HTMLAudioElement) => a.error)).toBeNull()
+})

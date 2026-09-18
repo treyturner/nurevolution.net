@@ -1,5 +1,6 @@
 import type { EpisodeDetail } from '../../shared/content/public'
 import { attachment } from './filename'
+import { byteRange } from '../http/byte-range'
 
 interface DownloadOptions {
   fetch?: typeof globalThis.fetch
@@ -44,34 +45,58 @@ export function createDownloadResponder(
       const url = new URL(audio.url)
       if (url.origin !== origin || url.username || url.password)
         throw new Error('Disallowed download origin')
+      // This no-store proxy issues no validators, so If-Range cannot match.
+      // Conditional resumes and HEAD therefore receive the full representation.
+      const range =
+        request.method === 'GET' && !request.headers.has('if-range')
+          ? byteRange(request.headers.get('range'), audio.byteLength)
+          : undefined
+      if (range === null)
+        return fail(416, 'Requested range is not satisfiable.', {
+          'content-range': `bytes */${audio.byteLength}`,
+          'accept-ranges': 'bytes',
+        })
+      const expectedLength = range
+        ? range.end - range.start + 1
+        : audio.byteLength
+      const contentRange = range
+        ? `bytes ${range.start}-${range.end}/${audio.byteLength}`
+        : null
+      const upstreamHeaders: Record<string, string> = {
+        'Accept-Encoding': 'identity',
+      }
+      if (range) upstreamHeaders.Range = `bytes=${range.start}-${range.end}`
       timer = setTimeout(() => {
         timedOut = true
         controller.abort()
       }, options.timeoutMs ?? 10_000)
       upstream = await fetchMedia(audio.url, {
         method: request.method,
-        headers: { 'Accept-Encoding': 'identity' },
+        headers: upstreamHeaders,
         redirect: 'error',
         signal: AbortSignal.any([controller.signal, request.signal]),
       })
       clearTimeout(timer)
       if (
-        upstream.status !== 200 ||
+        upstream.status !== (range ? 206 : 200) ||
         upstream.headers.get('content-type')?.toLowerCase() !==
           audio.mediaType ||
-        upstream.headers.get('content-length') !== String(audio.byteLength) ||
+        upstream.headers.get('content-length') !== String(expectedLength) ||
+        upstream.headers.get('content-range') !== contentRange ||
         ![null, 'identity'].includes(upstream.headers.get('content-encoding'))
       )
         throw new Error(
           'Upstream download metadata disagrees with the canonical asset',
         )
-      const headers = {
+      const headers: Record<string, string> = {
         'content-type': audio.mediaType,
-        'content-length': String(audio.byteLength),
+        'content-length': String(expectedLength),
+        'accept-ranges': 'bytes',
         'content-disposition': disposition,
         'x-content-type-options': 'nosniff',
         'cache-control': 'no-store',
       }
+      if (contentRange) headers['content-range'] = contentRange
       if (request.method === 'HEAD') {
         await upstream.body?.cancel()
         return new Response(null, { headers })
@@ -86,14 +111,14 @@ export function createDownloadResponder(
             const chunk = await reader.read()
             if (canceled) return
             if (chunk.done) {
-              if (length !== audio.byteLength)
+              if (length !== expectedLength)
                 throw new Error('Truncated download')
               output.close()
               reader.releaseLock()
               return
             }
             length += chunk.value.byteLength
-            if (length > audio.byteLength)
+            if (length > expectedLength)
               throw new Error('Download exceeds canonical byte length')
             output.enqueue(chunk.value)
           } catch (error) {
@@ -110,7 +135,7 @@ export function createDownloadResponder(
           await reader.cancel(reason)
         },
       })
-      return new Response(body, { headers })
+      return new Response(body, { status: range ? 206 : 200, headers })
     } catch (error) {
       clearTimeout(timer)
       controller.abort()
