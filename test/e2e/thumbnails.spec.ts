@@ -68,7 +68,8 @@ test('scrolling the list requests thumbnails, and failed thumbnails never fall b
   for (const width of [390, 768, 1280]) {
     await page.setViewportSize({ width, height: 900 })
     const episodesTab = page.getByRole('tab', { name: 'Episodes', exact: true })
-    if (await episodesTab.isVisible()) await episodesTab.click()
+    if (width <= 700) await episodesTab.click()
+    else await expect(episodesTab).toHaveCount(0)
     await expect.poll(spacing).toBe(12)
   }
   // iPadOS 14.3 ignores flex gaps; spacing must not depend on that property.
