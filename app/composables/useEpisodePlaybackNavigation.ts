@@ -65,6 +65,9 @@ export function useEpisodePlaybackNavigation() {
     })
   }
   return {
+    get timestamp() {
+      return state.value.timestamp
+    },
     get sortOrder() {
       return sortOrder.value
     },

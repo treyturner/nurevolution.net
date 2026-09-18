@@ -45,6 +45,7 @@ function harness(
     setup() {
       const player = usePodcastPlayer(() => episode, {
         pending: false,
+        timestamp: { kind: 'none' },
         neighbor: () => null,
         episodes: [],
         sortOrder: 'newest-first',
@@ -247,6 +248,7 @@ it('persists zero when Retry discards a pending restore and when the same ID rec
     defineComponent({
       setup() {
         const player = usePodcastPlayer(() => selected.value, {
+          timestamp: { kind: 'none' },
           isRoot: () => false,
           restore: async () => 'restored',
           pending: false,

@@ -722,6 +722,31 @@ describe('restored positions and explicit playback intent', () => {
     expect(player.snapshot().pendingSeek).toBeNull()
     expect(media.play).not.toHaveBeenCalled()
   })
+  it('labels a failed shared seek separately and lets a subsequent manual seek replace it', () => {
+    const { media, player } = setup()
+    player.select(a, { position: 8.25, paused: true, positionReason: 'shared' })
+    Object.defineProperty(media, 'currentTime', {
+      configurable: true,
+      get: () => 0,
+      set: () => {
+        throw new Error('seek')
+      },
+    })
+    media.ready()
+    expect(player.snapshot().seekMessage).toBe(
+      'Could not seek to the shared position. Try again.',
+    )
+    Object.defineProperty(media, 'currentTime', {
+      configurable: true,
+      writable: true,
+      value: 0,
+    })
+    player.seek(12.125, 'shared')
+    expect(player.snapshot().seekMessage).toBeNull()
+    player.seek(5)
+    expect(media.currentTime).toBe(5)
+    expect(media.play).not.toHaveBeenCalled()
+  })
   it('clamps saved time to changed duration and never plays or advances at the end', () => {
     const { media, player } = setup()
     player.select(a, { position: 150 })

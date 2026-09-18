@@ -34,6 +34,7 @@ export interface PlayerSnapshot {
 export interface PlayerSelection {
   position?: number
   paused?: boolean
+  positionReason?: 'saved' | 'shared'
 }
 
 /** One element, with asynchronous work scoped to its current source and play intent. */
@@ -409,7 +410,11 @@ export function createPlayer(
       }
       const snapshot = audio.snapshot()
       metadataRetries = 0
-      if (options.position !== undefined) seek.request(options.position, true)
+      if (options.position !== undefined)
+        seek.request(
+          options.position,
+          options.positionReason === 'shared' ? 'shared' : true,
+        )
       load(
         next,
         Boolean(
@@ -437,7 +442,7 @@ export function createPlayer(
       audio.pause()
       publish('pause')
     },
-    seek(seconds: number) {
+    seek(seconds: number, reason?: 'shared') {
       if (
         disposed ||
         !source ||
@@ -446,7 +451,7 @@ export function createPlayer(
       )
         return
       playbackTime = null
-      seek.request(seconds)
+      seek.request(seconds, reason === 'shared' ? 'shared' : false)
       const actual = current()
       if (actual) seek.reconcile(actual)
       publish()

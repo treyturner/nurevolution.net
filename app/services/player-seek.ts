@@ -28,7 +28,7 @@ export function createPlayerSeek(audio: AudioAdapter, changed: () => void) {
   let pending: number | null = null
   let applied: number | null = null
   let message: string | null = null
-  let restore = false
+  let restore: boolean | 'shared' = false
   let failedTarget: number | null = null
   let timer: ReturnType<typeof setTimeout> | undefined
   function clear() {
@@ -39,14 +39,17 @@ export function createPlayerSeek(audio: AudioAdapter, changed: () => void) {
   function fail() {
     failedTarget = applied
     clear()
-    message = restore
-      ? 'Saved position could not be restored.'
-      : 'Could not seek. Try again.'
+    message =
+      restore === 'shared'
+        ? 'Could not seek to the shared position. Try again.'
+        : restore
+          ? 'Saved position could not be restored.'
+          : 'Could not seek. Try again.'
     changed()
   }
   return {
     snapshot: () => ({ pendingSeek: pending, seekMessage: message }),
-    request(seconds: number, restoring = false) {
+    request(seconds: number, restoring: boolean | 'shared' = false) {
       if (!Number.isFinite(seconds)) return
       clear()
       message = null

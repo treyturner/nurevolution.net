@@ -60,6 +60,11 @@ export function usePodcastPlayer(
   const trackClock = createTrackClock()
   const trackTime = ref(0)
   const cleanups: (() => void)[] = []
+  const invalidTimestampMessage = 'Invalid timestamp; starting at 0:00.'
+  function clearTimestampMessage() {
+    if (state.restoreMessage === invalidTimestampMessage)
+      state.restoreMessage = null
+  }
   const sequenceRevision = ref(0)
   const sequence = createEpisodeSequencer(
     {
@@ -119,16 +124,40 @@ export function usePodcastPlayer(
   }
   function select(saved?: ResumeRecord | null) {
     const current = episode()
+    const source = current
+      ? playerSource(
+          current,
+          config.public.mediaOrigin,
+          navigator.userAgent,
+          (type) => element?.canPlayType(type) ?? '',
+          window.location.href,
+        )
+      : null
+    const timestamp = navigation?.timestamp
+    if (source && timestamp && timestamp.kind !== 'none') {
+      const target = timestamp.kind === 'time' ? timestamp.seconds : 0
+      state.restoreMessage =
+        timestamp.kind === 'invalid' ? invalidTimestampMessage : null
+      sequence.pause()
+      if (element && !element.paused) pendingResetPauses++
+      resetting = true
+      try {
+        controller?.pause()
+        controller?.select(source, {
+          position: target,
+          paused: true,
+          positionReason: 'shared',
+        })
+        // Same-source selects are intentionally idempotent; query links still seek.
+        trackClock.reset()
+        controller?.seek(target, 'shared')
+      } finally {
+        resetting = false
+      }
+      return
+    }
     controller?.select(
-      current
-        ? playerSource(
-            current,
-            config.public.mediaOrigin,
-            navigator.userAgent,
-            (type) => element?.canPlayType(type) ?? '',
-            window.location.href,
-          )
-        : null,
+      source,
       saved?.episodeId === current?.id && saved
         ? { position: saved.positionSeconds, paused: true }
         : {},
@@ -162,6 +191,7 @@ export function usePodcastPlayer(
       (snapshot, event) => {
         Object.assign(state, snapshot)
         trackTime.value = trackClock(snapshot, event)
+        if (snapshot.wantsPlay) clearTimestampMessage()
         if (snapshot.status === 'playing') playbackStarted = true
         if (
           sequence.snapshot().continuing &&
@@ -236,7 +266,7 @@ export function usePodcastPlayer(
     })
     void initialize()
   })
-  watch(episode, () => {
+  watch([episode, () => navigation?.timestamp], () => {
     if (!bootstrapped) return
     state.restoreMessage = null
     pendingPauseAt = null
@@ -305,18 +335,21 @@ export function usePodcastPlayer(
       )
       if (target?.startTime !== null && target?.startTime !== undefined) {
         trackClock.reset()
+        clearTimestampMessage()
         controller?.seek(target.startTime)
       }
     },
     previousTrack() {
       if (tracks.value.previous !== null) {
         trackClock.reset()
+        clearTimestampMessage()
         controller?.seek(tracks.value.previous)
       }
     },
     nextTrack() {
       if (tracks.value.next !== null) {
         trackClock.reset()
+        clearTimestampMessage()
         controller?.seek(tracks.value.next)
       }
     },
@@ -354,10 +387,12 @@ export function usePodcastPlayer(
     },
     seek(seconds: number) {
       trackClock.reset()
+      clearTimestampMessage()
       controller?.seek(seconds)
     },
     skip(seconds: number) {
       trackClock.reset()
+      clearTimestampMessage()
       controller?.skip(seconds)
     },
     setVolume: (value: number) => controller?.setVolume(value),
