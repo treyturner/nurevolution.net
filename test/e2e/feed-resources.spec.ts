@@ -5,9 +5,65 @@ import { readCatalog } from '../../server/content/repository.ts'
 import { fileReader } from '../../tools/content/files.ts'
 import { selectPublic, episodeDetail } from '../../shared/content/public.ts'
 import { serializeChapters } from '../../shared/content/chapters.ts'
+import { parseRss } from '../../tools/content/feed/assert.ts'
 import { devBaseURL } from '../../playwright.config'
 
 const { catalog } = await readCatalog(fileReader('content'))
+
+test('advertises canonical artwork for all episodes and resolvable chapters only for known starts', async ({
+  request,
+}) => {
+  const { items } = parseRss(await (await request.get('/feed/podcast')).text())
+  let chapterCount = 0
+  let trackCount = 0
+  for (const item of items) {
+    const episode = catalog.episodes.find(
+      (entry) =>
+        entry.guid === item.getElementsByTagName('guid')[0]!.textContent,
+    )!
+    const artwork = item.getElementsByTagNameNS(
+      'http://www.itunes.com/dtds/podcast-1.0.dtd',
+      'image',
+    )
+    expect(artwork.length).toBe(1)
+    const artworkUrl = new URL(artwork[0]!.getAttribute('href')!)
+    expect(artworkUrl.origin).toBe(catalog.show.siteUrl)
+    const asset = catalog.assets.find(
+      (entry) => entry.id === episode.artworkAssetId,
+    )!
+    expect(artworkUrl.pathname).toBe(`/episode-artwork/v1-${asset.sha256}.jpg`)
+    expect((await request.head(artworkUrl.pathname)).status()).toBe(200)
+    const references = item.getElementsByTagNameNS(
+      'https://podcastindex.org/namespace/1.0',
+      'chapters',
+    )
+    const known = episode.tracks.filter((track) => track.startTime !== null)
+    expect(references.length).toBe(known.length ? 1 : 0)
+    if (!known.length) continue
+    const reference = references[0]!
+    expect(reference.getAttribute('type')).toBe('application/json+chapters')
+    const url = new URL(reference.getAttribute('url')!)
+    expect(url.origin).toBe(catalog.show.siteUrl)
+    expect(url.pathname).toBe(`/chapters/${episode.slug}.json`)
+    const response = await request.get(url.pathname + url.search)
+    expect(response.status()).toBe(200)
+    const body = await response.body()
+    expect(url.searchParams.get('v')).toBe(
+      createHash('sha256').update(body).digest('hex'),
+    )
+    expect((await response.json()).chapters).toEqual(
+      known.map((track) => ({
+        startTime: track.startTime,
+        title: `${String(track.position).padStart(2, '0')}. ${track.artist} - ${track.title}`,
+      })),
+    )
+    chapterCount++
+    trackCount += known.length
+  }
+  expect(items.length).toBe(55)
+  expect(chapterCount).toBe(34)
+  expect(trackCount).toBe(626)
+})
 
 test('serves exact current chapters for every timed episode and no document for untimed episodes', async ({
   request,

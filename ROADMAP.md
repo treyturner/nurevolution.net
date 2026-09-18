@@ -321,7 +321,7 @@ Run `pnpm verify`. External validator/client results are provisional until repea
 
 ### M8 - Listening and feed enhancements
 
-**Implementation underway, beginning with Safari compatibility.** The owner prioritized this milestone ahead of drafts/scheduling on 2026-09-18 and deferred palettes and track/artist/release links. See the [M8 implementation plan](docs/milestones/M08-listening-and-feed-enhancements.md) for contracts, evidence, exclusions, and review slices. Actual iPad acceptance and the other four feature areas remain outstanding.
+**Implementation underway, beginning with Safari compatibility.** The owner prioritized this milestone ahead of drafts/scheduling on 2026-09-18 and deferred palettes and track/artist/release links. See the [M8 implementation plan](docs/milestones/M08-listening-and-feed-enhancements.md) for contracts, evidence, exclusions, and review slices. All five areas are implemented in review-sized local branches. Safari PR #56 passed CI/automatic review and partial actual-iPad acceptance; remaining device/UI/client acceptance and later review slices are still required. No M8 changes are deployed.
 
 **Outcome:** share precise listening positions, use supported device media controls, expose existing artwork/timed tracks in the feed, and restore ordinary playback on Safari 14.3.
 

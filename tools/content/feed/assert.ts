@@ -5,6 +5,7 @@ import type { PodcastArchive } from '../../../server/content/feed.ts'
 const itunes = 'http://www.itunes.com/dtds/podcast-1.0.dtd'
 const content = 'http://purl.org/rss/1.0/modules/content/'
 const atom = 'http://www.w3.org/2005/Atom'
+const podcast = 'https://podcastindex.org/namespace/1.0'
 
 export function elements(parent: Element): Element[] {
   return Array.from(parent.childNodes).filter(
@@ -97,6 +98,7 @@ export function parseRss(xml: string) {
     'xmlns:itunes': itunes,
     'xmlns:content': content,
     'xmlns:atom': atom,
+    'xmlns:podcast': podcast,
   })
   shape(root, ['channel'])
   const channel = one(root, 'channel')
@@ -186,6 +188,8 @@ export function assertPodcastFeed(xml: string, archive: PodcastArchive) {
         'enclosure',
         'itunes:author',
         'itunes:explicit',
+        'itunes:image',
+        ...(expected.rss.chaptersUrl === null ? [] : ['podcast:chapters']),
         ...(expected.durationSeconds === null ? [] : ['itunes:duration']),
       ])
       text(item, 'title', `${expected.artist} – ${expected.title}`)
@@ -194,6 +198,17 @@ export function assertPodcastFeed(xml: string, archive: PodcastArchive) {
       text(item, 'encoded', expected.descriptionHtml, content)
       text(item, 'author', expected.artist, itunes)
       text(item, 'explicit', expected.rss.explicit ? 'true' : 'false', itunes)
+      const image = one(item, 'image', itunes)
+      attributes(image, { href: expected.rss.artworkUrl })
+      shape(image, [])
+      if (expected.rss.chaptersUrl !== null) {
+        const chapters = one(item, 'chapters', podcast)
+        attributes(chapters, {
+          url: expected.rss.chaptersUrl,
+          type: 'application/json+chapters',
+        })
+        shape(chapters, [])
+      }
       const pubDate = one(item, 'pubDate')
       attributes(pubDate, {})
       assert.equal(elements(pubDate).length, 0, 'pubDate: nested markup')
