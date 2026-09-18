@@ -1,6 +1,7 @@
 strictPeerDependencies: true
 
 allowBuilds:
+  core-js@3.50.0: false
   esbuild@0.28.2: true
   unrs-resolver@1.12.2: true
 

@@ -20,6 +20,7 @@ function fixture() {
     muteSupported: true,
     continuing: false,
     attached: true,
+    initialized: true,
     restoring: false,
     restoreMessage: null,
   })

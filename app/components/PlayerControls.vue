@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import type { PodcastPlayer } from '../composables/usePodcastPlayer'
 import { formatTime } from '../services/episode-page'
+import { useCompactContainer } from '../composables/useCompactContainer'
 const props = defineProps<{ player: PodcastPlayer; sourceUrl?: string }>()
+const { container, compact } = useCompactContainer(319)
 const state = computed(() => props.player.state)
 const draft = ref<number | null>(null)
 const showPause = computed(
@@ -97,7 +99,9 @@ watch(
 
 <template>
   <div
+    ref="container"
     class="audio-controls"
+    :class="{ 'compact-controls': compact }"
     role="group"
     aria-label="Audio player"
     aria-describedby="playback-status"
@@ -130,11 +134,9 @@ watch(
           aria-label="Previous episode"
           title="Previous episode"
           :aria-busy="player.sequencing.busy"
+          :aria-disabled="player.sequencing.busy || undefined"
           :disabled="
-            state.restoring ||
-            !state.sourceId ||
-            !player.sequencing.available ||
-            player.sequencing.busy
+            state.restoring || !state.sourceId || !player.sequencing.available
           "
           @click="player.previousEpisode()"
         >
@@ -229,11 +231,9 @@ watch(
           aria-label="Next episode"
           title="Next episode"
           :aria-busy="player.sequencing.busy"
+          :aria-disabled="player.sequencing.busy || undefined"
           :disabled="
-            state.restoring ||
-            !state.sourceId ||
-            !player.sequencing.available ||
-            player.sequencing.busy
+            state.restoring || !state.sourceId || !player.sequencing.available
           "
           @click="player.nextEpisode()"
         >
@@ -245,6 +245,7 @@ watch(
       <div
         v-if="state.muteSupported || state.volumeSupported"
         class="volume-group"
+        :class="{ 'has-volume-control': state.volumeSupported }"
         role="group"
         aria-label="Volume controls"
       >

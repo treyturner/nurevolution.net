@@ -1,10 +1,13 @@
 import { fileURLToPath } from 'node:url'
+import { browserCompatibility } from './shared/browser-compatibility'
 
 export default defineNuxtConfig({
   compatibilityDate: '2026-09-07',
   ssr: true,
   devtools: { enabled: false },
+  experimental: browserCompatibility.experimental,
   vite: {
+    ...browserCompatibility.vite,
     server: { allowedHosts: ['.coder.treyturner.info'] },
   },
   runtimeConfig: {
@@ -19,6 +22,7 @@ export default defineNuxtConfig({
       title: 'nurevolution studios',
       htmlAttrs: { lang: 'en' },
       meta: [{ name: 'color-scheme', content: 'dark' }],
+      script: [{ src: '/player-startup.js', defer: true }],
       link: [
         {
           rel: 'icon',

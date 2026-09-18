@@ -12,6 +12,11 @@ const props = defineProps<{
   failedPath?: string | null
 }>()
 const config = useRuntimeConfig()
+useHead({
+  noscript: [
+    { innerHTML: '<style>.player-startup-loading{display:none}</style>' },
+  ],
+})
 const artworkUrl = computed(() =>
   props.episode
     ? deliveryAssetUrl(
@@ -56,6 +61,7 @@ const messages = {
 }
 const statusMessage = computed(() => {
   if (props.player.state.restoring) return 'Restoring your place…'
+  if (props.episode && !props.player.state.initialized) return 'Loading player…'
   if (status.value === 'playing') {
     const tracks = props.episode?.tracks ?? []
     const current = tracks.find(
@@ -88,7 +94,13 @@ const feedback = computed(() => {
 </script>
 
 <template>
-  <section class="player" aria-labelledby="episode-title">
+  <section
+    class="player"
+    aria-labelledby="episode-title"
+    :data-player-startup="
+      episode && !player.state.initialized ? 'pending' : undefined
+    "
+  >
     <div v-if="episode" class="artwork">
       <button
         v-if="!failedArtwork"
@@ -156,11 +168,31 @@ const feedback = computed(() => {
             role="status"
             aria-atomic="true"
           >
-            {{ feedback.message }}
+            <span
+              :class="{
+                'player-startup-loading': episode && !player.state.initialized,
+              }"
+              >{{ feedback.message }}</span
+            >
+            <template v-if="episode && !player.state.initialized">
+              <span class="player-startup-failure"
+                >Player could not start.</span
+              >
+              <noscript
+                >JavaScript is needed for playback. You can download the
+                MP3.</noscript
+              >
+            </template>
           </p>
           <span class="player-status-action">
+            <a
+              v-if="episode && !player.state.initialized"
+              class="status-retry player-startup-reload"
+              href=""
+              >Reload</a
+            >
             <NuxtLink
-              v-if="feedback.retry === 'episode'"
+              v-else-if="feedback.retry === 'episode'"
               class="status-retry"
               :to="failedPath!"
               :prefetch="false"

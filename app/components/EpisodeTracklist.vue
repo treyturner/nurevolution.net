@@ -2,6 +2,8 @@
 import type { EpisodeDetail } from '../../shared/content/public'
 import type { PodcastPlayer } from '../composables/usePodcastPlayer'
 import { formatTime } from '../services/episode-page'
+import { useCompactContainer } from '../composables/useCompactContainer'
+const { container, compact } = useCompactContainer(24, true)
 const props = defineProps<{
   tracks: EpisodeDetail['tracks']
   durationSeconds?: number | null
@@ -59,7 +61,12 @@ function activate(position: number) {
 </script>
 
 <template>
-  <ol v-if="tracks.length" class="track-list">
+  <ol
+    v-if="tracks.length"
+    ref="container"
+    class="track-list"
+    :class="{ 'compact-tracks': compact }"
+  >
     <li
       v-for="(track, index) in tracks"
       :key="track.position"

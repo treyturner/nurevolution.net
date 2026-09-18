@@ -1,6 +1,6 @@
 # M8 - Listening and feed enhancements
 
-Status: **Implementation plan prepared on 2026-09-18; feature implementation has not started.** After squash-merging PR #55, the owner requested a new feature branch with this plan as its first commit. The branch is `feat/m8-listening-and-feed-enhancements`, based on synchronized `main` at `6e9abc6e7dec60799953ba74eab771f8b429ffae`. This commit records the implementation decisions and acceptance requirements; it does not perform a release.
+Status: **Implementation in progress; Safari compatibility is the first review slice.** The plan was committed first as `c762a04` on 2026-09-18, on `feat/m8-listening-and-feed-enhancements` based on synchronized `main` at `6e9abc6e7dec60799953ba74eab771f8b429ffae` after PR #55. The owner subsequently authorized implementation with one open PR at a time and local forward branches, automatic review on each batched push, and no deployment. Physical Safari acceptance and the remaining four feature areas are still required.
 
 Roadmap: [M8](../../ROADMAP.md#m8---listening-and-feed-enhancements). Baseline: [current status](../STATUS.md), [player behavior](../PLAYER.md), [content](../CONTENT.md), and [feed validation](../FEED-VALIDATION.md). M0-M7 keep their numbers. Drafts and scheduled repository publishing are now M9. Older milestone documents retain their original numbering as historical evidence.
 
@@ -50,6 +50,8 @@ Set `experimental.entryImportMap: false` and explicitly target Safari 14 / iOS 1
 Use the installed framework configuration and the [Nuxt configuration reference](https://nuxt.com/docs/4.x/api/nuxt-config#entryimportmap). [Vite's browser guidance](https://vite.dev/guide/build#browser-compatibility) distinguishes syntax transformation from runtime API support. Do not add an indiscriminate polyfill bundle or downgrade the application stack. Replace application-owned unsupported calls with equivalent supported operations; use a narrowly scoped compatibility dependency only if an unavoidable third-party call requires it, with its pin and client-entry loading covered by tests.
 
 Replace `findLastIndex` with a backwards loop, preserving the three-second rule, missing-timing behavior, and existing 10-microsecond highlight tolerance. Audit client-reachable framework/application dependencies for unsupported APIs and syntax. Keep browser globals inside mounted/client paths. Optional capabilities such as volume setters and clipboard access must fail gracefully without preventing player attachment.
+
+The first production-bundle audit found framework calls to `Array.prototype.at` (Nuxt router) and `Object.hasOwn` (payload decoding through devalue). Pin `core-js` 3.50.0 and import only those two modules from a client plugin before any plugin setup executes, in both applications. Its install-time informational script is explicitly disabled. Vue's newer array-method wrappers are unused by application code; Nuxt's `AbortSignal.any`/`timeout` calls are feature-detected. The server-only content projection's `.at(-1)` does not require a browser change. API-removal browser tests verify initial payload hydration and subsequent episode navigation with both necessary polyfills.
 
 ### Dialogs and CSS
 

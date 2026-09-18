@@ -20,6 +20,7 @@ export function usePodcastPlayer(
     PlayerSnapshot & {
       continuing: boolean
       attached: boolean
+      initialized: boolean
       restoring: boolean
       restoreMessage: string | null
     }
@@ -38,6 +39,7 @@ export function usePodcastPlayer(
     muteSupported: false,
     continuing: false,
     attached: false,
+    initialized: false,
     restoring: false,
     restoreMessage: null,
   })
@@ -192,6 +194,8 @@ export function usePodcastPlayer(
     }
     select(saved)
     bootstrapped = true
+    state.initialized = true
+    document.dispatchEvent(new Event('nurevolution:player-ready'))
     initialWrite = !state.restoreMessage
     savedId = state.restoreMessage ? state.sourceId : null
     capture(controller.snapshot())
