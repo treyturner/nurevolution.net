@@ -53,6 +53,7 @@ function cancelHold() {
 }
 function close(restoreFocus = false) {
   cancelHold()
+  suppressSeek.value = false
   if (!opened.value) return
   opened.value = false
   if (restoreFocus)

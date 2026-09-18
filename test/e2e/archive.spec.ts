@@ -155,6 +155,7 @@ test('mobile tabs keep both lists accessible, retain focus, and reflow with larg
   await page.evaluate(() => {
     document.documentElement.style.fontSize = '200%'
   })
+  await expect(page.locator('.wordmark > span')).toBeHidden()
   expect(
     await page.evaluate(
       () => document.documentElement.scrollWidth <= innerWidth,
@@ -174,7 +175,8 @@ test('mobile tabs keep both lists accessible, retain focus, and reflow with larg
   await expect(page.locator('#tracks-panel')).toBeVisible()
   const episodeBox = (await page.locator('#episodes-panel').boundingBox())!
   const trackBox = (await page.locator('#tracks-panel').boundingBox())!
-  expect(episodeBox.width).toBeCloseTo(trackBox.width, 1)
+  expect(episodeBox.width / trackBox.width).toBeCloseTo(2 / 3, 2)
+  await expect(page.locator('.wordmark > span')).toBeVisible()
   const actions = page.locator('.episode-row-actions').first()
   const playBox = (await actions.locator('.row-play').boundingBox())!
   const copyBox = (await actions.locator('.row-copy-link').boundingBox())!

@@ -297,6 +297,33 @@ test('playhead menu supports keyboard access, dismissal and narrow screens witho
   await expect(page.locator('audio')).toHaveJSProperty('paused', false)
 })
 
+test('keyboard seeking remains available after closing the playhead menu', async ({
+  page,
+}) => {
+  await page.goto(ruminate + '?t=8.25')
+  await at(page, 8.25)
+  const slider = page.getByRole('slider', { name: 'Playback position' })
+  const audio = page.locator('audio')
+  for (const key of ['Escape', 'Tab', 'Enter']) {
+    const before = await audio.evaluate(
+      (element: HTMLAudioElement) => element.currentTime,
+    )
+    await slider.focus()
+    await slider.press('Shift+F10')
+    await page.getByRole('menuitem', { name: 'Copy timestamp link' }).press(key)
+    await expect(page.getByRole('menu')).toHaveCount(0)
+    await slider.focus()
+    await slider.press('ArrowRight')
+    await expect
+      .poll(() =>
+        audio.evaluate((element: HTMLAudioElement) => element.currentTime),
+      )
+      .toBeGreaterThan(before)
+    await expect(audio).toHaveJSProperty('paused', true)
+    await expect(audio).toHaveJSProperty('seeking', false)
+  }
+})
+
 test('only the thumb opens timestamp copying, while the rest of the bar still seeks normally', async ({
   page,
 }) => {
@@ -430,6 +457,7 @@ for (const environment of ['dev delivery', 'HTTPS preview'] as const) {
 
 test('delayed metadata retains the newest link and honors a later Play request', async ({
   page,
+  browserName,
 }) => {
   let release!: () => void
   const waiting = new Promise<void>((resolve) => {
@@ -444,6 +472,7 @@ test('delayed metadata retains the newest link and honors a later Play request',
     await hydrated(page)
     await routeTo(page, praxis + '?t=18.75')
     await expect(page).toHaveURL(/t=18.75$/)
+    await expect(page.locator('html')).toHaveAttribute('data-loads', '1')
     await page.locator('audio').evaluate((audio: HTMLAudioElement) => {
       audio.muted = true
     })
@@ -457,7 +486,11 @@ test('delayed metadata retains the newest link and honors a later Play request',
           .evaluate((audio: HTMLAudioElement) => audio.currentTime),
       )
       .toBeGreaterThanOrEqual(18.75 - 0.001)
-    await expect(page.locator('html')).toHaveAttribute('data-loads', '1')
+    // WebKit reloads once in the Play gesture to preserve media permission.
+    await expect(page.locator('html')).toHaveAttribute(
+      'data-loads',
+      browserName === 'webkit' ? '2' : '1',
+    )
   } finally {
     release()
   }

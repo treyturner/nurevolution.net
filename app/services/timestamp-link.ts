@@ -24,10 +24,17 @@ export function timestampIntent(
     !/^\d+(?:\.\d+)?$/.test(input)
   )
     return { kind: 'invalid' }
-  const seconds = Number(input)
-  return Number.isFinite(seconds) && seconds <= Number.MAX_SAFE_INTEGER
-    ? { kind: 'time', seconds }
-    : { kind: 'invalid' }
+  // Check the decimal before Number can round a value just above the bound down.
+  const [integer, fraction = ''] = input.split('.')
+  const whole = integer!.replace(/^0+/, '') || '0'
+  const maximum = String(Number.MAX_SAFE_INTEGER)
+  if (
+    whole.length > maximum.length ||
+    (whole.length === maximum.length &&
+      (whole > maximum || (whole === maximum && /[1-9]/.test(fraction))))
+  )
+    return { kind: 'invalid' }
+  return { kind: 'time', seconds: Number(input) }
 }
 
 export function sameTimestamp(left: TimestampIntent, right: TimestampIntent) {

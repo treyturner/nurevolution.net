@@ -57,7 +57,16 @@ function copyEpisodeLink(episode: EpisodeSummary, event: MouseEvent) {
           <span class="episode-list-title">{{ episode.title }}</span>
           <span class="episode-list-artist">
             <span class="episode-list-meta">
-              <span class="episode-list-artist-name">{{ episode.artist }}</span>
+              <span class="episode-list-artist-name"
+                ><template
+                  v-for="(part, index) in episode.artist.split(/\s+(?=&)/)"
+                  :key="index"
+                  >{{ index ? ' ' : ''
+                  }}<span class="episode-list-artist-part">{{
+                    part
+                  }}</span></template
+                ></span
+              >
               <time
                 v-if="episode.publishedAt"
                 class="episode-list-date"

@@ -49,3 +49,11 @@ The owner confirmed the old site and database are retired and their backups are 
 ## Scheduled production backup
 
 A September 18 journal inspection confirmed that the weekly production backup started automatically on September 13 at 04:20:21 UTC and finished successfully at 04:20:27 UTC. The repository check passed; the recorded snapshot was `23fd4e9a4163be58637004420a4df12c79256c5e33df5b978bfe5e6ce327d7e2`. This closes the old first-scheduled-run observation. The September 17 post-deployment backup and September 18 authenticated repository read are recorded separately in the reboot evidence. No backup was triggered for this documentation reconciliation.
+
+## Later M8 layout and system-control checks
+
+The owner refined the preview to a 40/60 Episodes/Tracklist split, condensed `XX.` track numbers, narrower number-to-text spacing, and an older-iOS vertical offset. Episode artist names prefer wrapping before `&`. These refinements are included in the final PR candidate.
+
+The owner confirmed native system seeking while using Download MP3 -> View, and later reported that embedded-player seeking also appeared to work, possibly after a touch-target misunderstanding. Temporary diagnostic capture from the iPad found a finite 4627.6179591836735-second duration with a full `[0, duration]` seekable range. Neither `navigator.mediaSession` nor `MediaMetadata` existed on the device. Missing system artwork and programmable previous/next or skip buttons are recorded as an iPadOS 14.3 limitation; this observation does not establish modern-Safari device coverage. The diagnostic collector was removed and the normal preview restored.
+
+The owner authorized PR finalization and merge after automatic review approval. Production deployment remains a separate operation subject to the staged resource-support fallback requirement.

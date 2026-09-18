@@ -95,9 +95,9 @@ function activate(position: number) {
         @click="activate(track.position)"
       />
       <div class="track-content">
-        <span class="track-number" aria-hidden="true">{{
-          String(track.position).padStart(2, '0')
-        }}</span>
+        <span class="track-number" aria-hidden="true"
+          >{{ String(track.position).padStart(2, '0') }}.</span
+        >
         <span>
           <span class="track-artist">{{ track.artist }}</span>
           <span class="track-title-line">

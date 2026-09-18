@@ -24,6 +24,8 @@ describe('timestamp links', () => {
       '208.794',
       '0001.250',
       String(Number.MAX_SAFE_INTEGER),
+      '0009007199254740991.000',
+      '9007199254740990.999',
     ])
       expect(timestampIntent(path, { t: value })).toEqual({
         kind: 'time',
@@ -46,6 +48,9 @@ describe('timestamp links', () => {
       'NaN',
       '9'.repeat(64),
       '0'.repeat(65),
+      '9007199254740992',
+      '9007199254740991.1',
+      '0009007199254740991.000000000000001',
       ['1'],
       ['1', '2'],
       1,

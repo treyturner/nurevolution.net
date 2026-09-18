@@ -58,7 +58,7 @@ test('track time display switches without seeking and resets to duration on relo
   await expect(page.locator('audio')).toHaveJSProperty('paused', true)
   await expect(
     page.locator('.track-list li[aria-current] .track-number'),
-  ).toHaveText('02')
+  ).toHaveText('02.')
   await toggle.press('Space')
   await expect(times).toHaveText(['0:08', '0:23', '0:08'])
   await page.getByRole('button', { name: /^Seek to track 3:/ }).click()
@@ -205,7 +205,7 @@ test('sample-based track starts select the clicked row after a fresh paused load
     await expect(
       page.locator('.track-list li[aria-current] .track-number'),
       `Requested ${starts[position - 1]}, browser confirmed ${actual}`,
-    ).toHaveText(String(position).padStart(2, '0'))
+    ).toHaveText(`${String(position).padStart(2, '0')}.`)
   }
   await page.getByRole('button', { name: 'Next track' }).click()
   await at(page, starts[2]!)
@@ -214,7 +214,7 @@ test('sample-based track starts select the clicked row after a fresh paused load
   await at(page, starts[1]!)
   await expect(
     page.locator('.track-list li[aria-current] .track-number'),
-  ).toHaveText('02')
+  ).toHaveText('02.')
 })
 
 test('tabbed lists show the active tracklist when playback starts or resumes, but respect browsing while playing', async ({
