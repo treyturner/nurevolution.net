@@ -67,8 +67,8 @@ async function open() {
   if (!opened.value) return
   const head = thumb()
   const x = head.x
-  const y = head.y + head.size / 2 + 6
   const box = menu.value!.getBoundingClientRect()
+  const y = head.y - head.size / 2 - 6 - box.height
   position.value = {
     left: `${Math.max(8, Math.min(x, window.innerWidth - box.width - 8))}px`,
     top: `${Math.max(8, Math.min(y, window.innerHeight - box.height - 8))}px`,
