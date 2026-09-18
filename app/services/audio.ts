@@ -44,6 +44,11 @@ export function createAudioAdapter(
 ) {
   const subscriptions = new Set<() => void>()
   let disposed = false
+  const ios = Boolean(
+    browser &&
+    (/iPhone|iPad|iPod/.test(browser.userAgent) ||
+      (browser.platform === 'MacIntel' && browser.maxTouchPoints > 1)),
+  )
 
   function assertActive() {
     if (disposed) throw new Error('The audio adapter has been disposed.')
@@ -52,11 +57,15 @@ export function createAudioAdapter(
   return {
     // iOS can echo a volume assignment before reverting it, defeating a
     // synchronous capability probe. Desktop-mode iPads identify as a touch Mac.
-    volumeWritable:
-      !browser ||
-      !(
-        /iPhone|iPad|iPod/.test(browser.userAgent) ||
-        (browser.platform === 'MacIntel' && browser.maxTouchPoints > 1)
+    volumeWritable: !ios,
+    // WebKit's load() records media permission when invoked in the original
+    // gesture. A later network/seek completion no longer has that gesture.
+    requiresGesturePreparation:
+      ios ||
+      Boolean(
+        browser &&
+        /AppleWebKit\//.test(browser.userAgent) &&
+        !/(?:Chrome|Chromium)\//.test(browser.userAgent),
       ),
     snapshot() {
       assertActive()

@@ -494,3 +494,111 @@ test('Pause cancels episode row autoplay during a delayed selection, and failed 
     held.release()
   }
 })
+
+// Current headless WebKit is more permissive than Safari 14.3. Model the old
+// per-element permission: only load/play inside the actual click unlocks it.
+async function requireWebkitGesture(page: Page) {
+  await page.addInitScript(() => {
+    Object.defineProperties(navigator, {
+      userAgent: {
+        configurable: true,
+        value:
+          'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15) AppleWebKit/605.1.15 Version/14.0 Safari/605.1.15',
+      },
+      platform: { configurable: true, value: 'MacIntel' },
+      maxTouchPoints: { configurable: true, value: 5 },
+    })
+    let gesture = false
+    const allowed = new WeakSet<HTMLMediaElement>()
+    document.addEventListener(
+      'click',
+      () => {
+        gesture = true
+      },
+      true,
+    )
+    document.addEventListener('click', () => {
+      gesture = false
+    })
+    const load = HTMLMediaElement.prototype.load
+    const play = HTMLMediaElement.prototype.play
+    HTMLMediaElement.prototype.load = function () {
+      if (gesture) allowed.add(this)
+      return load.call(this)
+    }
+    HTMLMediaElement.prototype.play = function () {
+      if (gesture) allowed.add(this)
+      if (!allowed.has(this)) {
+        document.documentElement.dataset.gestureBlocked = 'true'
+        return Promise.reject(
+          new DOMException('A media gesture is required', 'NotAllowedError'),
+        )
+      }
+      return play.call(this)
+    }
+  })
+}
+
+test('cold episode row Play retains WebKit tap permission across delayed navigation', async ({
+  page,
+}) => {
+  await requireWebkitGesture(page)
+  const episodes = await fixture(page)
+  await page.locator('audio').evaluate((audio: HTMLAudioElement) => {
+    audio.loop = true
+  })
+  const held = await hold(page, episodes[0]!.slug)
+  try {
+    await rowPlay(page, episodes[0]!).click()
+    await held.request
+    // Preparing permission must neither play nor audibly flash the old source.
+    await expect(page.locator('audio')).toHaveJSProperty('paused', true)
+    expect(
+      await page.locator('html').getAttribute('data-play-calls'),
+    ).toBeNull()
+    held.release()
+    await expect(page).toHaveURL(new RegExp(episodes[0]!.path + '$'))
+    await expect(page.locator('.media-status')).toHaveText(/^Playing\b/)
+    expect(
+      await page.locator('html').getAttribute('data-gesture-blocked'),
+    ).toBeNull()
+    await expect(page.locator('audio')).toHaveCount(1)
+  } finally {
+    held.release()
+  }
+})
+
+test('cold selected-episode Play retains WebKit permission through a pending timestamp seek', async ({
+  page,
+}) => {
+  await requireWebkitGesture(page)
+  await stubArchiveMedia(page)
+  let release!: () => void
+  const gate = new Promise<void>((resolve) => {
+    release = resolve
+  })
+  await page.route('https://podcast.nurevolution.net/**', async (route) => {
+    await gate
+    await route.fallback()
+  })
+  try {
+    await page.goto('/episodes/trey-turner-ruminate?t=0.5', {
+      waitUntil: 'domcontentloaded',
+    })
+    await page.waitForFunction(() =>
+      document.querySelector('audio')?.classList.contains('custom-audio'),
+    )
+    await page.locator('audio').evaluate((audio: HTMLAudioElement) => {
+      audio.muted = true
+      audio.loop = true
+    })
+    await page.getByRole('button', { name: 'Play', exact: true }).click()
+    release()
+    await expect(page.locator('.media-status')).toHaveText(/^Playing\b/)
+    expect(
+      await page.locator('html').getAttribute('data-gesture-blocked'),
+    ).toBeNull()
+  } finally {
+    release()
+  }
+})

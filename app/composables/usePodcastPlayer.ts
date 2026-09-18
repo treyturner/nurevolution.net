@@ -377,9 +377,19 @@ export function usePodcastPlayer(
     previousEpisode: () => sequence.manual('previous'),
     nextEpisode: () => sequence.manual('next'),
     playEpisode(id: string) {
-      if (!navigation || !bootstrapped || state.restoring) return
+      if (
+        !navigation ||
+        !bootstrapped ||
+        state.restoring ||
+        sequence.snapshot().busy
+      )
+        return
       const target = navigation.episodes.find((episode) => episode.id === id)
-      if (target) return sequence.play(target)
+      if (target) {
+        if (target.id !== state.sourceId || state.pendingSeek !== null)
+          controller?.preparePlay()
+        return sequence.play(target)
+      }
     },
     get sortOrder() {
       return navigation?.sortOrder ?? 'newest-first'
@@ -447,7 +457,10 @@ export function usePodcastPlayer(
       initialWrite = true
       capture(controller.snapshot(), undefined, true)
     },
-    play: () => controller?.play(),
+    play() {
+      if (state.pendingSeek !== null) controller?.preparePlay()
+      controller?.play()
+    },
     pause() {
       sequence.pause()
       if (!controller) return

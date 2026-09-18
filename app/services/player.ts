@@ -59,6 +59,7 @@ export function createPlayer(
   let reconciling = false
   let resetPausePending = false
   let playObservedSinceLoad = false
+  let gesturePrepared = false
   let playbackTime: number | null = null
   const failedSources = new Set<string>()
   const seek = createPlayerSeek(audio, () => {
@@ -284,6 +285,7 @@ export function createPlayer(
       }
       wantsPlay = true
       playObservedSinceLoad = true
+      gesturePrepared = true
       if (event === 'playing' && snapshot.readyState >= 3) endArmed = true
       set(
         event === 'playing' && snapshot.readyState >= 3
@@ -390,6 +392,25 @@ export function createPlayer(
   }
   return {
     snapshot,
+    preparePlay() {
+      if (
+        disposed ||
+        !source ||
+        gesturePrepared ||
+        !audio.requiresGesturePreparation
+      )
+        return
+      gesturePrepared = true
+      // Already-playing media has permission. Otherwise load synchronously in
+      // the tap without playing the old episode, preserving any paused seek.
+      if (wantsPlay) return
+      const pending = seek.snapshot().pendingSeek
+      const position =
+        pending ?? (current()?.ended ? 0 : snapshot().currentTime)
+      if (pending === null && position > 0) seek.request(position, true)
+      metadataRetries = 0
+      load(source, false)
+    },
     select(next: PlayerSource | null, options: PlayerSelection = {}) {
       if (next?.fallbackUrl && failedSources.has(next.url))
         next = { id: next.id, url: next.fallbackUrl }

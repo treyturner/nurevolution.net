@@ -1310,3 +1310,93 @@ describe('virtual playback recovery', () => {
     player.dispose()
   })
 })
+
+describe('WebKit gesture preparation', () => {
+  beforeEach(() => vi.useFakeTimers())
+  afterEach(() => {
+    vi.clearAllTimers()
+    vi.useRealTimers()
+  })
+  function webkit() {
+    const media = new Media()
+    const player = createPlayer(
+      createAudioAdapter(media, {
+        userAgent:
+          'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15) AppleWebKit/605.1.15 Version/14.0 Safari/605.1.15',
+        platform: 'MacIntel',
+        maxTouchPoints: 5,
+      }),
+      vi.fn(),
+    )
+    return { media, player }
+  }
+  it('prepares once without playing the old source and preserves a paused position if navigation fails', () => {
+    const { media, player } = webkit()
+    player.select(a)
+    media.ready()
+    player.seek(8.25)
+    player.preparePlay()
+    expect(media.load).toHaveBeenCalledTimes(2)
+    expect(media.play).not.toHaveBeenCalled()
+    expect(player.snapshot()).toMatchObject({
+      sourceId: a.id,
+      wantsPlay: false,
+      pendingSeek: 8.25,
+    })
+    media.ready()
+    expect(player.snapshot()).toMatchObject({
+      currentTime: 8.25,
+      pendingSeek: null,
+    })
+    player.preparePlay()
+    expect(media.load).toHaveBeenCalledTimes(2)
+    player.select(b)
+    expect(player.snapshot().pendingSeek).toBeNull()
+    player.play()
+    expect(media.play).toHaveBeenCalledOnce()
+    player.preparePlay()
+    expect(media.load).toHaveBeenCalledTimes(3)
+  })
+  it('keeps shared seeks pending and cancellable through gesture preparation', () => {
+    const { media, player } = webkit()
+    player.select(a, { position: 8.25, positionReason: 'shared', paused: true })
+    player.preparePlay()
+    player.play()
+    expect(player.snapshot()).toMatchObject({
+      wantsPlay: true,
+      pendingSeek: 8.25,
+    })
+    expect(media.play).not.toHaveBeenCalled()
+    player.pause()
+    media.ready()
+    expect(media.currentTime).toBe(8.25)
+    expect(media.play).not.toHaveBeenCalled()
+  })
+  it('does not interrupt active media or reload engines without the gesture requirement', () => {
+    const { media, player } = webkit()
+    player.select(a)
+    media.ready()
+    player.play()
+    player.preparePlay()
+    expect(media.load).toHaveBeenCalledOnce()
+    expect(media.paused).toBe(false)
+    const ordinary = setup()
+    ordinary.player.select(a)
+    ordinary.player.preparePlay()
+    expect(ordinary.media.load).toHaveBeenCalledOnce()
+    expect(ordinary.media.play).not.toHaveBeenCalled()
+  })
+  it('starts an ended source from zero instead of restoring its end', () => {
+    const { media, player } = webkit()
+    player.select(a)
+    media.ready()
+    media.currentTime = 120
+    media.ended = true
+    media.emit('ended')
+    player.preparePlay()
+    player.play()
+    media.ready()
+    expect(media.currentTime).toBe(0)
+    expect(media.play).toHaveBeenCalledOnce()
+  })
+})
