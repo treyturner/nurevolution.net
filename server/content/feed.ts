@@ -5,8 +5,6 @@ import {
   showPublic,
 } from '../../shared/content/public.ts'
 import { requireRssMetadata } from './validate.ts'
-import { episodeArtworkPath } from '../../shared/content/artwork.ts'
-import { chapterDocument } from '../chapters/document.ts'
 
 export function publicFeedArchive(catalog: Catalog, asOf: number) {
   const rss = requireRssMetadata(catalog.show)
@@ -20,10 +18,6 @@ export function publicFeedArchive(catalog: Catalog, asOf: number) {
     show: { ...showPublic(catalog), rss: structuredClone(rss) },
     episodes: selectPublic(catalog, asOf).map((episode) => {
       const detail = episodeDetail(catalog, episode)
-      const artwork = catalog.assets.find(
-        (asset) => asset.id === episode.artworkAssetId,
-      )!
-      const chapters = chapterDocument(detail)
       return {
         ...detail,
         rss: {
@@ -31,14 +25,6 @@ export function publicFeedArchive(catalog: Catalog, asOf: number) {
             links.get(episode.id) ??
             new URL(detail.path, catalog.show.siteUrl).href,
           explicit: episode.explicit ?? rss.explicit,
-          artworkUrl: new URL(episodeArtworkPath(artwork), catalog.show.siteUrl)
-            .href,
-          chaptersUrl: chapters
-            ? new URL(
-                `/chapters/${episode.slug}.json?v=${chapters.sha256}`,
-                catalog.show.siteUrl,
-              ).href
-            : null,
         },
       }
     }),

@@ -48,13 +48,9 @@ describe('complete podcast RSS serialization', () => {
       ).toBe(Date.parse(raw.publication.feedRfc822))
     }
     expect(xml).not.toMatch(
-      /sourceRoot|sha256|wordpress-import|itunes:new-feed-url|itunes:block|itunes:complete|lastBuildDate|<generator|<comments|<itunes:keywords|<itunes:type/,
+      /sourceRoot|sha256|wordpress-import|itunes:new-feed-url|itunes:block|itunes:complete|lastBuildDate|<generator|<comments|<itunes:keywords|<itunes:type|podcast:chapters/,
     )
-    expect(xml.match(/<itunes:image /g)).toHaveLength(56)
-    expect(xml.match(/<podcast:chapters /g)).toHaveLength(
-      value.episodes.filter((episode) => episode.rss.chaptersUrl !== null)
-        .length,
-    )
+    expect(xml.match(/<itunes:image /g)).toHaveLength(1)
   })
 
   it('documents exactly seven legacy title/author differences and preserves clean labels', () => {
@@ -156,9 +152,6 @@ describe('complete podcast RSS serialization', () => {
     episode.guid = 'urn:opaque:A&B<3%26%27😀'
     episode.guidIsPermalink = true
     episode.audio.url = 'https://example.com/A%26B%27C/😀?a=1&b=2'
-    episode.rss.artworkUrl = 'https://example.com/cover.jpg?a=1&b=2'
-    episode.rss.chaptersUrl =
-      'https://example.com/chapters.json?v=1&other="value"'
     episode.descriptionHtml =
       '<p>A &amp; B ]]> 😀\r\n\t<a href="https://example.com?a=1&amp;b=2">link</a></p>'
     const xml = serializePodcastRss(value)
@@ -206,36 +199,6 @@ describe('XML primitives and independent checks', () => {
       (x: string) => x.replace('</rss>', '<channel/></rss>'),
     ],
     ['nested title', (x: string) => x.replace('<title>', '<title><b/>')],
-    [
-      'missing episode image',
-      (x: string) => x.replace(/(<item>[\s\S]*?)<itunes:image[^>]+\/>/, '$1'),
-    ],
-    [
-      'wrong chapter type',
-      (x: string) =>
-        x.replace('type="application/json+chapters"', 'type="text/html"'),
-    ],
-    [
-      'wrong chapter namespace',
-      (x: string) =>
-        x.replace('https://podcastindex.org/namespace/1.0', 'urn:wrong'),
-    ],
-    [
-      'wrong chapter URL',
-      (x: string) =>
-        x.replace(
-          /(<podcast:chapters url=")[^"]+/,
-          '$1https://wrong.example/chapters.json',
-        ),
-    ],
-    [
-      'nested chapters',
-      (x: string) =>
-        x.replace(
-          /(<podcast:chapters[^>]+)\/>/,
-          '$1><bad/></podcast:chapters>',
-        ),
-    ],
     [
       'wrong enclosure',
       (x: string) => x.replace('length="145672454"', 'length="1"'),

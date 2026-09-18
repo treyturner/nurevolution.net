@@ -56,12 +56,7 @@ export function serializePodcastRss(archive: PodcastArchive): string {
       `<enclosure url="${attribute(episode.audio.url, field('audio.url'))}" length="${episode.audio.byteLength}" type="${attribute(episode.audio.mediaType, field('audio.mediaType'))}"/>`,
       itemText('itunes:author', episode.artist),
       itemText('itunes:explicit', String(episode.rss.explicit)),
-      `<itunes:image href="${attribute(episode.rss.artworkUrl, field('rss.artworkUrl'))}"/>`,
     ]
-    if (episode.rss.chaptersUrl !== null)
-      body.push(
-        `<podcast:chapters url="${attribute(episode.rss.chaptersUrl, field('rss.chaptersUrl'))}" type="application/json+chapters"/>`,
-      )
     if (episode.durationSeconds !== null)
       body.push(
         itemText(
@@ -71,5 +66,5 @@ export function serializePodcastRss(archive: PodcastArchive): string {
       )
     return `<item>\n${body.join('\n')}\n</item>`
   })
-  return `<?xml version="1.0" encoding="UTF-8"?>\n<rss version="2.0" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:podcast="https://podcastindex.org/namespace/1.0">\n<channel>\n${[...channel, ...items].join('\n')}\n</channel>\n</rss>\n`
+  return `<?xml version="1.0" encoding="UTF-8"?>\n<rss version="2.0" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom">\n<channel>\n${[...channel, ...items].join('\n')}\n</channel>\n</rss>\n`
 }

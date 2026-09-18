@@ -2,7 +2,6 @@ import assert from 'node:assert/strict'
 import { createHash } from 'node:crypto'
 import artwork from '../../tools/content/episode-artwork-manifest.json' with { type: 'json' }
 import ruminate from '../../content/episodes/wp-484.json' with { type: 'json' }
-import { parseRss } from '../../tools/content/feed/assert.ts'
 
 export async function verifyFeedResources(
   origin: string,
@@ -17,30 +16,6 @@ export async function verifyFeedResources(
     'application/json+chapters; charset=utf-8',
   )
   const body = await response.text()
-  const { items } = parseRss(
-    await (await request(origin + '/feed/podcast')).text(),
-  )
-  const item = items.find(
-    (item) =>
-      item.getElementsByTagName('guid')[0]!.textContent === ruminate.guid,
-  )!
-  const chapters = item.getElementsByTagNameNS(
-    'https://podcastindex.org/namespace/1.0',
-    'chapters',
-  )[0]!
-  const chapterUrl = new URL(chapters.getAttribute('url')!)
-  assert.equal(chapterUrl.origin, 'https://nurevolution.net')
-  assert.equal(chapterUrl.pathname, '/chapters/trey-turner-ruminate.json')
-  assert.equal(
-    chapterUrl.searchParams.get('v'),
-    createHash('sha256').update(body).digest('hex'),
-  )
-  assert.equal(
-    await (
-      await request(origin + chapterUrl.pathname + chapterUrl.search)
-    ).text(),
-    body,
-  )
   assert.deepEqual(JSON.parse(body), {
     version: '1.2.0',
     chapters: ruminate.tracks.map((track) => ({
