@@ -1,10 +1,10 @@
 {
   "schemaVersion": 1,
   "observedOn": "2026-09-18",
-  "status": "Implementation verified locally; remaining PR/device/client acceptance is open. M8 is not closed.",
+  "status": "All five areas and UI refinements consolidated in PR 56; candidate verification/review and physical device/client acceptance remain open. M8 is not closed.",
   "deployment": "None performed or authorized for M8. All observations are workspace/local unless stated otherwise.",
   "firstPlanCommit": "c762a0443f946c5059d0fd5d9618d49626b273b4",
-  "implementationCommit": "19e1babd7e1d18411395ba47a8a59eef13113f84",
+  "implementationCommit": "c6b7d07bfe5f0e16eba079a4859b46b7aff8468d",
   "gates": [
     {
       "slice": "safari",
@@ -152,7 +152,8 @@
     "checks": "All checks passed for 7d7ffcb; artifact publishing skipped for PR event.",
     "review": "Automatic reviewer completed at 2026-09-18T11:28:53.969411Z for 7d7ffcb; +1 reaction at 11:28:56Z; no inline findings.",
     "reviewRequested": false,
-    "agentStatusComments": 0
+    "agentStatusComments": 0,
+    "scope": "Historical Safari-only head; its passing checks and review do not cover the expanded PR."
   },
   "feed": {
     "items": 55,
@@ -162,7 +163,7 @@
     "chapterReferences": 34,
     "knownStarts": 626,
     "omittedUntimedOrEmptyEpisodes": 21,
-    "resourceSupportCommit": "649b772c117bd9ca63b8245a7ae730058fb4e90f",
+    "resourceSupportCommit": "e1013e02da9650d024337504ef409e7266d4f442",
     "checks": [
       "All advertised image mappings and chapter documents fetched from the built application.",
       "Chapter version hints match SHA-256 of served bytes.",
@@ -172,15 +173,16 @@
   },
   "workspacePreview": {
     "origin": "https://3000--main--dev--treyturner.coder.treyturner.info",
-    "commit": "19e1babd7e1d18411395ba47a8a59eef13113f84",
+    "commit": "c6b7d07bfe5f0e16eba079a4859b46b7aff8468d",
     "health": "healthy",
     "loaded": "Immutable production build containing all local M8 slices.",
     "visualWidthsPixels": [1280, 390, 320],
-    "visualObservation": "No horizontal overflow; 44px track-copy targets preserved.",
+    "visualObservation": "Focused Chromium, Firefox, and WebKit checks cover inline track-copy icons and tooltips, duration layout at 390px and 594px, and 320px with 200% text. Copy targets are 44px wide and at least 24px tall, clear of the artist text.",
     "mediaSessionObservation": "Headless Chromium exposed Troglodyte / Mat Zo / Trey Turner - Ruminate and playing state. This is not lock-screen/headset acceptance.",
     "downloadRangeObservation": "Ruminate and The Dark Prophet return exact 206 bytes for initial, middle, and suffix ranges, compared against canonical originals. The exposed port-3000 preview also returned bytes 0-1 for Ruminate with Content-Length 2 and Content-Range bytes 0-1/145672454.",
     "playheadMenuObservation": "Chromium, Firefox and WebKit regressions verify thumb activation at the start, middle and end, exclusion of rail/time-label clicks, normal rail seeking, keyboard access and narrow viewport bounds. An earlier Chromium touch-input check on build 86c5ad8 on real Ruminate at 390px confirms a rail hold does not open the menu, while a thumb hold copies the canonical t=8.25 URL and preserves paused position at 8.25 seconds. Screenshot: nurevolution.net/.local/m8-preview/thumb-menu-touch.png. Physical iPad gesture acceptance remains untested.",
-    "timestampOriginObservation": "Chromium, Firefox, and WebKit verify both timestamp-copy actions and paused restoration on the dev delivery origin and an HTTPS preview proxy, preserving the visible scheme, hostname, and port. A real-audio Chromium check on the refreshed port-3000 preview copies and reopens Ruminate at 8.25 and track 2 at 174.49004535147392 seconds, paused. Log: nurevolution.net/.local/m8-preview/19e1bab/timestamp-origin-check.log."
+    "timestampOriginObservation": "Chromium, Firefox, and WebKit verify both timestamp-copy actions and paused restoration on the dev delivery origin and an HTTPS preview proxy, preserving the visible scheme, hostname, and port. A real-audio Chromium check on the refreshed port-3000 preview copies and reopens Ruminate at 8.25 and track 2 at 174.49004535147392 seconds, paused. Log: nurevolution.net/.local/m8-preview/19e1bab/timestamp-origin-check.log.",
+    "latestLayoutObservation": "Track durations remain beside details above an 18rem list width; smaller lists retain stacked metadata. The tooltip reads Copy track link. All three browser engines passed playing-state, fallback-layout, and overflow checks on c6b7d07."
   },
   "ownerIpadObservations": {
     "device": "Owner-reported iPad Pro on iPadOS 14.3; captured desktop-mode user agent identifies Safari 14.0.2.",
@@ -198,7 +200,7 @@
     "Owner playhead context-menu, timestamp-copy/layout and physical touch-gesture acceptance.",
     "Physical lock-screen/headset/media-key actions and background playback observation on a supported device.",
     "Podcast Addict artwork, chapter display and fractional chapter seeks for Ruminate/Praxis, plus untimed-episode omission.",
-    "Separate review/CI for sharing, Media Session, feed support, and RSS advertisement within the one-open-PR limit.",
+    "Fresh automatic review/CI for all outstanding changes consolidated into PR 56.",
     "Authorized production support release retained as a compatible fallback before eventual RSS advertisement."
   ]
 }

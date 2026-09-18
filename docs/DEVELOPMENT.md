@@ -95,7 +95,7 @@ Episode feed artwork is generated explicitly from verified originals. Builds and
 
 Timestamp links use the current browser origin, including its scheme, hostname, and port, so links copied in a workspace preview reopen that preview directly. Ordinary episode links and RSS resource URLs retain the canonical production origin. A preview's canonical RSS chapter/artwork references do not make undeployed production resources available. Actual podcast-client acceptance is separate from the automated resource checks and remains pending until those resources are reachable by the client. Do not change the canonical feed identity to make a preview subscription work.
 
-The [M8 evidence record](milestones/evidence/M08-local-verification.json) records local gates, the first PR's review, observed iPad behavior, and outstanding physical/UI/client acceptance. The milestone remains open, and this work does not authorize deployment.
+The [M8 evidence record](milestones/evidence/M08-local-verification.json) records local gates, historical Safari-only review, the consolidated PR, observed iPad behavior, and outstanding physical/UI/client acceptance. The milestone remains open, and this work does not authorize deployment.
 
 ## Coverage and browser execution
 
