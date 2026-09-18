@@ -312,6 +312,53 @@ test('only the thumb opens timestamp copying, while the rest of the bar still se
   await expect(page.locator('audio')).toHaveJSProperty('paused', true)
 })
 
+test('touch holds have a larger thumb target while mouse clicks and distant touches stay excluded', async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 390, height: 844 })
+  await page.goto(ruminate + '?t=20')
+  await at(page, 20)
+  const slider = page.getByRole('slider', { name: 'Playback position' })
+  await slider.scrollIntoViewIfNeeded()
+  const box = (await slider.boundingBox())!
+  const menu = page.getByRole('menu', { name: 'Playback position actions' })
+  await slider.click({
+    button: 'right',
+    position: { x: box.width / 2 + 12, y: box.height / 2 },
+  })
+  await expect(menu).toHaveCount(0)
+  await page.clock.install()
+  const hold = (offset: number) =>
+    slider.dispatchEvent('pointerdown', {
+      pointerType: 'touch',
+      isPrimary: true,
+      clientX: box.x + box.width / 2 + offset,
+      clientY: box.y + box.height / 2,
+    })
+  await hold(12)
+  await page.clock.fastForward(650)
+  await expect(menu).toBeVisible()
+  await slider.dispatchEvent('pointerup')
+  await page.getByRole('menuitem', { name: 'Copy timestamp link' }).click()
+  await expect(page.locator('html')).toHaveAttribute(
+    'data-copied',
+    new URL(page.url()).origin + ruminate + '?t=20',
+  )
+  await at(page, 20)
+  await hold(24)
+  await page.clock.fastForward(650)
+  await expect(menu).toHaveCount(0)
+  await slider.dispatchEvent('pointerup')
+  await hold(12)
+  await slider.dispatchEvent('pointermove', {
+    clientX: box.x + box.width / 2 + 28,
+    clientY: box.y + box.height / 2,
+  })
+  await page.clock.fastForward(650)
+  await expect(menu).toHaveCount(0)
+  await slider.dispatchEvent('pointerup')
+})
+
 for (const environment of ['dev delivery', 'HTTPS preview'] as const) {
   test(`timestamp copies round trip within the ${environment} origin`, async ({
     page,

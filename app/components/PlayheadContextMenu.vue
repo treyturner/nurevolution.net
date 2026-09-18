@@ -36,12 +36,14 @@ function thumb() {
     y: box.top + box.height / 2,
   }
 }
-function onThumb(event: MouseEvent) {
+function onThumb(event: MouseEvent, touchInput = false) {
   const head = thumb()
+  const radius = Math.max(head.size, touchInput ? 32 : 0) / 2
   return (
-    event.target === head.input &&
+    (event.target === head.input ||
+      (touchInput && event.target === row.value)) &&
     !head.input.disabled &&
-    Math.hypot(event.clientX - head.x, event.clientY - head.y) <= head.size / 2
+    Math.hypot(event.clientX - head.x, event.clientY - head.y) <= radius
   )
 }
 
@@ -98,7 +100,7 @@ function triggerKey(event: KeyboardEvent) {
 function pointerDown(event: PointerEvent) {
   cancelHold()
   suppressSeek.value = false
-  contextEligible = onThumb(event)
+  contextEligible = onThumb(event, event.pointerType === 'touch')
   if (
     !props.enabled ||
     !contextEligible ||
