@@ -99,7 +99,11 @@ describe('conditional feed delivery', () => {
     const initial = await respond('GET')
     episode.title = 'Hidden editorial change'
     expect((await respond('GET')).headers.etag).toBe(initial.headers.etag)
-    source.episodes[1]!.tracks = []
+    source.episodes.find(
+      (item) =>
+        item.id !== episode.id &&
+        item.tracks.every((track) => track.startTime === null),
+    )!.tracks = []
     expect((await respond('GET')).headers.etag).toBe(initial.headers.etag)
     time++
     expect((await respond('GET')).body).toBe(initial.body)
@@ -117,6 +121,37 @@ describe('conditional feed delivery', () => {
         () => time,
       )('GET'),
     ).toEqual(edited)
+  })
+
+  it('invalidates the feed for known chapter corrections and artwork, without changing subscriber identities', async () => {
+    const source = runnableCatalog()
+    const episode = source.episodes.find((item) => item.id === 'wp-417')!
+    const respond = createFeedResponder(
+      async () => publicFeedArchive(source, at),
+      () => at,
+    )
+    const initial = await respond('GET')
+    episode.tracks[1]!.startTime! += 0.000001
+    const corrected = await respond('GET', initial.headers.etag)
+    expect(corrected.status).toBe(200)
+    expect(corrected.headers.etag).not.toBe(initial.headers.etag)
+    episode.tracks[1]!.title += ' (corrected)'
+    const titled = await respond('GET', corrected.headers.etag)
+    expect(titled.status).toBe(200)
+    expect(titled.headers.etag).not.toBe(corrected.headers.etag)
+    episode.artworkAssetId = source.show.itunesArtworkAssetId
+    const artwork = await respond('GET', titled.headers.etag)
+    expect(artwork.status).toBe(200)
+    expect(artwork.headers.etag).not.toBe(titled.headers.etag)
+    const identities = (xml: string) =>
+      xml.match(
+        /<(?:guid|enclosure|pubDate)\b[^>]*>(?:[^<]*<\/(?:guid|pubDate)>)?/g,
+      )
+    expect(identities(artwork.body)).toEqual(identities(initial.body))
+    episode.tracks = []
+    const untimed = await respond('GET', artwork.headers.etag)
+    expect(untimed.status).toBe(200)
+    expect(untimed.headers.etag).not.toBe(artwork.headers.etag)
   })
 
   it('returns non-cacheable generic errors, including HEAD, and recovers failed catalog loads', async () => {
