@@ -525,6 +525,9 @@ audio.custom-audio {
 .playhead-menu button:focus {
   background: #303b4a;
 }
+.playhead-menu button:focus {
+  outline: none;
+}
 .playhead-menu svg {
   flex: none;
   width: 16px;
