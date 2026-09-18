@@ -143,6 +143,9 @@ describe('archive presentation and native media integration', () => {
       Object.assign(audio.element, { currentTime: 8.25 })
       await audio.trigger('timeupdate')
       expect(status.text()).toBe('Playing 2/3: Artist 2 - Song 2')
+      await audio.trigger('waiting')
+      expect(status.text()).toBe('Buffering 2/3: Artist 2 - Song 2')
+      await audio.trigger('playing')
       Object.assign(audio.element, { paused: true })
       await audio.trigger('pause')
       expect(status.text()).toBe('Press Play to listen.')
@@ -157,6 +160,9 @@ describe('archive presentation and native media integration', () => {
       ]) {
         await wrapper.setProps({ episode: { ...episode, tracks } })
         expect(status.text()).toBe('Playing: Trey Turner - Praxis')
+        await audio.trigger('waiting')
+        expect(status.text()).toBe('Buffering: Trey Turner - Praxis')
+        await audio.trigger('playing')
       }
     } finally {
       wrapper.unmount()

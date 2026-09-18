@@ -734,6 +734,14 @@ audio.custom-audio {
   overflow-wrap: break-word;
   overflow-wrap: anywhere;
 }
+/* Keep artist/title together before breaking after the artist's hyphen.
+   Long individual fields can still wrap within the available width. */
+.media-status-details,
+.media-status-part {
+  display: inline-block;
+  max-width: 100%;
+  vertical-align: top;
+}
 .status-retry {
   display: inline-flex;
   align-items: center;

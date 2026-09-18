@@ -188,3 +188,63 @@ test('download stays below changing phone statuses and beside short desktop stat
     expect(long.overflow).toBe(false)
   }
 })
+
+test('track status wraps after the count, then after the artist separator', async ({
+  page,
+}) => {
+  await stubArchiveMedia(page)
+  await page.goto('/episodes/trey-turner-impulse')
+  await ready(page)
+  await page.locator('audio').evaluate((audio: HTMLAudioElement) => {
+    Object.defineProperty(audio, 'paused', { configurable: true, value: false })
+    audio.dispatchEvent(new Event('play'))
+    audio.dispatchEvent(new Event('playing'))
+  })
+  const status = page.locator('.media-status')
+  await expect(status).toHaveText('Playing 1/16: Sinic - One Makes One')
+  const measure = () =>
+    status.evaluate((element) => {
+      const bounds = (selector: string) => {
+        const box = element.querySelector(selector)!.getBoundingClientRect()
+        return { top: box.top, bottom: box.bottom, width: box.width }
+      }
+      return {
+        prefix: bounds('span > .media-status-part'),
+        details: bounds('.media-status-details'),
+        artist: bounds('.media-status-details > :first-child'),
+        title: bounds('.media-status-details > :last-child'),
+      }
+    })
+  const initial = await measure()
+  const size = (width: number) =>
+    status.evaluate((element, width) => {
+      ;(element as HTMLElement).style.width = `${width}px`
+    }, width)
+  await size(initial.prefix.width + initial.details.width + 20)
+  const single = await measure()
+  expect(single.prefix.top).toBeCloseTo(single.artist.top, 1)
+  expect(single.artist.top).toBeCloseTo(single.title.top, 1)
+  await size(Math.max(initial.prefix.width, initial.details.width) + 1)
+  const two = await measure()
+  expect(two.artist.top).toBeGreaterThanOrEqual(two.prefix.bottom - 1)
+  expect(two.artist.top).toBeCloseTo(two.title.top, 1)
+  await size(
+    Math.max(initial.prefix.width, initial.artist.width, initial.title.width) +
+      1,
+  )
+  const three = await measure()
+  expect(three.artist.top).toBeGreaterThanOrEqual(three.prefix.bottom - 1)
+  expect(three.title.top).toBeGreaterThanOrEqual(three.artist.bottom - 1)
+  await page
+    .locator('audio')
+    .evaluate((audio) => audio.dispatchEvent(new Event('waiting')))
+  await expect(status).toHaveText('Buffering 1/16: Sinic - One Makes One')
+  await page.setViewportSize({ width: 320, height: 1000 })
+  await status.evaluate((element) => {
+    ;(element as HTMLElement).style.width = ''
+    document.documentElement.style.fontSize = '200%'
+  })
+  expect(
+    await page.evaluate(() => document.documentElement.scrollWidth),
+  ).toBeLessThanOrEqual(320)
+})

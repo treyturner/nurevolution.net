@@ -274,7 +274,9 @@ for (const recovery of ['late metadata', 'Play', 'Play then pause']) {
           a.loop = true
           void a.play()
         })
-        await expect(page.locator('.media-status')).toHaveText('Buffering…')
+        await expect(page.locator('.media-status')).toHaveText(
+          'Buffering 1/22: Moniker - Vessels',
+        )
       }
       if (recovery === 'Play then pause') {
         await audio.evaluate((a: HTMLAudioElement) => a.pause())

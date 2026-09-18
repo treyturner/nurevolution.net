@@ -82,17 +82,20 @@ const messages = {
   error: 'Audio could not be loaded.',
   blocked: 'Press Play to continue.',
 }
-const statusMessage = computed(() => {
-  if (props.player.state.restoring) return 'Restoring your place…'
-  if (props.episode && !props.player.state.initialized) return 'Loading player…'
+const statusDetails = computed(() => {
   if (
-    (status.value === 'playing' || status.value === 'loading') &&
+    !props.player.state.restoring &&
+    props.player.state.initialized &&
+    (status.value === 'playing' ||
+      status.value === 'loading' ||
+      status.value === 'buffering') &&
     props.episode &&
     props.player.state.sourceId === props.episode.id
   ) {
     const tracks = props.episode.tracks
     const position =
-      status.value === 'loading'
+      status.value === 'loading' ||
+      (status.value === 'buffering' && props.player.state.pendingSeek !== null)
         ? trackNavigation(
             tracks,
             props.player.state.pendingSeek ?? props.player.state.currentTime,
@@ -100,11 +103,26 @@ const statusMessage = computed(() => {
           ).current
         : props.player.tracks.current
     const current = tracks.find((track) => track.position === position)
-    const action = status.value === 'loading' ? 'Loading' : 'Playing'
-    if (current)
-      return `${action} ${current.position}/${tracks.length}: ${current.artist} - ${current.title}`
-    return `${action}: ${props.episode.artist} - ${props.episode.title}`
+    const action = {
+      loading: 'Loading',
+      playing: 'Playing',
+      buffering: 'Buffering',
+    }[status.value]
+    return {
+      prefix: current
+        ? `${action} ${current.position}/${tracks.length}:`
+        : `${action}:`,
+      artist: current?.artist ?? props.episode.artist,
+      title: current?.title ?? props.episode.title,
+    }
   }
+  return null
+})
+const statusMessage = computed(() => {
+  if (props.player.state.restoring) return 'Restoring your place…'
+  if (props.episode && !props.player.state.initialized) return 'Loading player…'
+  const details = statusDetails.value
+  if (details) return `${details.prefix} ${details.artist} - ${details.title}`
   return messages[status.value]
 })
 const feedback = computed(() => {
@@ -209,7 +227,20 @@ const feedback = computed(() => {
               :class="{
                 'player-startup-loading': episode && !player.state.initialized,
               }"
-              >{{ feedback.message }}</span
+              ><template v-if="!feedback.error && statusDetails"
+                ><span class="media-status-part">{{
+                  statusDetails.prefix
+                }}</span
+                >{{ ' '
+                }}<span class="media-status-details"
+                  ><span class="media-status-part"
+                    >{{ statusDetails.artist }} -</span
+                  >{{ ' '
+                  }}<span class="media-status-part">{{
+                    statusDetails.title
+                  }}</span></span
+                ></template
+              ><template v-else>{{ feedback.message }}</template></span
             >
             <template v-if="episode && !player.state.initialized">
               <span class="player-startup-failure"
