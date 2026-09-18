@@ -189,6 +189,8 @@ Use the feature branch for the initial plan and first implementation slice. Late
 
 ## Verification and completion record
 
+The [September 18 local verification record](evidence/M08-local-verification.json) consolidates tested commits, gate counts and log digests, PR #56 review/CI evidence, the combined preview, and unperformed acceptance checks. It records progress without closing M8.
+
 For each implementation slice, run focused tests during development, then `mise exec -- pnpm verify` on the finished candidate. The canonical gate includes preparation, formatting, lint/types, migration/operations tests, coverage, content/feed/artwork/playback checks, production builds, all three browser projects, and Docker delivery. Add the new offline artwork check to the build path when introduced. Retain current coverage thresholds and independent playback-index/image/Headscale CI checks.
 
 Before closing M8, record:

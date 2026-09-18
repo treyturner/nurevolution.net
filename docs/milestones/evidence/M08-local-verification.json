@@ -1,0 +1,135 @@
+{
+  "schemaVersion": 1,
+  "observedOn": "2026-09-18",
+  "status": "Implementation verified locally; remaining PR/device/client acceptance is open. M8 is not closed.",
+  "deployment": "None performed or authorized for M8. All observations are workspace/local unless stated otherwise.",
+  "firstPlanCommit": "c762a0443f946c5059d0fd5d9618d49626b273b4",
+  "implementationCommit": "99a436878820b84ac822155c015a048f785ab4de",
+  "gates": [
+    {
+      "slice": "safari",
+      "commit": "fc11e20",
+      "scope": "Safari fixes, with later documentation-only commit 07240e1 reviewed in PR 56.",
+      "command": "mise exec -- pnpm verify",
+      "result": "passed",
+      "unitAndIntegrationTests": 498,
+      "browserTests": 287,
+      "expectedBrowserSkips": 4,
+      "delivery": "Exact runtime and Caddy proxy, byte ranges, resumed/browser downloads, restart and fixture isolation passed.",
+      "localLog": "nurevolution.net/.local/m8-safari-fix-verify.log",
+      "logSha256": "48786626773d0df18d2749efcbd0e757727ed49766b6cd6c5cdc6589854bdee9"
+    },
+    {
+      "slice": "sharing-initial",
+      "commit": null,
+      "scope": "Initial sharing gate before the latest Safari fixes; the rebased sharing code is also covered by the later Media Session and combined gates.",
+      "command": "mise exec -- pnpm verify",
+      "result": "passed",
+      "unitAndIntegrationTests": 494,
+      "browserTests": 308,
+      "expectedBrowserSkips": 4,
+      "delivery": "Exact runtime and Caddy proxy, byte ranges, resumed/browser downloads, restart and fixture isolation passed.",
+      "localLog": "nurevolution.net-m8-sharing/.local/verify.log",
+      "logSha256": "148764b5730723389fc17ed390bdc1a877bfddd90a56829f7a542de620440210"
+    },
+    {
+      "slice": "media-session",
+      "commit": "2535d4b",
+      "scope": "Includes the latest Safari fixes and timestamp sharing.",
+      "command": "mise exec -- pnpm verify",
+      "result": "passed",
+      "unitAndIntegrationTests": 512,
+      "browserTests": 317,
+      "expectedBrowserSkips": 4,
+      "delivery": "Exact runtime and Caddy proxy, byte ranges, resumed/browser downloads, restart and fixture isolation passed.",
+      "localLog": "nurevolution.net-m8-media-session/.local/media-session-verify.log",
+      "logSha256": "a65cf6d6108b3a05a6a33ec64aec8da11dba938e6975c73d7c5644f38bfff802"
+    },
+    {
+      "slice": "feed-resources",
+      "commit": "daa41d4",
+      "scope": "Resource-support boundary with RSS unchanged.",
+      "command": "mise exec -- pnpm verify",
+      "result": "passed",
+      "unitAndIntegrationTests": 523,
+      "browserTests": 326,
+      "expectedBrowserSkips": 4,
+      "delivery": "Exact runtime and Caddy proxy, byte ranges, resumed/browser downloads, restart and fixture isolation passed.",
+      "localLog": "nurevolution.net-m8-feed-resources/.local/feed-resources-verify.log",
+      "logSha256": "22a6aa7d83ca5a1178c727c38544ffeb99d94707d0d747cebc884cb6cf983cba"
+    },
+    {
+      "slice": "combined",
+      "commit": "99a4368",
+      "scope": "Final implementation gate run in the candidate worktree before commit; only documentation changed after the gate.",
+      "command": "mise exec -- pnpm verify",
+      "result": "passed",
+      "unitAndIntegrationTests": 530,
+      "browserTests": 329,
+      "expectedBrowserSkips": 4,
+      "delivery": "Exact runtime and Caddy proxy, byte ranges, resumed/browser downloads, restart and fixture isolation passed.",
+      "localLog": "nurevolution.net-m8-feed-advertisement/.local/feed-advertisement-verify.log",
+      "logSha256": "5c3f2bee838d651365cee2cda2514d2881d180af5ce04af94cf068c44514f0fa"
+    }
+  ],
+  "combinedCoveragePercent": {
+    "statements": 96.35,
+    "branches": 94.98,
+    "functions": 96.18,
+    "lines": 97.04
+  },
+  "firstPullRequest": {
+    "number": 56,
+    "url": "https://github.com/treyturner/nurevolution.net/pull/56",
+    "state": "open",
+    "head": "07240e1e8e7d95d121eff41fbec6d1f2a97b2ef5",
+    "verify": "https://github.com/treyturner/nurevolution.net/actions/runs/35333893402/job/105564196778",
+    "checks": "All checks passed; artifact publishing skipped for PR event.",
+    "review": "Automatic reviewer completed at 2026-09-18T10:20:39.447858Z; +1 reaction at 10:20:42Z; no inline findings.",
+    "reviewRequested": false,
+    "agentStatusComments": 0
+  },
+  "feed": {
+    "items": 55,
+    "historicalIdentitiesPreserved": 55,
+    "episodeArtworkImages": 55,
+    "artworkBytes": 14021978,
+    "chapterReferences": 34,
+    "knownStarts": 626,
+    "omittedUntimedOrEmptyEpisodes": 21,
+    "resourceSupportCommit": "daa41d4",
+    "checks": [
+      "All advertised image mappings and chapter documents fetched from the built application.",
+      "Chapter version hints match SHA-256 of served bytes.",
+      "GET/HEAD/304, visibility filtering, old hints, errors, and caching checked.",
+      "Every artwork file verified offline for source/output identity, dimensions, format, metadata removal, byte limit, and retention rules."
+    ]
+  },
+  "workspacePreview": {
+    "origin": "https://3000--main--dev--treyturner.coder.treyturner.info",
+    "commit": "99a436878820b84ac822155c015a048f785ab4de",
+    "health": "healthy",
+    "loaded": "Immutable production build containing all local M8 slices.",
+    "visualWidthsPixels": [1280, 390, 320],
+    "visualObservation": "No horizontal overflow; 44px track-copy targets preserved.",
+    "mediaSessionObservation": "Headless Chromium exposed Troglodyte / Mat Zo / Trey Turner - Ruminate and playing state. This is not lock-screen/headset acceptance."
+  },
+  "ownerIpadObservations": {
+    "device": "Owner-reported iPad Pro on iPadOS 14.3; captured desktop-mode user agent identifies Safari 14.0.2.",
+    "confirmed": [
+      "Player starts and plays.",
+      "Track seeking works; confirmed-seek highlight bounce fixed, including paused seek followed by Play.",
+      "Page-wide focus outline removed.",
+      "Download MP3 saves successfully."
+    ],
+    "limits": "Native Safari View on the workspace download can fail or show live-style playback; preview download lacks ranges while the production path was read-only verified to support ranges. Production native View remains untested. See docs/operations/acceptance-2026-09-18.md."
+  },
+  "pending": [
+    "Remaining actual-iPad checks: artwork dialogs, episode-change confirmation/cancel, paused reload restoration, untimed guest playback.",
+    "Owner timestamp-copy/layout acceptance.",
+    "Physical lock-screen/headset/media-key actions and background playback observation on a supported device.",
+    "Podcast Addict artwork, chapter display and fractional chapter seeks for Ruminate/Praxis, plus untimed-episode omission.",
+    "Separate review/CI for sharing, Media Session, feed support, and RSS advertisement within the one-open-PR limit.",
+    "Authorized production support release retained as a compatible fallback before eventual RSS advertisement."
+  ]
+}
