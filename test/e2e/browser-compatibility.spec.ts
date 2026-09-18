@@ -90,7 +90,7 @@ test('production entry works without import maps or newer optional APIs', async 
     ),
   ).toBe(true)
   for (const size of await page
-    .locator('.transport-row button')
+    .locator('.transport-row button:visible')
     .evaluateAll((buttons) =>
       buttons.map((button) => button.getBoundingClientRect().width),
     ))

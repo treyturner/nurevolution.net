@@ -182,6 +182,7 @@ watch(
           </svg>
         </button>
         <button
+          class="skip-control"
           type="button"
           aria-label="Back 30 seconds"
           title="Back 30 seconds"
@@ -213,6 +214,7 @@ watch(
           </svg>
         </button>
         <button
+          class="skip-control"
           type="button"
           aria-label="Forward 30 seconds"
           title="Forward 30 seconds"

@@ -124,14 +124,14 @@ test('volume keyboard and mute reflect native state; unsupported volume has an h
     page.getByRole('button', { name: 'Mute', exact: true }),
   ).toBeVisible()
 })
-test('controls wrap at 320 pixels with enlarged text and retain keyboard focus', async ({
+test('transport stays on one line and hides skips only when needed, including with enlarged text', async ({
   page,
 }) => {
   await page.setViewportSize({ width: 320, height: 800 })
   await page.goto('/')
   await ready(page)
   const targetSizes = () =>
-    page.locator('.audio-controls button').evaluateAll((buttons) =>
+    page.locator('.audio-controls button:visible').evaluateAll((buttons) =>
       buttons.map((button) => {
         const { width, height } = button.getBoundingClientRect()
         return { width, height }
@@ -141,6 +141,28 @@ test('controls wrap at 320 pixels with enlarged text and retain keyboard focus',
     expect(width).toBeGreaterThanOrEqual(44)
     expect(height).toBeGreaterThanOrEqual(44)
   }
+  const skips = page.locator('.transport-row .skip-control')
+  await expect(skips.first()).toBeHidden()
+  await expect(skips.last()).toBeHidden()
+  const expectSingleRow = async () => {
+    const centers = await page
+      .locator('.transport-row button:visible')
+      .evaluateAll((buttons) =>
+        buttons.map((button) => {
+          const box = button.getBoundingClientRect()
+          return box.y + box.height / 2
+        }),
+      )
+    expect(Math.max(...centers) - Math.min(...centers)).toBeLessThan(1)
+  }
+  await expect(page.locator('.transport-row button:visible')).toHaveCount(5)
+  await expectSingleRow()
+  await page.setViewportSize({ width: 600, height: 800 })
+  await expect(skips.first()).toBeVisible()
+  await expect(skips.last()).toBeVisible()
+  await expect(page.locator('.transport-row button:visible')).toHaveCount(7)
+  await expectSingleRow()
+  await page.setViewportSize({ width: 320, height: 800 })
   await page.addStyleTag({ content: ':root { font-size: 200%; }' })
   for (const { width, height } of await targetSizes()) {
     expect(width).toBeGreaterThanOrEqual(44)
@@ -151,6 +173,9 @@ test('controls wrap at 320 pixels with enlarged text and retain keyboard focus',
       () => document.documentElement.scrollWidth <= innerWidth,
     ),
   ).toBe(true)
+  await expect(skips.first()).toBeHidden()
+  await expect(skips.last()).toBeHidden()
+  await expectSingleRow()
   const play = page.getByRole('button', { name: 'Play', exact: true })
   await page.locator('audio').evaluate((a: HTMLAudioElement) => {
     a.muted = true

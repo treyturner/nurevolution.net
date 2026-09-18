@@ -119,11 +119,14 @@ dialog:not([open]) {
   }
 }
 .compact-controls .transport-row {
-  grid-template-columns: repeat(4, minmax(44px, 1fr));
-  row-gap: 0.5rem;
+  --transport-width: 15.25rem;
+  grid-template-columns: repeat(2, minmax(44px, 1fr)) minmax(
+      55px,
+      1.25fr
+    ) repeat(2, minmax(44px, 1fr));
 }
-.compact-controls .transport-row button:nth-child(5) {
-  border-radius: 0.3rem 0 0 0.3rem;
+.compact-controls .skip-control {
+  display: none;
 }
 .track-list.compact-tracks .track-row {
   grid-template-columns: 1.5rem minmax(0, 1fr);
@@ -545,17 +548,18 @@ audio.custom-audio {
   margin-top: 0.5rem;
 }
 .transport-row {
+  --transport-width: 21rem;
   display: grid;
-  flex: 0 1 23rem;
+  flex: 0 1 var(--transport-width);
   min-width: 0;
   width: 100%;
-  grid-template-columns: repeat(3, minmax(0, 1fr)) minmax(0, 1.25fr) repeat(
-      3,
-      minmax(0, 1fr)
-    );
+  grid-template-columns: repeat(3, minmax(44px, 1fr)) minmax(
+      55px,
+      1.25fr
+    ) repeat(3, minmax(44px, 1fr));
   align-items: center;
   gap: 0;
-  max-width: 23rem;
+  max-width: var(--transport-width);
 }
 .audio-controls button {
   display: inline-flex;
@@ -607,11 +611,14 @@ audio.custom-audio {
 }
 @container (max-width: 319px) {
   .transport-row {
-    grid-template-columns: repeat(4, minmax(44px, 1fr));
-    row-gap: 0.5rem;
+    --transport-width: 15.25rem;
+    grid-template-columns: repeat(2, minmax(44px, 1fr)) minmax(
+        55px,
+        1.25fr
+      ) repeat(2, minmax(44px, 1fr));
   }
-  .transport-row button:nth-child(5) {
-    border-radius: 0.3rem 0 0 0.3rem;
+  .transport-row .skip-control {
+    display: none;
   }
 }
 .transport-row svg {
