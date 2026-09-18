@@ -30,7 +30,7 @@ function copy(event: MouseEvent) {
     class="timestamp-copy"
     type="button"
     :aria-label="label"
-    :title="label"
+    title="Copy track link"
     :disabled="disabled || timestampSeconds(seconds) === null"
     @click="copy"
   >

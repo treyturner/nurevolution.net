@@ -7,7 +7,7 @@ import TimestampCopyButton from './TimestampCopyButton.vue'
 import { useCopyLink } from '../composables/useCopyLink'
 import CopyLinkToast from './CopyLinkToast.vue'
 const { toast, copyLink } = useCopyLink()
-const { container, compact } = useCompactContainer(24, true)
+const { container, compact } = useCompactContainer(18, true)
 const props = defineProps<{
   tracks: EpisodeDetail['tracks']
   durationSeconds?: number | null

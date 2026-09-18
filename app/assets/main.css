@@ -1036,7 +1036,7 @@ button.track-row:disabled + .track-content {
     animation: none;
   }
 }
-@container (max-width: 24rem) {
+@container (max-width: 18rem) {
   .track-content {
     grid-template-columns: 1.5rem minmax(0, 1fr);
     row-gap: 0.25rem;
@@ -1057,6 +1057,9 @@ button.track-row:disabled + .track-content {
 }
 .track-number {
   padding-top: 0.12rem;
+}
+.track-time {
+  white-space: nowrap;
 }
 .track-artist {
   display: block;
