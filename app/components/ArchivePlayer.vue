@@ -7,6 +7,7 @@ import DownloadIcon from './DownloadIcon.vue'
 import ArtworkDialog from './ArtworkDialog.vue'
 import PlayerControls from './PlayerControls.vue'
 import { timestampUrl } from '../services/timestamp-link'
+import { trackNavigation } from '../services/track-navigation'
 import { useCopyLink } from '../composables/useCopyLink'
 import CopyLinkToast from './CopyLinkToast.vue'
 const { toast, copyLink } = useCopyLink()
@@ -84,13 +85,24 @@ const messages = {
 const statusMessage = computed(() => {
   if (props.player.state.restoring) return 'Restoring your place…'
   if (props.episode && !props.player.state.initialized) return 'Loading player…'
-  if (status.value === 'playing') {
+  if (
+    (status.value === 'playing' || status.value === 'loading') &&
+    props.player.state.sourceId === props.episode?.id
+  ) {
     const tracks = props.episode?.tracks ?? []
-    const current = tracks.find(
-      (track) => track.position === props.player.tracks.current,
-    )
-    if (current)
-      return `Playing ${current.position}/${tracks.length}: ${current.artist} - ${current.title}`
+    const position =
+      status.value === 'loading'
+        ? trackNavigation(
+            tracks,
+            props.player.state.pendingSeek ?? props.player.state.currentTime,
+            props.player.state.duration,
+          ).current
+        : props.player.tracks.current
+    const current = tracks.find((track) => track.position === position)
+    if (current) {
+      const action = status.value === 'loading' ? 'Loading' : 'Playing'
+      return `${action} ${current.position}/${tracks.length}: ${current.artist} - ${current.title}`
+    }
   }
   return messages[status.value]
 })

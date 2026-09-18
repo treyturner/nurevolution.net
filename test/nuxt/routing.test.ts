@@ -22,7 +22,7 @@ it('announces accepted navigation without remounting the player', async () => {
       .findAll('[role="status"], [aria-live]')
       .map((region) => region.text())
       .filter(Boolean),
-  ).toEqual(['Selected Trey Turner - Praxis', 'Loading audio…'])
+  ).toEqual(['Selected Trey Turner - Praxis', 'Loading 1/21: KRNE - Chariots'])
   expect(wrapper.get('audio').attributes('aria-describedby')).toBe(
     'playback-status',
   )

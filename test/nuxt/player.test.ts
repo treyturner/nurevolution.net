@@ -4,6 +4,7 @@ import { nextTick } from 'vue'
 import './content-endpoints'
 import ArchivePlayer from '../fixtures/PlayerHarness.vue'
 import ArchiveLists from '../../app/components/ArchiveLists.vue'
+import Player from '../../app/components/ArchivePlayer.vue'
 import EpisodeTracklist from '../../app/components/EpisodeTracklist.vue'
 import { archiveCatalog as catalog } from '../fixtures/archive'
 import {
@@ -109,6 +110,22 @@ describe('archive presentation and native media integration', () => {
       props: { episode },
     })
     try {
+      const status = wrapper.get('.media-status')
+      const player = wrapper.findComponent(Player).props('player')
+      expect(status.text()).toBe('Loading 1/3: Artist 1 - Song 1')
+      player.seek(8.25)
+      await nextTick()
+      expect(status.text()).toBe('Loading 2/3: Artist 2 - Song 2')
+      for (const tracks of [
+        [],
+        episode.tracks.map((track) => ({ ...track, startTime: null })),
+        [episode.tracks[0]!, { ...episode.tracks[1]!, startTime: null }],
+      ]) {
+        await wrapper.setProps({ episode: { ...episode, tracks } })
+        expect(status.text()).toBe('Loading audio…')
+      }
+      await wrapper.setProps({ episode })
+      player.seek(0)
       const audio = wrapper.get('audio')
       Object.defineProperties(audio.element, {
         currentTime: { configurable: true, writable: true, value: 0 },
@@ -118,7 +135,6 @@ describe('archive presentation and native media integration', () => {
         seeking: { configurable: true, value: false },
       })
       await audio.trigger('loadedmetadata')
-      const status = wrapper.get('.media-status')
       expect(status.text()).toBe('Press Play to listen.')
       Object.assign(audio.element, { paused: false })
       await audio.trigger('play')
