@@ -6,7 +6,6 @@ import { deliveryAssetUrl } from '../services/delivery-assets'
 import DownloadIcon from './DownloadIcon.vue'
 import ArtworkDialog from './ArtworkDialog.vue'
 import PlayerControls from './PlayerControls.vue'
-import TimestampCopyButton from './TimestampCopyButton.vue'
 import { timestampUrl } from '../services/timestamp-link'
 import { useCopyLink } from '../composables/useCopyLink'
 import CopyLinkToast from './CopyLinkToast.vue'
@@ -18,6 +17,25 @@ const props = defineProps<{
   siteUrl?: string
 }>()
 const config = useRuntimeConfig()
+const canCopyTimestamp = computed(() =>
+  Boolean(
+    props.episode &&
+    props.siteUrl &&
+    props.player.state.initialized &&
+    !props.player.state.restoring &&
+    !props.player.sequencing.busy &&
+    props.player.state.sourceId === props.episode.id,
+  ),
+)
+function copyTimestamp(target: HTMLElement) {
+  if (!canCopyTimestamp.value) return
+  const url = timestampUrl(
+    props.siteUrl!,
+    props.episode!.path,
+    props.player.state.pendingSeek ?? props.player.state.currentTime,
+  )
+  if (url) void copyLink({ url, target, message: 'Timestamp link copied' })
+}
 useHead({
   noscript: [
     { innerHTML: '<style>.player-startup-loading{display:none}</style>' },
@@ -162,6 +180,8 @@ const feedback = computed(() => {
         v-if="player.state.attached"
         :player="player"
         :source-url="episode?.audio.url"
+        :can-copy-timestamp="canCopyTimestamp"
+        @copy-timestamp="copyTimestamp"
       />
       <div class="player-actions">
         <div
@@ -224,25 +244,6 @@ const feedback = computed(() => {
             :download="episode.audio.downloadFilename"
             >Download MP3 <DownloadIcon
           /></a>
-          <TimestampCopyButton
-            v-if="episode && siteUrl"
-            :url="
-              timestampUrl(
-                siteUrl,
-                episode.path,
-                player.state.pendingSeek ?? player.state.currentTime,
-              )
-            "
-            label="Copy timestamp link"
-            text="Copy timestamp link"
-            :disabled="
-              !player.state.initialized ||
-              player.state.restoring ||
-              player.sequencing.busy ||
-              player.state.sourceId !== episode.id
-            "
-            @copy="copyLink({ ...$event, message: 'Timestamp link copied' })"
-          />
         </div>
       </div>
       <!-- The server validates and sanitizes canonical descriptions before this projection. -->

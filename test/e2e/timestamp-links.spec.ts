@@ -172,8 +172,14 @@ test('copying positions and timed tracks preserves playback and canonical fracti
 }) => {
   await page.goto(ruminate + '?t=8.25')
   await at(page, 8.25)
+  await expect(
+    page.getByRole('menuitem', { name: 'Copy timestamp link' }),
+  ).toHaveCount(0)
   await page
-    .getByRole('button', { name: 'Copy timestamp link', exact: true })
+    .getByRole('slider', { name: 'Playback position' })
+    .click({ button: 'right' })
+  await page
+    .getByRole('menuitem', { name: 'Copy timestamp link', exact: true })
     .click()
   await expect(page.locator('html')).toHaveAttribute(
     'data-copied',
@@ -197,6 +203,53 @@ test('copying positions and timed tracks preserves playback and canonical fracti
     'Couldn’t copy link. Please try again.',
   )
   await at(page, 8.25)
+})
+
+test('playhead menu supports keyboard access, dismissal and narrow screens without interrupting playback', async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 320, height: 640 })
+  await page.goto(ruminate + '?t=8.25')
+  await at(page, 8.25)
+  const slider = page.getByRole('slider', { name: 'Playback position' })
+  const menu = page.getByRole('menu', { name: 'Playback position actions' })
+  const copy = page.getByRole('menuitem', { name: 'Copy timestamp link' })
+  await expect(page.locator('.player-links')).toHaveText('Download MP3')
+  await slider.focus()
+  await slider.press('Shift+F10')
+  await expect(copy).toBeFocused()
+  await copy.press('Escape')
+  await expect(menu).toHaveCount(0)
+  await expect(slider).toBeFocused()
+  await slider.press('Shift+F10')
+  await copy.press('Enter')
+  await expect(page.locator('html')).toHaveAttribute(
+    'data-copied',
+    'https://nurevolution.net' + ruminate + '?t=8.25',
+  )
+  await at(page, 8.25)
+  await page.locator('audio').evaluate((audio: HTMLAudioElement) => {
+    audio.muted = true
+  })
+  await page.getByRole('button', { name: 'Play', exact: true }).click()
+  await expect(page.locator('audio')).toHaveJSProperty('paused', false)
+  await slider.click({ button: 'right' })
+  await expect(copy).toBeFocused()
+  const box = (await menu.boundingBox())!
+  expect(box.x).toBeGreaterThanOrEqual(8)
+  expect(box.y).toBeGreaterThanOrEqual(8)
+  expect(box.x + box.width).toBeLessThanOrEqual(312)
+  expect(box.y + box.height).toBeLessThanOrEqual(632)
+  await copy.click()
+  await expect(page.locator('audio')).toHaveJSProperty('paused', false)
+  const copied = await page.locator('html').getAttribute('data-copied')
+  expect(Number(new URL(copied!).searchParams.get('t'))).toBeGreaterThanOrEqual(
+    8.25,
+  )
+  await slider.click({ button: 'right' })
+  await page.locator('h1').click()
+  await expect(menu).toHaveCount(0)
+  await expect(page.locator('audio')).toHaveJSProperty('paused', false)
 })
 
 test('delayed metadata retains the newest link and honors a later Play request', async ({

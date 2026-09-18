@@ -468,6 +468,9 @@ audio.custom-audio {
   display: flex;
   align-items: center;
   gap: 0.7rem;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
 }
 .player-time {
   font-size: 0.875rem;
@@ -484,6 +487,38 @@ audio.custom-audio {
 .seek-row input {
   flex: 1;
   width: 100%;
+}
+.playhead-menu {
+  position: fixed;
+  z-index: 30;
+  width: max-content;
+  max-width: calc(100vw - 16px);
+  padding: 0.25rem;
+  border: 1px solid var(--line);
+  border-radius: 0.35rem;
+  background: #202630;
+  box-shadow: 0 4px 16px rgb(0 0 0 / 35%);
+}
+.playhead-menu button {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-height: 44px;
+  padding: 0.6rem 0.75rem;
+  border: 0;
+  font-size: 0.8rem;
+  text-align: left;
+  background: transparent;
+}
+.playhead-menu button:hover,
+.playhead-menu button:focus {
+  background: #303b4a;
+}
+.playhead-menu svg {
+  flex: none;
+  width: 16px;
+  height: 16px;
+  margin-right: 0.6rem;
 }
 .playback-row {
   display: flex;
@@ -862,14 +897,6 @@ audio.custom-audio {
   width: 16px;
   height: 16px;
   flex: none;
-}
-.timestamp-copy-text {
-  padding: 0;
-  font-size: 0.75rem;
-  text-decoration: underline;
-}
-.timestamp-copy-text svg {
-  margin-left: 0.5rem;
 }
 .timestamp-copy:disabled {
   opacity: 0.45;

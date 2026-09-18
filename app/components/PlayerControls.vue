@@ -2,7 +2,13 @@
 import type { PodcastPlayer } from '../composables/usePodcastPlayer'
 import { formatTime } from '../services/episode-page'
 import { useCompactContainer } from '../composables/useCompactContainer'
-const props = defineProps<{ player: PodcastPlayer; sourceUrl?: string }>()
+import PlayheadContextMenu from './PlayheadContextMenu.vue'
+const props = defineProps<{
+  player: PodcastPlayer
+  sourceUrl?: string
+  canCopyTimestamp?: boolean
+}>()
+const emit = defineEmits<{ copyTimestamp: [target: HTMLElement] }>()
 const { container, compact } = useCompactContainer(319)
 const state = computed(() => props.player.state)
 const draft = ref<number | null>(null)
@@ -50,7 +56,11 @@ const seekDescription = computed(() =>
     ? 'Duration unavailable'
     : `${spoken(time.value)} of ${spoken(state.value.duration)}`,
 )
-function preview(event: Event) {
+function preview(event: Event, suppressed = false) {
+  if (suppressed) {
+    ;(event.target as HTMLInputElement).value = String(time.value)
+    return
+  }
   draft.value = Number((event.target as HTMLInputElement).value)
 }
 function commit() {
@@ -106,7 +116,13 @@ watch(
     aria-label="Audio player"
     aria-describedby="playback-status"
   >
-    <div class="seek-row">
+    <PlayheadContextMenu
+      v-slot="{ suppressSeek }"
+      :enabled="Boolean(canCopyTimestamp)"
+      :source-key="`${state.sourceId}:${sourceUrl}`"
+      @open="draft = null"
+      @copy="emit('copyTimestamp', $event)"
+    >
       <span class="player-time" aria-hidden="true">{{ formatTime(time) }}</span>
       <input
         aria-label="Playback position"
@@ -117,8 +133,14 @@ watch(
         :value="time"
         :aria-valuetext="seekDescription"
         :disabled="!seekable"
-        @input="preview"
-        @change="commit"
+        :title="
+          canCopyTimestamp
+            ? 'Right-click or long-press to copy a timestamp link'
+            : undefined
+        "
+        :aria-haspopup="canCopyTimestamp ? 'menu' : undefined"
+        @input="preview($event, suppressSeek)"
+        @change="!suppressSeek && commit()"
         @keydown="key"
         @pointercancel="draft = null"
         @blur="draft = null"
@@ -126,7 +148,7 @@ watch(
       <span class="player-time" aria-hidden="true">{{
         state.duration === null ? '-:-' : formatTime(state.duration)
       }}</span>
-    </div>
+    </PlayheadContextMenu>
     <div class="playback-row">
       <div class="transport-row">
         <button
