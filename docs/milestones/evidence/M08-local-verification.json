@@ -1,10 +1,10 @@
 {
   "schemaVersion": 1,
   "observedOn": "2026-09-18",
-  "status": "All five areas and UI refinements consolidated in PR 56; candidate verification/review and physical device/client acceptance remain open. M8 is not closed.",
+  "status": "All five areas and UI refinements consolidated in PR 56; full local verification passed. Expanded-PR CI/review and physical device/client acceptance remain open. M8 is not closed.",
   "deployment": "None performed or authorized for M8. All observations are workspace/local unless stated otherwise.",
   "firstPlanCommit": "c762a0443f946c5059d0fd5d9618d49626b273b4",
-  "implementationCommit": "c6b7d07bfe5f0e16eba079a4859b46b7aff8468d",
+  "implementationCommit": "f1b18e98bcc4dff3865367df18c1f4f4b9162e7c",
   "gates": [
     {
       "slice": "safari",
@@ -135,13 +135,26 @@
       "delivery": "Exact runtime and Caddy proxy, byte ranges, resumed/browser downloads, restart and fixture isolation passed.",
       "localLog": "nurevolution.net-m8-feed-advertisement/.local/timestamp-origin-verify.log",
       "logSha256": "098f69a963e8a2bd41d5b3a83dd274511321cc27c0694d786c37d64d25590b73"
+    },
+    {
+      "slice": "consolidated-pr56-ui-refinements",
+      "commit": "f1b18e98bcc4dff3865367df18c1f4f4b9162e7c",
+      "scope": "All five M8 areas and the final owner-requested UI refinements, including inline track-copy controls and the duration breakpoint. Subsequent edits only record verification evidence.",
+      "command": "NUREVOLUTION_DOCKER_ADDRESS=172.18.0.2 NUREVOLUTION_TEST_PORT=3160 NUREVOLUTION_MEDIA_TEST_PORT=3161 NUREVOLUTION_DEV_TEST_PORT=3162 mise exec -- pnpm verify",
+      "result": "passed",
+      "unitAndIntegrationTests": 560,
+      "browserTests": 356,
+      "expectedBrowserSkips": 4,
+      "delivery": "Exact runtime and Caddy proxy, byte ranges, resumed/browser downloads, restart and fixture isolation passed.",
+      "localLog": "nurevolution.net/.local/m8-pr56-consolidated-verify.log",
+      "logSha256": "45f736be73c1a83a97f2a707301a5db47976c8757250bc021a69d23c604ded8e"
     }
   ],
   "combinedCoveragePercent": {
-    "statements": 96.23,
-    "branches": 94.78,
-    "functions": 96.17,
-    "lines": 97.02
+    "statements": 96.2,
+    "branches": 94.66,
+    "functions": 96.19,
+    "lines": 97.04
   },
   "firstPullRequest": {
     "number": 56,
@@ -173,9 +186,9 @@
   },
   "workspacePreview": {
     "origin": "https://3000--main--dev--treyturner.coder.treyturner.info",
-    "commit": "c6b7d07bfe5f0e16eba079a4859b46b7aff8468d",
+    "commit": "f1b18e98bcc4dff3865367df18c1f4f4b9162e7c",
     "health": "healthy",
-    "loaded": "Immutable production build containing all local M8 slices.",
+    "loaded": "Immutable production build from the fully verified consolidated candidate; later PR edits only record evidence.",
     "visualWidthsPixels": [1280, 390, 320],
     "visualObservation": "Focused Chromium, Firefox, and WebKit checks cover inline track-copy icons and tooltips, duration layout at 390px and 594px, and 320px with 200% text. Copy targets are 44px wide and at least 24px tall, clear of the artist text.",
     "mediaSessionObservation": "Headless Chromium exposed Troglodyte / Mat Zo / Trey Turner - Ruminate and playing state. This is not lock-screen/headset acceptance.",
@@ -202,5 +215,15 @@
     "Podcast Addict artwork, chapter display and fractional chapter seeks for Ruminate/Praxis, plus untimed-episode omission.",
     "Fresh automatic review/CI for all outstanding changes consolidated into PR 56.",
     "Authorized production support release retained as a compatible fallback before eventual RSS advertisement."
-  ]
+  ],
+  "consolidatedPullRequest": {
+    "number": 56,
+    "url": "https://github.com/treyturner/nurevolution.net/pull/56",
+    "verifiedCommit": "f1b18e98bcc4dff3865367df18c1f4f4b9162e7c",
+    "scope": "All five M8 areas and the subsequent UI refinements.",
+    "localVerify": "passed",
+    "remoteChecksAndReview": "Awaiting automatic CI/review for the expanded PR. The historical Safari-only approval does not apply.",
+    "reviewRequested": false,
+    "agentStatusComments": 0
+  }
 }
