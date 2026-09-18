@@ -52,4 +52,90 @@ test('scrolling the list requests thumbnails, and failed thumbnails never fall b
   await expect(
     page.locator('.episode-list a[aria-current="page"]'),
   ).toHaveAttribute('href', detail.path)
+  const spacing = () =>
+    page
+      .locator('.episode-list li')
+      .first()
+      .evaluate((row) => {
+        const image = row
+          .querySelector('.episode-list-artwork')!
+          .getBoundingClientRect()
+        const text = row
+          .querySelector('.episode-list-info')!
+          .getBoundingClientRect()
+        return text.left - image.right
+      })
+  for (const width of [390, 768, 1280]) {
+    await page.setViewportSize({ width, height: 900 })
+    const episodesTab = page.getByRole('tab', { name: 'Episodes', exact: true })
+    if (width <= 700) await episodesTab.click()
+    else await expect(episodesTab).toHaveCount(0)
+    await expect.poll(spacing).toBe(12)
+  }
+  // iPadOS 14.3 ignores flex gaps; spacing must not depend on that property.
+  await page.addStyleTag({
+    content: '.episode-list li > a:first-child { gap: 0 !important }',
+  })
+  await expect.poll(spacing).toBe(12)
+})
+
+test('artist and date wrap as whole items and the separator disappears at a line start', async ({
+  page,
+}) => {
+  await stubArchiveMedia(page)
+  await page.setViewportSize({ width: 390, height: 900 })
+  await page.goto('/episodes/trey-turner-ruminate')
+  await hydrated(page)
+  await page.getByRole('tab', { name: 'Episodes', exact: true }).click()
+  const metadata = page.locator('.episode-list-artist').first()
+  const measure = () =>
+    metadata.evaluate((element) => {
+      const box = (selector: string) => {
+        const bounds = element.querySelector(selector)!.getBoundingClientRect()
+        return {
+          left: bounds.left,
+          right: bounds.right,
+          top: bounds.top,
+          bottom: bounds.bottom,
+          height: bounds.height,
+        }
+      }
+      const bounds = element.getBoundingClientRect()
+      return {
+        artist: box('.episode-list-artist-name'),
+        date: box('.episode-list-date'),
+        separator: box('.episode-date-separator'),
+        left: bounds.left,
+        right: bounds.right,
+        lineHeight: Number.parseFloat(getComputedStyle(element).lineHeight),
+      }
+    })
+  for (const noGap of [false, true]) {
+    await page.evaluate(
+      (value) =>
+        document.documentElement.classList.toggle('no-flex-gap', value),
+      noGap,
+    )
+    await page.setViewportSize({ width: 460, height: 900 })
+    const wide = await measure()
+    expect(wide.date.top).toBeCloseTo(wide.artist.top, 1)
+    expect(wide.separator.left).toBeGreaterThanOrEqual(wide.artist.right)
+    await page.setViewportSize({ width: 350, height: 900 })
+    const narrow = await measure()
+    expect(narrow.date.top).toBeGreaterThanOrEqual(narrow.artist.bottom - 1)
+    expect(narrow.date.left).toBeCloseTo(narrow.left, 1)
+    expect(narrow.separator.right).toBeLessThanOrEqual(narrow.left + 0.1)
+    await expect(metadata).toHaveCSS('overflow', 'hidden')
+    expect(narrow.artist.height).toBeLessThanOrEqual(narrow.lineHeight + 1)
+    expect(narrow.date.height).toBeLessThanOrEqual(narrow.lineHeight + 1)
+  }
+  await page.setViewportSize({ width: 320, height: 900 })
+  await page.evaluate(() => {
+    document.documentElement.style.fontSize = '200%'
+  })
+  const enlarged = await measure()
+  expect(enlarged.date.right).toBeLessThanOrEqual(enlarged.right + 1)
+  expect(
+    await page.evaluate(() => document.documentElement.scrollWidth),
+  ).toBeLessThanOrEqual(320)
 })

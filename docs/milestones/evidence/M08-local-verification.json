@@ -1,0 +1,229 @@
+{
+  "schemaVersion": 1,
+  "observedOn": "2026-09-18",
+  "status": "All five areas and UI refinements consolidated in PR 56; full local verification passed. Expanded-PR CI/review and physical device/client acceptance remain open. M8 is not closed.",
+  "deployment": "None performed or authorized for M8. All observations are workspace/local unless stated otherwise.",
+  "firstPlanCommit": "c762a0443f946c5059d0fd5d9618d49626b273b4",
+  "implementationCommit": "f1b18e98bcc4dff3865367df18c1f4f4b9162e7c",
+  "gates": [
+    {
+      "slice": "safari",
+      "commit": "fc11e20",
+      "scope": "Safari fixes, with later documentation-only commit 07240e1 reviewed in PR 56.",
+      "command": "mise exec -- pnpm verify",
+      "result": "passed",
+      "unitAndIntegrationTests": 498,
+      "browserTests": 287,
+      "expectedBrowserSkips": 4,
+      "delivery": "Exact runtime and Caddy proxy, byte ranges, resumed/browser downloads, restart and fixture isolation passed.",
+      "localLog": "nurevolution.net/.local/m8-safari-fix-verify.log",
+      "logSha256": "48786626773d0df18d2749efcbd0e757727ed49766b6cd6c5cdc6589854bdee9"
+    },
+    {
+      "slice": "sharing-initial",
+      "commit": null,
+      "scope": "Initial sharing gate before the latest Safari fixes; the rebased sharing code is also covered by the later Media Session and combined gates.",
+      "command": "mise exec -- pnpm verify",
+      "result": "passed",
+      "unitAndIntegrationTests": 494,
+      "browserTests": 308,
+      "expectedBrowserSkips": 4,
+      "delivery": "Exact runtime and Caddy proxy, byte ranges, resumed/browser downloads, restart and fixture isolation passed.",
+      "localLog": "nurevolution.net-m8-sharing/.local/verify.log",
+      "logSha256": "148764b5730723389fc17ed390bdc1a877bfddd90a56829f7a542de620440210"
+    },
+    {
+      "slice": "media-session",
+      "commit": "2535d4b",
+      "scope": "Includes the earlier Safari fixes and timestamp sharing; predates preview download range support.",
+      "command": "mise exec -- pnpm verify",
+      "result": "passed",
+      "unitAndIntegrationTests": 512,
+      "browserTests": 317,
+      "expectedBrowserSkips": 4,
+      "delivery": "Exact runtime and Caddy proxy, byte ranges, resumed/browser downloads, restart and fixture isolation passed.",
+      "localLog": "nurevolution.net-m8-media-session/.local/media-session-verify.log",
+      "logSha256": "a65cf6d6108b3a05a6a33ec64aec8da11dba938e6975c73d7c5644f38bfff802"
+    },
+    {
+      "slice": "feed-resources",
+      "commit": "daa41d4",
+      "scope": "Resource-support boundary with RSS unchanged.",
+      "command": "mise exec -- pnpm verify",
+      "result": "passed",
+      "unitAndIntegrationTests": 523,
+      "browserTests": 326,
+      "expectedBrowserSkips": 4,
+      "delivery": "Exact runtime and Caddy proxy, byte ranges, resumed/browser downloads, restart and fixture isolation passed.",
+      "localLog": "nurevolution.net-m8-feed-resources/.local/feed-resources-verify.log",
+      "logSha256": "22a6aa7d83ca5a1178c727c38544ffeb99d94707d0d747cebc884cb6cf983cba"
+    },
+    {
+      "slice": "combined",
+      "commit": "99a4368",
+      "scope": "Combined implementation gate before preview download range support; retained as historical evidence.",
+      "command": "mise exec -- pnpm verify",
+      "result": "passed",
+      "unitAndIntegrationTests": 530,
+      "browserTests": 329,
+      "expectedBrowserSkips": 4,
+      "delivery": "Exact runtime and Caddy proxy, byte ranges, resumed/browser downloads, restart and fixture isolation passed.",
+      "localLog": "nurevolution.net-m8-feed-advertisement/.local/feed-advertisement-verify.log",
+      "logSha256": "5c3f2bee838d651365cee2cda2514d2881d180af5ce04af94cf068c44514f0fa"
+    },
+    {
+      "slice": "safari-download-ranges",
+      "commit": "7d7ffcb6d4523828b30ddf802f028546f2ac44ef",
+      "scope": "Includes preview MP3 byte-range support and native download-URL media regressions.",
+      "command": "NUREVOLUTION_DOCKER_ADDRESS=172.18.0.2 mise exec -- pnpm verify",
+      "result": "passed",
+      "unitAndIntegrationTests": 518,
+      "browserTests": 293,
+      "expectedBrowserSkips": 4,
+      "delivery": "Exact runtime and Caddy proxy, byte ranges, resumed/browser downloads, restart and fixture isolation passed.",
+      "localLog": "nurevolution.net/.local/m8-download-ranges-verify.log",
+      "logSha256": "065e31ba1f0d286f1f6df919eebbc0b88cbe4b4f09e6f7ea6a3c53351f273d48"
+    },
+    {
+      "slice": "combined-download-ranges",
+      "commit": "01bd6f923702839a841f36f994a77c1171444ff1",
+      "scope": "Includes preview MP3 byte-range support and native download-URL media regressions.",
+      "command": "NUREVOLUTION_DOCKER_ADDRESS=172.18.0.2 mise exec -- pnpm verify",
+      "result": "passed",
+      "unitAndIntegrationTests": 550,
+      "browserTests": 335,
+      "expectedBrowserSkips": 4,
+      "delivery": "Exact runtime and Caddy proxy, byte ranges, resumed/browser downloads, restart and fixture isolation passed.",
+      "localLog": "nurevolution.net-m8-feed-advertisement/.local/m8-download-ranges-combined-verify.log",
+      "logSha256": "5cd14343eee09a493aebe9618a41df01df1404351555907c020c52e1de1f7b10"
+    },
+    {
+      "slice": "combined-playhead-context-menu",
+      "commit": "4d6a29ba4b1545114ba33608a0920989d5f68bf4",
+      "scope": "Includes the playhead context menu and iPad View owner confirmation; later edits only reconcile documentation and evidence.",
+      "command": "NUREVOLUTION_DOCKER_ADDRESS=172.18.0.2 mise exec -- pnpm verify",
+      "result": "passed",
+      "unitAndIntegrationTests": 555,
+      "browserTests": 338,
+      "expectedBrowserSkips": 4,
+      "delivery": "Exact runtime and Caddy proxy, byte ranges, resumed/browser downloads, restart and fixture isolation passed.",
+      "localLog": "nurevolution.net-m8-feed-advertisement/.local/playhead-menu-verify.log",
+      "logSha256": "33c1f65da3e0bcd9abd578cb1941f1362bdfcffa701f86513160730781564545"
+    },
+    {
+      "slice": "combined-thumb-only-context-menu",
+      "commit": "86c5ad81d0411b4e16e283a2fefc36ebdc5c4866",
+      "scope": "Restricts pointer context-menu activation to the playhead thumb and anchors the menu beside it. Later changes only reconcile documentation.",
+      "command": "NUREVOLUTION_DOCKER_ADDRESS=172.18.0.2 mise exec -- pnpm verify",
+      "result": "passed",
+      "unitAndIntegrationTests": 557,
+      "browserTests": 341,
+      "expectedBrowserSkips": 4,
+      "delivery": "Exact runtime and Caddy proxy, byte ranges, resumed/browser downloads, restart and fixture isolation passed.",
+      "localLog": "nurevolution.net-m8-feed-advertisement/.local/thumb-menu-verify.log",
+      "logSha256": "11062d79802227bd2232b26bf28000b4d7db2a4d8f30cdba4d9e308cd1a17d9c"
+    },
+    {
+      "slice": "combined-timestamp-current-origin",
+      "commit": "19e1babd7e1d18411395ba47a8a59eef13113f84",
+      "scope": "Current-position and track timestamp links use the browser origin, with copied-link round trips through the dev delivery origin and an HTTPS preview proxy. Later edits only reconcile documentation.",
+      "command": "NUREVOLUTION_DOCKER_ADDRESS=172.18.0.2 NUREVOLUTION_TEST_PORT=3160 NUREVOLUTION_MEDIA_TEST_PORT=3161 NUREVOLUTION_DEV_TEST_PORT=3162 mise exec -- pnpm verify",
+      "result": "passed",
+      "unitAndIntegrationTests": 560,
+      "browserTests": 347,
+      "expectedBrowserSkips": 4,
+      "delivery": "Exact runtime and Caddy proxy, byte ranges, resumed/browser downloads, restart and fixture isolation passed.",
+      "localLog": "nurevolution.net-m8-feed-advertisement/.local/timestamp-origin-verify.log",
+      "logSha256": "098f69a963e8a2bd41d5b3a83dd274511321cc27c0694d786c37d64d25590b73"
+    },
+    {
+      "slice": "consolidated-pr56-ui-refinements",
+      "commit": "f1b18e98bcc4dff3865367df18c1f4f4b9162e7c",
+      "scope": "All five M8 areas and the final owner-requested UI refinements, including inline track-copy controls and the duration breakpoint. Subsequent edits only record verification evidence.",
+      "command": "NUREVOLUTION_DOCKER_ADDRESS=172.18.0.2 NUREVOLUTION_TEST_PORT=3160 NUREVOLUTION_MEDIA_TEST_PORT=3161 NUREVOLUTION_DEV_TEST_PORT=3162 mise exec -- pnpm verify",
+      "result": "passed",
+      "unitAndIntegrationTests": 560,
+      "browserTests": 356,
+      "expectedBrowserSkips": 4,
+      "delivery": "Exact runtime and Caddy proxy, byte ranges, resumed/browser downloads, restart and fixture isolation passed.",
+      "localLog": "nurevolution.net/.local/m8-pr56-consolidated-verify.log",
+      "logSha256": "45f736be73c1a83a97f2a707301a5db47976c8757250bc021a69d23c604ded8e"
+    }
+  ],
+  "combinedCoveragePercent": {
+    "statements": 96.2,
+    "branches": 94.66,
+    "functions": 96.19,
+    "lines": 97.04
+  },
+  "firstPullRequest": {
+    "number": 56,
+    "url": "https://github.com/treyturner/nurevolution.net/pull/56",
+    "state": "open",
+    "head": "7d7ffcb6d4523828b30ddf802f028546f2ac44ef",
+    "verify": "https://github.com/treyturner/nurevolution.net/actions/runs/35339443145/job/105581743285",
+    "checks": "All checks passed for 7d7ffcb; artifact publishing skipped for PR event.",
+    "review": "Automatic reviewer completed at 2026-09-18T11:28:53.969411Z for 7d7ffcb; +1 reaction at 11:28:56Z; no inline findings.",
+    "reviewRequested": false,
+    "agentStatusComments": 0,
+    "scope": "Historical Safari-only head; its passing checks and review do not cover the expanded PR."
+  },
+  "feed": {
+    "items": 55,
+    "historicalIdentitiesPreserved": 55,
+    "episodeArtworkImages": 55,
+    "artworkBytes": 14021978,
+    "chapterReferences": 34,
+    "knownStarts": 626,
+    "omittedUntimedOrEmptyEpisodes": 21,
+    "resourceSupportCommit": "e1013e02da9650d024337504ef409e7266d4f442",
+    "checks": [
+      "All advertised image mappings and chapter documents fetched from the built application.",
+      "Chapter version hints match SHA-256 of served bytes.",
+      "GET/HEAD/304, visibility filtering, old hints, errors, and caching checked.",
+      "Every artwork file verified offline for source/output identity, dimensions, format, metadata removal, byte limit, and retention rules."
+    ]
+  },
+  "workspacePreview": {
+    "origin": "https://3000--main--dev--treyturner.coder.treyturner.info",
+    "commit": "f1b18e98bcc4dff3865367df18c1f4f4b9162e7c",
+    "health": "healthy",
+    "loaded": "Immutable production build from the fully verified consolidated candidate; later PR edits only record evidence.",
+    "visualWidthsPixels": [1280, 390, 320],
+    "visualObservation": "Focused Chromium, Firefox, and WebKit checks cover inline track-copy icons and tooltips, duration layout at 390px and 594px, and 320px with 200% text. Copy targets are 44px wide and at least 24px tall, clear of the artist text.",
+    "mediaSessionObservation": "Headless Chromium exposed Troglodyte / Mat Zo / Trey Turner - Ruminate and playing state. This is not lock-screen/headset acceptance.",
+    "downloadRangeObservation": "Ruminate and The Dark Prophet return exact 206 bytes for initial, middle, and suffix ranges, compared against canonical originals. The exposed port-3000 preview also returned bytes 0-1 for Ruminate with Content-Length 2 and Content-Range bytes 0-1/145672454.",
+    "playheadMenuObservation": "Chromium, Firefox and WebKit regressions verify thumb activation at the start, middle and end, exclusion of rail/time-label clicks, normal rail seeking, keyboard access and narrow viewport bounds. An earlier Chromium touch-input check on build 86c5ad8 on real Ruminate at 390px confirms a rail hold does not open the menu, while a thumb hold copies the canonical t=8.25 URL and preserves paused position at 8.25 seconds. Screenshot: nurevolution.net/.local/m8-preview/thumb-menu-touch.png. Physical iPad gesture acceptance remains untested.",
+    "timestampOriginObservation": "Chromium, Firefox, and WebKit verify both timestamp-copy actions and paused restoration on the dev delivery origin and an HTTPS preview proxy, preserving the visible scheme, hostname, and port. A real-audio Chromium check on the refreshed port-3000 preview copies and reopens Ruminate at 8.25 and track 2 at 174.49004535147392 seconds, paused. Log: nurevolution.net/.local/m8-preview/19e1bab/timestamp-origin-check.log.",
+    "latestLayoutObservation": "Track durations remain beside details above an 18rem list width; smaller lists retain stacked metadata. The tooltip reads Copy track link. All three browser engines passed playing-state, fallback-layout, and overflow checks on c6b7d07."
+  },
+  "ownerIpadObservations": {
+    "device": "Owner-reported iPad Pro on iPadOS 14.3; captured desktop-mode user agent identifies Safari 14.0.2.",
+    "confirmed": [
+      "Player starts and plays.",
+      "Track seeking works; confirmed-seek highlight bounce fixed, including paused seek followed by Play.",
+      "Page-wide focus outline removed.",
+      "Download MP3 saves successfully.",
+      "Download MP3 -> View now opens a working player on the fixed Coder preview (01bd6f9, including 7d7ffcb)."
+    ],
+    "limits": "The owner confirmed the previously broken native View path works after the byte-range fix. Production native View and the new playhead-menu touch gesture on the physical iPad remain untested. See docs/operations/acceptance-2026-09-18.md."
+  },
+  "pending": [
+    "Remaining actual-iPad checks: artwork dialogs, episode-change confirmation/cancel, paused reload restoration, untimed guest playback.",
+    "Owner playhead context-menu, timestamp-copy/layout and physical touch-gesture acceptance.",
+    "Physical lock-screen/headset/media-key actions and background playback observation on a supported device.",
+    "Podcast Addict artwork, chapter display and fractional chapter seeks for Ruminate/Praxis, plus untimed-episode omission.",
+    "Fresh automatic review/CI for all outstanding changes consolidated into PR 56.",
+    "Authorized production support release retained as a compatible fallback before eventual RSS advertisement."
+  ],
+  "consolidatedPullRequest": {
+    "number": 56,
+    "url": "https://github.com/treyturner/nurevolution.net/pull/56",
+    "verifiedCommit": "f1b18e98bcc4dff3865367df18c1f4f4b9162e7c",
+    "scope": "All five M8 areas and the subsequent UI refinements.",
+    "localVerify": "passed",
+    "remoteChecksAndReview": "Awaiting automatic CI/review for the expanded PR. The historical Safari-only approval does not apply.",
+    "reviewRequested": false,
+    "agentStatusComments": 0
+  }
+}

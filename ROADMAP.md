@@ -143,7 +143,7 @@ Feed and media URLs must be usable by podcast clients without interactive browse
 
 ## 6. Milestone sequence
 
-M0–M4 are **implemented and merged**. M5 is **implemented with live rehearsal evidence**. M6 is **closed on 2026-09-18**; production is active and the legacy site/database are retired. M7 is **implemented and released**; M8–M9 implementation has not started. M0–M7 IDs remain stable. On 2026-09-18 the owner swapped the two unstarted milestones: selected former M9 enhancements are now M8; former M8 drafts/scheduling is now M9. Historical milestone plans retain their original numbering.
+M0–M4 are **implemented and merged**. M5 is **implemented with live rehearsal evidence**. M6 is **closed on 2026-09-18**; production is active and the legacy site/database are retired. M7 is **implemented and released**; M8 implementation is underway and M9 has not started. M0–M7 IDs remain stable. On 2026-09-18 the owner swapped the two then-unstarted milestones: selected former M9 enhancements are now M8; former M8 drafts/scheduling is now M9. Historical milestone plans retain their original numbering.
 
 Plans and completion evidence are available for [M0 - Migration audit](docs/milestones/M00-migration-audit.md) and [M1 - Foundation and verification](docs/milestones/M01-foundation-and-verification.md). The [M2 - Canonical content record](docs/milestones/M02-canonical-content.md) documents schemas, faithful import, protected edits, public data access, and completed acceptance checks. The [M3 - Replacement RSS record](docs/milestones/M03-podcast-rss.md) documents implemented metadata, serialization, aliases, cache behavior, compatibility tests, and the public validation handoff. Owner instructions are in the [content authoring guide](docs/CONTENT.md) and [feed validation guide](docs/FEED-VALIDATION.md).
 
@@ -321,7 +321,7 @@ Run `pnpm verify`. External validator/client results are provisional until repea
 
 ### M8 - Listening and feed enhancements
 
-**Scope agreed; implementation not started.** The owner prioritized this milestone ahead of drafts/scheduling on 2026-09-18 and deferred palettes and track/artist/release links. See the [bounded M8 scope](docs/milestones/M08-listening-and-feed-enhancements.md) for contracts, evidence, exclusions, and review slices.
+**Implementation consolidated in PR #56.** The owner prioritized this milestone ahead of drafts/scheduling on 2026-09-18 and deferred palettes and track/artist/release links. See the [M8 implementation plan](docs/milestones/M08-listening-and-feed-enhancements.md) for contracts, evidence, exclusions, and commit boundaries. All five areas and subsequent UI refinements are included in the expanded PR at the owner's request. The earlier Safari-only head passed CI/automatic review and partial actual-iPad acceptance; the expanded PR passed its full local gate and awaits fresh remote CI/review; remaining device/client acceptance is still required. No M8 changes are deployed.
 
 **Outcome:** share precise listening positions, use supported device media controls, expose existing artwork/timed tracks in the feed, and restore ordinary playback on Safari 14.3.
 
@@ -335,7 +335,7 @@ Run `pnpm verify`. External validator/client results are provisional until repea
 
 **Acceptance/verification:** preserve canonical fractional seconds and [truncate earlier when lower precision is required](docs/CONTENT.md#episode-fields-and-new-episodes). Cover URL/restoration precedence, no autoplay, player races, unsupported device APIs, untimed/missing tracks, feed compatibility, and unpublished endpoint filtering. Run `pnpm verify`, actual Safari 14.3 playback/seek checks, supported device controls, and a chapter-capable podcast-client check. Existing missing metadata does not block chapter generation for timed episodes.
 
-**Delivery:** independently reviewable Safari, sharing, device-control, and feed slices; split artwork/chapters if needed. All five areas are required to close M8. This scope update does not authorize implementation or deployment.
+**Delivery:** Safari, sharing, device controls, feed support, and RSS advertisement retain distinct commit boundaries within the consolidated PR. All five areas are required to close M8. The resource-support release must still be published, deployed, verified, and retained as a fallback before the RSS-advertisement release. No M8 deployment is authorized.
 
 ### M9 - Drafts and scheduled repository publishing
 

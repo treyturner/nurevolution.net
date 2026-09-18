@@ -1,20 +1,14 @@
 <script setup lang="ts">
 import type { EpisodeSummary } from '../../shared/content/public'
+import { openModal } from '../services/modal'
 defineProps<{ episode: EpisodeSummary }>()
 const emit = defineEmits<{ answer: [allowed: boolean] }>()
 const dialog = ref<HTMLDialogElement | null>(null)
-onMounted(() => dialog.value!.showModal())
-onBeforeUnmount(() => dialog.value?.close())
-function backdropClick(event: MouseEvent) {
-  const bounds = dialog.value!.getBoundingClientRect()
-  if (
-    event.clientX < bounds.left ||
-    event.clientX > bounds.right ||
-    event.clientY < bounds.top ||
-    event.clientY > bounds.bottom
-  )
-    emit('answer', false)
-}
+let dispose: (() => void) | undefined
+onMounted(() => {
+  dispose = openModal(dialog.value!, () => emit('answer', false))
+})
+onBeforeUnmount(() => dispose?.())
 </script>
 
 <template>
@@ -23,8 +17,6 @@ function backdropClick(event: MouseEvent) {
     class="episode-change-dialog"
     aria-labelledby="episode-change-question"
     aria-describedby="episode-change-target"
-    @cancel.prevent="emit('answer', false)"
-    @click.self="backdropClick"
   >
     <h2 id="episode-change-question">Stop playback to change episodes?</h2>
     <p id="episode-change-target">{{ episode.artist }} - {{ episode.title }}</p>

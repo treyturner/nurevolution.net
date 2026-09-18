@@ -58,7 +58,7 @@ test('track time display switches without seeking and resets to duration on relo
   await expect(page.locator('audio')).toHaveJSProperty('paused', true)
   await expect(
     page.locator('.track-list li[aria-current] .track-number'),
-  ).toHaveText('02')
+  ).toHaveText('02.')
   await toggle.press('Space')
   await expect(times).toHaveText(['0:08', '0:23', '0:08'])
   await page.getByRole('button', { name: /^Seek to track 3:/ }).click()
@@ -80,7 +80,7 @@ test('the current track plays and pauses in place with mouse and keyboard', asyn
   })
   await at(page, 12.345)
   await expect(audio).toHaveJSProperty('seeking', false)
-  const current = page.locator('.track-list li[aria-current] button')
+  const current = page.locator('.track-list li[aria-current] button.track-row')
   await expect(current).toHaveAccessibleName(/^Play track 2:/)
   let seeks = 0
   await page.exposeFunction('recordTrackSeek', () => {
@@ -98,10 +98,9 @@ test('the current track plays and pauses in place with mouse and keyboard', asyn
     'Playing 2/3: Test tone - Track 2',
   )
   await expect(current).toHaveAccessibleName(/^Pause track 2:/)
-  await expect(current.locator('.track-current')).toHaveCSS(
-    'transition-duration',
-    '1s',
-  )
+  await expect(
+    page.locator('.track-list li[aria-current] .track-current'),
+  ).toHaveCSS('transition-duration', '1s')
   await current.click()
   await expect(audio).toHaveJSProperty('paused', true)
   const pausedAt = await audio.evaluate((a: HTMLAudioElement) => a.currentTime)
@@ -132,7 +131,7 @@ test('the final track offers a seek at the episode end instead of replaying the 
   })
   await at(page, 40)
   await expect(audio).toHaveJSProperty('seeking', false)
-  const final = page.locator('.track-list li[aria-current] button')
+  const final = page.locator('.track-list li[aria-current] button.track-row')
   await expect(final).toHaveAccessibleName(/^Seek to track 3:/)
   await final.click()
   await at(page, 32)
@@ -206,7 +205,7 @@ test('sample-based track starts select the clicked row after a fresh paused load
     await expect(
       page.locator('.track-list li[aria-current] .track-number'),
       `Requested ${starts[position - 1]}, browser confirmed ${actual}`,
-    ).toHaveText(String(position).padStart(2, '0'))
+    ).toHaveText(`${String(position).padStart(2, '0')}.`)
   }
   await page.getByRole('button', { name: 'Next track' }).click()
   await at(page, starts[2]!)
@@ -215,7 +214,50 @@ test('sample-based track starts select the clicked row after a fresh paused load
   await at(page, starts[1]!)
   await expect(
     page.locator('.track-list li[aria-current] .track-number'),
-  ).toHaveText('02')
+  ).toHaveText('02.')
+})
+
+test('tabbed lists show the active tracklist when playback starts or resumes, but respect browsing while playing', async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 390, height: 844 })
+  await fixture(page, [0, 8.25, 32])
+  const audio = page.locator('audio')
+  const episodes = page.getByRole('tab', { name: 'Episodes', exact: true })
+  const tracks = page.getByRole('tab', { name: 'Tracklist', exact: true })
+  await audio.evaluate((element: HTMLAudioElement) => {
+    element.muted = true
+    element.loop = true
+  })
+  await expect(episodes).toHaveAttribute('aria-selected', 'true')
+  await page.getByRole('button', { name: 'Next track', exact: true }).click()
+  await at(page, 8.25)
+  await expect(episodes).toHaveAttribute('aria-selected', 'true')
+  const play = page.getByRole('button', { name: 'Play', exact: true })
+  await play.focus()
+  await play.press('Enter')
+  await expect(page.locator('.media-status')).toHaveText(/^Playing 2\/3:/)
+  await expect(tracks).toHaveAttribute('aria-selected', 'true')
+  await expect(page.locator('#tracks-panel')).toBeVisible()
+  await expect(page.locator('.track-list [aria-current]')).toContainText(
+    'Track 2',
+  )
+  await expect(
+    page.getByRole('button', { name: 'Pause', exact: true }),
+  ).toBeFocused()
+
+  await episodes.click()
+  await page.getByRole('button', { name: 'Next track', exact: true }).click()
+  await expect(page.locator('.media-status')).toHaveText(/^Playing 3\/3:/)
+  await expect(episodes).toHaveAttribute('aria-selected', 'true')
+  await page.getByRole('button', { name: 'Pause', exact: true }).click()
+  await expect(audio).toHaveJSProperty('paused', true)
+  await expect(episodes).toHaveAttribute('aria-selected', 'true')
+  await page.getByRole('button', { name: 'Play', exact: true }).click()
+  await expect(tracks).toHaveAttribute('aria-selected', 'true')
+  await expect(page.locator('.track-list [aria-current]')).toContainText(
+    'Track 3',
+  )
 })
 
 test('mobile keyboard track seeking preserves tabs and leaves uncertain gaps unhighlighted', async ({
@@ -228,7 +270,7 @@ test('mobile keyboard track seeking preserves tabs and leaves uncertain gaps unh
   ).toBeDisabled()
   await page.getByRole('tab', { name: 'Tracklist' }).click()
   await expect(page.locator('.track-list li')).toHaveCount(5)
-  await expect(page.locator('.track-list button')).toHaveCount(3)
+  await expect(page.locator('.track-list button.track-row')).toHaveCount(3)
   const first = page.getByRole('button', { name: /^Seek to track 1:/ })
   await first.focus()
   await first.press('Enter')

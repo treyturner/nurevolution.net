@@ -34,6 +34,7 @@ export interface PlayerSnapshot {
 export interface PlayerSelection {
   position?: number
   paused?: boolean
+  positionReason?: 'saved' | 'shared'
 }
 
 /** One element, with asynchronous work scoped to its current source and play intent. */
@@ -47,6 +48,7 @@ export function createPlayer(
   let generation = 0
   let disposed = false
   let endArmed = false
+  let playedSinceLoad = false
   let status: PlayerStatus = 'idle'
   let metadataTimer: ReturnType<typeof setTimeout> | undefined
   let durationTimer: ReturnType<typeof setTimeout> | undefined
@@ -58,6 +60,7 @@ export function createPlayer(
   let reconciling = false
   let resetPausePending = false
   let playObservedSinceLoad = false
+  let gesturePrepared = false
   let playbackTime: number | null = null
   const failedSources = new Set<string>()
   const seek = createPlayerSeek(audio, () => {
@@ -283,7 +286,11 @@ export function createPlayer(
       }
       wantsPlay = true
       playObservedSinceLoad = true
-      if (event === 'playing' && snapshot.readyState >= 3) endArmed = true
+      gesturePrepared = true
+      if (event === 'playing' && snapshot.readyState >= 3) {
+        endArmed = true
+        playedSinceLoad = true
+      }
       set(
         event === 'playing' && snapshot.readyState >= 3
           ? 'playing'
@@ -312,16 +319,17 @@ export function createPlayer(
         Number.isFinite(snapshot.currentTime)
           ? snapshot.currentTime
           : null
-      // WebKit can resume its clock after a seek without another playing
-      // event. Require consecutive advancing updates from an already-playing
-      // source; a seek jump or an unchanged buffering clock is not playback.
+      // WebKit can resume its clock after a seek or pause without another
+      // playing event. Require consecutive advancing updates from a source
+      // that has played; a seek jump or an unchanged clock is not playback.
       if (
         status === 'buffering' &&
-        endArmed &&
+        playedSinceLoad &&
         previousTime !== null &&
         playbackTime !== null &&
         playbackTime > previousTime
       ) {
+        endArmed = true
         set('playing')
       }
     }
@@ -367,6 +375,7 @@ export function createPlayer(
     stopDurationTimer()
     playbackTime = null
     endArmed = false
+    playedSinceLoad = false
     generation++
     // Only unresolved requests from this source can guard its native events.
     pendingPlays.clear()
@@ -389,6 +398,25 @@ export function createPlayer(
   }
   return {
     snapshot,
+    preparePlay() {
+      if (
+        disposed ||
+        !source ||
+        gesturePrepared ||
+        !audio.requiresGesturePreparation
+      )
+        return
+      gesturePrepared = true
+      // Already-playing media has permission. Otherwise load synchronously in
+      // the tap without playing the old episode, preserving any paused seek.
+      if (wantsPlay) return
+      const pending = seek.snapshot().pendingSeek
+      const position =
+        pending ?? (current()?.ended ? 0 : snapshot().currentTime)
+      if (pending === null && position > 0) seek.request(position, true)
+      metadataRetries = 0
+      load(source, false)
+    },
     select(next: PlayerSource | null, options: PlayerSelection = {}) {
       if (next?.fallbackUrl && failedSources.has(next.url))
         next = { id: next.id, url: next.fallbackUrl }
@@ -409,7 +437,11 @@ export function createPlayer(
       }
       const snapshot = audio.snapshot()
       metadataRetries = 0
-      if (options.position !== undefined) seek.request(options.position, true)
+      if (options.position !== undefined)
+        seek.request(
+          options.position,
+          options.positionReason === 'shared' ? 'shared' : true,
+        )
       load(
         next,
         Boolean(
@@ -437,7 +469,7 @@ export function createPlayer(
       audio.pause()
       publish('pause')
     },
-    seek(seconds: number) {
+    seek(seconds: number, reason?: 'shared') {
       if (
         disposed ||
         !source ||
@@ -446,7 +478,7 @@ export function createPlayer(
       )
         return
       playbackTime = null
-      seek.request(seconds)
+      seek.request(seconds, reason === 'shared' ? 'shared' : false)
       const actual = current()
       if (actual) seek.reconcile(actual)
       publish()

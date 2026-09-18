@@ -1,6 +1,7 @@
 import { createEpisodeSequencer } from '../services/episode-sequencing'
 import type { ComponentPublicInstance } from 'vue'
 import { trackNavigation } from '../services/track-navigation'
+import { createTrackClock } from '../services/track-clock'
 import { createAudioAdapter, type AudioEvent } from '../services/audio'
 import { createPlayer, type PlayerSnapshot } from '../services/player'
 import {
@@ -8,6 +9,8 @@ import {
   type ResumeRecord,
 } from '../services/playback-storage'
 import { playerSource } from '../services/playback-source'
+import { createMediaSession } from '../services/media-session'
+import { deliveryAssetUrl } from '../services/delivery-assets'
 import type { EpisodeDetail } from '../../shared/content/public'
 import type { useEpisodePlaybackNavigation } from './useEpisodePlaybackNavigation'
 
@@ -20,6 +23,7 @@ export function usePodcastPlayer(
     PlayerSnapshot & {
       continuing: boolean
       attached: boolean
+      initialized: boolean
       restoring: boolean
       restoreMessage: string | null
     }
@@ -38,12 +42,14 @@ export function usePodcastPlayer(
     muteSupported: false,
     continuing: false,
     attached: false,
+    initialized: false,
     restoring: false,
     restoreMessage: null,
   })
   let element: HTMLAudioElement | null = null
   let controller: ReturnType<typeof createPlayer> | undefined
   let storage: ReturnType<typeof createPlaybackStorage> | undefined
+  let mediaSession: ReturnType<typeof createMediaSession> | undefined
   let bootstrapped = false
   let playbackStarted = false
   let disposed = false
@@ -54,7 +60,14 @@ export function usePodcastPlayer(
   let pendingResetPauses = 0
   let suppressPauseCapture = false
   let pendingPauseAt: number | null = null
+  const trackClock = createTrackClock()
+  const trackTime = ref(0)
   const cleanups: (() => void)[] = []
+  const invalidTimestampMessage = 'Invalid timestamp; starting at 0:00.'
+  function clearTimestampMessage() {
+    if (state.restoreMessage === invalidTimestampMessage)
+      state.restoreMessage = null
+  }
   const sequenceRevision = ref(0)
   const sequence = createEpisodeSequencer(
     {
@@ -112,18 +125,48 @@ export function usePodcastPlayer(
       storage.capture(snapshot.sourceId, snapshot.currentTime)
     }
   }
+  function updateMediaSession(forcePosition = false) {
+    // Route acceptance precedes the controller's source change. Keep the old
+    // metadata until both identities agree, including synchronous reset events.
+    if (state.sourceId === (episode()?.id ?? null))
+      mediaSession?.update(forcePosition)
+  }
   function select(saved?: ResumeRecord | null) {
     const current = episode()
+    const source = current
+      ? playerSource(
+          current,
+          config.public.mediaOrigin,
+          navigator.userAgent,
+          (type) => element?.canPlayType(type) ?? '',
+          window.location.href,
+        )
+      : null
+    const timestamp = navigation?.timestamp
+    if (source && timestamp && timestamp.kind !== 'none') {
+      const target = timestamp.kind === 'time' ? timestamp.seconds : 0
+      state.restoreMessage =
+        timestamp.kind === 'invalid' ? invalidTimestampMessage : null
+      sequence.pause()
+      if (element && !element.paused) pendingResetPauses++
+      resetting = true
+      try {
+        controller?.pause()
+        controller?.select(source, {
+          position: target,
+          paused: true,
+          positionReason: 'shared',
+        })
+        // Same-source selects are intentionally idempotent; query links still seek.
+        trackClock.reset()
+        controller?.seek(target, 'shared')
+      } finally {
+        resetting = false
+      }
+      return
+    }
     controller?.select(
-      current
-        ? playerSource(
-            current,
-            config.public.mediaOrigin,
-            navigator.userAgent,
-            (type) => element?.canPlayType(type) ?? '',
-            window.location.href,
-          )
-        : null,
+      source,
       saved?.episodeId === current?.id && saved
         ? { position: saved.positionSeconds, paused: true }
         : {},
@@ -152,10 +195,18 @@ export function usePodcastPlayer(
     )
     // Browser globals and storage are touched only by the mounted owner.
     controller = createPlayer(
-      createAudioAdapter(element!),
+      createAudioAdapter(element!, navigator),
       () => {},
       (snapshot, event) => {
         Object.assign(state, snapshot)
+        trackTime.value = trackClock(snapshot, event)
+        updateMediaSession(
+          event === 'seeked' ||
+            event === 'play' ||
+            event === 'pause' ||
+            event === 'ended',
+        )
+        if (snapshot.wantsPlay) clearTimestampMessage()
         if (snapshot.status === 'playing') playbackStarted = true
         if (
           sequence.snapshot().continuing &&
@@ -169,6 +220,9 @@ export function usePodcastPlayer(
       },
     )
     state.attached = true
+    // The application is running even while a saved selection awaits its request.
+    state.initialized = true
+    document.dispatchEvent(new Event('nurevolution:player-ready'))
     storage = navigation
       ? createPlaybackStorage(() => window.localStorage)
       : undefined
@@ -211,6 +265,43 @@ export function usePodcastPlayer(
     controller?.pause()
   }
   onMounted(() => {
+    // Optional platform APIs are accessed only by the mounted player owner.
+    try {
+      mediaSession = createMediaSession(
+        navigator.mediaSession,
+        typeof MediaMetadata === 'function'
+          ? (data) => new MediaMetadata(data)
+          : undefined,
+        {
+          snapshot: () => ({
+            ...state,
+            episode: episode(),
+            showTitle: navigation?.showTitle ?? '',
+            artworkUrl: deliveryAssetUrl(
+              episode()?.artworkUrl ?? '',
+              'artwork',
+              config.public.webOrigin,
+            ),
+            busy:
+              !state.initialized ||
+              state.restoring ||
+              Boolean(navigation?.pending) ||
+              sequence.snapshot().busy,
+            track: currentTrack.value,
+            previous: tracks.value.previous,
+            next: tracks.value.next,
+          }),
+          play: () => player.play(),
+          pause: () => player.pause(),
+          seek: (seconds) => player.seek(seconds),
+          skip: (seconds) => player.skip(seconds),
+          previousTrack: () => player.previousTrack(),
+          nextTrack: () => player.nextTrack(),
+        },
+      )
+    } catch {
+      // Some engines expose an API property that cannot be read in this context.
+    }
     listen(document, 'visibilitychange', () => {
       if (document.visibilityState === 'hidden') storage?.flush()
     })
@@ -218,16 +309,34 @@ export function usePodcastPlayer(
       storage?.flush()
       suspended = true
       pauseForLifecycle()
+      mediaSession?.suspend()
     })
     listen(window, 'pageshow', (event) => {
       if (!(event as PageTransitionEvent).persisted) return
       pauseForLifecycle()
       suspended = false
       storage?.visit(false)
+      mediaSession?.resume()
     })
     void initialize()
   })
-  watch(episode, () => {
+  watch(
+    [
+      episode,
+      () => state.initialized,
+      () => state.restoring,
+      () => navigation?.pending,
+      sequenceRevision,
+    ],
+    () => updateMediaSession(),
+  )
+  watch(
+    () => navigation?.pending,
+    (pending) => {
+      if (pending) clearTimestampMessage()
+    },
+  )
+  watch([episode, () => navigation?.timestamp], () => {
     if (!bootstrapped) return
     state.restoreMessage = null
     pendingPauseAt = null
@@ -240,6 +349,7 @@ export function usePodcastPlayer(
   })
   onBeforeUnmount(() => {
     disposed = true
+    mediaSession?.dispose()
     sequence.dispose()
     storage?.flush()
     suspended = true
@@ -249,19 +359,16 @@ export function usePodcastPlayer(
   const tracks = computed(() =>
     trackNavigation(
       episode()?.tracks ?? [],
-      state.pendingSeek ?? state.currentTime,
+      state.pendingSeek ?? trackTime.value,
       state.duration,
     ),
   )
   const currentTrack = computed(
     () =>
-      trackNavigation(
-        episode()?.tracks ?? [],
-        state.currentTime,
-        state.duration,
-      ).current,
+      trackNavigation(episode()?.tracks ?? [], trackTime.value, state.duration)
+        .current,
   )
-  return {
+  const player = {
     state: readonly(state),
     get sequencing() {
       void sequenceRevision.value
@@ -269,6 +376,21 @@ export function usePodcastPlayer(
     },
     previousEpisode: () => sequence.manual('previous'),
     nextEpisode: () => sequence.manual('next'),
+    playEpisode(id: string) {
+      if (
+        !navigation ||
+        !bootstrapped ||
+        state.restoring ||
+        sequence.snapshot().busy
+      )
+        return
+      const target = navigation.episodes.find((episode) => episode.id === id)
+      if (target) {
+        if (target.id !== state.sourceId || state.pendingSeek !== null)
+          controller?.preparePlay()
+        return sequence.play(target)
+      }
+    },
     get sortOrder() {
       return navigation?.sortOrder ?? 'newest-first'
     },
@@ -297,15 +419,25 @@ export function usePodcastPlayer(
       const target = episode()?.tracks.find(
         (track) => track.position === position,
       )
-      if (target?.startTime !== null && target?.startTime !== undefined)
+      if (target?.startTime !== null && target?.startTime !== undefined) {
+        trackClock.reset()
+        clearTimestampMessage()
         controller?.seek(target.startTime)
+      }
     },
     previousTrack() {
-      if (tracks.value.previous !== null)
+      if (tracks.value.previous !== null) {
+        trackClock.reset()
+        clearTimestampMessage()
         controller?.seek(tracks.value.previous)
+      }
     },
     nextTrack() {
-      if (tracks.value.next !== null) controller?.seek(tracks.value.next)
+      if (tracks.value.next !== null) {
+        trackClock.reset()
+        clearTimestampMessage()
+        controller?.seek(tracks.value.next)
+      }
     },
     bindAudio(value: Element | ComponentPublicInstance | null) {
       element = value as HTMLAudioElement | null
@@ -325,7 +457,10 @@ export function usePodcastPlayer(
       initialWrite = true
       capture(controller.snapshot(), undefined, true)
     },
-    play: () => controller?.play(),
+    play() {
+      if (state.pendingSeek !== null) controller?.preparePlay()
+      controller?.play()
+    },
     pause() {
       sequence.pause()
       if (!controller) return
@@ -339,10 +474,19 @@ export function usePodcastPlayer(
       // Save the command once; its queued native pause is not new activity.
       capture(controller.snapshot(), 'pause', true)
     },
-    seek: (seconds: number) => controller?.seek(seconds),
-    skip: (seconds: number) => controller?.skip(seconds),
+    seek(seconds: number) {
+      trackClock.reset()
+      clearTimestampMessage()
+      controller?.seek(seconds)
+    },
+    skip(seconds: number) {
+      trackClock.reset()
+      clearTimestampMessage()
+      controller?.skip(seconds)
+    },
     setVolume: (value: number) => controller?.setVolume(value),
     toggleMute: () => controller?.toggleMute(),
   }
+  return player
 }
 export type PodcastPlayer = ReturnType<typeof usePodcastPlayer>

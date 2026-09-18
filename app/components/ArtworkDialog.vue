@@ -1,10 +1,14 @@
 <script setup lang="ts">
+import { openModal } from '../services/modal'
 defineProps<{ src: string; alt: string }>()
 const emit = defineEmits<{ close: [] }>()
 const dialog = ref<HTMLDialogElement | null>(null)
-const close = () => dialog.value?.close()
-onMounted(() => dialog.value!.showModal())
-onBeforeUnmount(close)
+const close = () => emit('close')
+let dispose: (() => void) | undefined
+onMounted(() => {
+  dispose = openModal(dialog.value!, close)
+})
+onBeforeUnmount(() => dispose?.())
 </script>
 
 <template>
@@ -12,7 +16,6 @@ onBeforeUnmount(close)
     ref="dialog"
     class="artwork-dialog"
     :aria-label="alt"
-    @close="emit('close')"
     @click.self="close"
   >
     <div class="artwork-dialog-stage" @click.self="close">

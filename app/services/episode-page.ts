@@ -3,6 +3,11 @@ import type {
   EpisodeSummary,
   PublicShow,
 } from '../../shared/content/public'
+import {
+  sameTimestamp,
+  timestampKey,
+  type TimestampIntent,
+} from './timestamp-link'
 
 export interface EpisodePage {
   show: PublicShow
@@ -13,6 +18,8 @@ export interface EpisodePage {
 export interface EpisodePageState {
   model: EpisodePage | null
   path: string
+  route: string
+  timestamp: TimestampIntent
   pendingPath: string | null
   failedPath: string | null
 }
@@ -48,7 +55,14 @@ export function createEpisodeNavigation(
     (path: string, slug?: string) => boolean | Promise<boolean>
   >()
   const preparing = new Set<(path: string, token: number) => void>()
-  let staged: { path: string; model: EpisodePage } | undefined
+  let staged:
+    | {
+        path: string
+        route: string
+        timestamp: TimestampIntent
+        model: EpisodePage
+      }
+    | undefined
   return {
     onBeforePrepare(
       guard: (path: string, slug?: string) => boolean | Promise<boolean>,
@@ -68,7 +82,12 @@ export function createEpisodeNavigation(
       state.pendingPath = null
       state.failedPath = null
     },
-    async prepare(path: string, slug?: string) {
+    async prepare(
+      path: string,
+      slug?: string,
+      timestamp: TimestampIntent = { kind: 'none' },
+      route = path,
+    ) {
       const own = ++generation
       controller?.abort()
       staged = undefined
@@ -89,22 +108,33 @@ export function createEpisodeNavigation(
       state.pendingPath = path
       for (const listener of preparing) listener(path, own)
       try {
-        const model = await load(path, slug, controller.signal)
+        const model =
+          state.model && state.path === path
+            ? state.model
+            : await load(path, slug, controller.signal)
         if (own !== generation) return false
-        staged = { path, model }
+        staged = { path, route, timestamp, model }
         return own
       } catch (error) {
         if (own !== generation) return false
         state.pendingPath = null
-        state.failedPath = path
+        state.failedPath = route
         throw error
       }
     },
-    complete(path: string, token: number | undefined, failed = false) {
-      if (staged?.path !== path || token !== generation) return
+    complete(route: string, token: number | undefined, failed = false) {
+      if (staged?.route !== route || token !== generation) return
       if (!failed) {
+        if (
+          state.path !== staged.path ||
+          !sameTimestamp(state.timestamp, staged.timestamp) ||
+          (staged.timestamp.kind !== 'none' &&
+            timestampKey(state.route) !== timestampKey(staged.route))
+        )
+          state.timestamp = staged.timestamp
         state.model = staged.model
-        state.path = path
+        state.path = staged.path
+        state.route = route
       }
       staged = undefined
       state.pendingPath = null

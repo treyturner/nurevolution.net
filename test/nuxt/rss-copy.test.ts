@@ -21,7 +21,7 @@ afterEach(() => {
 })
 
 it.each(['Desktop', 'Android'])(
-  'copies the canonical feed URL and shows an accessible temporary toast on %s',
+  'copies the feed with accessible feedback and no duplicate Android popup on %s',
   async (agent) => {
     vi.spyOn(navigator, 'userAgent', 'get').mockReturnValue(agent)
     const write = vi.spyOn(navigator.clipboard, 'writeText').mockResolvedValue()
@@ -35,9 +35,12 @@ it.each(['Desktop', 'Android'])(
     expect(write).toHaveBeenCalledWith(feedUrl)
     expect(document.activeElement).toBe(button.element)
     expect(wrapper.get('[role="status"]').text()).toBe('RSS URL copied')
-    expect(document.querySelector('.copy-link-toast')?.textContent).toBe(
-      'RSS URL copied',
-    )
+    if (agent === 'Android')
+      expect(document.querySelector('.copy-link-toast')).toBeNull()
+    else
+      expect(document.querySelector('.copy-link-toast')?.textContent).toBe(
+        'RSS URL copied',
+      )
     await vi.advanceTimersByTimeAsync(3000)
     expect(wrapper.get('[role="status"]').text()).toBe('')
     expect(document.querySelector('.copy-link-toast')).toBeNull()
@@ -76,6 +79,7 @@ it('retains the visible subscription label and a safe canonical feed destination
 })
 
 it('offers a native feed link after clipboard denial without claiming success', async () => {
+  vi.spyOn(navigator, 'userAgent', 'get').mockReturnValue('Android')
   const write = vi
     .spyOn(navigator.clipboard, 'writeText')
     .mockRejectedValue(new DOMException('Denied', 'NotAllowedError'))

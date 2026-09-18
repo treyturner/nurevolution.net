@@ -1,3 +1,11 @@
+@font-face {
+  font-family: 'Six Caps';
+  src: url('/fonts/six-caps/numerals.ttf') format('truetype');
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  unicode-range: U+002E, U+0030-0039;
+}
 :root {
   color-scheme: dark;
   font-family: system-ui, sans-serif;
@@ -18,9 +26,13 @@ body {
 }
 .app-shell {
   width: min(100% - 3rem, 72rem);
+  margin-left: auto;
+  margin-right: auto;
   margin-inline: auto;
 }
 main {
+  padding-top: 2rem;
+  padding-bottom: 2rem;
   padding-block: 2rem;
 }
 h1 {
@@ -29,6 +41,7 @@ h1 {
   font-weight: 650;
   letter-spacing: -0.045em;
   line-height: 1.1;
+  overflow-wrap: break-word;
   overflow-wrap: anywhere;
 }
 h2 {
@@ -57,13 +70,84 @@ button {
   padding: 0.65rem 1rem;
   cursor: pointer;
 }
-:focus-visible {
+:focus {
   outline: 3px solid var(--focus-color);
   outline-offset: 5px;
 }
+/* Safari can focus the content container after a tap. Keep focus rings on
+   interactive controls without outlining the whole page. */
+#main-content:focus {
+  outline: none;
+}
+@supports selector(:focus-visible) {
+  :root :focus:not(:focus-visible) {
+    outline: none;
+  }
+}
+dialog:not([open]) {
+  display: none;
+}
+.modal-fallback-backdrop {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1000;
+  background: var(--modal-shade, rgb(0 0 0 / 65%));
+}
+.modal-fallback {
+  display: block;
+  z-index: 1001;
+}
+.episode-change-dialog.modal-fallback {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  margin: 0;
+  transform: translate(-50%, -50%);
+  max-height: calc(100vh - 2rem);
+  overflow: auto;
+}
+@supports not (aspect-ratio: 1) {
+  .artwork {
+    position: relative;
+  }
+  .artwork::before {
+    content: '';
+    display: block;
+    padding-top: 100%;
+  }
+  .artwork-trigger,
+  .artwork-fallback {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+  }
+}
+.compact-controls .transport-row {
+  --transport-width: 15.25rem;
+  grid-template-columns:
+    repeat(2, minmax(44px, 1fr)) minmax(50px, 1.1fr)
+    repeat(2, minmax(44px, 1fr));
+}
+.compact-controls .skip-control {
+  display: none;
+}
+.track-list.compact-tracks .track-content {
+  grid-template-columns: 1.8rem minmax(0, 1fr);
+  row-gap: 0.25rem;
+}
+.track-list.compact-tracks .track-meta {
+  grid-column: 1 / -1;
+  padding-top: 0;
+}
 .skip-link {
   position: fixed;
+  top: 0.75rem;
   inset-block-start: 0.75rem;
+  left: 1rem;
   inset-inline-start: 1rem;
   z-index: 10;
   padding: 0.5rem 1rem;
@@ -83,6 +167,69 @@ button {
   clip-path: inset(50%);
   white-space: nowrap;
   border: 0;
+}
+/* Safari 14 supports grid gaps but not flex gaps. The client measures that
+   distinction once; margins preserve spacing only where flex gaps are absent. */
+.no-flex-gap .site-header,
+.no-flex-gap .site-brand,
+.no-flex-gap .site-header .rss-link,
+.no-flex-gap .episode-change-actions,
+.no-flex-gap .seek-row,
+.no-flex-gap .playback-row,
+.no-flex-gap .player-actions,
+.no-flex-gap .download-link,
+.no-flex-gap .track-meta,
+.no-flex-gap .track-current,
+.no-flex-gap .mobile-tabs,
+.no-flex-gap .episode-list-heading,
+.no-flex-gap .track-list-heading {
+  gap: 0;
+}
+.no-flex-gap .site-header > * + * {
+  margin-left: 1rem;
+}
+.no-flex-gap .site-brand > * + * {
+  margin-left: 0.65rem;
+}
+.no-flex-gap .rss-icon {
+  margin-left: 0.8rem;
+}
+.no-flex-gap .episode-change-actions > * {
+  margin-top: 0.75rem;
+  margin-left: 0.75rem;
+  max-width: calc(100% - 0.75rem);
+}
+.no-flex-gap .seek-row > * + *,
+.no-flex-gap .download-link > * {
+  margin-left: 0.7rem;
+}
+.no-flex-gap .playback-row > * {
+  margin-bottom: 0.5rem;
+}
+.no-flex-gap .transport-row {
+  margin-right: 0.5rem;
+}
+.no-flex-gap .player-actions > * {
+  margin-right: 1rem;
+  margin-bottom: 0.5rem;
+}
+.no-flex-gap .track-meta > * + * {
+  margin-left: 0.65rem;
+}
+.no-flex-gap .track-current > * + * {
+  margin-left: 0.35em;
+}
+.no-flex-gap .mobile-tabs > * + * {
+  margin-left: 0.5rem;
+}
+.no-flex-gap .episode-list-heading > * + *,
+.no-flex-gap .track-list-heading > * + * {
+  margin-left: 1rem;
+}
+@media (max-width: 700px) {
+  .no-flex-gap .rss-icon {
+    margin-left: 0;
+  }
 }
 .site-header {
   display: flex;
@@ -115,9 +262,11 @@ button {
   gap: 0;
   color: #f1f3f6;
   font-size: 1.2rem;
+  line-height: 1.6;
   font-weight: 650;
   text-decoration: none;
   letter-spacing: -0.04em;
+  overflow-wrap: break-word;
   overflow-wrap: anywhere;
 }
 .wordmark span {
@@ -136,6 +285,7 @@ button {
   border: 0;
   background: transparent;
   color: var(--focus-color);
+  margin-left: auto;
   margin-inline-start: auto;
   align-self: center;
   justify-content: flex-end;
@@ -160,6 +310,8 @@ button {
   grid-template-columns: minmax(0, 21rem) minmax(0, 1fr);
   gap: clamp(1.5rem, 5vw, 4rem);
   align-items: start;
+  padding-top: 3rem;
+  padding-bottom: 3rem;
   padding-block: 3rem;
 }
 .player-content {
@@ -187,16 +339,22 @@ button {
   background: transparent;
   cursor: zoom-in;
 }
-.artwork-trigger:focus-visible {
+.artwork-trigger:focus {
   outline-offset: -4px;
 }
-html:has(.artwork-dialog[open], .episode-change-dialog[open]) {
+html.modal-open {
   overflow: hidden;
 }
 .artwork-dialog {
+  --modal-shade: rgb(0 0 0 / 85%);
   position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
   inset: 0;
   width: 100%;
+  height: 100vh;
   height: 100dvh;
   max-width: none;
   max-height: none;
@@ -211,6 +369,7 @@ html:has(.artwork-dialog[open], .episode-change-dialog[open]) {
   background: rgb(0 0 0 / 85%);
 }
 .episode-change-dialog {
+  --modal-shade: rgb(0 0 0 / 65%);
   width: min(28rem, calc(100% - 2rem));
   padding: 1.5rem;
   border: 1px solid var(--line);
@@ -226,6 +385,7 @@ html:has(.artwork-dialog[open], .episode-change-dialog[open]) {
 }
 .episode-change-dialog p {
   color: var(--muted);
+  overflow-wrap: break-word;
   overflow-wrap: anywhere;
 }
 .episode-change-actions {
@@ -249,6 +409,7 @@ html:has(.artwork-dialog[open], .episode-change-dialog[open]) {
   width: auto;
   height: auto;
   max-width: 90vw;
+  max-height: 90vh;
   max-height: 90dvh;
 }
 .artwork-dialog-close {
@@ -267,7 +428,7 @@ html:has(.artwork-dialog[open], .episode-change-dialog[open]) {
   opacity: 0.7;
 }
 .artwork-dialog-close:hover,
-.artwork-dialog-close:focus-visible {
+.artwork-dialog-close:focus {
   opacity: 1;
 }
 .artwork-fallback {
@@ -287,6 +448,7 @@ html:has(.artwork-dialog[open], .episode-change-dialog[open]) {
   margin: 0 0 0.35rem;
   font-size: 1.35rem;
   color: #c0c9d7;
+  overflow-wrap: break-word;
   overflow-wrap: anywhere;
 }
 .episode-meta {
@@ -295,6 +457,8 @@ html:has(.artwork-dialog[open], .episode-change-dialog[open]) {
   margin: 1rem 0 1.5rem;
 }
 .episode-meta > span {
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
   margin-inline: 0.5rem;
 }
 audio {
@@ -307,12 +471,17 @@ audio.custom-audio {
 }
 .audio-controls {
   container-type: inline-size;
+  margin-top: 1rem;
+  margin-bottom: 0.75rem;
   margin-block: 1rem 0.75rem;
 }
 .seek-row {
   display: flex;
   align-items: center;
   gap: 0.7rem;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
 }
 .player-time {
   font-size: 0.875rem;
@@ -327,8 +496,56 @@ audio.custom-audio {
   cursor: pointer;
 }
 .seek-row input {
+  --playhead-size: 16px;
   flex: 1;
   width: 100%;
+}
+.seek-row input::-webkit-slider-thumb {
+  box-sizing: border-box;
+  width: var(--playhead-size);
+  height: var(--playhead-size);
+}
+.seek-row input::-moz-range-thumb {
+  box-sizing: border-box;
+  width: var(--playhead-size);
+  height: var(--playhead-size);
+}
+.playhead-menu {
+  position: fixed;
+  z-index: 30;
+  width: max-content;
+  max-width: calc(100vw - 16px);
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 0.35rem;
+  background: #202630;
+  box-shadow: 0 4px 16px rgb(0 0 0 / 35%);
+}
+.playhead-menu button {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-height: 44px;
+  padding: 0.35rem 0.5rem;
+  border: 0;
+  border-radius: 0;
+  font-size: 0.8rem;
+  text-align: left;
+  background: transparent;
+}
+.playhead-menu button:hover,
+.playhead-menu button:focus {
+  background: #303b4a;
+}
+.playhead-menu button:focus {
+  outline: none;
+}
+.playhead-menu svg {
+  flex: none;
+  width: 16px;
+  height: 16px;
+  margin-right: 0.4rem;
 }
 .playback-row {
   display: flex;
@@ -339,17 +556,17 @@ audio.custom-audio {
   margin-top: 0.5rem;
 }
 .transport-row {
+  --transport-width: 21rem;
   display: grid;
-  flex: 0 1 23rem;
+  flex: 0 1 var(--transport-width);
   min-width: 0;
   width: 100%;
-  grid-template-columns: repeat(3, minmax(0, 1fr)) minmax(0, 1.25fr) repeat(
-      3,
-      minmax(0, 1fr)
-    );
+  grid-template-columns:
+    repeat(3, minmax(44px, 1fr)) minmax(50px, 1.1fr)
+    repeat(3, minmax(44px, 1fr));
   align-items: center;
   gap: 0;
-  max-width: 23rem;
+  max-width: var(--transport-width);
 }
 .audio-controls button {
   display: inline-flex;
@@ -367,12 +584,15 @@ audio.custom-audio {
   cursor: pointer;
 }
 .audio-controls button:disabled,
+.audio-controls button[aria-disabled='true'],
 .audio-controls input:disabled {
   opacity: 0.45;
   cursor: default;
 }
 .audio-controls .play-toggle {
   min-height: 52px;
+  padding-top: 0;
+  padding-bottom: 0;
   padding-block: 0;
   border-color: var(--focus-color);
   background: var(--focus-color);
@@ -380,6 +600,8 @@ audio.custom-audio {
 }
 .transport-row button {
   width: 100%;
+  padding-left: 0;
+  padding-right: 0;
   padding-inline: 0;
 }
 .transport-row button:not(.play-toggle) {
@@ -391,22 +613,31 @@ audio.custom-audio {
 .transport-row button:last-child {
   border-radius: 0 0.3rem 0.3rem 0;
 }
-.transport-row button:focus-visible {
+.transport-row button:focus {
   z-index: 1;
 }
 @container (max-width: 319px) {
   .transport-row {
-    grid-template-columns: repeat(4, minmax(44px, 1fr));
-    row-gap: 0.5rem;
+    --transport-width: 15.25rem;
+    grid-template-columns:
+      repeat(2, minmax(44px, 1fr)) minmax(50px, 1.1fr)
+      repeat(2, minmax(44px, 1fr));
   }
-  .transport-row button:nth-child(5) {
-    border-radius: 0.3rem 0 0 0.3rem;
+  .transport-row .skip-control {
+    display: none;
   }
 }
 .transport-row svg {
   width: 22px;
   height: 22px;
   fill: currentColor;
+}
+/* Balance the visual weight of the paired triangles within their buttons. */
+.transport-row .previous-track svg {
+  transform: translateX(-1.5px);
+}
+.transport-row .next-track svg {
+  transform: translateX(1.5px);
 }
 .transport-row .play-toggle svg {
   width: 32px;
@@ -422,7 +653,7 @@ audio.custom-audio {
   border-radius: 0.3rem;
   background: #202630;
 }
-.volume-group:has(.volume-control) {
+.volume-group.has-volume-control {
   /* Use the slider's minimum width when deciding whether the group wraps. */
   flex: 1 1 calc(46px + 4.75rem);
   min-width: min(100%, calc(46px + 4.75rem));
@@ -444,15 +675,12 @@ audio.custom-audio {
   width: 7rem;
   flex: 1 1 7rem;
   height: 44px;
+  margin-right: 0.75rem;
   margin-inline-end: 0.75rem;
 }
 .volume-group input[type='range']:first-child {
+  margin-left: 0.75rem;
   margin-inline-start: 0.75rem;
-}
-.device-volume {
-  margin: 0;
-  color: var(--muted);
-  font-size: 0.875rem;
 }
 .player-actions {
   display: flex;
@@ -466,20 +694,62 @@ audio.custom-audio {
   grid-template-columns: minmax(0, max-content) 3rem;
   align-items: center;
   gap: 0.5rem;
-  flex: 1 1 10rem;
+  flex: 1 1 auto;
   min-width: min(100%, 10rem);
+  max-width: 100%;
   /* Reserve three status lines and the action slot in every state. */
   min-height: max(44px, 3.6rem);
   color: var(--muted);
   font-size: 0.75rem;
 }
+.player-links {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 1rem;
+}
+.no-flex-gap .player-links {
+  gap: 0;
+}
+.no-flex-gap .player-links > * + * {
+  margin-left: 1rem;
+}
 .player-feedback-error {
   color: var(--error-color);
+}
+.player-startup-failure,
+.player-status-action .player-startup-reload {
+  display: none;
+}
+.player[data-player-startup='pending'][data-player-startup-failed]
+  .player-feedback {
+  color: var(--error-color);
+}
+.player[data-player-startup='pending'][data-player-startup-failed]
+  .player-startup-loading {
+  display: none;
+}
+.player[data-player-startup='pending'][data-player-startup-failed]
+  .player-startup-failure {
+  display: inline;
+}
+.player[data-player-startup='pending'][data-player-startup-failed]
+  .player-startup-reload {
+  display: inline-flex;
 }
 .media-status {
   min-width: 0;
   margin: 0;
+  overflow-wrap: break-word;
   overflow-wrap: anywhere;
+}
+/* Keep artist/title together before breaking after the artist's hyphen.
+   Long individual fields can still wrap within the available width. */
+.media-status-details,
+.media-status-part {
+  display: inline-block;
+  max-width: 100%;
+  vertical-align: top;
 }
 .status-retry {
   display: inline-flex;
@@ -506,15 +776,18 @@ audio.custom-audio {
 .description {
   color: #b8c1ce;
   font-size: 0.85rem;
+  overflow-wrap: break-word;
   overflow-wrap: anywhere;
   margin-top: 0.75rem;
 }
 .description p {
+  margin-top: 0.65rem;
+  margin-bottom: 0.65rem;
   margin-block: 0.65rem;
 }
 .archive-grid {
   display: grid;
-  grid-template-columns: minmax(0, 21rem) minmax(0, 1fr);
+  grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
   gap: clamp(1.5rem, 5vw, 4rem);
   padding-top: 2rem;
   border-top: 1px solid var(--line);
@@ -530,6 +803,7 @@ audio.custom-audio {
 }
 .episode-list li {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   border-bottom: 1px solid #222832;
 }
@@ -542,9 +816,8 @@ audio.custom-audio {
 .episode-list li > a:first-child {
   display: flex;
   align-items: center;
-  gap: 12px;
   flex: 1;
-  min-width: 0;
+  min-width: min(100%, calc(92px + 2rem));
   padding: 0.9rem 16px;
   text-decoration: none;
   color: #e1e6ee;
@@ -554,6 +827,8 @@ audio.custom-audio {
 }
 .episode-list-artwork {
   flex-shrink: 0;
+  margin-right: 12px;
+  margin-inline-end: 12px;
   width: 48px;
   height: 48px;
   object-fit: cover;
@@ -567,6 +842,7 @@ audio.custom-audio {
   display: block;
   font-size: 0.88rem;
   line-height: 1.4;
+  overflow-wrap: break-word;
   overflow-wrap: anywhere;
 }
 .episode-list-artist {
@@ -574,9 +850,47 @@ audio.custom-audio {
   font-size: 0.72rem;
   color: var(--muted);
   margin-top: 0.2rem;
+  overflow: hidden;
+  overflow-wrap: break-word;
   overflow-wrap: anywhere;
 }
+/* Whole artist/date items wrap first. Clip a hanging separator when the date
+   starts a new line; margins also work on Safari without flexbox gaps. */
+.episode-list-meta {
+  display: flex;
+  flex-wrap: wrap;
+  margin-left: -0.9em;
+}
+.episode-list-meta > * {
+  min-width: 0;
+  margin-left: 0.9em;
+}
+.episode-list-artist-part {
+  display: inline-block;
+  max-width: 100%;
+  vertical-align: top;
+}
+.episode-list-date {
+  position: relative;
+}
+.episode-date-separator {
+  position: absolute;
+  right: 100%;
+  width: 0.9em;
+  text-align: center;
+}
+
+.episode-row-actions {
+  display: flex;
+  align-self: stretch;
+  margin-left: auto;
+}
+.row-play[aria-disabled='true'] {
+  opacity: 0.45;
+  cursor: default;
+}
 .row-download,
+.row-play,
 .row-copy-link {
   display: flex;
   flex-shrink: 0;
@@ -587,7 +901,8 @@ audio.custom-audio {
   min-height: 44px;
   text-decoration: none;
 }
-.row-copy-link {
+.row-copy-link,
+.row-play {
   padding: 0;
   border: 0;
   border-radius: 0;
@@ -595,15 +910,19 @@ audio.custom-audio {
   color: var(--focus-color);
 }
 .row-copy-link:hover,
+.row-play:hover,
 .row-download:hover {
   background: #1a2029;
 }
 .row-download svg,
+.row-play svg,
 .row-copy-link svg {
   opacity: 0.7;
 }
 .row-copy-link:hover svg,
-.row-copy-link:focus-visible svg {
+.row-copy-link:focus svg,
+.row-play:hover svg,
+.row-play:focus svg {
   opacity: 1;
 }
 .copy-link-toast {
@@ -626,19 +945,61 @@ audio.custom-audio {
   container-type: inline-size;
 }
 .track-list li {
+  position: relative;
   border-bottom: 1px solid #222832;
   border-left: 3px solid transparent;
 }
-.track-row {
+.track-content {
+  position: relative;
   display: grid;
-  grid-template-columns: 1.5rem minmax(0, 1fr) auto;
+  grid-template-columns: 1.8rem minmax(0, 1fr) auto;
   align-items: start;
-  gap: 0.7rem;
+  gap: 0.7rem 0.5rem;
   padding: 0.7rem 0.65rem;
   width: 100%;
   text-align: left;
 }
+.track-row + .track-content {
+  pointer-events: none;
+}
+.track-list.has-track-links li:hover {
+  background: #202630;
+}
+.timestamp-copy {
+  -webkit-tap-highlight-color: transparent;
+  position: relative;
+  pointer-events: auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: 44px;
+  height: max(24px, 1.6em);
+  margin: min(0px, calc((1.6em - 24px) / 2)) 0;
+  margin-left: 0.35em;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  vertical-align: middle;
+}
+.timestamp-copy svg {
+  width: 1em;
+  height: 1em;
+  flex: none;
+}
+.timestamp-copy:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
 button.track-row {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  padding: 0;
   border: 0;
   border-radius: 0;
   background: transparent;
@@ -649,12 +1010,14 @@ button.track-row {
 button.track-row:hover {
   background: #202630;
 }
-button.track-row:focus-visible {
+button.track-row:focus {
   outline: 2px solid var(--focus-color);
   outline-offset: -2px;
 }
 button.track-row:disabled {
   cursor: default;
+}
+button.track-row:disabled + .track-content {
   opacity: 0.6;
 }
 .track-meta {
@@ -731,9 +1094,9 @@ button.track-row:disabled {
     animation: none;
   }
 }
-@container (max-width: 24rem) {
-  .track-row {
-    grid-template-columns: 1.5rem minmax(0, 1fr);
+@container (max-width: 18rem) {
+  .track-content {
+    grid-template-columns: 1.8rem minmax(0, 1fr);
     row-gap: 0.25rem;
   }
   .track-meta {
@@ -751,18 +1114,36 @@ button.track-row:disabled {
   font-variant-numeric: tabular-nums;
 }
 .track-number {
-  padding-top: 0.12rem;
+  font-family: 'Six Caps', 'Arial Narrow', sans-serif;
+  font-size: 2.025rem;
+  font-weight: 400;
+  line-height: 1;
+  align-self: center;
+  transform: translateY(0.09em) scale(1.3, 1.035);
+  transform-origin: left bottom;
+  white-space: nowrap;
+}
+/* Older iOS Safari renders these numerals lower than Chromium. */
+@supports (-webkit-touch-callout: none) and (not (aspect-ratio: 1)) {
+  .track-number {
+    transform: translateY(calc(0.01em - 1px)) scale(1.3, 1.035);
+  }
+}
+.track-time {
+  white-space: nowrap;
 }
 .track-artist {
   display: block;
   font-size: 0.8rem;
   color: #e1e6ee;
+  overflow-wrap: break-word;
   overflow-wrap: anywhere;
 }
-.track-title {
+.track-title-line {
   display: block;
   font-size: 0.78rem;
   color: var(--muted);
+  overflow-wrap: break-word;
   overflow-wrap: anywhere;
 }
 .empty-tracks {
@@ -777,7 +1158,10 @@ button.track-row:disabled {
 .mobile-tabs button {
   flex: 1;
   min-width: 0;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
   padding-inline: 0.5rem;
+  overflow-wrap: break-word;
   overflow-wrap: anywhere;
 }
 .mobile-tabs button[aria-selected='true'] {
@@ -786,6 +1170,8 @@ button.track-row:disabled {
 }
 .site-footer {
   margin-top: 3rem;
+  padding-top: 1.5rem;
+  padding-bottom: 1.5rem;
   padding-block: 1.5rem;
   text-align: right;
   font-size: 0.7rem;
@@ -796,6 +1182,8 @@ button.track-row:disabled {
     width: min(100% - 2rem, 36rem);
   }
   main {
+    padding-top: 1.25rem;
+    padding-bottom: 1.25rem;
     padding-block: 1.25rem;
   }
   .site-header {
@@ -804,13 +1192,20 @@ button.track-row:disabled {
   .rss-label {
     display: none;
   }
+  .player-links {
+    flex-basis: 100%;
+  }
   .player {
     grid-template-columns: minmax(0, 1fr);
     gap: 1.5rem;
+    padding-top: 1.5rem;
+    padding-bottom: 2rem;
     padding-block: 1.5rem 2rem;
   }
   .artwork {
     width: min(100%, 22rem);
+    margin-left: auto;
+    margin-right: auto;
     margin-inline: auto;
   }
   .archive-grid {
@@ -840,7 +1235,10 @@ button.track-row:disabled {
   flex: 0 0 auto;
   min-width: 44px;
   height: 44px;
+  margin-top: -8px;
+  margin-bottom: -8px;
   margin-block: -8px;
+  margin-left: auto;
   margin-inline-start: auto;
   font: inherit;
   font-size: 0.7rem;
@@ -862,9 +1260,14 @@ button.track-row:disabled {
   cursor: default;
 }
 @media (max-width: 420px) {
+  .audio-controls {
+    margin-bottom: 0.25rem;
+    margin-block-end: 0.25rem;
+  }
   .seek-row {
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    row-gap: 0;
   }
   .seek-row .player-time:first-child {
     grid-area: 1 / 1;
@@ -876,5 +1279,17 @@ button.track-row:disabled {
   .seek-row input {
     grid-area: 2 / 1 / 3 / 3;
     width: 100%;
+  }
+  .player-actions {
+    margin-top: 0;
+    row-gap: 0;
+  }
+  .player-feedback {
+    grid-template-columns: minmax(0, max-content) 44px;
+    gap: 0.35rem;
+    min-height: max(44px, 2.4rem);
+  }
+  .no-flex-gap .player-actions > * {
+    margin-bottom: 0;
   }
 }

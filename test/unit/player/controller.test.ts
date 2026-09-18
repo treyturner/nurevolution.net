@@ -485,6 +485,26 @@ describe('persistent episode controller', () => {
     expect(changed).toHaveBeenLastCalledWith('buffering')
     player.dispose()
   })
+  it('recovers after pausing and resuming an established source without another playing event', () => {
+    const { media, changed, player } = setup()
+    player.select(a)
+    media.ready()
+    player.play()
+    media.emit('playing')
+    player.pause()
+    player.seek(32)
+    player.play()
+    media.readyState = 2
+    media.emit('waiting')
+    media.emit('timeupdate')
+    media.emit('timeupdate')
+    expect(changed).toHaveBeenLastCalledWith('buffering')
+    media.currentTime = 32.25
+    media.emit('timeupdate')
+    expect(changed).toHaveBeenLastCalledWith('playing')
+    expect(media.play).toHaveBeenCalledTimes(2)
+    player.dispose()
+  })
   it('does not mistake paused seeks, seeking updates, or insufficient data for resumed playback', () => {
     const { media, changed, player } = setup()
     player.select(a)
@@ -720,6 +740,31 @@ describe('restored positions and explicit playback intent', () => {
     media.ready()
     expect(media.currentTime).toBe(8.25)
     expect(player.snapshot().pendingSeek).toBeNull()
+    expect(media.play).not.toHaveBeenCalled()
+  })
+  it('labels a failed shared seek separately and lets a subsequent manual seek replace it', () => {
+    const { media, player } = setup()
+    player.select(a, { position: 8.25, paused: true, positionReason: 'shared' })
+    Object.defineProperty(media, 'currentTime', {
+      configurable: true,
+      get: () => 0,
+      set: () => {
+        throw new Error('seek')
+      },
+    })
+    media.ready()
+    expect(player.snapshot().seekMessage).toBe(
+      'Could not seek to the shared position. Try again.',
+    )
+    Object.defineProperty(media, 'currentTime', {
+      configurable: true,
+      writable: true,
+      value: 0,
+    })
+    player.seek(12.125, 'shared')
+    expect(player.snapshot().seekMessage).toBeNull()
+    player.seek(5)
+    expect(media.currentTime).toBe(5)
     expect(media.play).not.toHaveBeenCalled()
   })
   it('clamps saved time to changed duration and never plays or advances at the end', () => {
@@ -1283,5 +1328,95 @@ describe('virtual playback recovery', () => {
     expect(player.snapshot().status).toBe('error')
     expect(media.src).toBe(virtual.url)
     player.dispose()
+  })
+})
+
+describe('WebKit gesture preparation', () => {
+  beforeEach(() => vi.useFakeTimers())
+  afterEach(() => {
+    vi.clearAllTimers()
+    vi.useRealTimers()
+  })
+  function webkit() {
+    const media = new Media()
+    const player = createPlayer(
+      createAudioAdapter(media, {
+        userAgent:
+          'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15) AppleWebKit/605.1.15 Version/14.0 Safari/605.1.15',
+        platform: 'MacIntel',
+        maxTouchPoints: 5,
+      }),
+      vi.fn(),
+    )
+    return { media, player }
+  }
+  it('prepares once without playing the old source and preserves a paused position if navigation fails', () => {
+    const { media, player } = webkit()
+    player.select(a)
+    media.ready()
+    player.seek(8.25)
+    player.preparePlay()
+    expect(media.load).toHaveBeenCalledTimes(2)
+    expect(media.play).not.toHaveBeenCalled()
+    expect(player.snapshot()).toMatchObject({
+      sourceId: a.id,
+      wantsPlay: false,
+      pendingSeek: 8.25,
+    })
+    media.ready()
+    expect(player.snapshot()).toMatchObject({
+      currentTime: 8.25,
+      pendingSeek: null,
+    })
+    player.preparePlay()
+    expect(media.load).toHaveBeenCalledTimes(2)
+    player.select(b)
+    expect(player.snapshot().pendingSeek).toBeNull()
+    player.play()
+    expect(media.play).toHaveBeenCalledOnce()
+    player.preparePlay()
+    expect(media.load).toHaveBeenCalledTimes(3)
+  })
+  it('keeps shared seeks pending and cancellable through gesture preparation', () => {
+    const { media, player } = webkit()
+    player.select(a, { position: 8.25, positionReason: 'shared', paused: true })
+    player.preparePlay()
+    player.play()
+    expect(player.snapshot()).toMatchObject({
+      wantsPlay: true,
+      pendingSeek: 8.25,
+    })
+    expect(media.play).not.toHaveBeenCalled()
+    player.pause()
+    media.ready()
+    expect(media.currentTime).toBe(8.25)
+    expect(media.play).not.toHaveBeenCalled()
+  })
+  it('does not interrupt active media or reload engines without the gesture requirement', () => {
+    const { media, player } = webkit()
+    player.select(a)
+    media.ready()
+    player.play()
+    player.preparePlay()
+    expect(media.load).toHaveBeenCalledOnce()
+    expect(media.paused).toBe(false)
+    const ordinary = setup()
+    ordinary.player.select(a)
+    ordinary.player.preparePlay()
+    expect(ordinary.media.load).toHaveBeenCalledOnce()
+    expect(ordinary.media.play).not.toHaveBeenCalled()
+  })
+  it('starts an ended source from zero instead of restoring its end', () => {
+    const { media, player } = webkit()
+    player.select(a)
+    media.ready()
+    media.currentTime = 120
+    media.ended = true
+    media.emit('ended')
+    player.preparePlay()
+    player.play()
+    media.ready()
+    expect(media.currentTime).toBe(0)
+    expect(media.play).toHaveBeenCalledOnce()
   })
 })

@@ -18,7 +18,8 @@ export function trackNavigation(
       track.startTime >= 0 &&
       (duration === null || track.startTime < duration),
   )
-  const anchor = known.findLastIndex((track) => reached(track.startTime!))
+  let anchor = known.length - 1
+  while (anchor >= 0 && !reached(known[anchor]!.startTime!)) anchor--
   const previous =
     anchor < 0
       ? null

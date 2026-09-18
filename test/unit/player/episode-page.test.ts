@@ -24,6 +24,8 @@ const model = {
 const state = (): EpisodePageState => ({
   model: null,
   path: '',
+  route: '',
+  timestamp: { kind: 'none' },
   pendingPath: null,
   failedPath: null,
 })
@@ -38,6 +40,58 @@ function deferred<T>() {
 }
 
 describe('episode page loading and navigation', () => {
+  it('commits query-only time intent atomically without reloading the selected episode', async () => {
+    const path = '/episodes/praxis'
+    const s = { ...state(), model, path, route: path }
+    const load = vi.fn(async () => model)
+    const nav = createEpisodeNavigation(s, load)
+    const first = await nav.prepare(
+      path,
+      'praxis',
+      { kind: 'time', seconds: 8.25 },
+      path + '?t=8.25',
+    )
+    expect(s.timestamp).toEqual({ kind: 'none' })
+    nav.complete(path, Number(first))
+    expect(s.timestamp).toEqual({ kind: 'none' })
+    nav.complete(path + '?t=8.25', Number(first))
+    expect(s.timestamp).toEqual({ kind: 'time', seconds: 8.25 })
+    const intent = s.timestamp
+    const unrelated = await nav.prepare(
+      path,
+      'praxis',
+      { kind: 'time', seconds: 8.25 },
+      path + '?t=8.25&source=test#tracks',
+    )
+    nav.complete(path + '?t=8.25&source=test#tracks', Number(unrelated))
+    expect(s.timestamp).toBe(intent)
+    expect(s.model).toBe(model)
+    expect(load).not.toHaveBeenCalled()
+    const stale = await nav.prepare(
+      path,
+      'praxis',
+      { kind: 'time', seconds: 10 },
+      path + '?t=10',
+    )
+    const latest = await nav.prepare(
+      path,
+      'praxis',
+      { kind: 'time', seconds: 20 },
+      path + '?t=20',
+    )
+    nav.complete(path + '?t=10', Number(stale), true)
+    nav.complete(path + '?t=20', Number(latest))
+    expect(s.timestamp).toEqual({ kind: 'time', seconds: 20 })
+    const cancelled = await nav.prepare(
+      path,
+      'praxis',
+      { kind: 'invalid' },
+      path + '?t=bad',
+    )
+    nav.complete(path + '?t=bad', Number(cancelled), true)
+    expect(s.route).toBe(path + '?t=20')
+    expect(s.timestamp).toEqual({ kind: 'time', seconds: 20 })
+  })
   it('waits for confirmation before loading and preserves the current page on cancellation', async () => {
     const s = { ...state(), model, path: '/current' }
     const decision = deferred<boolean>()

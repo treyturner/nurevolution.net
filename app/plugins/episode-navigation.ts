@@ -45,7 +45,7 @@ export default defineNuxtPlugin((nuxt) => {
   )
   nuxt.$router.afterEach((to, _from, failure) =>
     navigation.complete(
-      to.path,
+      to.fullPath,
       typeof to.meta.episodeNavigationToken === 'number'
         ? to.meta.episodeNavigationToken
         : undefined,

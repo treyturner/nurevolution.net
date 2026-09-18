@@ -9,6 +9,7 @@ interface Event {
   node: { res: Writable }
   status?: number
   headers?: Record<string, string>
+  requestHeaders?: Record<string, string>
 }
 const event = (method = 'HEAD', slug?: string): Event => ({
   method,
@@ -25,6 +26,10 @@ const event = (method = 'HEAD', slug?: string): Event => ({
 function globals() {
   vi.stubGlobal('defineEventHandler', (fn: unknown) => fn)
   vi.stubGlobal('getRouterParam', (e: Event) => e.slug)
+  vi.stubGlobal(
+    'getRequestHeader',
+    (e: Event, name: string) => e.requestHeaders?.[name],
+  )
   vi.stubGlobal(
     'getRequestURL',
     (e: Event) => new URL(e.path, 'https://nurevolution.net'),
@@ -56,6 +61,12 @@ it('writes through Node backpressure, cancels disconnected transfers, and closes
     e: Event,
   ) => Promise<void>
   const first = event('GET', 'saved')
+  first.requestHeaders = {
+    range: 'bytes=0-1',
+    'if-range': '"old"',
+    cookie: 'secret',
+    authorization: 'secret',
+  }
   const writes: Buffer[] = []
   let drain!: () => void
   first.node.res = new Writable({
@@ -72,6 +83,10 @@ it('writes through Node backpressure, cancels disconnected transfers, and closes
   await vi.waitFor(() => expect(writes).toHaveLength(1))
   expect(complete).toBe(false)
   expect(captured!.signal.aborted).toBe(false)
+  expect(Object.fromEntries(captured!.headers)).toEqual({
+    range: 'bytes=0-1',
+    'if-range': '"old"',
+  })
   drain()
   await pending
   expect(Buffer.concat(writes).toString()).toBe('bytes')

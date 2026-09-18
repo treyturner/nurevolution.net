@@ -16,6 +16,7 @@ for (const [width, scale] of [
   [1440, 100],
   [390, 100],
   [320, 100],
+  [320, 200],
   [390, 200],
 ] as const) {
   test(`error feedback stays in place at ${width}px with ${scale}% text`, async ({
@@ -70,7 +71,9 @@ for (const [width, scale] of [
         },
       })
     })
-    await page.getByRole('button', { name: 'Forward 30 seconds' }).click()
+    await page
+      .getByRole('slider', { name: 'Playback position' })
+      .press('PageUp')
     await error('Could not seek. Try again.')
     await expect(page.locator('.status-retry')).toHaveCount(0)
 
@@ -120,3 +123,128 @@ for (const [width, scale] of [
     await expect(page.locator('.player-feedback-error')).toHaveCount(0)
   })
 }
+
+test('download stays below changing phone statuses and beside short desktop statuses', async ({
+  page,
+}) => {
+  await stubArchiveMedia(page)
+  await page.goto('/episodes/trey-turner-impulse')
+  await ready(page)
+  const measurements = () =>
+    page.evaluate(() => {
+      const feedback = document
+        .querySelector('.player-feedback')!
+        .getBoundingClientRect()
+      const status = document.querySelector('.media-status')!
+      const text = status.getBoundingClientRect()
+      const link = document
+        .querySelector('.player-links')!
+        .getBoundingClientRect()
+      return {
+        feedback: { top: feedback.top, bottom: feedback.bottom },
+        text: { height: text.height },
+        link: { top: link.top },
+        lineHeight: Number.parseFloat(getComputedStyle(status).lineHeight),
+        overflow: document.documentElement.scrollWidth > innerWidth,
+      }
+    })
+  for (const noGap of [false, true]) {
+    await page.evaluate((noGap) => {
+      document.documentElement.classList.toggle('no-flex-gap', noGap)
+      document.querySelector('.media-status')!.textContent =
+        'Playing 1/16: Sinic - One Makes One'
+    }, noGap)
+    await page.setViewportSize({ width: 412, height: 900 })
+    const narrow = await measurements()
+    expect(narrow.link.top).toBeGreaterThanOrEqual(narrow.feedback.bottom)
+    expect(narrow.text.height).toBeLessThanOrEqual(narrow.lineHeight + 1)
+    expect(narrow.overflow).toBe(false)
+    for (const message of [
+      'Loading audio…',
+      'Press Play to listen.',
+      'Playing 1/16: Sinic - One Makes One',
+    ]) {
+      await page.locator('.media-status').evaluate((element, message) => {
+        element.textContent = message
+      }, message)
+      const current = await measurements()
+      expect(current.link.top).toBeGreaterThanOrEqual(current.feedback.bottom)
+      expect(current.link.top - current.feedback.top).toBeCloseTo(
+        narrow.link.top - narrow.feedback.top,
+        1,
+      )
+    }
+    await page.setViewportSize({ width: 1440, height: 900 })
+    const wide = await measurements()
+    expect(wide.link.top).toBeLessThan(wide.feedback.bottom)
+    expect(wide.text.height).toBeLessThanOrEqual(wide.lineHeight + 1)
+    await page.setViewportSize({ width: 390, height: 900 })
+    await page.evaluate(() => {
+      document.querySelector('.media-status')!.textContent =
+        'Playing 1/16: An artist with a long name - A very long track title that must wrap even after the download link moves below'
+    })
+    const long = await measurements()
+    expect(long.link.top).toBeGreaterThanOrEqual(long.feedback.bottom)
+    expect(long.overflow).toBe(false)
+  }
+})
+
+test('track status wraps after the count, then after the artist separator', async ({
+  page,
+}) => {
+  await stubArchiveMedia(page)
+  await page.goto('/episodes/trey-turner-impulse')
+  await ready(page)
+  await page.locator('audio').evaluate((audio: HTMLAudioElement) => {
+    Object.defineProperty(audio, 'paused', { configurable: true, value: false })
+    audio.dispatchEvent(new Event('play'))
+    audio.dispatchEvent(new Event('playing'))
+  })
+  const status = page.locator('.media-status')
+  await expect(status).toHaveText('Playing 1/16: Sinic - One Makes One')
+  const measure = () =>
+    status.evaluate((element) => {
+      const bounds = (selector: string) => {
+        const box = element.querySelector(selector)!.getBoundingClientRect()
+        return { top: box.top, bottom: box.bottom, width: box.width }
+      }
+      return {
+        prefix: bounds('span > .media-status-part'),
+        details: bounds('.media-status-details'),
+        artist: bounds('.media-status-details > :first-child'),
+        title: bounds('.media-status-details > :last-child'),
+      }
+    })
+  const initial = await measure()
+  const size = (width: number) =>
+    status.evaluate((element, width) => {
+      ;(element as HTMLElement).style.width = `${width}px`
+    }, width)
+  await size(initial.prefix.width + initial.details.width + 20)
+  const single = await measure()
+  expect(single.prefix.top).toBeCloseTo(single.artist.top, 1)
+  expect(single.artist.top).toBeCloseTo(single.title.top, 1)
+  await size(Math.max(initial.prefix.width, initial.details.width) + 1)
+  const two = await measure()
+  expect(two.artist.top).toBeGreaterThanOrEqual(two.prefix.bottom - 1)
+  expect(two.artist.top).toBeCloseTo(two.title.top, 1)
+  await size(
+    Math.max(initial.prefix.width, initial.artist.width, initial.title.width) +
+      1,
+  )
+  const three = await measure()
+  expect(three.artist.top).toBeGreaterThanOrEqual(three.prefix.bottom - 1)
+  expect(three.title.top).toBeGreaterThanOrEqual(three.artist.bottom - 1)
+  await page
+    .locator('audio')
+    .evaluate((audio) => audio.dispatchEvent(new Event('waiting')))
+  await expect(status).toHaveText('Buffering 1/16: Sinic - One Makes One')
+  await page.setViewportSize({ width: 320, height: 1000 })
+  await status.evaluate((element) => {
+    ;(element as HTMLElement).style.width = ''
+    document.documentElement.style.fontSize = '200%'
+  })
+  expect(
+    await page.evaluate(() => document.documentElement.scrollWidth),
+  ).toBeLessThanOrEqual(320)
+})

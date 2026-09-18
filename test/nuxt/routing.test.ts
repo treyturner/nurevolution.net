@@ -20,8 +20,9 @@ it('announces accepted navigation without remounting the player', async () => {
   expect(
     wrapper
       .findAll('[role="status"], [aria-live]')
-      .map((region) => region.text()),
-  ).toEqual(['', 'Selected Trey Turner - Praxis', 'Loading audio…', ''])
+      .map((region) => region.text())
+      .filter(Boolean),
+  ).toEqual(['Selected Trey Turner - Praxis', 'Loading 1/21: KRNE - Chariots'])
   expect(wrapper.get('audio').attributes('aria-describedby')).toBe(
     'playback-status',
   )
@@ -77,6 +78,7 @@ it('reuses hydration data, aborts superseded navigation, and distinguishes initi
   const invoke = () => nuxt.runWithContext(() => middleware(to, from))
   const prepare = vi.spyOn(nuxt.$episodeNavigation, 'prepare')
   state.value.path = to.path
+  state.value.route = to.fullPath
   nuxt.isHydrating = true
   await invoke()
   expect(prepare).not.toHaveBeenCalled()

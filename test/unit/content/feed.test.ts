@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest'
+import { createHash } from 'node:crypto'
 import {
   episodeSchema,
   rssSettingsSchema,
@@ -122,5 +123,59 @@ describe('RSS metadata and shared projection', () => {
         descriptionHtml: '<p>😀 &amp; <3\t\r\n</p>',
       }).descriptionHtml,
     ).toContain('😀')
+  })
+
+  it('maps verified episode artwork and hashes only known chapters, including partial timing', () => {
+    const source = runnableCatalog()
+    const episode = source.episodes[0]!
+    episode.tracks = [
+      { position: 1, artist: 'Unknown', title: 'No cut', startTime: null },
+      {
+        position: 2,
+        artist: 'A & B',
+        title: 'Known <cut>',
+        startTime: 208.794,
+      },
+      {
+        position: 3,
+        artist: 'Other',
+        title: 'Another unknown cut',
+        startTime: null,
+      },
+    ]
+    const expectedBody =
+      JSON.stringify({
+        version: '1.2.0',
+        chapters: [{ startTime: 208.794, title: '02. A & B - Known <cut>' }],
+      }) + '\n'
+    const expectedHash = createHash('sha256').update(expectedBody).digest('hex')
+    const project = () =>
+      publicFeedArchive(source, at).episodes.find(
+        (item) => item.id === episode.id,
+      )!
+    const initial = project()
+    const image = source.assets.find(
+      (asset) => asset.id === episode.artworkAssetId,
+    )!
+    expect(initial.rss.artworkUrl).toBe(
+      `https://nurevolution.net/episode-artwork/v1-${image.sha256}.jpg`,
+    )
+    expect(initial.rss.chaptersUrl).toBe(
+      `https://nurevolution.net/chapters/${episode.slug}.json?v=${expectedHash}`,
+    )
+    episode.tracks[0]!.title = 'Still unknown'
+    expect(project().rss.chaptersUrl).toBe(initial.rss.chaptersUrl)
+    episode.tracks[1]!.startTime = 208.794001
+    expect(project().rss.chaptersUrl).not.toBe(initial.rss.chaptersUrl)
+    episode.tracks[1]!.startTime = null
+    expect(project().rss.chaptersUrl).toBeNull()
+    episode.tracks = []
+    expect(project().rss.chaptersUrl).toBeNull()
+    episode.status = 'draft'
+    expect(
+      publicFeedArchive(source, at).episodes.some(
+        (item) => item.id === episode.id,
+      ),
+    ).toBe(false)
   })
 })

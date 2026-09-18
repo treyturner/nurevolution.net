@@ -2,11 +2,18 @@
 import type { EpisodeDetail } from '../../shared/content/public'
 import type { PodcastPlayer } from '../composables/usePodcastPlayer'
 import { formatTime } from '../services/episode-page'
+import { useCompactContainer } from '../composables/useCompactContainer'
+import TimestampCopyButton from './TimestampCopyButton.vue'
+import { useCopyLink } from '../composables/useCopyLink'
+import CopyLinkToast from './CopyLinkToast.vue'
+const { toast, copyLink } = useCopyLink()
+const { container, compact } = useCompactContainer(18, true)
 const props = defineProps<{
   tracks: EpisodeDetail['tracks']
   durationSeconds?: number | null
   timeDisplay?: 'timestamp' | 'duration'
   player?: PodcastPlayer
+  episodePath?: string
 }>()
 function displayTime(index: number) {
   const start = props.tracks[index]!.startTime
@@ -59,7 +66,15 @@ function activate(position: number) {
 </script>
 
 <template>
-  <ol v-if="tracks.length" class="track-list">
+  <ol
+    v-if="tracks.length"
+    ref="container"
+    class="track-list"
+    :class="{
+      'compact-tracks': compact,
+      'has-track-links': episodePath,
+    }"
+  >
     <li
       v-for="(track, index) in tracks"
       :key="track.position"
@@ -67,30 +82,34 @@ function activate(position: number) {
         player?.tracks.current === track.position ? 'true' : undefined
       "
     >
-      <component
-        :is="timed(track.position) ? 'button' : 'div'"
+      <button
+        v-if="timed(track.position)"
         class="track-row"
-        :type="timed(track.position) ? 'button' : undefined"
-        :aria-label="
-          timed(track.position)
-            ? `${action(track.position)} track ${track.position}: ${track.artist} - ${track.title}, ${formatTime(track.startTime)}`
-            : undefined
-        "
+        type="button"
+        :aria-label="`${action(track.position)} track ${track.position}: ${track.artist} - ${track.title}, ${formatTime(track.startTime)}`"
         :disabled="
-          timed(track.position)
-            ? !player?.state.attached ||
-              player.state.restoring ||
-              player.state.status === 'error'
-            : undefined
+          !player?.state.attached ||
+          player.state.restoring ||
+          player.state.status === 'error'
         "
         @click="activate(track.position)"
-      >
-        <span class="track-number" aria-hidden="true">{{
-          String(track.position).padStart(2, '0')
-        }}</span>
+      />
+      <div class="track-content">
+        <span class="track-number" aria-hidden="true"
+          >{{ String(track.position).padStart(2, '0') }}.</span
+        >
         <span>
-          <span class="track-artist">{{ track.artist }}</span
-          ><span class="track-title">{{ track.title }}</span>
+          <span class="track-artist">{{ track.artist }}</span>
+          <span class="track-title-line">
+            <span class="track-title">{{ track.title }}</span>
+            <TimestampCopyButton
+              v-if="episodePath && track.startTime !== null"
+              :episode-path="episodePath"
+              :seconds="track.startTime"
+              :label="`Copy link to track ${track.position}: ${track.artist} - ${track.title}`"
+              @copy="copyLink({ ...$event, message: 'Timestamp link copied' })"
+            />
+          </span>
         </span>
         <span v-if="track.startTime !== null" class="track-meta">
           <Transition name="track-current" appear>
@@ -122,8 +141,16 @@ function activate(position: number) {
             >{{ displayTime(index) }}</span
           >
         </span>
-      </component>
+      </div>
     </li>
   </ol>
   <p v-else class="empty-tracks">No tracklist is available for this episode.</p>
+  <span class="sr-only" role="status" aria-atomic="true">{{
+    toast?.message
+  }}</span>
+  <CopyLinkToast
+    v-if="toast?.showPopup"
+    :target="toast.target"
+    :message="toast.message"
+  />
 </template>

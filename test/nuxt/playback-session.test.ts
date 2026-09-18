@@ -45,6 +45,8 @@ function harness(
     setup() {
       const player = usePodcastPlayer(() => episode, {
         pending: false,
+        timestamp: { kind: 'none' },
+        showTitle: 'nurevolution studios',
         neighbor: () => null,
         episodes: [],
         sortOrder: 'newest-first',
@@ -247,6 +249,8 @@ it('persists zero when Retry discards a pending restore and when the same ID rec
     defineComponent({
       setup() {
         const player = usePodcastPlayer(() => selected.value, {
+          timestamp: { kind: 'none' },
+          showTitle: 'nurevolution studios',
           isRoot: () => false,
           restore: async () => 'restored',
           pending: false,

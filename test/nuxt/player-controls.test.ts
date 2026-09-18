@@ -20,6 +20,7 @@ function fixture() {
     muteSupported: true,
     continuing: false,
     attached: true,
+    initialized: true,
     restoring: false,
     restoreMessage: null,
   })
@@ -37,6 +38,7 @@ function fixture() {
     },
     previousEpisode: vi.fn(),
     nextEpisode: vi.fn(),
+    playEpisode: vi.fn(),
     sortOrder: 'newest-first',
     toggleSort: vi.fn(),
     bindAudio: vi.fn(),
@@ -178,7 +180,7 @@ it('wires volume and mute independently and leaves no slider space for device-ow
   state.volumeSupported = false
   await wrapper.vm.$nextTick()
   expect(wrapper.find('.volume-control').exists()).toBe(false)
-  expect(wrapper.text()).toContain("Use your device's volume buttons.")
+  expect(wrapper.text()).not.toContain("Use your device's volume buttons.")
   expect(wrapper.find('[aria-label="Unmute"]').exists()).toBe(true)
   state.muteSupported = false
   await wrapper.vm.$nextTick()
@@ -235,4 +237,49 @@ it('cancels a scrub when accepted audio changes under the same stable episode ID
   expect(player.seek).not.toHaveBeenCalled()
   expect(input.element.value).toBe('10')
   wrapper.unmount()
+})
+
+it('cancels a long-press scrub, copies without seeking, and permits the next ordinary scrub', async () => {
+  const { player } = fixture()
+  const wrapper = await mountSuspended(PlayerControls, {
+    props: { player, canCopyTimestamp: true },
+    attachTo: document.body,
+  })
+  vi.useFakeTimers()
+  try {
+    const input = wrapper.get<HTMLInputElement>(
+      '[aria-label="Playback position"]',
+    )
+    vi.spyOn(input.element, 'getBoundingClientRect').mockReturnValue(
+      new DOMRect(-4, 28, 200, 44),
+    )
+    await input.trigger('pointerdown', {
+      pointerType: 'touch',
+      isPrimary: true,
+      clientX: 50,
+      clientY: 50,
+    })
+    input.element.value = '20'
+    await input.trigger('input')
+    await vi.advanceTimersByTimeAsync(650)
+    expect(input.element.value).toBe('10')
+    input.element.value = '21'
+    await input.trigger('input')
+    await input.trigger('change')
+    expect(input.element.value).toBe('10')
+    expect(player.seek).not.toHaveBeenCalled()
+    document.querySelector<HTMLButtonElement>('[role="menuitem"]')!.click()
+    await wrapper.vm.$nextTick()
+    expect(wrapper.emitted('copyTimestamp')).toEqual([[input.element]])
+    await input.trigger('pointerdown', { pointerType: 'mouse' })
+    input.element.value = '25'
+    await input.trigger('input')
+    await input.trigger('change')
+    expect(player.seek).toHaveBeenCalledExactlyOnceWith(25)
+    expect(player.play).not.toHaveBeenCalled()
+    expect(player.pause).not.toHaveBeenCalled()
+  } finally {
+    vi.useRealTimers()
+    wrapper.unmount()
+  }
 })

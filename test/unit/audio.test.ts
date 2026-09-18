@@ -33,6 +33,26 @@ class ControlledAudio extends EventTarget implements AudioPort {
 }
 
 describe('audio adapter', () => {
+  it.each([
+    ['iPhone OS 14_3 Safari', 'iPhone', 5, false],
+    ['iPad OS 14_3 Safari', 'iPad', 5, false],
+    ['iPod Safari', 'iPod', 5, false],
+    ['Macintosh Version/14.0.2 Safari', 'MacIntel', 5, false],
+    ['Macintosh Version/14.0.2 Safari', 'MacIntel', 0, true],
+    ['Windows Chrome/153', 'Win32', 10, true],
+    ['Android Chrome/153', 'Linux armv8l', 5, true],
+  ])(
+    'marks element volume support for %s / %s / %s touch points',
+    (userAgent, platform, maxTouchPoints, writable) => {
+      const audio = createAudioAdapter(new ControlledAudio(), {
+        userAgent,
+        platform,
+        maxTouchPoints,
+      })
+      expect(audio.volumeWritable).toBe(writable)
+    },
+  )
+
   it('does not read seekable ranges until metadata has a finite positive duration', () => {
     const element = new ControlledAudio()
     const ranges = vi.fn(() => ({ length: 0, start: () => 0, end: () => 0 }))

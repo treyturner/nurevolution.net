@@ -67,7 +67,7 @@ useHead(() =>
           height="300"
           alt=""
         />
-        <div class="wordmark">nurevolution studios<span>austin, tx</span></div>
+        <SiteWordmark />
       </div>
       <RssCopyButton :feed-url="state.model.show.feedUrl" />
     </header>

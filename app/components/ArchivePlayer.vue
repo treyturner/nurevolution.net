@@ -6,12 +6,40 @@ import { deliveryAssetUrl } from '../services/delivery-assets'
 import DownloadIcon from './DownloadIcon.vue'
 import ArtworkDialog from './ArtworkDialog.vue'
 import PlayerControls from './PlayerControls.vue'
+import { timestampUrl } from '../services/timestamp-link'
+import { trackNavigation } from '../services/track-navigation'
+import { useCopyLink } from '../composables/useCopyLink'
+import CopyLinkToast from './CopyLinkToast.vue'
+const { toast, copyLink } = useCopyLink()
 const props = defineProps<{
   episode: EpisodeDetail | null
   player: PodcastPlayer
   failedPath?: string | null
 }>()
 const config = useRuntimeConfig()
+const canCopyTimestamp = computed(() =>
+  Boolean(
+    props.episode &&
+    props.player.state.initialized &&
+    !props.player.state.restoring &&
+    !props.player.sequencing.busy &&
+    props.player.state.sourceId === props.episode.id,
+  ),
+)
+function copyTimestamp(target: HTMLElement) {
+  if (!canCopyTimestamp.value) return
+  const url = timestampUrl(
+    window.location.origin,
+    props.episode!.path,
+    props.player.state.pendingSeek ?? props.player.state.currentTime,
+  )
+  if (url) void copyLink({ url, target, message: 'Timestamp link copied' })
+}
+useHead({
+  noscript: [
+    { innerHTML: '<style>.player-startup-loading{display:none}</style>' },
+  ],
+})
 const artworkUrl = computed(() =>
   props.episode
     ? deliveryAssetUrl(
@@ -54,16 +82,47 @@ const messages = {
   error: 'Audio could not be loaded.',
   blocked: 'Press Play to continue.',
 }
+const statusDetails = computed(() => {
+  if (
+    !props.player.state.restoring &&
+    props.player.state.initialized &&
+    (status.value === 'playing' ||
+      status.value === 'loading' ||
+      status.value === 'buffering') &&
+    props.episode &&
+    props.player.state.sourceId === props.episode.id
+  ) {
+    const tracks = props.episode.tracks
+    const position =
+      status.value === 'loading' ||
+      (status.value === 'buffering' && props.player.state.pendingSeek !== null)
+        ? trackNavigation(
+            tracks,
+            props.player.state.pendingSeek ?? props.player.state.currentTime,
+            props.player.state.duration,
+          ).current
+        : props.player.tracks.current
+    const current = tracks.find((track) => track.position === position)
+    const action = {
+      loading: 'Loading',
+      playing: 'Playing',
+      buffering: 'Buffering',
+    }[status.value]
+    return {
+      prefix: current
+        ? `${action} ${current.position}/${tracks.length}:`
+        : `${action}:`,
+      artist: current?.artist ?? props.episode.artist,
+      title: current?.title ?? props.episode.title,
+    }
+  }
+  return null
+})
 const statusMessage = computed(() => {
   if (props.player.state.restoring) return 'Restoring your place…'
-  if (status.value === 'playing') {
-    const tracks = props.episode?.tracks ?? []
-    const current = tracks.find(
-      (track) => track.position === props.player.tracks.current,
-    )
-    if (current)
-      return `Playing ${current.position}/${tracks.length}: ${current.artist} - ${current.title}`
-  }
+  if (props.episode && !props.player.state.initialized) return 'Loading player…'
+  const details = statusDetails.value
+  if (details) return `${details.prefix} ${details.artist} - ${details.title}`
   return messages[status.value]
 })
 const feedback = computed(() => {
@@ -88,7 +147,13 @@ const feedback = computed(() => {
 </script>
 
 <template>
-  <section class="player" aria-labelledby="episode-title">
+  <section
+    class="player"
+    aria-labelledby="episode-title"
+    :data-player-startup="
+      episode && !player.state.initialized ? 'pending' : undefined
+    "
+  >
     <div v-if="episode" class="artwork">
       <button
         v-if="!failedArtwork"
@@ -144,6 +209,8 @@ const feedback = computed(() => {
         v-if="player.state.attached"
         :player="player"
         :source-url="episode?.audio.url"
+        :can-copy-timestamp="canCopyTimestamp"
+        @copy-timestamp="copyTimestamp"
       />
       <div class="player-actions">
         <div
@@ -156,11 +223,44 @@ const feedback = computed(() => {
             role="status"
             aria-atomic="true"
           >
-            {{ feedback.message }}
+            <span
+              :class="{
+                'player-startup-loading': episode && !player.state.initialized,
+              }"
+              ><template v-if="!feedback.error && statusDetails"
+                ><span class="media-status-part">{{
+                  statusDetails.prefix
+                }}</span
+                >{{ ' '
+                }}<span class="media-status-details"
+                  ><span class="media-status-part"
+                    >{{ statusDetails.artist }} -</span
+                  >{{ ' '
+                  }}<span class="media-status-part">{{
+                    statusDetails.title
+                  }}</span></span
+                ></template
+              ><template v-else>{{ feedback.message }}</template></span
+            >
+            <template v-if="episode && !player.state.initialized">
+              <span class="player-startup-failure"
+                >Player could not start.</span
+              >
+              <noscript
+                >JavaScript is needed for playback. You can download the
+                MP3.</noscript
+              >
+            </template>
           </p>
           <span class="player-status-action">
+            <a
+              v-if="episode && !player.state.initialized"
+              class="status-retry player-startup-reload"
+              href=""
+              >Reload</a
+            >
             <NuxtLink
-              v-if="feedback.retry === 'episode'"
+              v-else-if="feedback.retry === 'episode'"
               class="status-retry"
               :to="failedPath!"
               :prefetch="false"
@@ -178,13 +278,15 @@ const feedback = computed(() => {
             </button>
           </span>
         </div>
-        <a
-          v-if="episode"
-          class="download-link"
-          :href="`/downloads/${episode.slug}`"
-          :download="episode.audio.downloadFilename"
-          >Download MP3 <DownloadIcon
-        /></a>
+        <div class="player-links">
+          <a
+            v-if="episode"
+            class="download-link"
+            :href="`/downloads/${episode.slug}`"
+            :download="episode.audio.downloadFilename"
+            >Download MP3 <DownloadIcon
+          /></a>
+        </div>
       </div>
       <!-- The server validates and sanitizes canonical descriptions before this projection. -->
       <!-- eslint-disable vue/no-v-html -->
@@ -196,6 +298,14 @@ const feedback = computed(() => {
       :src="artworkUrl"
       :alt="`${episode.artist} - ${episode.title} cover art`"
       @close="closeArtwork"
+    />
+    <span class="sr-only" role="status" aria-atomic="true">{{
+      toast?.message
+    }}</span>
+    <CopyLinkToast
+      v-if="toast?.showPopup"
+      :target="toast.target"
+      :message="toast.message"
     />
   </section>
 </template>

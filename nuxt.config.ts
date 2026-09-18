@@ -1,10 +1,14 @@
 import { fileURLToPath } from 'node:url'
+import { browserCompatibility } from './shared/browser-compatibility'
+import episodeArtwork from './tools/content/episode-artwork-manifest.json'
 
 export default defineNuxtConfig({
   compatibilityDate: '2026-09-07',
   ssr: true,
   devtools: { enabled: false },
+  experimental: browserCompatibility.experimental,
   vite: {
+    ...browserCompatibility.vite,
     server: { allowedHosts: ['.coder.treyturner.info'] },
   },
   runtimeConfig: {
@@ -19,6 +23,7 @@ export default defineNuxtConfig({
       title: 'nurevolution studios',
       htmlAttrs: { lang: 'en' },
       meta: [{ name: 'color-scheme', content: 'dark' }],
+      script: [{ src: '/player-startup.js', defer: true }],
       link: [
         {
           rel: 'icon',
@@ -30,6 +35,17 @@ export default defineNuxtConfig({
     },
   },
   typescript: { strict: true },
+  routeRules: Object.fromEntries(
+    episodeArtwork.images.map(({ path }) => [
+      path,
+      {
+        headers: {
+          'cache-control': 'public, max-age=31536000, immutable',
+          'x-content-type-options': 'nosniff',
+        },
+      },
+    ]),
+  ),
   nitro: {
     preset: 'node-server',
     serverAssets: [

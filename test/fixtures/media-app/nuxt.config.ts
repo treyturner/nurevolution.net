@@ -1,9 +1,20 @@
 import { fileURLToPath } from 'node:url'
 import { defineNuxtConfig } from 'nuxt/config'
+import { browserCompatibility } from '../../../shared/browser-compatibility'
 
 export default defineNuxtConfig({
   compatibilityDate: '2026-09-07',
   ssr: true,
+  experimental: browserCompatibility.experimental,
+  plugins: [
+    fileURLToPath(
+      new URL(
+        '../../../app/plugins/browser-runtime.client.ts',
+        import.meta.url,
+      ),
+    ),
+  ],
+  vite: browserCompatibility.vite,
   css: [
     fileURLToPath(new URL('../../../app/assets/main.css', import.meta.url)),
   ],

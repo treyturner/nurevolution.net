@@ -2,10 +2,8 @@ import { afterEach, beforeEach, expect, it, vi } from 'vitest'
 import { mkdtemp, writeFile, rm, symlink, mkdir } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
-import {
-  createPlaybackResponder,
-  byteRange,
-} from '../../../server/playback/response'
+import { createPlaybackResponder } from '../../../server/playback/response'
+import { byteRange } from '../../../server/http/byte-range'
 import { fixture } from './fixtures'
 
 let root: string

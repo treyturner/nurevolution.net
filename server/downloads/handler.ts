@@ -13,10 +13,16 @@ export function downloadHandler(
     }
     event.node.res.on('close', disconnect)
     try {
+      const headers = new Headers()
+      for (const name of ['range', 'if-range']) {
+        const value = getRequestHeader(event, name)
+        if (value !== undefined) headers.set(name, value)
+      }
       const response = await respond(
         getRouterParam(event, 'slug') ?? '',
         new Request(getRequestURL(event), {
           method: event.method,
+          headers,
           signal: controller.signal,
         }),
       )

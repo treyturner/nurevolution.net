@@ -15,7 +15,7 @@ const fixture = {
   ...episode,
   audio: { ...episode.audio, byteLength: bytes.length },
 }
-const request = (method = 'GET') =>
+const request = (method = 'GET', headers: Record<string, string> = {}) =>
   new Request(
     'https://nurevolution.net/downloads/test?url=https://evil.example',
     {
@@ -23,7 +23,7 @@ const request = (method = 'GET') =>
       headers: {
         cookie: 'secret',
         authorization: 'secret',
-        range: 'bytes=0-1',
+        ...headers,
       },
     },
   )
@@ -49,7 +49,7 @@ describe('bounded attachment streaming', () => {
       }),
     )
     expect(response.status).toBe(200)
-    expect(response.headers.get('accept-ranges')).toBeNull()
+    expect(response.headers.get('accept-ranges')).toBe('bytes')
     expect(response.headers.get('content-disposition')).toBe(
       attachment(episode.audio.downloadFilename),
     )
@@ -73,6 +73,147 @@ describe('bounded attachment streaming', () => {
     expect(await (await respond('missing', request('HEAD'))).text()).toBe('')
     expect(fetch).toHaveBeenCalledOnce()
   })
+  it.each([
+    ['bytes=0-1', 0, 1],
+    ['bytes=1-2', 1, 2],
+    ['bytes=2-', 2, 3],
+    ['bytes=-2', 2, 3],
+    ['bytes=1-999', 1, 3],
+    ['bytes=-999', 0, 3],
+  ])(
+    'serves the exact requested bytes for %s without forwarding credentials',
+    async (range, start, end) => {
+      const partial = bytes.slice(start, end + 1)
+      const fetch = vi.fn<typeof globalThis.fetch>().mockResolvedValue(
+        new Response(partial, {
+          status: 206,
+          headers: {
+            'content-type': 'audio/mpeg',
+            'content-length': String(partial.length),
+            'content-range': `bytes ${start}-${end}/4`,
+          },
+        }),
+      )
+      const respond = createDownloadResponder(async () => fixture, { fetch })
+      const response = await respond('saved', request('GET', { range }))
+      expect(response.status).toBe(206)
+      expect(response.headers.get('content-range')).toBe(
+        `bytes ${start}-${end}/4`,
+      )
+      expect(response.headers.get('accept-ranges')).toBe('bytes')
+      expect(response.headers.get('content-length')).toBe(
+        String(partial.length),
+      )
+      expect(response.headers.get('content-disposition')).toBe(
+        attachment(episode.audio.downloadFilename),
+      )
+      expect(fetch.mock.calls[0]![1]!.headers).toEqual({
+        'Accept-Encoding': 'identity',
+        Range: `bytes=${start}-${end}`,
+      })
+      expect(new Uint8Array(await response.arrayBuffer())).toEqual(partial)
+    },
+  )
+  it('returns 416 for unsatisfiable ranges before fetching and keeps missing episodes private', async () => {
+    const fetch = vi.fn<typeof globalThis.fetch>()
+    const respond = createDownloadResponder(
+      async (slug) => (slug === 'missing' ? undefined : fixture),
+      { fetch },
+    )
+    for (const range of [
+      'bytes=4-',
+      'bytes=3-1',
+      'bytes=-0',
+      'bytes=999999999999999999999-',
+    ]) {
+      const response = await respond('saved', request('GET', { range }))
+      expect(response.status).toBe(416)
+      expect(response.headers.get('content-range')).toBe('bytes */4')
+      expect(response.headers.get('cache-control')).toBe('no-store')
+    }
+    const missing = await respond(
+      'missing',
+      request('GET', { range: 'bytes=4-' }),
+    )
+    expect(missing.status).toBe(404)
+    expect(missing.headers.get('content-range')).toBeNull()
+    expect(fetch).not.toHaveBeenCalled()
+  })
+  it.each([
+    ['GET', { range: 'items=0-1' }],
+    ['GET', { range: 'bytes=garbage' }],
+    ['GET', { range: 'bytes=0-1,2-3' }],
+    ['GET', { range: 'bytes=0-1', 'if-range': '"old"' }],
+    [
+      'GET',
+      { range: 'bytes=99-', 'if-range': 'Wed, 01 Jan 2020 00:00:00 GMT' },
+    ],
+    ['HEAD', { range: 'bytes=0-1' }],
+  ] as const)(
+    'serves full metadata/bytes for %s %j when a range is ignored',
+    async (method, headers) => {
+      const fetch = vi
+        .fn<typeof globalThis.fetch>()
+        .mockResolvedValue(success(method === 'HEAD' ? null : bytes))
+      const response = await createDownloadResponder(async () => fixture, {
+        fetch,
+      })('saved', request(method, headers))
+      expect(response.status).toBe(200)
+      expect(response.headers.get('content-range')).toBeNull()
+      expect(response.headers.get('content-length')).toBe('4')
+      expect(fetch.mock.calls[0]![1]!.headers).toEqual({
+        'Accept-Encoding': 'identity',
+      })
+      expect((await response.arrayBuffer()).byteLength).toBe(
+        method === 'HEAD' ? 0 : 4,
+      )
+    },
+  )
+  it.each([
+    { status: 200, range: null, length: '4' },
+    { status: 206, range: null, length: '2' },
+    { status: 206, range: 'bytes 1-2/4', length: '2' },
+    { status: 206, range: 'bytes 0-1/5', length: '2' },
+    { status: 206, range: 'bytes 0-1/4', length: '4' },
+  ])(
+    'rejects incorrect partial response metadata: %j',
+    async ({ status, range, length }) => {
+      const headers = new Headers({
+        'content-type': 'audio/mpeg',
+        'content-length': length,
+      })
+      if (range) headers.set('content-range', range)
+      const upstream = new Response(bytes, { status, headers })
+      const cancel = vi.spyOn(upstream.body!, 'cancel')
+      const response = await createDownloadResponder(async () => fixture, {
+        fetch: vi.fn<typeof globalThis.fetch>().mockResolvedValue(upstream),
+        log: vi.fn(),
+      })('saved', request('GET', { range: 'bytes=0-1' }))
+      expect(response.status).toBe(502)
+      expect(response.headers.get('content-range')).toBeNull()
+      expect(cancel).toHaveBeenCalled()
+    },
+  )
+  it.each([new Uint8Array([1]), new Uint8Array([1, 2, 3])])(
+    'rejects partial bodies whose bytes disagree with the selected length',
+    async (body) => {
+      const response = await createDownloadResponder(async () => fixture, {
+        fetch: vi.fn<typeof globalThis.fetch>().mockResolvedValue(
+          new Response(body, {
+            status: 206,
+            headers: {
+              'content-type': 'audio/mpeg',
+              'content-length': '2',
+              'content-range': 'bytes 0-1/4',
+            },
+          }),
+        ),
+        log: vi.fn(),
+      })('saved', request('GET', { range: 'bytes=0-1' }))
+      expect(response.status).toBe(206)
+      await expect(response.arrayBuffer()).rejects.toThrow(/download/i)
+    },
+  )
   it.each<ResponseInit>([
     { status: 404 },
     { headers: { 'content-type': 'text/html', 'content-length': '4' } },

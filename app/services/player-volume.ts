@@ -1,4 +1,5 @@
 interface VolumePort {
+  readonly volumeWritable?: boolean
   snapshot(): { volume: number; muted: boolean; paused: boolean }
   setVolume(value: number): void
   setMuted(value: boolean): void
@@ -11,18 +12,21 @@ export function createPlayerVolume(audio: VolumePort) {
   let lastNonzero = 1
   const initial = audio.snapshot()
   if (initial.paused) {
-    const probe = initial.volume === 0.5 ? 0.25 : 0.5
-    try {
-      audio.setVolume(probe)
-      volumeSupported = audio.snapshot().volume === probe
-    } catch {
-      /* Hardware-owned volume can reject assignments. */
-    } finally {
+    if (audio.volumeWritable !== false) {
+      const probe = initial.volume === 0.5 ? 0.25 : 0.5
       try {
-        audio.setVolume(initial.volume)
-        if (audio.snapshot().volume !== initial.volume) volumeSupported = false
+        audio.setVolume(probe)
+        volumeSupported = audio.snapshot().volume === probe
       } catch {
-        volumeSupported = false
+        /* Hardware-owned volume can reject assignments. */
+      } finally {
+        try {
+          audio.setVolume(initial.volume)
+          if (audio.snapshot().volume !== initial.volume)
+            volumeSupported = false
+        } catch {
+          volumeSupported = false
+        }
       }
     }
     try {

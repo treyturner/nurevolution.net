@@ -11,6 +11,7 @@ Use the pinned toolchain described in the [development guide](DEVELOPMENT.md#set
 ```sh
 pnpm check:content
 pnpm check:feed
+pnpm check:episode-artwork
 CI=1 pnpm verify
 ```
 
@@ -24,18 +25,18 @@ Do not run the original WordPress import over authored content. Its unchanged M2
 
 ## Deployed behavior to preserve
 
-| Request or condition                          | Expected behavior                                                                                                                                                                                                              |
-| --------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| GET `/feed/podcast`                           | 200 with the complete RSS, `application/rss+xml; charset=utf-8`, `X-Content-Type-Options: nosniff`; no authentication, cookies, browser challenge, or HTML shell.                                                              |
-| HEAD `/feed/podcast`                          | Same representation headers as GET, no body.                                                                                                                                                                                   |
-| GET/HEAD `/feed/podcast/` or `/?feed=podcast` | One 301 to relative `/feed/podcast`; the query alias requires exactly one lowercase `feed=podcast` on `/`.                                                                                                                     |
-| Unsupported methods on these feed paths       | 405, `Allow: GET, HEAD`, non-cacheable plain text.                                                                                                                                                                             |
-| Unrelated home/query/API/episode paths        | Normal application routing. `/wp/?feed=podcast` and `/wp/feed/podcast` were empty legacy feeds and are not podcast aliases.                                                                                                    |
-| Successful feed, redirect, or 304 caching     | `Cache-Control: public, max-age=60, must-revalidate`. No unbounded stale response cache.                                                                                                                                       |
-| ETag                                          | Weak SHA-256 validator of the XML bytes. Identical visible content has identical bytes and validator across requests/restarts. Rendered edits and publication change it; hidden records and non-rendered track changes do not. |
-| Matching `If-None-Match`                      | 304 without a body, retaining ETag and cache policy. Strong/weak equivalents, lists, and wildcard work. Malformed/nonmatching headers cannot falsely return 304.                                                               |
-| `If-Modified-Since` alone                     | Normal 200/HEAD response; the feed has no trustworthy editorial Last-Modified value and does not emit one.                                                                                                                     |
-| Content load/serialization failure            | 503, `text/plain; charset=utf-8`, `Cache-Control: no-store`, generic message; HEAD has no body. No successful ETag or partial archive.                                                                                         |
+| Request or condition                          | Expected behavior                                                                                                                                                                                                                                           |
+| --------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| GET `/feed/podcast`                           | 200 with the complete RSS, `application/rss+xml; charset=utf-8`, `X-Content-Type-Options: nosniff`; no authentication, cookies, browser challenge, or HTML shell.                                                                                           |
+| HEAD `/feed/podcast`                          | Same representation headers as GET, no body.                                                                                                                                                                                                                |
+| GET/HEAD `/feed/podcast/` or `/?feed=podcast` | One 301 to relative `/feed/podcast`; the query alias requires exactly one lowercase `feed=podcast` on `/`.                                                                                                                                                  |
+| Unsupported methods on these feed paths       | 405, `Allow: GET, HEAD`, non-cacheable plain text.                                                                                                                                                                                                          |
+| Unrelated home/query/API/episode paths        | Normal application routing. `/wp/?feed=podcast` and `/wp/feed/podcast` were empty legacy feeds and are not podcast aliases.                                                                                                                                 |
+| Successful feed, redirect, or 304 caching     | `Cache-Control: public, max-age=60, must-revalidate`. No unbounded stale response cache.                                                                                                                                                                    |
+| ETag                                          | Weak SHA-256 validator of the XML bytes. Identical visible content has identical bytes and validator across requests/restarts. Rendered edits, chapter corrections, artwork, and publication change it; hidden records and untimed-track-only edits do not. |
+| Matching `If-None-Match`                      | 304 without a body, retaining ETag and cache policy. Strong/weak equivalents, lists, and wildcard work. Malformed/nonmatching headers cannot falsely return 304.                                                                                            |
+| `If-Modified-Since` alone                     | Normal 200/HEAD response; the feed has no trustworthy editorial Last-Modified value and does not emit one.                                                                                                                                                  |
+| Content load/serialization failure            | 503, `text/plain; charset=utf-8`, `Cache-Control: no-store`, generic message; HEAD has no body. No successful ETag or partial archive.                                                                                                                      |
 
 The channel's Atom self link always names the canonical production feed, including on preview hosts. Historical item links retain their exact old URLs; the implemented redirects send those pages to `/episodes/<saved-slug>`, with all 55 verified in production during M6. New episodes use saved-slug URLs. Both show-artwork paths and all enclosure URLs remain unchanged.
 
@@ -65,10 +66,28 @@ Use an existing subscription in Apple Podcasts where available and at least one 
 
 Use the owner's existing directory access to validate the established listing when available. Do not create a second show or submit a rehearsal feed as a new listing. If account/client access is unavailable, leave the corresponding check pending with a concrete follow-up. Technical validation and directory approval are separate results. [Apple validation guidance](https://podcasters.apple.com/support/829-validate-your-podcast)
 
-M9 must review the 60-second HTTP cache window, any intermediary caches, client polling, and publication-boundary behavior before claiming scheduled release precision. M8 will add episode artwork and chapters through separately validated canonical metadata; neither feature is emitted today. See the [agreed M8 scope](milestones/M08-listening-and-feed-enhancements.md).
+M9 must review the 60-second HTTP cache window, any intermediary caches, client polling, and publication-boundary behavior before claiming scheduled release precision. The local M8 implementation emits episode artwork and chapters from canonical metadata; it is not yet deployed or accepted in a physical podcast client. See the [agreed M8 scope](milestones/M08-listening-and-feed-enhancements.md).
 
 M6 closed by owner acceptance on 2026-09-18. Remaining client-download, old-subscription, and directory observations above are follow-ups outside M6; closure does not mark them as performed. See the [retirement record](milestones/evidence/M06-retirement.json).
 
 ## Evidence record
 
 M3's local implementation results are recorded in its [completion evidence](milestones/M03-podcast-rss.md#completion-evidence). M5 rehearsal results are in its [live evidence](milestones/evidence/M05-live-rehearsal.json). The [M6 cutover evidence](milestones/evidence/M06-cutover.json) records canonical production delivery and feed validation; [M6 closure](milestones/evidence/M06-retirement.json) records retirement and accepted limitations. The owner subsequently completed Podcast Addict loading/seeking for every episode. Complete client downloads, old-subscription refresh, and directory checks remain unverified follow-ups outside M6. Record new observations with their actual scope and date.
+
+## M8 resource support and rollout
+
+The local resource-support slice implements `/chapters/<slug>.json` and `/episode-artwork/v1-<source-sha256>.jpg`. The retained support commit (`e1013e0`) leaves RSS unchanged. Subsequent commits add item-level `itunes:image` and eligible `podcast:chapters` references. Both are now included in PR #56; neither is deployed. The combined PR does not by itself publish a support-only artifact, so that release must still be prepared before the ordered rollout below. JSON chapters use version `1.2.0`, retain fractional starts, and omit unknown timestamps; untimed, unknown, draft, and future episodes return generic non-cacheable 404s. GET/HEAD share representation metadata, weak SHA-256 ETags support 304, and successful responses use `public, max-age=60, must-revalidate`, `nosniff`, and anonymous CORS. Read/serialization failures return a generic non-cacheable 503. Other methods return 405.
+
+Chapter `v` query values are refresh hints, never immutable snapshots: old, current, or missing hints all resolve the current eligible document and ETag. Resource URLs remain available after timing corrections. Generated JPEGs have exact-path immutable caching, JPEG media type, HEAD support, and `nosniff`; unknown image paths do not inherit immutable caching. Offline artifact checks validate every image, and built-browser/delivery checks exercise real routes. The Nitro route reads a complete filename and strips `.json` explicitly because its current router treats a suffix on a dynamic parameter as part of the parameter name.
+
+The RSS advertisement declares `xmlns:podcast="https://podcastindex.org/namespace/1.0"`. Every published item has one canonical JPEG artwork URL. Items with known starts have one `podcast:chapters` link of type `application/json+chapters`, using `/chapters/<slug>.json?v=<SHA-256 of chapter JSON bytes>` on the canonical site origin. The current archive yields 55 item images and 34 chapter references covering 626 known starts; the 21 untimed/empty lists omit the chapter tag. Channel artwork, enclosure identities, GUIDs, and dates remain unchanged.
+
+Corrections to known start times, artist/title text, or chapter membership change the chapter bytes and version hint, so the RSS bytes and ETag change too. Artwork-source or recipe changes update its content-addressed URL and feed validator. An edit solely to an untimed track does not change chapters or the feed. The independent XML checker validates namespaces, item eligibility, exact attributes, and all preserved fields; browser and exact-runtime/proxy tests fetch advertised resources and compare the version hint with the served bytes.
+
+When deployment is separately authorized:
+
+1. Deploy and verify the **resource-support release**, including representative chapter GET/HEAD/304, one untimed 404, every artwork mapping, and unchanged RSS identities.
+2. Retain that exact verified release and its delivery bundle as the compatible fallback.
+3. Deploy the later **RSS-advertisement release** and verify item artwork and chapter references with actual podcast clients. Recheck Ruminate/Praxis fractional chapter seeks and an untimed guest episode without a chapter reference.
+
+After advertisement, rollback targets must continue serving chapter and previously advertised artwork paths. Do not revert to a pre-support release that would strand cached feed references. Existing GUID/enclosure protection remains mandatory. No step here authorizes deployment; M8 work currently remains undeployed. Earlier all-episode Podcast Addict load/seek acceptance does not establish support for these new chapter/artwork fields.

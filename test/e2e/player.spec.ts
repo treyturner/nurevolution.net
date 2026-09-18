@@ -92,7 +92,9 @@ test('keeps loading until metadata arrives, with playback still paused', async (
     const audio = page.locator('audio')
     await expect(audio).toHaveJSProperty('readyState', 0)
     await expect(audio).toHaveJSProperty('paused', true)
-    await expect(page.locator('.media-status')).toHaveText('Loading audio…')
+    await expect(page.locator('.media-status')).toHaveText(
+      'Loading 1/22: Moniker - Vessels',
+    )
     release()
     await ready(page)
     expect(
@@ -213,7 +215,9 @@ test('recovers stalled metadata automatically and shows duration without a Play 
     await firstRequest
     const audio = page.locator('audio')
     await expect(audio).toHaveJSProperty('readyState', 0)
-    await expect(page.locator('.media-status')).toHaveText('Loading audio…')
+    await expect(page.locator('.media-status')).toHaveText(
+      'Loading 1/22: Moniker - Vessels',
+    )
     await page.clock.fastForward(15_000)
     await ready(page)
     expect(attempts).toBeGreaterThanOrEqual(2)
@@ -270,11 +274,15 @@ for (const recovery of ['late metadata', 'Play', 'Play then pause']) {
           a.loop = true
           void a.play()
         })
-        await expect(page.locator('.media-status')).toHaveText('Buffering…')
+        await expect(page.locator('.media-status')).toHaveText(
+          'Buffering 1/22: Moniker - Vessels',
+        )
       }
       if (recovery === 'Play then pause') {
         await audio.evaluate((a: HTMLAudioElement) => a.pause())
-        await expect(page.locator('.media-status')).toHaveText('Loading audio…')
+        await expect(page.locator('.media-status')).toHaveText(
+          'Loading 1/22: Moniker - Vessels',
+        )
         await page.clock.fastForward(15_000)
         await expect(page.locator('.media-status')).toHaveText(
           'Audio is taking longer to load.',

@@ -1,7 +1,15 @@
 <script setup lang="ts">
 import type { PodcastPlayer } from '../composables/usePodcastPlayer'
 import { formatTime } from '../services/episode-page'
-const props = defineProps<{ player: PodcastPlayer; sourceUrl?: string }>()
+import { useCompactContainer } from '../composables/useCompactContainer'
+import PlayheadContextMenu from './PlayheadContextMenu.vue'
+const props = defineProps<{
+  player: PodcastPlayer
+  sourceUrl?: string
+  canCopyTimestamp?: boolean
+}>()
+const emit = defineEmits<{ copyTimestamp: [target: HTMLElement] }>()
+const { container, compact } = useCompactContainer(319)
 const state = computed(() => props.player.state)
 const draft = ref<number | null>(null)
 const showPause = computed(
@@ -48,7 +56,11 @@ const seekDescription = computed(() =>
     ? 'Duration unavailable'
     : `${spoken(time.value)} of ${spoken(state.value.duration)}`,
 )
-function preview(event: Event) {
+function preview(event: Event, suppressed = false) {
+  if (suppressed) {
+    ;(event.target as HTMLInputElement).value = String(time.value)
+    return
+  }
   draft.value = Number((event.target as HTMLInputElement).value)
 }
 function commit() {
@@ -97,12 +109,20 @@ watch(
 
 <template>
   <div
+    ref="container"
     class="audio-controls"
+    :class="{ 'compact-controls': compact }"
     role="group"
     aria-label="Audio player"
     aria-describedby="playback-status"
   >
-    <div class="seek-row">
+    <PlayheadContextMenu
+      v-slot="{ suppressSeek }"
+      :enabled="Boolean(canCopyTimestamp)"
+      :source-key="`${state.sourceId}:${sourceUrl}`"
+      @open="draft = null"
+      @copy="emit('copyTimestamp', $event)"
+    >
       <span class="player-time" aria-hidden="true">{{ formatTime(time) }}</span>
       <input
         aria-label="Playback position"
@@ -113,8 +133,14 @@ watch(
         :value="time"
         :aria-valuetext="seekDescription"
         :disabled="!seekable"
-        @input="preview"
-        @change="commit"
+        :title="
+          canCopyTimestamp
+            ? 'Right-click or long-press the playhead to copy a timestamp link'
+            : undefined
+        "
+        :aria-haspopup="canCopyTimestamp ? 'menu' : undefined"
+        @input="preview($event, suppressSeek)"
+        @change="!suppressSeek && commit()"
         @keydown="key"
         @pointercancel="draft = null"
         @blur="draft = null"
@@ -122,7 +148,7 @@ watch(
       <span class="player-time" aria-hidden="true">{{
         state.duration === null ? '-:-' : formatTime(state.duration)
       }}</span>
-    </div>
+    </PlayheadContextMenu>
     <div class="playback-row">
       <div class="transport-row">
         <button
@@ -130,11 +156,9 @@ watch(
           aria-label="Previous episode"
           title="Previous episode"
           :aria-busy="player.sequencing.busy"
+          :aria-disabled="player.sequencing.busy || undefined"
           :disabled="
-            state.restoring ||
-            !state.sourceId ||
-            !player.sequencing.available ||
-            player.sequencing.busy
+            state.restoring || !state.sourceId || !player.sequencing.available
           "
           @click="player.previousEpisode()"
         >
@@ -143,6 +167,7 @@ watch(
           </svg>
         </button>
         <button
+          class="previous-track"
           type="button"
           aria-label="Previous track"
           :title="
@@ -158,6 +183,7 @@ watch(
           </svg>
         </button>
         <button
+          class="skip-control"
           type="button"
           aria-label="Back 30 seconds"
           title="Back 30 seconds"
@@ -189,6 +215,7 @@ watch(
           </svg>
         </button>
         <button
+          class="skip-control"
           type="button"
           aria-label="Forward 30 seconds"
           title="Forward 30 seconds"
@@ -210,6 +237,7 @@ watch(
           </svg>
         </button>
         <button
+          class="next-track"
           type="button"
           aria-label="Next track"
           :title="
@@ -229,11 +257,9 @@ watch(
           aria-label="Next episode"
           title="Next episode"
           :aria-busy="player.sequencing.busy"
+          :aria-disabled="player.sequencing.busy || undefined"
           :disabled="
-            state.restoring ||
-            !state.sourceId ||
-            !player.sequencing.available ||
-            player.sequencing.busy
+            state.restoring || !state.sourceId || !player.sequencing.available
           "
           @click="player.nextEpisode()"
         >
@@ -245,6 +271,7 @@ watch(
       <div
         v-if="state.muteSupported || state.volumeSupported"
         class="volume-group"
+        :class="{ 'has-volume-control': state.volumeSupported }"
         role="group"
         aria-label="Volume controls"
       >
@@ -300,9 +327,6 @@ watch(
           "
         />
       </div>
-      <p v-if="!state.volumeSupported" class="device-volume">
-        Use your device's volume buttons.
-      </p>
     </div>
   </div>
 </template>

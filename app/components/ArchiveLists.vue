@@ -3,7 +3,7 @@ import type { EpisodeDetail, EpisodeSummary } from '../../shared/content/public'
 import type { PodcastPlayer } from '../composables/usePodcastPlayer'
 import EpisodeList from './EpisodeList.vue'
 import EpisodeTracklist from './EpisodeTracklist.vue'
-defineProps<{
+const props = defineProps<{
   player?: PodcastPlayer
   episodes: EpisodeSummary[]
   siteUrl: string
@@ -20,6 +20,22 @@ const otherTrackTimeLabel = computed(() =>
   trackTimeDisplay.value === 'duration' ? 'Timestamp' : 'Duration',
 )
 const tabs = narrow
+let playbackStarted = false
+watch(
+  () =>
+    [
+      props.player?.state.sourceId,
+      props.player?.state.wantsPlay,
+      props.player?.state.status,
+    ] as const,
+  ([sourceId, wantsPlay, status], previous) => {
+    if (!wantsPlay || sourceId !== previous?.[0]) playbackStarted = false
+    if (wantsPlay && status === 'playing' && !playbackStarted) {
+      playbackStarted = true
+      if (tabs.value) active.value = 'tracks'
+    }
+  },
+)
 let media: MediaQueryList | undefined
 const resize = () => {
   narrow.value = media!.matches
@@ -120,6 +136,7 @@ function key(event: KeyboardEvent) {
           </button>
         </div>
         <EpisodeList
+          :player="player"
           :episodes="episodes"
           :site-url="siteUrl"
           :selected-id="selected?.id"
@@ -152,6 +169,7 @@ function key(event: KeyboardEvent) {
         </div>
         <EpisodeTracklist
           v-if="selected"
+          :episode-path="selected.path"
           :tracks="selected.tracks"
           :duration-seconds="selected.durationSeconds"
           :time-display="trackTimeDisplay"

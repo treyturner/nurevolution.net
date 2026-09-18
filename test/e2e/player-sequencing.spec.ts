@@ -374,3 +374,231 @@ test('a media failure during automatic detail loading cancels continuation on th
     held.release()
   }
 })
+
+function rowPlay(page: Page, episode: EpisodeSummary) {
+  return page.getByRole('button', {
+    name: `Play ${episode.artist} - ${episode.title}`,
+    exact: true,
+  })
+}
+
+test('episode row Play selects and starts audio, and resumes the current episode without seeking', async ({
+  page,
+}) => {
+  const episodes = await fixture(page)
+  await page.locator('audio').evaluate((audio: HTMLAudioElement) => {
+    audio.loop = true
+  })
+  const history = await page.evaluate(() => window.history.length)
+  await rowPlay(page, episodes[0]!).focus()
+  await rowPlay(page, episodes[0]!).press('Enter')
+  await expect(page).toHaveURL(new RegExp(episodes[0]!.path + '$'))
+  await expect(page.locator('audio')).toHaveJSProperty('paused', false)
+  await expect(page.locator('.media-status')).toHaveText(/^Playing\b/)
+  expect(await page.evaluate(() => window.history.length)).toBe(history + 1)
+  await pause(page)
+  await page.locator('audio').evaluate(async (audio: HTMLAudioElement) => {
+    await new Promise<void>((resolve) => {
+      audio.addEventListener('seeked', () => resolve(), { once: true })
+      audio.currentTime = 0.5
+    })
+    const descriptor = Object.getOwnPropertyDescriptor(
+      HTMLMediaElement.prototype,
+      'currentTime',
+    )!
+    Object.defineProperty(audio, 'currentTime', {
+      configurable: true,
+      get() {
+        return descriptor.get!.call(this)
+      },
+      set(value) {
+        document.documentElement.dataset.rowSeek = String(value)
+        descriptor.set!.call(this, value)
+      },
+    })
+  })
+  const loads = await page.locator('html').getAttribute('data-loads')
+  await rowPlay(page, episodes[0]!).click()
+  await expect(page.locator('audio')).toHaveJSProperty('paused', false)
+  expect(await page.locator('html').getAttribute('data-loads')).toBe(loads)
+  expect(await page.locator('html').getAttribute('data-row-seek')).toBeNull()
+  await expect(page.getByRole('dialog')).toHaveCount(0)
+  await expect(page.locator('audio')).toHaveCount(1)
+})
+
+test('episode row Play honors confirmation and switches the mobile view when playback starts', async ({
+  page,
+}) => {
+  const episodes = await fixture(page)
+  await page.locator('audio').evaluate((audio: HTMLAudioElement) => {
+    audio.loop = true
+  })
+  await play(page)
+  await page.setViewportSize({ width: 390, height: 900 })
+  await page.getByRole('tab', { name: 'Episodes', exact: true }).click()
+  await rowPlay(page, episodes[0]!).click()
+  await expect(page.getByRole('dialog')).toBeVisible()
+  await expect(page.locator('audio')).toHaveJSProperty('paused', false)
+  await page
+    .getByRole('button', { name: 'Keep listening', exact: true })
+    .click()
+  await expect(page).toHaveURL(new RegExp(episodes[1]!.path + '$'))
+  await expect(rowPlay(page, episodes[0]!)).toHaveAttribute(
+    'aria-disabled',
+    'false',
+  )
+  await rowPlay(page, episodes[0]!).click()
+  await page
+    .getByRole('button', { name: 'Change episode', exact: true })
+    .click()
+  await expect(page).toHaveURL(new RegExp(episodes[0]!.path + '$'))
+  await expect(page.locator('.media-status')).toHaveText(/^Playing\b/)
+  await expect(
+    page.getByRole('tab', { name: 'Tracklist', exact: true }),
+  ).toHaveAttribute('aria-selected', 'true')
+})
+
+test('Pause cancels episode row autoplay during a delayed selection, and failed selections stay paused', async ({
+  page,
+}) => {
+  const episodes = await fixture(page)
+  const held = await hold(page, episodes[0]!.slug)
+  try {
+    await rowPlay(page, episodes[0]!).click()
+    await held.request
+    await expect(rowPlay(page, episodes[2]!)).toHaveAttribute(
+      'aria-disabled',
+      'true',
+    )
+    await pause(page)
+    held.release()
+    await expect(page).toHaveURL(new RegExp(episodes[0]!.path + '$'))
+    await ready(page)
+    await expect(page.locator('audio')).toHaveJSProperty('paused', true)
+    expect(
+      await page.locator('html').getAttribute('data-play-calls'),
+    ).toBeNull()
+    await page.route(`**/api/episodes/${episodes[2]!.slug}`, (route) =>
+      route.fulfill({ status: 404, json: { statusCode: 404 } }),
+    )
+    await rowPlay(page, episodes[2]!).click()
+    await expect(page.locator('.media-status')).toHaveText(
+      'Episode could not be loaded.',
+    )
+    await expect(page).toHaveURL(new RegExp(episodes[0]!.path + '$'))
+    await expect(page.locator('audio')).toHaveJSProperty('paused', true)
+    expect(
+      await page.locator('html').getAttribute('data-play-calls'),
+    ).toBeNull()
+  } finally {
+    held.release()
+  }
+})
+
+// Current headless WebKit is more permissive than Safari 14.3. Model the old
+// per-element permission: only load/play inside the actual click unlocks it.
+async function requireWebkitGesture(page: Page) {
+  await page.addInitScript(() => {
+    Object.defineProperties(navigator, {
+      userAgent: {
+        configurable: true,
+        value:
+          'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15) AppleWebKit/605.1.15 Version/14.0 Safari/605.1.15',
+      },
+      platform: { configurable: true, value: 'MacIntel' },
+      maxTouchPoints: { configurable: true, value: 5 },
+    })
+    let gesture = false
+    const allowed = new WeakSet<HTMLMediaElement>()
+    document.addEventListener(
+      'click',
+      () => {
+        gesture = true
+      },
+      true,
+    )
+    document.addEventListener('click', () => {
+      gesture = false
+    })
+    const load = HTMLMediaElement.prototype.load
+    const play = HTMLMediaElement.prototype.play
+    HTMLMediaElement.prototype.load = function () {
+      if (gesture) allowed.add(this)
+      return load.call(this)
+    }
+    HTMLMediaElement.prototype.play = function () {
+      if (gesture) allowed.add(this)
+      if (!allowed.has(this)) {
+        document.documentElement.dataset.gestureBlocked = 'true'
+        return Promise.reject(
+          new DOMException('A media gesture is required', 'NotAllowedError'),
+        )
+      }
+      return play.call(this)
+    }
+  })
+}
+
+test('cold episode row Play retains WebKit tap permission across delayed navigation', async ({
+  page,
+}) => {
+  await requireWebkitGesture(page)
+  const episodes = await fixture(page)
+  await page.locator('audio').evaluate((audio: HTMLAudioElement) => {
+    audio.loop = true
+  })
+  const held = await hold(page, episodes[0]!.slug)
+  try {
+    await rowPlay(page, episodes[0]!).click()
+    await held.request
+    // Preparing permission must neither play nor audibly flash the old source.
+    await expect(page.locator('audio')).toHaveJSProperty('paused', true)
+    expect(
+      await page.locator('html').getAttribute('data-play-calls'),
+    ).toBeNull()
+    held.release()
+    await expect(page).toHaveURL(new RegExp(episodes[0]!.path + '$'))
+    await expect(page.locator('.media-status')).toHaveText(/^Playing\b/)
+    expect(
+      await page.locator('html').getAttribute('data-gesture-blocked'),
+    ).toBeNull()
+    await expect(page.locator('audio')).toHaveCount(1)
+  } finally {
+    held.release()
+  }
+})
+
+test('cold selected-episode Play retains WebKit permission through a pending timestamp seek', async ({
+  page,
+}) => {
+  await requireWebkitGesture(page)
+  await stubArchiveMedia(page)
+  let release!: () => void
+  const gate = new Promise<void>((resolve) => {
+    release = resolve
+  })
+  await page.route('https://podcast.nurevolution.net/**', async (route) => {
+    await gate
+    await route.fallback()
+  })
+  try {
+    await page.goto('/episodes/trey-turner-ruminate?t=0.5', {
+      waitUntil: 'domcontentloaded',
+    })
+    await page.waitForFunction(() =>
+      document.querySelector('audio')?.classList.contains('custom-audio'),
+    )
+    await page.locator('audio').evaluate((audio: HTMLAudioElement) => {
+      audio.muted = true
+      audio.loop = true
+    })
+    await page.getByRole('button', { name: 'Play', exact: true }).click()
+    release()
+    await expect(page.locator('.media-status')).toHaveText(/^Playing\b/)
+    expect(
+      await page.locator('html').getAttribute('data-gesture-blocked'),
+    ).toBeNull()
+  } finally {
+    release()
+  }
+})

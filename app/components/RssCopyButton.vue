@@ -51,5 +51,9 @@ async function copyFeed(event: MouseEvent) {
   <span class="sr-only" role="status" aria-atomic="true">{{
     toast?.message
   }}</span>
-  <CopyLinkToast v-if="toast" :target="toast.target" :message="toast.message" />
+  <CopyLinkToast
+    v-if="toast?.showPopup"
+    :target="toast.target"
+    :message="toast.message"
+  />
 </template>
