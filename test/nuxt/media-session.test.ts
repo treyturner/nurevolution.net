@@ -21,13 +21,19 @@ afterEach(() => {
   else Reflect.deleteProperty(navigator, 'mediaSession')
 })
 
-it('connects system actions, track metadata, and lifecycle cleanup to the mounted audio controller', async () => {
+it.each([false, true])('wires media (shared: %s)', async (shared) => {
   const callbacks = new Map<
     MediaSessionAction,
     MediaSessionActionHandler | null
   >()
+  let metadata: MediaMetadata | null = null
   const session: MediaSessionPort = {
-    metadata: null,
+    get metadata() {
+      return metadata
+    },
+    set metadata(value) {
+      metadata = value
+    },
     playbackState: 'none',
     setActionHandler: (action, callback) => {
       callbacks.set(action, callback)
@@ -56,6 +62,9 @@ it('connects system actions, track metadata, and lifecycle cleanup to the mounte
     })),
   })
   const pending = ref(false)
+  const timestamp = ref<{ kind: 'none' } | { kind: 'time'; seconds: number }>({
+    kind: 'none',
+  })
   const wrapper = await mountSuspended(
     defineComponent({
       setup() {
@@ -63,7 +72,9 @@ it('connects system actions, track metadata, and lifecycle cleanup to the mounte
           get pending() {
             return pending.value
           },
-          timestamp: { kind: 'none' },
+          get timestamp() {
+            return timestamp.value
+          },
           showTitle: 'Show',
           neighbor: () => null,
           episodes: [],
@@ -172,6 +183,8 @@ it('connects system actions, track metadata, and lifecycle cleanup to the mounte
     window.dispatchEvent(restored)
     expect(session.playbackState).toBe('paused')
     expect(callbacks.get('play')).toBeTypeOf('function')
+    const metadataWrites = vi.spyOn(session, 'metadata', 'set')
+    if (shared) timestamp.value = { kind: 'time', seconds: 0 }
     episode.value = {
       ...episode.value,
       id: 'other',
@@ -180,7 +193,13 @@ it('connects system actions, track metadata, and lifecycle cleanup to the mounte
     }
     await wrapper.vm.$nextTick()
     emit('loadedmetadata')
-    expect(session.metadata).toMatchObject({ title: 'Untimed', album: 'Show' })
+    expect(session.metadata).toMatchObject({
+      title: 'Untimed',
+      album: 'Show',
+    })
+    expect(
+      metadataWrites.mock.calls.map(([data]) => data?.title ?? null),
+    ).toEqual(['Untimed'])
     expect(callbacks.get('nexttrack')).toBeNull()
     expect(callbacks.get('previoustrack')).toBeNull()
   } finally {

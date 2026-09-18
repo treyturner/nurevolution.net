@@ -136,6 +136,31 @@ test('invalid timestamps suppress saved progress without breaking the episode', 
   await expect(page.locator('.media-status')).toHaveText(/^Playing\b/)
 })
 
+test('a failed episode request replaces an invalid timestamp warning and can be retried', async ({
+  page,
+}) => {
+  await page.goto(praxis + '?t=invalid')
+  await at(page, 0)
+  await expect(page.locator('.media-status')).toHaveText(
+    'Invalid timestamp; starting at 0:00.',
+  )
+  await page.route('**/api/episodes/*', (route) =>
+    route.fulfill({ status: 503, json: { statusCode: 503 } }),
+  )
+  await routeTo(page, ruminate)
+  await expect(page.locator('.media-status')).toHaveText(
+    'Episode could not be loaded.',
+  )
+  await expect(page.locator('h1')).toHaveText('Praxis')
+  await page.unroute('**/api/episodes/*')
+  await page.getByRole('link', { name: 'Retry episode' }).click()
+  await expect(page.locator('h1')).toHaveText('Ruminate')
+  await at(page, 0)
+  await expect(page.locator('.media-status')).toHaveText(
+    'Press Play to listen.',
+  )
+})
+
 test('same-episode time links and history seek once; other query and hash edits leave playback alone', async ({
   page,
 }) => {

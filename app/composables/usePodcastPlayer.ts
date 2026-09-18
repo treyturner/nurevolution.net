@@ -125,6 +125,12 @@ export function usePodcastPlayer(
       storage.capture(snapshot.sourceId, snapshot.currentTime)
     }
   }
+  function updateMediaSession(forcePosition = false) {
+    // Route acceptance precedes the controller's source change. Keep the old
+    // metadata until both identities agree, including synchronous reset events.
+    if (state.sourceId === (episode()?.id ?? null))
+      mediaSession?.update(forcePosition)
+  }
   function select(saved?: ResumeRecord | null) {
     const current = episode()
     const source = current
@@ -194,7 +200,7 @@ export function usePodcastPlayer(
       (snapshot, event) => {
         Object.assign(state, snapshot)
         trackTime.value = trackClock(snapshot, event)
-        mediaSession?.update(
+        updateMediaSession(
           event === 'seeked' ||
             event === 'play' ||
             event === 'pause' ||
@@ -322,7 +328,13 @@ export function usePodcastPlayer(
       () => navigation?.pending,
       sequenceRevision,
     ],
-    () => mediaSession?.update(),
+    () => updateMediaSession(),
+  )
+  watch(
+    () => navigation?.pending,
+    (pending) => {
+      if (pending) clearTimestampMessage()
+    },
   )
   watch([episode, () => navigation?.timestamp], () => {
     if (!bootstrapped) return

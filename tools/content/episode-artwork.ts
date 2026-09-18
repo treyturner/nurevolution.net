@@ -1,5 +1,15 @@
-import { createHash } from 'node:crypto'
-import { mkdir, readFile, writeFile } from 'node:fs/promises'
+import { createHash, randomUUID } from 'node:crypto'
+import {
+  link,
+  lstat,
+  mkdir,
+  mkdtemp,
+  readFile,
+  rename,
+  rm,
+  unlink,
+  writeFile,
+} from 'node:fs/promises'
 import { basename, dirname, resolve } from 'node:path'
 import { parseArgs } from 'node:util'
 import sharp from 'sharp'
@@ -137,6 +147,81 @@ export async function checkEpisodeArtwork(
   return checkFiles(output, manifest)
 }
 
+async function discardTransaction(pending: string) {
+  // Move the journal out of the recovery path before non-atomic recursive
+  // cleanup, so interruption during cleanup cannot leave a broken journal.
+  const discarded = pending + '.cleanup-' + randomUUID()
+  await rename(pending, discarded)
+  await rm(discarded, { recursive: true })
+}
+
+// A prepared transaction lives beside the manifest, outside public artwork.
+// Hard links publish complete images without replacing existing immutable files;
+// the manifest rename commits the batch. The journal survives process exits.
+async function recoverArtwork(output: string, manifestPath: string) {
+  const pending = manifestPath + '.pending'
+  await assertNoSymlinks(pending)
+  let journal: string
+  try {
+    journal = await readFile(resolve(pending, 'journal.json'), 'utf8')
+  } catch (error) {
+    if (error instanceof Error && 'code' in error && error.code === 'ENOENT') {
+      // A missing journal inside an existing transaction is not ours to erase.
+      try {
+        await lstat(pending)
+      } catch (missing) {
+        if (
+          missing instanceof Error &&
+          'code' in missing &&
+          missing.code === 'ENOENT'
+        )
+          return
+        throw missing
+      }
+    }
+    throw error
+  }
+  await listFiles(pending) // Reject symlinks anywhere in the transaction.
+  const { previous, next } = z
+    .object({ previous: manifestSchema, next: manifestSchema })
+    .strict()
+    .parse(JSON.parse(journal))
+  const current = await readManifest(manifestPath, true)
+  if (JSON.stringify(current) === JSON.stringify(next)) {
+    await checkFiles(output, next)
+  } else {
+    if (JSON.stringify(current) !== JSON.stringify(previous))
+      throw Error(
+        'Episode artwork manifest changed during publication; retain the pending transaction for inspection',
+      )
+    const oldPaths = new Set(previous.images.map((image) => image.path))
+    for (const entry of next.images.filter(
+      (image) => !oldPaths.has(image.path),
+    )) {
+      const target = resolve(output, basename(entry.path))
+      await assertNoSymlinks(target)
+      const staged = await lstat(resolve(pending, basename(entry.path)))
+      try {
+        const published = await lstat(target)
+        if (published.ino !== staged.ino || published.dev !== staged.dev)
+          throw Error(
+            'Episode artwork file changed during publication; refusing to remove it',
+          )
+        await unlink(target)
+      } catch (error) {
+        if (!(
+          error instanceof Error &&
+          'code' in error &&
+          error.code === 'ENOENT'
+        ))
+          throw error
+      }
+    }
+    await checkFiles(output, previous)
+  }
+  await discardTransaction(pending)
+}
+
 export async function generateEpisodeArtwork(
   catalog: Catalog,
   uploads: string,
@@ -145,6 +230,7 @@ export async function generateEpisodeArtwork(
   asOf = Date.now(),
 ) {
   await assertNoSymlinks(output)
+  await recoverArtwork(output, manifestPath)
   const previous = await readManifest(manifestPath, true)
   await checkFiles(output, previous)
   const entries = new Map(
@@ -190,22 +276,54 @@ export async function generateEpisodeArtwork(
     })
     if (!old) generated.set(path, image)
   }
-  // Validate and encode every original before writing any new public artifacts.
-  await mkdir(output, { recursive: true })
-  await mkdir(dirname(manifestPath), { recursive: true })
-  for (const [path, bytes] of generated) {
-    const destination = resolve(output, basename(path))
-    await assertNoSymlinks(destination)
-    await writeFile(destination, bytes, { flag: 'wx' })
-  }
   const manifest: EpisodeArtworkManifest = {
     version: 1,
     images: [...entries.values()].sort((a, b) =>
       a.path < b.path ? -1 : a.path > b.path ? 1 : 0,
     ),
   }
-  await writeFile(manifestPath, JSON.stringify(manifest, null, 2) + '\n')
-  return checkEpisodeArtwork(catalog, output, manifestPath, asOf)
+  // Validate and encode every original before preparing a recoverable batch.
+  await mkdir(dirname(manifestPath), { recursive: true })
+  const staging = await mkdtemp(manifestPath + '.preparing-')
+  const pending = manifestPath + '.pending'
+  let prepared = false
+  try {
+    for (const [path, bytes] of generated)
+      await writeFile(resolve(staging, basename(path)), bytes, { flag: 'wx' })
+    await writeFile(
+      resolve(staging, 'manifest.json'),
+      JSON.stringify(manifest, null, 2) + '\n',
+      { flag: 'wx' },
+    )
+    await writeFile(
+      resolve(staging, 'journal.json'),
+      JSON.stringify({ previous, next: manifest }),
+      { flag: 'wx' },
+    )
+    // Only a completely prepared directory may become a recoverable journal.
+    await rename(staging, pending)
+    prepared = true
+    await mkdir(output, { recursive: true })
+    for (const path of generated.keys()) {
+      const destination = resolve(output, basename(path))
+      await assertNoSymlinks(destination)
+      await link(resolve(pending, basename(path)), destination)
+    }
+    const result = await checkEpisodeArtwork(
+      catalog,
+      output,
+      resolve(pending, 'manifest.json'),
+      asOf,
+    )
+    await rename(resolve(pending, 'manifest.json'), manifestPath)
+    await discardTransaction(pending)
+    return result
+  } catch (error) {
+    if (prepared) await recoverArtwork(output, manifestPath)
+    throw error
+  } finally {
+    await rm(staging, { recursive: true, force: true })
+  }
 }
 
 export async function episodeArtworkCli(args: string[]) {

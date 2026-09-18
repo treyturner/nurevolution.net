@@ -1,3 +1,5 @@
+import { execFile } from 'node:child_process'
+import { promisify } from 'node:util'
 import { createHash, randomBytes } from 'node:crypto'
 import * as fs from 'node:fs/promises'
 import { tmpdir } from 'node:os'
@@ -12,6 +14,10 @@ import {
   type EpisodeArtworkManifest,
 } from '../../../tools/content/episode-artwork.ts'
 import { catalog } from './fixtures.ts'
+
+vi.mock('node:fs/promises', async (original) => ({
+  ...(await original<typeof import('node:fs/promises')>()),
+}))
 
 let root: string
 const asOf = Date.parse('2026-09-18')
@@ -156,6 +162,135 @@ it('retains previously public URLs when artwork changes and rejects unadvertised
   await fs.writeFile(resolve(f.output, 'extra.jpg'), 'extra')
   await expect(f.check()).rejects.toThrow('do not match the manifest')
 })
+
+async function publicationFixture() {
+  const f = await fixture()
+  await f.generate()
+  const original = await fs.readFile(f.file())
+  const manifest = await fs.readFile(f.manifest)
+  const modified = (await fs.stat(f.file())).mtimeMs
+  for (const color of ['red', 'green']) {
+    const bytes = await sharp({
+      create: { width: 20, height: 20, channels: 3, background: color },
+    })
+      .png()
+      .toBuffer()
+    const asset = {
+      ...f.asset,
+      id: color,
+      relativePath: color + '.png',
+      sha256: digest(bytes),
+      byteLength: bytes.length,
+    }
+    f.content.assets.push(asset)
+    f.content.episodes.push({
+      ...f.content.episodes[0]!,
+      id: color,
+      artworkAssetId: color,
+    })
+    await fs.writeFile(resolve(f.uploads, asset.relativePath), bytes)
+  }
+  return { ...f, original, originalManifest: manifest, modified }
+}
+
+it.each(['staging', 'second image', 'manifest', 'validation'])(
+  'rolls back a %s failure without changing existing artwork and allows retry',
+  async (failure) => {
+    const f = await publicationFixture()
+    if (failure === 'staging')
+      vi.spyOn(fs, 'writeFile').mockRejectedValueOnce(Error('Injected failure'))
+    if (failure === 'second image') {
+      const link = fs.link
+      vi.spyOn(fs, 'link')
+        .mockImplementationOnce(link)
+        .mockRejectedValueOnce(Error('Injected failure'))
+    }
+    if (failure === 'manifest') {
+      const rename = fs.rename
+      vi.spyOn(fs, 'rename').mockImplementation(async (source, target) => {
+        if (target === f.manifest) throw Error('Injected failure')
+        return rename(source, target)
+      })
+    }
+    if (failure === 'validation') {
+      const read = fs.readFile
+      let failed = false
+      vi.spyOn(fs, 'readFile').mockImplementation(
+        (...args: Parameters<typeof fs.readFile>) => {
+          if (
+            !failed &&
+            String(args[0]).startsWith(f.output + '/') &&
+            args[0] !== f.file()
+          ) {
+            failed = true
+            return Promise.reject(Error('Injected failure'))
+          }
+          return read(...args)
+        },
+      )
+    }
+    await expect(f.generate()).rejects.toThrow('Injected failure')
+    vi.restoreAllMocks()
+    expect(await fs.readdir(f.output)).toEqual([basename(f.file())])
+    expect(await fs.readFile(f.manifest)).toEqual(f.originalManifest)
+    expect(await fs.readFile(f.file())).toEqual(f.original)
+    expect((await fs.stat(f.file())).mtimeMs).toBe(f.modified)
+    expect((await f.generate()).images).toBe(3)
+    expect((await f.check()).images).toBe(3)
+    expect(await fs.readdir(root)).not.toContain('manifest.json.pending')
+  },
+)
+
+it.each(['before', 'after', 'cleanup'])(
+  'recovers after process exit %s the manifest commit',
+  async (when) => {
+    const f = await publicationFixture()
+    const catalogPath = resolve(root, 'catalog.json')
+    await fs.writeFile(catalogPath, JSON.stringify(f.content))
+    const script = `
+    import fs from 'node:fs/promises'
+    import { syncBuiltinESMExports } from 'node:module'
+    const [catalogPath, uploads, output, manifest, when, asOf] = process.argv.slice(1)
+    const link = fs.link, rename = fs.rename, rm = fs.rm
+    fs.link = async (...args) => {
+      await link(...args)
+      if (when === 'before') process.exit(73)
+    }
+    fs.rename = async (...args) => {
+      await rename(...args)
+      if (when === 'after' && args[1] === manifest) process.exit(73)
+    }
+    fs.rm = async (...args) => {
+      if (when === 'cleanup' && String(args[0]).includes('.cleanup-')) process.exit(73)
+      return rm(...args)
+    }
+    syncBuiltinESMExports()
+    const { generateEpisodeArtwork } = await import(${JSON.stringify(new URL('../../../tools/content/episode-artwork.ts', import.meta.url).href)})
+    await generateEpisodeArtwork(JSON.parse(await fs.readFile(catalogPath, 'utf8')), uploads, output, manifest, Number(asOf))
+  `
+    await expect(
+      promisify(execFile)(process.execPath, [
+        '--input-type=module',
+        '-e',
+        script,
+        catalogPath,
+        f.uploads,
+        f.output,
+        f.manifest,
+        when,
+        String(asOf),
+      ]),
+    ).rejects.toMatchObject({ code: 73 })
+    expect((await fs.readdir(root)).includes('manifest.json.pending')).toBe(
+      when !== 'cleanup',
+    )
+    expect((await f.generate()).images).toBe(3)
+    expect((await f.check()).images).toBe(3)
+    expect(await fs.readFile(f.file())).toEqual(f.original)
+    expect((await fs.stat(f.file())).mtimeMs).toBe(f.modified)
+    expect(await fs.readdir(root)).not.toContain('manifest.json.pending')
+  },
+)
 
 it('fails before writing derivatives for missing, mismatched, corrupt, or oversized originals', async () => {
   const f = await fixture()
