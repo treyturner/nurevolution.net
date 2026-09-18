@@ -4,7 +4,7 @@
   "status": "Implementation verified locally; remaining PR/device/client acceptance is open. M8 is not closed.",
   "deployment": "None performed or authorized for M8. All observations are workspace/local unless stated otherwise.",
   "firstPlanCommit": "c762a0443f946c5059d0fd5d9618d49626b273b4",
-  "implementationCommit": "01bd6f923702839a841f36f994a77c1171444ff1",
+  "implementationCommit": "4d6a29ba4b1545114ba33608a0920989d5f68bf4",
   "gates": [
     {
       "slice": "safari",
@@ -96,13 +96,26 @@
       "delivery": "Exact runtime and Caddy proxy, byte ranges, resumed/browser downloads, restart and fixture isolation passed.",
       "localLog": "nurevolution.net-m8-feed-advertisement/.local/m8-download-ranges-combined-verify.log",
       "logSha256": "5cd14343eee09a493aebe9618a41df01df1404351555907c020c52e1de1f7b10"
+    },
+    {
+      "slice": "combined-playhead-context-menu",
+      "commit": "4d6a29ba4b1545114ba33608a0920989d5f68bf4",
+      "scope": "Includes the playhead context menu and iPad View owner confirmation; later edits only reconcile documentation and evidence.",
+      "command": "NUREVOLUTION_DOCKER_ADDRESS=172.18.0.2 mise exec -- pnpm verify",
+      "result": "passed",
+      "unitAndIntegrationTests": 555,
+      "browserTests": 338,
+      "expectedBrowserSkips": 4,
+      "delivery": "Exact runtime and Caddy proxy, byte ranges, resumed/browser downloads, restart and fixture isolation passed.",
+      "localLog": "nurevolution.net-m8-feed-advertisement/.local/playhead-menu-verify.log",
+      "logSha256": "33c1f65da3e0bcd9abd578cb1941f1362bdfcffa701f86513160730781564545"
     }
   ],
   "combinedCoveragePercent": {
-    "statements": 96.36,
-    "branches": 95.02,
-    "functions": 96.18,
-    "lines": 97.05
+    "statements": 96.29,
+    "branches": 94.77,
+    "functions": 96.16,
+    "lines": 97.06
   },
   "firstPullRequest": {
     "number": 56,
@@ -123,7 +136,7 @@
     "chapterReferences": 34,
     "knownStarts": 626,
     "omittedUntimedOrEmptyEpisodes": 21,
-    "resourceSupportCommit": "2b013432e9ac8352bbd92330b7ffeb8634202275",
+    "resourceSupportCommit": "a9a323135432e2646c856d61145ba77fbd762349",
     "checks": [
       "All advertised image mappings and chapter documents fetched from the built application.",
       "Chapter version hints match SHA-256 of served bytes.",
@@ -133,13 +146,14 @@
   },
   "workspacePreview": {
     "origin": "https://3000--main--dev--treyturner.coder.treyturner.info",
-    "commit": "01bd6f923702839a841f36f994a77c1171444ff1",
+    "commit": "4d6a29ba4b1545114ba33608a0920989d5f68bf4",
     "health": "healthy",
     "loaded": "Immutable production build containing all local M8 slices.",
     "visualWidthsPixels": [1280, 390, 320],
     "visualObservation": "No horizontal overflow; 44px track-copy targets preserved.",
     "mediaSessionObservation": "Headless Chromium exposed Troglodyte / Mat Zo / Trey Turner - Ruminate and playing state. This is not lock-screen/headset acceptance.",
-    "downloadRangeObservation": "Ruminate and The Dark Prophet return exact 206 bytes for initial, middle, and suffix ranges, compared against canonical originals. The exposed port-3000 preview also returned bytes 0-1 for Ruminate with Content-Length 2 and Content-Range bytes 0-1/145672454."
+    "downloadRangeObservation": "Ruminate and The Dark Prophet return exact 206 bytes for initial, middle, and suffix ranges, compared against canonical originals. The exposed port-3000 preview also returned bytes 0-1 for Ruminate with Content-Length 2 and Content-Range bytes 0-1/145672454.",
+    "playheadMenuObservation": "Right-click/keyboard menu tests passed in Chromium, Firefox and WebKit, including 320px viewport bounds and copying during playback. A Chromium touch-input check on real Ruminate at 390px opened the menu with a stationary hold, copied the canonical t=8.25 URL and preserved paused position at 8.25 seconds. Screenshot: nurevolution.net/.local/m8-preview/playhead-menu-touch.png. This is not a physical iPad gesture check."
   },
   "ownerIpadObservations": {
     "device": "Owner-reported iPad Pro on iPadOS 14.3; captured desktop-mode user agent identifies Safari 14.0.2.",
@@ -147,14 +161,14 @@
       "Player starts and plays.",
       "Track seeking works; confirmed-seek highlight bounce fixed, including paused seek followed by Play.",
       "Page-wide focus outline removed.",
-      "Download MP3 saves successfully."
+      "Download MP3 saves successfully.",
+      "Download MP3 -> View now opens a working player on the fixed Coder preview (01bd6f9, including 7d7ffcb)."
     ],
-    "limits": "The owner reproduced native Safari View failure on the Coder preview. The preview download handler then returned full 200 responses to byte ranges; this is fixed in 7d7ffcb and the current combined preview. Physical iPad View retest is pending. Production native View remains untested. See docs/operations/acceptance-2026-09-18.md."
+    "limits": "The owner confirmed the previously broken native View path works after the byte-range fix. Production native View and the new playhead-menu touch gesture on the physical iPad remain untested. See docs/operations/acceptance-2026-09-18.md."
   },
   "pending": [
-    "Physical iPad Download MP3 -> View load/seek retest on the fixed preview.",
     "Remaining actual-iPad checks: artwork dialogs, episode-change confirmation/cancel, paused reload restoration, untimed guest playback.",
-    "Owner timestamp-copy/layout acceptance.",
+    "Owner playhead context-menu, timestamp-copy/layout and physical touch-gesture acceptance.",
     "Physical lock-screen/headset/media-key actions and background playback observation on a supported device.",
     "Podcast Addict artwork, chapter display and fractional chapter seeks for Ruminate/Praxis, plus untimed-episode omission.",
     "Separate review/CI for sharing, Media Session, feed support, and RSS advertisement within the one-open-PR limit.",
