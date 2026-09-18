@@ -123,3 +123,53 @@ for (const [width, scale] of [
     await expect(page.locator('.player-feedback-error')).toHaveCount(0)
   })
 }
+
+test('download wraps before the status text, with long statuses confined to the player', async ({
+  page,
+}) => {
+  await stubArchiveMedia(page)
+  await page.goto('/episodes/trey-turner-impulse')
+  await ready(page)
+  const measurements = () =>
+    page.evaluate(() => {
+      const feedback = document
+        .querySelector('.player-feedback')!
+        .getBoundingClientRect()
+      const status = document.querySelector('.media-status')!
+      const text = status.getBoundingClientRect()
+      const link = document
+        .querySelector('.player-links')!
+        .getBoundingClientRect()
+      return {
+        feedback: { top: feedback.top, bottom: feedback.bottom },
+        text: { height: text.height },
+        link: { top: link.top },
+        lineHeight: Number.parseFloat(getComputedStyle(status).lineHeight),
+        overflow: document.documentElement.scrollWidth > innerWidth,
+      }
+    })
+  for (const noGap of [false, true]) {
+    await page.evaluate((noGap) => {
+      document.documentElement.classList.toggle('no-flex-gap', noGap)
+      document.querySelector('.media-status')!.textContent =
+        'Playing 1/16: Sinic - One Makes One'
+    }, noGap)
+    await page.setViewportSize({ width: 390, height: 900 })
+    const narrow = await measurements()
+    expect(narrow.link.top).toBeGreaterThanOrEqual(narrow.feedback.bottom)
+    expect(narrow.text.height).toBeLessThanOrEqual(narrow.lineHeight + 1)
+    expect(narrow.overflow).toBe(false)
+    await page.setViewportSize({ width: 700, height: 900 })
+    const wide = await measurements()
+    expect(wide.link.top).toBeLessThan(wide.feedback.bottom)
+    expect(wide.text.height).toBeLessThanOrEqual(wide.lineHeight + 1)
+    await page.setViewportSize({ width: 390, height: 900 })
+    await page.evaluate(() => {
+      document.querySelector('.media-status')!.textContent =
+        'Playing 1/16: An artist with a long name - A very long track title that must wrap even after the download link moves below'
+    })
+    const long = await measurements()
+    expect(long.link.top).toBeGreaterThanOrEqual(long.feedback.bottom)
+    expect(long.overflow).toBe(false)
+  }
+})

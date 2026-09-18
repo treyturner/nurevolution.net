@@ -685,8 +685,9 @@ audio.custom-audio {
   grid-template-columns: minmax(0, max-content) 3rem;
   align-items: center;
   gap: 0.5rem;
-  flex: 1 1 10rem;
+  flex: 1 1 auto;
   min-width: min(100%, 10rem);
+  max-width: 100%;
   /* Reserve three status lines and the action slot in every state. */
   min-height: max(44px, 3.6rem);
   color: var(--muted);
