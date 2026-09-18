@@ -909,6 +909,7 @@ audio.custom-audio {
   background: #202630;
 }
 .timestamp-copy {
+  -webkit-tap-highlight-color: transparent;
   position: relative;
   pointer-events: auto;
   display: inline-flex;

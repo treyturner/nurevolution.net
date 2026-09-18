@@ -259,7 +259,7 @@ const feedback = computed(() => {
       toast?.message
     }}</span>
     <CopyLinkToast
-      v-if="toast"
+      v-if="toast?.showPopup"
       :target="toast.target"
       :message="toast.message"
     />

@@ -5,6 +5,7 @@ export function useCopyLink() {
     target: HTMLElement
     message: string
     inlineId?: string
+    showPopup: boolean
   } | null>(null)
   let sequence = 0
   let timer: ReturnType<typeof setTimeout> | undefined
@@ -25,19 +26,22 @@ export function useCopyLink() {
     clearTimeout(timer)
     toast.value = null
     let inlineId: string | undefined
+    let showPopup = true
     let copied = false
     try {
       await navigator.clipboard.writeText(url)
       copied = true
-      // Episode buttons use an inline check on Android, which already confirms
-      // copies. RSS always shows its explicit URL-copied toast.
-      if (androidInlineId && /Android/i.test(navigator.userAgent))
+      // Android already confirms successful clipboard writes. Keep the live
+      // announcement and optional inline check, without a duplicate popup.
+      if (/Android/i.test(navigator.userAgent)) {
+        showPopup = false
         inlineId = androidInlineId
+      }
     } catch {
       message = errorMessage
     }
     if (own !== sequence) return
-    toast.value = { target, message, inlineId }
+    toast.value = { target, message, inlineId, showPopup }
     timer = setTimeout(() => {
       toast.value = null
     }, 3000)

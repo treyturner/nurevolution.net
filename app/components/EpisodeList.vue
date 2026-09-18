@@ -98,7 +98,7 @@ function copyEpisodeLink(episode: EpisodeSummary, event: MouseEvent) {
     toast?.message
   }}</span>
   <CopyLinkToast
-    v-if="toast && !toast.inlineId"
+    v-if="toast?.showPopup"
     :target="toast.target"
     :message="toast.message"
   />
