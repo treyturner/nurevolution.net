@@ -1,111 +1,17 @@
-# nurevolution
+# nurevolution studios
 
-A podcast website rebuilt from WordPress, now serving [nurevolution.net](https://nurevolution.net/). M1–M4 provide the verified Nuxt application, 55-episode archive, compatible RSS feed, and shared player. M5 provides verified application/Caddy images and deployment/recovery tooling. [M6 production cutover](docs/milestones/M06-cutover-and-retirement.md) completed on 2026-09-12; production is active. Development uses local/workspace servers; production is the only deployment environment. WordPress stays frozen and running for fallback while observation and retirement remain open. See [deployment operations](docs/DEPLOYMENT.md). M7 player enhancements and the owner's UI refinements are implemented. The owner requested production release for further feedback on 2026-09-14; [verified promotion runs](https://github.com/treyturner/nurevolution.net/actions/workflows/deploy.yml) record the actual deployed releases.
+A podcast archive rebuilt from WordPress, with a custom audio player, interactive tracklists, and a compatible RSS feed.
 
-See the [roadmap](ROADMAP.md), [M0 audit plan and evidence](docs/milestones/M00-migration-audit.md), [M1 completion record](docs/milestones/M01-foundation-and-verification.md), [M2 implementation and evidence](docs/milestones/M02-canonical-content.md), [M3 replacement RSS record](docs/milestones/M03-podcast-rss.md), [M4 archive/player plan](docs/milestones/M04-archive-player.md), [M7 implementation and verification record](docs/milestones/M07-rich-player-and-restoration.md), [player behavior and delivery guide](docs/PLAYER.md), [content authoring guide](docs/CONTENT.md), and [feed validation guide](docs/FEED-VALIDATION.md).
+**[Listen at nurevolution.net](https://nurevolution.net/)**
 
-## Setup
+[![Verify (main)](https://github.com/treyturner/nurevolution.net/actions/workflows/verify.yml/badge.svg?branch=main&event=push)](https://github.com/treyturner/nurevolution.net/actions/workflows/verify.yml?query=branch%3Amain)
+[![Deployment (main)](https://github.com/treyturner/nurevolution.net/actions/workflows/deploy.yml/badge.svg?branch=main&event=workflow_dispatch)](https://github.com/treyturner/nurevolution.net/actions/workflows/deploy.yml?query=branch%3Amain)
 
-Use Node.js **24.21.0** from `mise.toml` and `.node-version`, pnpm **12.3.4** from `package.json`, and Python **3.14.4** from `.python-version`. Python runs the existing M0 audit unit tests using only its standard library; no pip dependencies are needed. The repository's mise configuration selects Node without changing other projects' defaults:
+## Tech stack
 
-```sh
-mise install
-mise exec -- corepack enable
-mise exec -- pnpm install --frozen-lockfile
-mise exec -- pnpm exec playwright install --with-deps chromium firefox webkit
-mise exec -- pnpm verify
-```
-
-With [mise shell activation](https://mise.jdx.dev/cli/activate.html) or its shims already configured, the ordinary `node` and `pnpm` commands below use the project pin. Otherwise prefix them with `mise exec --`. Python remains separately pinned; mise does not replace the system Python used by host services. CI reads `.node-version` with `setup-node`, and the application image uses its pinned Node base image. Neither depends on an interactive shell.
-
-Browser installation is a one-time environment setup step; repeat it after changing Playwright versions. Linux system dependency installation may need elevated privileges. If Corepack shims are unavailable on your PATH, invoke pnpm as `corepack pnpm`, or install shims in a writable directory with `corepack enable --install-directory <directory>` and add that directory to PATH.
-
-No environment file, private migration source, external feed, or credentials are needed for M1/M2. Dependencies are pinned exactly and `pnpm-lock.yaml` is the installation source of truth. Do not replace it with a different package manager's lockfile.
-
-The version marker in `.nuxtrc` records the completed Nuxt test-utils setup so verification does not create a setup file or launch its installer. Keep it aligned when intentionally upgrading test-utils.
-
-## Development and commands
-
-```sh
-pnpm dev
-```
-
-Open the local URL printed by Nuxt. Vue and CSS edits update through HMR; changes to project configuration may restart the development server. Stop it with Ctrl-C. The archive restores its locally saved episode/position within 24 hours of the last document visit, always paused; otherwise it selects the latest episode. Direct episode URLs take precedence. Mobile uses Episodes/Tracklist tabs.
-
-| Command                                          | Behavior                                                                                                                                                                   |
-| ------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `pnpm prepare`                                   | Generate Nuxt types and ESLint configuration; also runs during installation.                                                                                               |
-| `pnpm dev`                                       | Start the local Nuxt development server.                                                                                                                                   |
-| `pnpm format`                                    | Rewrite maintained files with Prettier; review documentation changes.                                                                                                      |
-| `pnpm format:check`                              | Check formatting without edits.                                                                                                                                            |
-| `pnpm lint`                                      | Check source, tests, and tooling with Nuxt ESLint.                                                                                                                         |
-| `pnpm typecheck`                                 | Strict Nuxt checks plus explicit test, fixture, and tooling checks.                                                                                                        |
-| `pnpm test`                                      | Run Node unit tests and Nuxt runtime tests once.                                                                                                                           |
-| `pnpm test:migration`                            | Run the deterministic M0 audit unit tests without private source access.                                                                                                   |
-| `pnpm check:migration`                           | Validate the public M0 inventory and legacy URL map; exit 2 means valid artifacts contain documented blockers.                                                             |
-| `pnpm import:wordpress`                          | Dry-run the frozen WordPress import; `--write` creates missing files; `--check` compares without edits.                                                                    |
-| `pnpm check:content`                             | Validate authoring, references, safe descriptions, publication rules, and protected historical fields.                                                                     |
-| `pnpm check:thumbnails`                          | Validate the complete committed thumbnail set without original media or network access.                                                                                    |
-| `pnpm generate:thumbnails --uploads <directory>` | Regenerate small list thumbnails from verified original artwork; commit the results with content changes.                                                                  |
-| `pnpm check:feed`                                | Generate and independently parse the complete RSS, checking canonical fields and all protected historical identities without network or media access.                      |
-| `pnpm test:coverage`                             | Run those tests and enforce coverage thresholds.                                                                                                                           |
-| `pnpm build`                                     | Validate content and RSS, then produce the portable SSR Node application in `.output/`.                                                                                    |
-| `pnpm build:fixture`                             | Build the independent test-only media application.                                                                                                                         |
-| `pnpm test:e2e`                                  | Build the media fixture and run all browser projects; requires a current normal production build.                                                                          |
-| `pnpm verify`                                    | Prepare, formatting, lint, types, migration checks, application/content/feed coverage, content/feed validation, production builds, and browser tests, stopping on failure. |
-
-The canonical local and CI gate is **`pnpm verify`**, including the Docker delivery checks. A working Docker daemon is required; see [local and separate-daemon setup](docs/DEPLOYMENT.md#release-and-host-contracts). It prepares its generated prerequisites and builds both applications without a hand-started server. It does not install dependencies, rewrite maintained files, accept snapshots, or contact the legacy site.
-
-`pnpm test:operations`, also included in that gate, checks the Python host credential helpers and Discord notifier without cloud credentials or network access. The Docker delivery checks validate the Cloudflare account-token format and certificate automation before application routes exist, using an offline local CA.
-
-For focused work:
-
-```sh
-pnpm exec vitest run --project unit
-pnpm exec vitest run --project nuxt
-pnpm build
-pnpm build:fixture
-pnpm exec playwright test --project chromium
-```
-
-Run the normal production build locally with `node .output/server/index.mjs`. This validates the portable Node target; it is separate from live deployment and release acceptance.
-
-## Application and test boundaries
-
-- `app/` contains the SSR archive, request-scoped navigation model, persistent player session, mobile tabs, and audio adapter/controller.
-- `content/` holds 55 episode records, 156 assets, show metadata, legacy URL mappings, and deterministic import provenance. See [editing and reconciliation](docs/CONTENT.md).
-- `shared/content/` defines strict schemas and pure public selection/projections. `server/content/` validates and loads the catalog; `server/api/` exposes show, episode summaries, and detail. Nitro packages the archive as server assets, independent of the production working directory.
-- `tools/content/` imports only frozen public M0 inputs plus the Praxis evidence. The default import is a dry run; explicit writes create missing files without overwriting existing ones. Ordinary validation permits later editorial changes and protects historical subscriber identity.
-- `tools/migration/` contains the standard-library audit command and tests. The shared gate runs both its unit tests and the public artifact check; feed capture, database export, and source reconciliation remain explicit private-workspace operations.
-- `test/unit/` tests adapter behavior in Node with controlled media events and promises.
-- `test/nuxt/` mounts the real application and shell through Nuxt test utilities and happy-dom.
-- `test/e2e/` checks production SSR/hydration, unknown-route status, keyboard focus, narrow-screen text scaling, fixture isolation, and real browser media behavior.
-- `test/fixtures/media-app/` is a separate Nuxt app importing the production adapter, player/list components, and download handler. Its routes and media fixtures must return 404 in the normal production app.
-
-`createAudioAdapter(element)` accepts an existing `HTMLAudioElement` or the narrow `AudioPort` interface. `load(url)` sets and loads a source without invoking play. `play()` returns the native promise, including rejection; `pause()` pauses. `subscribe()` returns an unsubscribe function. Disposal pauses and removes only the adapter's listeners, and is idempotent. Operations after disposal throw synchronously; create a new adapter to start a new lifecycle. Imports and construction never create browser globals or playback state. The adapter also exposes the native media snapshot needed by the player controller. M7 adds custom seek/volume controls and local restoration; interactive tracks and chronological automatic sequencing share that session. See the [player guide](docs/PLAYER.md) for selection, retry, and download behavior.
-
-The committed audio fixture is an original, deterministic two-second, mono, 22,050 Hz, 16-bit PCM WAV containing a quiet 440 Hz tone, generated with `node tools/generate-audio-fixture.mjs`. No recording or third-party licensed asset is used. The fixture is muted in browser tests. Its provenance is also recorded [alongside the fixture](test/fixtures/media-app/README.md). M4 adds a small original MP3 fixture for the production player and attachment-download tests. These tests establish application/browser integration, not historical MP3 delivery or physical-device compatibility.
-
-## Coverage and browser execution
-
-Vitest includes every executable `app/**/*.{ts,vue}`, `shared/**/*.ts`, `server/**/*.ts`, and `tools/content/**/*.ts`, and `tools/deploy/**/*.ts` file, including unimported files. Only declaration files are excluded within those source patterns. Tests, generated output, dependencies, and declarative project configuration are outside the production-source patterns. No application subsystem is excluded. Python migration tooling is tested by `test:migration` separately from V8 application coverage. Generated migration reports/manifests retain the audit tool’s canonical formatting and are excluded from Prettier; maintained documentation remains checked.
-
-Coverage thresholds are **95% statements, lines, and functions; 90% branches**, with automatic threshold updates disabled. Reports appear in `coverage/index.html` and `coverage/lcov.info` as well as the terminal. Add meaningful behavioral tests as code grows; do not lower thresholds to make a gate pass.
-
-Playwright runs Chromium, Firefox, and WebKit against the built Node application on `127.0.0.1:3100` and isolated media app on `127.0.0.1:3101`. Override these with `NUREVOLUTION_TEST_PORT` and `NUREVOLUTION_MEDIA_TEST_PORT` when needed. Playwright owns both servers, stops them after testing, and fails if a port is already occupied. Local runs use two workers; CI uses one. Neither retries automatically. Media assertions wait for state/events rather than fixed sleeps.
-
-The browser report is `playwright-report/index.html`; failed tests retain screenshots and traces under `test-results/`. Inspect with `pnpm exec playwright show-report` or `pnpm exec playwright show-trace <trace.zip>`.
-
-## Dependency choices and CI
-
-The pinned Nuxt 4.5.2, Vue 3.5.42, and Vue Router 5.3.1 set uses standard SSR and Nitro's Node server preset. TypeScript 6.0.3 is within the selected ESLint parser's supported range. Vitest 4.1.11 matches `@nuxt/test-utils` 4.2.0 and the V8 coverage provider. Direct versions and their rationale are recorded in the [M1 toolchain contract](docs/milestones/M01-foundation-and-verification.md#toolchain-and-dependency-contract).
-
-`pnpm-workspace.yaml` allows only the version-specific `esbuild@0.28.2` and `unrs-resolver@1.12.2` installation scripts to prepare their platform binaries. It supplies `cac@6.7.14` through `@nuxt/cli@3.37.0` to `@bomb.sh/tab@0.0.19`, whose optional peer requires `^6.7.14`; other tooling requires cac 7. This preserves the declared peer range without changing unrelated consumers or ignoring conflicts. Reassess this narrow extension when upgrading that package.
-
-GitHub Actions checks pull requests and pushes to `main` on Ubuntu 24.04 using the declared Node/Python runtimes, a frozen installation, all three browsers, and exactly `pnpm verify`. Actions are pinned to verified commit SHAs, verification permissions are read-only, and available coverage/browser artifacts are retained for 14 days. PR verification needs no deployment secrets. After successful main verification, a separate job publishes the exact tested application/Caddy images; manual promotion uses environment-scoped credentials and stays disabled until the host is configured. A local successful run is separate evidence from an actual remote Actions run; the M1 completion record states both statuses.
-
-[Dependabot](.github/dependabot.yml) checks npm dependencies (including the pnpm lockfile) and SHA-pinned GitHub Actions every Monday at 09:00 UTC. It allows up to three open npm version-update PRs and one Actions version-update PR. Minor/patch npm updates share a group; Nuxt/Vue and Vitest major updates each have their own group to keep related packages together, while other majors remain individual PRs. All Actions version updates share one group. Security updates have a separate group per ecosystem and are not held to the weekly version-update schedule or its PR limits; Dependabot alerts and security updates must be enabled in repository settings for those fixes to open automatically. Nothing auto-merges.
-
-Node type-definition major updates are ignored until the declared Node runtime is deliberately upgraded. Dependency PRs must preserve the pinned toolchain and frozen installation; check the version-specific build-script approvals and `cac` extension in `pnpm-workspace.yaml` when their packages change. Container/runtime upgrades remain coordinated manual changes because their versions also appear in deployment policy, image digests, and verification fixtures. Python operational tools use the standard library. The offline [virtual playback indexer](docs/operations/virtual-playback.md) separately pins PyAV and requires a complete audio audit when its muxer version changes.
-
-[CodeQL](.github/workflows/codeql.yml) scans GitHub Actions, JavaScript/TypeScript (including Vue), and Python on PRs targeting `main`, pushes to `main`, Sundays at 12:20 UTC, and manual dispatch. Each language runs independently with the default query suite and no application build or dependency installation. Only the analysis job receives permission to upload security results; it needs no deployment secrets. This workflow uses **advanced setup**: keep CodeQL default setup disabled in repository settings so it does not conflict with workflow uploads. Weekly scans and Dependabot version updates become scheduled once these files reach `main`.
+- Nuxt 4, Vue 3, TypeScript, and Nitro
+- Node.js 24, pnpm, and mise
+- HTML audio with lossless virtual MP4 delivery for supported VBR playback
+- Docker, Caddy, and DigitalOcean
+- Vitest and Playwright
+- GitHub Actions, CodeQL, and Dependabot

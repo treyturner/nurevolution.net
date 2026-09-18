@@ -2,11 +2,11 @@
 
 The replacement RSS is served at `/feed/podcast` from the canonical archive. Its production identity remains `https://nurevolution.net/feed/podcast`. No WordPress, private export, external validator, or media download is needed for the automated checks.
 
-The header subscription link and browser RSS discovery use `/feed/podcast` on the current host: preview opens the preview feed and local development opens the local feed. The XML itself preserves the canonical production self URL, website/artwork/item links, GUIDs, and audio enclosure URLs. A podcast client reading preview RSS may therefore fetch production media; this is the existing subscriber-compatibility contract, not an isolated alternate podcast.
+The header RSS control copies the canonical public feed URL and falls back to opening it in a new tab; it does not subscribe to a separate development feed. Browser RSS discovery uses `/feed/podcast` on the current host. The XML preserves the canonical production self URL, website/artwork/item links, GUIDs, and audio enclosure URLs, so feed clients can fetch production media even when inspecting a local feed.
 
 ## Routine authoring and CI
 
-Use the pinned toolchain described in [README.md](../README.md):
+Use the pinned toolchain described in the [development guide](DEVELOPMENT.md#setup):
 
 ```sh
 pnpm check:content
@@ -57,16 +57,18 @@ Use the following procedure for future releases or delivery changes, repeating t
 
 After traffic switched on **2026-09-12 at 21:49 UTC**, checks against `https://nurevolution.net/feed/podcast` passed: GET/HEAD, canonical aliases, ETag revalidation, machine-client access, and equivalence of all 55 historical feed identities. The external W3C feed validator reported a valid feed with no warnings. All 55 historical page redirects and 156 public media assets passed the recorded delivery checks, including representative full and resumed downloads. See the [cutover record](milestones/evidence/M06-cutover.json) for the exact coverage and release identity. These production checks are complete; repeat relevant checks when the serving release or configuration changes.
 
-## Podcast clients and directories - outstanding observations
+## Podcast clients and directories - current observations
 
-The owner loaded the new feed and reported that it looked as expected. There was no existing subscription available to refresh, and the client name/version and in-app playback/download results were not reported. This confirms the reported appearance only; it does not establish existing-subscription continuity or directory acceptance.
+On 2026-09-18 the owner reported successful loading and seeking for every episode in Podcast Addict, covering the 55-episode archive. This completes the reported client load/seek observation. Client version, complete downloads, full-length playback, and refresh of a pre-migration subscription were not reported. The earlier cutover had no existing subscription available to refresh. See the [current owner acceptance record](operations/acceptance-2026-09-18.md); these observations do not establish directory acceptance or untested client behavior.
 
 Use an existing subscription in Apple Podcasts where available and at least one other podcast client. Refresh it and check for duplicate/missing episodes, the oldest and newest archive entries, show metadata/artwork, description links, and successful downloads/streaming. Retain observations and client versions. Client caching may exceed the server's advertised freshness, so record observation times.
 
 Use the owner's existing directory access to validate the established listing when available. Do not create a second show or submit a rehearsal feed as a new listing. If account/client access is unavailable, leave the corresponding check pending with a concrete follow-up. Technical validation and directory approval are separate results. [Apple validation guidance](https://podcasters.apple.com/support/829-validate-your-podcast)
 
-M8 must review the 60-second HTTP cache window, any intermediary caches, client polling, and publication-boundary behavior before claiming scheduled release precision. M9 may add episode artwork or chapters through separately validated canonical metadata; neither feature is emitted by M3.
+M9 must review the 60-second HTTP cache window, any intermediary caches, client polling, and publication-boundary behavior before claiming scheduled release precision. M8 will add episode artwork and chapters through separately validated canonical metadata; neither feature is emitted today. See the [agreed M8 scope](milestones/M08-listening-and-feed-enhancements.md).
+
+M6 closed by owner acceptance on 2026-09-18. Remaining client-download, old-subscription, and directory observations above are follow-ups outside M6; closure does not mark them as performed. See the [retirement record](milestones/evidence/M06-retirement.json).
 
 ## Evidence record
 
-M3's local implementation results are recorded in its [completion evidence](milestones/M03-podcast-rss.md#completion-evidence). M5 public rehearsal results are recorded in its [live evidence](milestones/evidence/M05-live-rehearsal.json). Canonical production delivery and feed validation are complete in the [M6 cutover evidence](milestones/evidence/M06-cutover.json). Existing-subscription refresh, explicit podcast-client playback/download observations, and directory checks remain outstanding. Record any later observations in the [M6 plan](milestones/M06-cutover-and-retirement.md); do not infer them from automated delivery checks. The broader observation window and retirement decision also remain open in that plan.
+M3's local implementation results are recorded in its [completion evidence](milestones/M03-podcast-rss.md#completion-evidence). M5 rehearsal results are in its [live evidence](milestones/evidence/M05-live-rehearsal.json). The [M6 cutover evidence](milestones/evidence/M06-cutover.json) records canonical production delivery and feed validation; [M6 closure](milestones/evidence/M06-retirement.json) records retirement and accepted limitations. The owner subsequently completed Podcast Addict loading/seeking for every episode. Complete client downloads, old-subscription refresh, and directory checks remain unverified follow-ups outside M6. Record new observations with their actual scope and date.

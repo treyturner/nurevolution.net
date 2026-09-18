@@ -1,6 +1,10 @@
-# Production maintenance - 2026-09-13
+# Production maintenance history
 
-The owner selected production plus local/workspace development, lowercase nurevolution branding, GitHub Actions uptime checks with the existing Discord destination, and routine droplet maintenance/reboots. M7 implementation has not started. Frozen WordPress and historical migration/cutover evidence remain available for fallback.
+For current operations and outstanding follow-ups, use [current status](../STATUS.md) and the [maintenance cadence](incidents.md#maintenance-cadence). The September 13 narrative below is historical: M7 has since shipped, M6 closed, and the first scheduled production backup was subsequently verified.
+
+## September 13 operating context
+
+The owner selected production plus local/workspace development, lowercase nurevolution branding, GitHub Actions uptime checks with the existing Discord destination, and routine droplet maintenance/reboots. Subsequent player releases are recorded in the M7 and deployment histories. Frozen WordPress and historical migration/cutover evidence remain available for fallback.
 
 ## Completed host work
 
@@ -17,10 +21,14 @@ The owner deleted the obsolete GitHub environment after the workspace integratio
 
 The owner installed/configured the Headscale `scheduled-backup.sh` wrapper on Unraid and updated the existing weekly User Script. Its live normal backup completed with snapshot `80c6d358e4fa399313ec56582b9be90d1c93538e28ea5576627e4f33ab673004`; Headscale restarted healthy. Configuration and successful backup sent no message. Failure delivery is covered by isolated tests; a live failure notification has not been triggered. The owner also installed the repository `UPTIME_DISCORD_WEBHOOK` secret; the first Actions monitor run follows merge. [Installation and recovery details](headscale-backup.md).
 
-## Remaining observations
+## M6 closure update - 2026-09-18
+
+The owner confirmed retirement of the old site/database and their backups, accepted a four-hour recovery target, and requested M6 closure. The [retirement evidence](../milestones/evidence/M06-retirement.json) supersedes the observation/retirement and proposed-target items in the dated notes below. Safari 14.3 is a separate compatibility fix; assistive checks are deferred enhancements. Replacement-host timing and ongoing cost/capacity review remain operations follow-ups.
+
+## Observations recorded on September 13 - historical
 
 - Observe the first weekly scheduled droplet backup after cutover (next shown as 2026-09-13 at 04:09 UTC after reboot); manual backups and timer enablement/reboot persistence are verified.
 - Complete the 24-hour cutover observation after 2026-09-13 at 21:49 UTC; agree the observation end before retiring frozen WordPress.
-- Verify the Unraid firewall/Headscale startup at its next owner-managed reboot. Component backup/restores passed; a whole replacement-host recovery time remains unmeasured.
+- Unraid firewall/Headscale startup verification completed after the owner-managed 2026-09-18 reboot. The [evidence](../milestones/evidence/M06-unraid-reboot.json) also verifies backup tools, the saved/active weekly schedule, its launcher, and cron. A whole replacement-host recovery time remains unmeasured.
 - iPhone Safari, screen-reader, and existing-subscription comparisons remain unperformed. The owner accepted available mobile testing for launch.
 - Review actual transfer and backup storage growth before changing capacity or committing to a total operational budget. No extra service purchase is part of this maintenance.

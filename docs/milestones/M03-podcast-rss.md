@@ -1,5 +1,7 @@
 # M3 - Replacement podcast RSS
 
+**Roadmap numbering update (2026-09-18):** this historical plan uses the original future milestone IDs. Drafts/scheduling is now M9; selected listening/feed enhancements and Safari 14.3 compatibility are now [M8](M08-listening-and-feed-enhancements.md). See [current status](../STATUS.md) for remaining work.
+
 Status: **Implemented, verified, and merged** on 2026-09-08. PR [#2](https://github.com/treyturner/nurevolution.net/pull/2) was rebased and merged to `main` at `fc0f261`; [main CI passed](https://github.com/treyturner/nurevolution.net/actions/runs/34289605132). The original plan and branch-commit evidence are retained below; actual results and a bounded date-precision clarification are recorded in [completion evidence](#completion-evidence). Production cutover and public directory/client checks remain M5/M6 work.
 
 Roadmap: [M3](../../ROADMAP.md#m3---replacement-podcast-rss). Prerequisites: [M2 content and completion evidence](M02-canonical-content.md), [M0 audit](../migration/MIGRATION-AUDIT.md), and [BOOTSTRAP.md](../BOOTSTRAP.md). Supplemental source evidence: [M03-feed-reference.json](evidence/M03-feed-reference.json).

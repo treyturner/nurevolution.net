@@ -1,6 +1,6 @@
 # Accurate VBR seeking
 
-The website can serve MP3 audio inside a virtual MP4 container. The front index maps time to exact compressed MP3 packets, avoiding Chromium's approximate VBR byte seeking. No audio is re-encoded. RSS enclosures, chapters, downloads, canonical asset identities, and sample-based track offsets continue to use the original files.
+The website can serve MP3 audio inside a virtual MP4 container. The front index maps time to exact compressed MP3 packets, avoiding Chromium's approximate VBR byte seeking. No audio is re-encoded. RSS enclosures, downloads, canonical asset identities, and sample-based track offsets retain their original identities/timeline. RSS chapter output remains future M8 work.
 
 ## Representation and audit
 

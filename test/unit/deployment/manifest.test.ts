@@ -50,7 +50,9 @@ it('does not publish draft-only or unreferenced new assets and rejects scheduled
     m.assets.find((e) => e.asset.id === c.episodes[0]!.audioAssetId)!.public,
   ).toBe(false)
   c.episodes[1]!.publishedAt = '2030-01-01T00:00:00.000Z'
-  expect(() => createManifest(c, commit, date)).toThrow('requires M8')
+  expect(() => createManifest(c, commit, date)).toThrow(
+    'Scheduled delivery is not yet supported',
+  )
   expect(() => createManifest(c, 'invalid', date)).toThrow()
   expect(() => createManifest(c, commit, 'yesterday')).toThrow()
 })

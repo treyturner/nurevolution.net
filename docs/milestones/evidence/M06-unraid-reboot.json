@@ -1,0 +1,103 @@
+{
+  "schemaVersion": 1,
+  "observedOn": "2026-09-18",
+  "trigger": "Owner reported that Unraid rebooted and requested persistence checks.",
+  "result": "Passed: Headscale restart, firewall isolation, backup tools and weekly scheduling persisted across the owner-managed Unraid reboot.",
+  "sources": [
+    "Owner reboot report in the project conversation",
+    "Read-only workspace probes and SSH commands on the production droplet",
+    "Owner-supplied Unraid terminal output at 2026-09-18T04:11:43Z, using container name headscale",
+    "Owner-supplied saved/active User Scripts schedules, weekly launcher, root cron schedule, and crond process output"
+  ],
+  "headscale": {
+    "httpsHealth": 200,
+    "httpsHealthWithPortQualifiedHost": 200,
+    "tlsVerification": "passed",
+    "dropletBackendState": "Running",
+    "dropletOnline": true,
+    "dropletAddress": "100.64.0.1",
+    "dropletHealthWarnings": [],
+    "relay": "headscale",
+    "networkCheck": {
+      "udp": true,
+      "ipv4": true,
+      "preferredRelayRegion": 999,
+      "relayLatencyMilliseconds": 45.318713
+    },
+    "limits": "Existing client and network checks do not establish fresh temporary-runner enrollment, private SSH traffic, or host firewall isolation."
+  },
+  "backup": {
+    "minioHttpsHealth": 200,
+    "authenticatedRepositoryRead": "passed using installed restic and existing service credentials; snapshots --no-lock, no backup or retention operation",
+    "snapshotCount": 4,
+    "latestSnapshot": "8dcbd5671d7c5f0eaf31753f5a8f8703a454f33234c057cb791b8b988f42482a",
+    "latestSnapshotAt": "2026-09-17T21:42:36.844199165Z",
+    "lastSuccessfulBackupRecordAt": "2026-09-17T21:42:43.217Z",
+    "dropletTimer": "active and enabled",
+    "nextScheduledBackupAt": "2026-09-20T04:36:52Z",
+    "limits": "Authenticated access and retained snapshot metadata were checked after reboot. No new backup, full data verification, or restore was run. Unraid backup tool and schedule persistence passed; the next scheduled backup has not yet executed."
+  },
+  "production": {
+    "command": "python3 deploy/uptime.py --check-only",
+    "healthy": true,
+    "failures": [],
+    "checks": [
+      "Website and application health",
+      "Canonical feed and sampled audio range response",
+      "Website origin, audio, and Headscale certificate checks"
+    ],
+    "dropletServices": {
+      "docker": "active",
+      "tailscaled": "active"
+    }
+  },
+  "unraidLocalChecks": {
+    "status": "passed",
+    "observedAt": "2026-09-18T04:11:43Z",
+    "bootTimeAsPrinted": "2026-09-17 20:27:36",
+    "bootTimeNote": "uptime -s reports host-local time; timezone was not printed.",
+    "container": {
+      "name": "headscale",
+      "status": "running",
+      "health": "healthy",
+      "startedAt": "2026-09-18T01:30:36.652131218Z",
+      "restartPolicy": "unless-stopped"
+    },
+    "firewall": {
+      "savedBootOrder": {
+        "firewallCallLine": 23,
+        "emhttpLine": 28
+      },
+      "hook": "mangle PREROUTING -s 172.26.0.0/16 -j NUREV-HS-EGRESS",
+      "policyMatchesRepository": true,
+      "hostPositiveControls": ["192.168.1.85:22", "192.168.1.1:443"],
+      "headscaleBlockedConnections": ["192.168.1.85:22", "192.168.1.1:443"],
+      "dropPacketsBefore": 5,
+      "dropPacketsAfter": 11,
+      "dropBytesBefore": 961,
+      "dropBytesAfter": 1321,
+      "limits": "Saved boot ordering and post-reboot behavior verified; not a trace of the first packets during boot. The log-and-continue failure policy is unchanged."
+    },
+    "backupTools": {
+      "restic": "/usr/bin/restic",
+      "resticVersion": "0.19.1",
+      "rclone": "/usr/sbin/rclone"
+    },
+    "backupSchedule": {
+      "status": "passed",
+      "savedSchedule": "/boot/config/plugins/user.scripts/schedule.json",
+      "activeSchedule": "/tmp/user.scripts/schedule.json",
+      "backupFrequencyInBoth": "weekly",
+      "firewallFrequencyInBoth": "disabled; foreground boot call is the intended launcher",
+      "weeklyLauncher": "/etc/cron.weekly/user.script.start.weekly.sh",
+      "launcherExecutable": true,
+      "launcherCommand": "/usr/local/emhttp/plugins/user.scripts/startSchedule.php weekly",
+      "rootCron": "30 4 * * 0 /usr/bin/run-parts /etc/cron.weekly 1> /dev/null",
+      "scheduleDescription": "Sunday 04:30 in Unraid local time",
+      "cronDaemonRunning": true,
+      "limits": "Schedule installation verified; no backup was triggered by this check."
+    },
+    "accessLimitation": "Unraid observations are owner-supplied; workspace retains strict SSH host verification."
+  },
+  "changes": "No deployment, service restart, firewall change, credential change, or notification. Documentation only."
+}

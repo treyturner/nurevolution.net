@@ -1,6 +1,6 @@
 # Editing the podcast archive
 
-The canonical archive is in `content/`. It contains 55 historical episodes, 832 tracks, and 626 known track starts across 34 episodes: 338 precise imported starts and 288 sample-derived timestamps across twelve episodes (Ruminate, View From A Vignette, Dancefloor Oriented, Radio Silenced, Carrier Detect, Is This Thing On?, Lost In Translation, Bass Face Space Race, Impulse, Off The Cuff, The Further Esoteric Adventures Of, and Plush Session). Original audio and artwork remain URL references. The repository includes only small generated artwork thumbnails for the episode list. M3 serves the complete replacement RSS at `/feed/podcast`. The current page remains the M1 shell; M4 will build episode pages and the player from this archive.
+The canonical archive is in `content/`. It contains 55 historical episodes, 832 tracks, and 626 known track starts across 34 episodes: 338 precise imported starts and 288 sample-derived timestamps across twelve episodes (Ruminate, View From A Vignette, Dancefloor Oriented, Radio Silenced, Carrier Detect, Is This Thing On?, Lost In Translation, Bass Face Space Race, Impulse, Off The Cuff, The Further Esoteric Adventures Of, and Plush Session). Original audio and artwork remain URL references. The repository includes only small generated artwork thumbnails for the episode list. M3 serves the complete replacement RSS at `/feed/podcast`. The released application serves episode pages and the shared M7 player from this archive. Of the remaining episodes, sixteen have untimed tracklists and five have no tracklist; see [current completeness](STATUS.md#archive-completeness).
 
 ## Files you edit
 
@@ -31,15 +31,15 @@ pnpm check:feed
 pnpm verify
 ```
 
-Checks are read-only and name the affected file and field. `pnpm build` runs content, thumbnail, and independently parsed feed checks before building, so it also rejects invalid authoring. RSS publication dates must use whole seconds (`.000Z`); a fractional instant fails the feed check rather than being silently truncated. No private WordPress files, SQL dump, media directory, environment file, credentials, or live feed is needed. Dependencies are installed separately using the setup in [README.md](../README.md). See the [feed validation guide](FEED-VALIDATION.md) for HTTP behavior and the pending public checks.
+Checks are read-only and name the affected file and field. `pnpm build` runs content, thumbnail, independently parsed feed, and playback-index checks before building, so it also rejects invalid authoring. RSS publication dates must use whole seconds (`.000Z`); a fractional instant fails the feed check rather than being silently truncated. No private WordPress files, SQL dump, media directory, environment file, credentials, or live feed is needed. Dependencies are installed separately using the setup in the [development guide](DEVELOPMENT.md#setup). See the [feed validation guide](FEED-VALIDATION.md) for HTTP behavior, completed production checks, and remaining manual observations.
 
 ## Episode fields and new episodes
 
 Imported IDs use `wp-<original post ID>`. A new episode may use another stable lowercase ASCII ID such as `new-mix-2026`. IDs and slugs contain only lowercase letters, digits, and single separating hyphens. They must be unique. Copy an existing episode as a starting point, then explicitly update all identifying fields, publication data, asset references, description, and tracks.
 
 - `schemaVersion` is `1`.
-- `id` matches the filename. `slug` reserves the future route `/episodes/<slug>`. Existing slugs were derived once from observed legacy page URLs; title edits never regenerate them.
-- `status` is `published` or `draft`. Published records require `publishedAt` in UTC with milliseconds, for example `2026-09-08T12:00:00.000Z`. The calendar date must be real. Future-dated published authoring is rejected; keep the record draft until actually publishing. Drafts may use `publishedAt: null`. Draft tooling and scheduled publication are M8 work.
+- `id` matches the filename. `slug` identifies the canonical route `/episodes/<slug>`. Existing slugs were derived once from observed legacy page URLs; title edits never regenerate them.
+- `status` is `published` or `draft`. Published records require `publishedAt` in UTC with milliseconds, for example `2026-09-08T12:00:00.000Z`. The calendar date must be real. Future-dated published authoring is rejected; keep the record draft until actually publishing. Drafts may use `publishedAt: null`. Draft tooling and scheduled publication are M9 work.
 - `title` and `artist` are nonblank plain text. Literal text such as `A & B` and `<3` is allowed; HTML tags and control characters are rejected.
 - `guid` is an opaque, stable identifier and `guidIsPermalink` is a JSON boolean. For a new non-permalink GUID, assign a unique permanent value; never derive or regenerate it from editable titles or URLs.
 - `audioAssetId` and `artworkAssetId` must resolve to assets of the appropriate kind. Every episode requires both. Two published episodes cannot share an enclosure URL.

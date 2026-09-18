@@ -1,5 +1,7 @@
 # M4 - Initial archive player and responsive dark design
 
+**Roadmap numbering update (2026-09-18):** this historical plan uses the original future milestone IDs. Drafts/scheduling is now M9; selected listening/feed enhancements and Safari 14.3 compatibility are now [M8](M08-listening-and-feed-enhancements.md). See [current status](../STATUS.md) for remaining work.
+
 Status: **Implemented, rebased and merged, with passing main CI** on 2026-09-09, at `77448fd`. The original plan and local completion record are retained below; subsequent review fixes and CI results are recorded in [merged evidence](#merged-review-and-ci-evidence). The owner chose mobile tabs during implementation. Public deployment, real-device/screen-reader observations, and directory/client checks remain explicit M5/M6 work.
 
 Roadmap: [M4](../../ROADMAP.md#m4---initial-archive-player-and-responsive-dark-design). Prerequisites: [M2 canonical content](M02-canonical-content.md), [M3 RSS](M03-podcast-rss.md), and [BOOTSTRAP.md](../BOOTSTRAP.md), subject to the roadmap's newer owner decisions. Supplemental baseline and public media observations: [M04-planning-reference.json](evidence/M04-planning-reference.json).

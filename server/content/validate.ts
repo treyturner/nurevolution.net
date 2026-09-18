@@ -70,7 +70,7 @@ export function validateCatalog(
       Date.parse(episode.publishedAt!) > authoringAsOf
     ) {
       throw new Error(
-        `${file}: future publishedAt; keep the episode draft until publishing (scheduling belongs to M8)`,
+        `${file}: future publishedAt; keep the episode draft until publishing (scheduled publication is not yet supported)`,
       )
     }
     return episode
