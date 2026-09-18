@@ -179,7 +179,7 @@ it('wires volume and mute independently and leaves no slider space for device-ow
   state.volumeSupported = false
   await wrapper.vm.$nextTick()
   expect(wrapper.find('.volume-control').exists()).toBe(false)
-  expect(wrapper.text()).toContain("Use your device's volume buttons.")
+  expect(wrapper.text()).not.toContain("Use your device's volume buttons.")
   expect(wrapper.find('[aria-label="Unmute"]').exists()).toBe(true)
   state.muteSupported = false
   await wrapper.vm.$nextTick()

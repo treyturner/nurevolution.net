@@ -327,9 +327,6 @@ watch(
           "
         />
       </div>
-      <p v-if="!state.volumeSupported" class="device-volume">
-        Use your device's volume buttons.
-      </p>
     </div>
   </div>
 </template>

@@ -117,9 +117,9 @@ test('volume keyboard and mute reflect native state; unsupported volume has an h
   await page.reload()
   await ready(page)
   await expect(volume).toHaveCount(0)
-  await expect(
-    page.getByText("Use your device's volume buttons."),
-  ).toBeVisible()
+  await expect(page.getByText("Use your device's volume buttons.")).toHaveCount(
+    0,
+  )
   await expect(
     page.getByRole('button', { name: 'Mute', exact: true }),
   ).toBeVisible()
@@ -172,7 +172,7 @@ for (const [mode, userAgent, platform] of [
     await expect(page.getByRole('slider', { name: 'Volume' })).toHaveCount(0)
     await expect(
       page.getByText("Use your device's volume buttons."),
-    ).toBeVisible()
+    ).toHaveCount(0)
     await expect(page.locator('html')).not.toHaveAttribute('data-volume-writes')
     await page.getByRole('button', { name: 'Mute', exact: true }).click()
     await expect(audio).toHaveJSProperty('muted', true)
