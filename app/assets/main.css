@@ -1169,9 +1169,14 @@ button.track-row:disabled {
   cursor: default;
 }
 @media (max-width: 420px) {
+  .audio-controls {
+    margin-bottom: 0.25rem;
+    margin-block-end: 0.25rem;
+  }
   .seek-row {
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    row-gap: 0;
   }
   .seek-row .player-time:first-child {
     grid-area: 1 / 1;
@@ -1183,5 +1188,17 @@ button.track-row:disabled {
   .seek-row input {
     grid-area: 2 / 1 / 3 / 3;
     width: 100%;
+  }
+  .player-actions {
+    margin-top: 0;
+    row-gap: 0;
+  }
+  .player-feedback {
+    grid-template-columns: minmax(0, max-content) 44px;
+    gap: 0.35rem;
+    min-height: max(44px, 2.4rem);
+  }
+  .no-flex-gap .player-actions > * {
+    margin-bottom: 0;
   }
 }

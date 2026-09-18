@@ -16,6 +16,7 @@ for (const [width, scale] of [
   [1440, 100],
   [390, 100],
   [320, 100],
+  [320, 200],
   [390, 200],
 ] as const) {
   test(`error feedback stays in place at ${width}px with ${scale}% text`, async ({
@@ -70,7 +71,9 @@ for (const [width, scale] of [
         },
       })
     })
-    await page.getByRole('button', { name: 'Forward 30 seconds' }).click()
+    await page
+      .getByRole('slider', { name: 'Playback position' })
+      .press('PageUp')
     await error('Could not seek. Try again.')
     await expect(page.locator('.status-retry')).toHaveCount(0)
 
