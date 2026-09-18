@@ -1,10 +1,14 @@
 # M7 - Rich player, interactive tracklists, and restoration
 
-Status: **All M7 behaviors and the owner's UI refinements are implemented; final UI review and production release are requested.** On 2026-09-14 the owner authorized bringing the merged timestamp updates into the UI branch and releasing the reviewed player to production for further feedback. This supersedes the initial deployment prohibition. Actual promotions are recorded by the [verified release workflow](https://github.com/treyturner/nurevolution.net/actions/workflows/deploy.yml); physical-device and assistive-technology observations remain pending.
+**Roadmap numbering update (2026-09-18):** this historical plan uses the original future milestone IDs. Drafts/scheduling is now M9; selected listening/feed enhancements and Safari 14.3 compatibility are now [M8](M08-listening-and-feed-enhancements.md). See [current status](../STATUS.md) for remaining work.
+
+Status: **All M7 behaviors and the owner's UI refinements are implemented and released.** On 2026-09-14 the owner authorized bringing the merged timestamp updates into the UI branch and releasing the reviewed player to production for further feedback. This supersedes the initial deployment prohibition. Actual promotions are recorded by the [verified release workflow](https://github.com/treyturner/nurevolution.net/actions/workflows/deploy.yml). On 2026-09-18 the owner deferred assistive-technology checks as future enhancement work, not a legacy-parity gap; the available iPad Pro on iPadOS 14.3 exposed an application startup compatibility issue. See the [current acceptance record](../operations/acceptance-2026-09-18.md); current Safari on physical hardware remains untested.
+
+The [player guide](../PLAYER.md) and [current status](../STATUS.md) describe the released behavior. Dated sections below retain historical counts, UI candidates, and restrictions; their former deployment prohibitions and pending M6 items are superseded.
 
 The original decision-complete plan below was prepared on `feat/m7-player-enhancements`, created from `main` at `f33d001a9427f35612ad1d2d3290929e2129ca0a` after fetching and confirming equality with `origin/main`. Its initial scope authorized sequential PR review/merge cycles and a complete development-server handoff without production deployment. The historical handoff evidence below describes that earlier scope.
 
-Roadmap: [M7](../../ROADMAP.md#m7---rich-player-interactive-tracklists-and-restoration). Prerequisites: [M4 player](M04-archive-player.md), the existing [player guide](../PLAYER.md), and confirmed roadmap decisions D01/D02. The owner's request starts M7 planning while [M6 observation and retirement](M06-cutover-and-retirement.md) remain open. M6 retirement is not an implementation prerequisite; its unfinished checks remain in M6.
+Roadmap: [M7](../../ROADMAP.md#m7---rich-player-interactive-tracklists-and-restoration). Prerequisites: [M4 player](M04-archive-player.md), the existing [player guide](../PLAYER.md), and confirmed roadmap decisions D01/D02. M7 originally proceeded independently of M6 retirement. [M6 is now closed](M06-cutover-and-retirement.md); Safari 14.3 compatibility remains a separate follow-up.
 
 ## Outcome and review decisions
 

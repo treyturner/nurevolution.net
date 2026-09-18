@@ -6,7 +6,7 @@ The public name is `headscale.treyturner.info`, using the existing `*.treyturner
 
 ## 0. Install the host firewall before stack startup
 
-Headscale stays managed by the existing Compose stack, with `restart: unless-stopped`. The host firewall loads synchronously from `/boot/config/go` before `emhttp`. It needs neither a running Docker daemon nor `DOCKER-USER`, a Compose profile, a separate service-start hook, or a polling loop. The owner has already verified the running container and firewall; boot persistence remains to be confirmed. Public control enrollment and authenticated relay traffic now pass.
+Headscale stays managed by the existing Compose stack, with `restart: unless-stopped`. The host firewall loads synchronously from `/boot/config/go` before `emhttp`. It needs neither a running Docker daemon nor `DOCKER-USER`, a Compose profile, a separate service-start hook, or a polling loop. The owner verified service restart and firewall persistence after the September 18 reboot; see [post-reboot evidence](../../docs/milestones/evidence/M06-unraid-reboot.json). The current live container name is `headscale`. Public control enrollment and authenticated relay traffic now pass.
 
 Save [firewall.sh](firewall.sh) as the User Scripts file `/boot/config/plugins/user.scripts/scripts/isolate_headscale_network/script`. Use **LF line endings**. The owner encountered CRLF (`0d 0a`), which makes direct Bash execution reject `set -euo pipefail`, even when the editor does not display `^M`. Normalize and run the stored file directly as root:
 
@@ -30,7 +30,7 @@ fi
 /usr/local/sbin/emhttp
 ```
 
-Set this User Script's schedule to **Disabled**; the foreground call in `go` supplies startup ordering. Unraid's [boot script](https://github.com/unraid/webgui/blob/master/etc/rc.d/rc.local) invokes `go` before the management utility starts. The selected fragment logs firewall installation failure and continues boot, so it does **not** guarantee isolation if installation fails. Confirm successful installation before enabling normal stack autostart. No reboot has yet verified this ordering on the owner's host.
+Set this User Script's schedule to **Disabled**; the foreground call in `go` supplies startup ordering. Unraid's [boot script](https://github.com/unraid/webgui/blob/master/etc/rc.d/rc.local) invokes `go` before the management utility starts. The selected fragment logs firewall installation failure and continues boot, so it does **not** guarantee isolation if installation fails. Confirm successful installation before enabling normal stack autostart. The September 18 reboot check confirmed the saved call before `emhttp`, healthy service restart, and installed policy blocking new connections. This verifies the saved ordering and post-reboot behavior, not a packet trace of the complete boot sequence.
 
 The earlier `docker_started` hook and Compose profile proposal is superseded. If applied, remove only its block from `go`, its generated `/usr/local/emhttp/plugins/nurevolution.headscale/event/docker_started` file, and the proposed `headscale` profile exclusion. Once the stored script and boot call are checked, restore `restart: unless-stopped` if it was temporarily set to `no`, and manage the service through the normal stack.
 

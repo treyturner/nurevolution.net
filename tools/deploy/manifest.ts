@@ -85,7 +85,7 @@ export function createManifest(
         Date.parse(e.publishedAt!) > Date.parse(asOf),
     )
   )
-    throw new Error('Scheduled delivery requires M8')
+    throw new Error('Scheduled delivery is not yet supported')
   const publicEpisodes = selectPublic(catalog, Date.parse(asOf))
   const showAssets = [
     catalog.show.standardArtworkAssetId,

@@ -1,8 +1,10 @@
 # M5 - Production delivery and operational rehearsal
 
+**Roadmap numbering update (2026-09-18):** this historical plan uses the original future milestone IDs. Drafts/scheduling is now M9; selected listening/feed enhancements and Safari 14.3 compatibility are now [M8](M08-listening-and-feed-enhancements.md). See [current status](../STATUS.md) for remaining work.
+
 **Operating policy updated 2026-09-13:** production is the only hosted environment; local/workspace servers are used for development. Earlier rehearsal and cutover steps below are historical. Follow the current [deployment runbook](../DEPLOYMENT.md) and [maintenance record](../operations/maintenance.md).
 
-Status: **M5 core operational rehearsal passed; M6 production cutover completed, updated 2026-09-12.** Production now runs verified release `cd96435205764c51771f4d49292df259adab89cd`; preview and its promotion gate are disabled. The dated M5 records below preserve the original media/feed, desktop browser, capacity, rollback, MinIO application/certificate recovery, and Google Drive Headscale recovery evidence. Weekly backups remain configured. See [M6](M06-cutover-and-retirement.md) for production acceptance, the owner’s mobile/fresh-feed observations, remaining client/recovery checks, and observation/WordPress retirement. WordPress stays frozen and running for fallback.
+**Current status, reconciled 2026-09-18:** M5 operational rehearsal passed, production is active, and [M6 is closed](M06-cutover-and-retirement.md). The old site/database are retired with backups owner-confirmed. Unraid persistence passed; the four-hour recovery objective is accepted, with replacement-host timing unmeasured. The dated records below preserve their original release IDs, resource/restore measurements, and pending-at-the-time observations. Use [current status](../STATUS.md) for remaining work.
 
 Roadmap: [M5](../../ROADMAP.md#m5---production-delivery-and-operational-rehearsal). Dependencies: [M4](M04-archive-player.md#merged-review-and-ci-evidence), [player delivery contract](../PLAYER.md), [feed validation](../FEED-VALIDATION.md), and the roadmap's D04/D08 decisions. Newer owner decisions take precedence over proposed defaults below.
 
@@ -10,7 +12,7 @@ Roadmap: [M5](../../ROADMAP.md#m5---production-delivery-and-operational-rehearsa
 
 [Production deployment 34720835192](https://github.com/treyturner/nurevolution.net/actions/runs/34720835192) accepted `cd96435205764c51771f4d49292df259adab89cd`; [M6 evidence](evidence/M06-cutover.json) records the public switch, all 55 pages/legacy redirects, 156 public assets, compatible feed, resolver cleanup, and production backup. Preview app/history separation was rehearsed before conversion; preview history remains saved, but its app and promotion are disabled. The owner accepted the mobile corrections and loaded the new feed successfully; an existing-subscription comparison was unavailable.
 
-The dated rehearsal below remains the source for its resource, rollback, and restoration measurements; those were not all rerun for the latest UI release. [M6](M06-cutover-and-retirement.md) records refreshed candidate/production acceptance and retains the remaining observation, retirement, and owner/client decisions.
+The dated rehearsal below remains the source for its resource, rollback, and restoration measurements; those were not all rerun for later UI releases. [M6](M06-cutover-and-retirement.md) subsequently recorded refreshed production acceptance and closed the observation/retirement work on September 18, with the remaining limitations explicitly carried forward.
 
 ## Latest live progress - 2026-09-11
 

@@ -1,4 +1,6 @@
-# BOOTSTRAP.md
+# Original project brief
+
+This is the historical bootstrap brief, not the current implementation or operations checklist. Use the [documentation index](README.md), [current status](STATUS.md), and [roadmap](../ROADMAP.md); newer owner decisions and accepted milestone records supersede proposals here.
 
 ## Project
 

@@ -1,6 +1,6 @@
 # Node 24 with mise
 
-The web image and CI already use Node 24. This migration moves the separate host deployment/backup helper to Node 24 and makes the workspace honor the repository's `mise.toml`. It requires an operator installation before production promotion. A PR merge still only verifies and publishes images; **Deploy verified release** remains manual.
+**Completed on 2026-09-17:** the application, CI, workspace, and separate host deployment/backup helper use Node 24.21.0; mise manages the project and host runtime. [Deployment 35277978662](https://github.com/treyturner/nurevolution.net/actions/runs/35277978662) and the successful post-deployment backup recorded in [reboot evidence](../milestones/evidence/M06-unraid-reboot.json) cover the migrated release. The steps below document the completed transition and reproducible recovery setup, not pending work on the current host. A PR merge verifies and publishes images; **Deploy verified release** remains manual.
 
 ## Runtime contract
 

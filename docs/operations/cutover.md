@@ -1,16 +1,16 @@
-# Cutover observation and WordPress fallback
+# Completed cutover and legacy recovery history
 
 Production cutover completed on **2026-09-12 at 21:49 UTC**. The [M6 evidence](../milestones/evidence/M06-cutover.json) identifies the accepted release, DNS changes, public/LAN checks, and backup. Production is the only hosted deployment environment. Subsequent releases use [normal verified promotion](../DEPLOYMENT.md) and [application rollback](rollback.md).
 
-The owner keeps WordPress frozen and its existing services, configuration, database, uploads, and episode files available for fallback. The agent performs accessible repository, droplet, and DNS operations. The owner handles Cloudflare settings outside the DNS token's scope, home DNS, physical devices, and eventual legacy retirement. Neither the new operating policy nor staging cleanup authorizes deletion of WordPress.
+**M6 closed on 2026-09-18.** The owner confirmed that the old site and database are retired and their backups are confirmed. WordPress is no longer a running fallback. Use [normal application rollback](rollback.md) for compatible application regressions; recovery from legacy backups would require deliberate restoration and validation. The historical DNS procedure below is not a ready-to-run recovery path. See the [closure evidence](../milestones/evidence/M06-retirement.json).
 
-## Observation
+## Observation - accepted and closed
 
-Record checks immediately, after 24 hours (**2026-09-13 at 21:49 UTC**), and at the agreed observation end: health/feed/media, resource usage, container restarts, backup results, client issues, and DNS behavior. Seven days was proposed; retirement timing remains an owner decision. The [maintenance record](maintenance.md) tracks completed operational work and outstanding observations.
+The original plan called for immediate, 24-hour, and observation-end checks. The owner accepted the observation outcome and requested closure on 2026-09-18 after confirming retirement. Fresh production probes passed. This does not invent an unrecorded 24-hour checkpoint or claim an exactly seven-day observation window.
 
-The owner accepted mobile testing as sufficient for cutover and reported that a newly loaded feed looked correct. An existing-subscription comparison was unavailable; do not record it as passed. iPhone Safari and screen-reader observations also remain unperformed.
+The owner accepted mobile testing for launch and subsequently completed Podcast Addict loading/seeking for all 55 episodes. Old-subscription refresh and directory observations remain unverified. Safari 14.3 compatibility is separate work, current physical Safari remains untested, and assistive checks are deferred future enhancements. These are recorded limitations outside M6, not additional passing tests.
 
-## Public fallback
+## Historical public fallback - requires restoring retired services
 
 An unexplained GUID/enclosure/count change is an immediate fallback trigger. TLS/feed/media failures on two independent probes one minute apart, repeated attributable playback/download failures, or repeated OOM/restart loops call for fallback unless a verified correction is ready within five minutes. A cosmetic defect alone does not trigger DNS rollback. Record the operator's decision and evidence.
 
@@ -20,6 +20,6 @@ Restore the exact saved apex/podcast DNS types, values, TTLs, and proxy flags fr
 
 Verify the frozen WordPress feed/media through ordinary public and LAN resolution as caches expire. Keep the production media available while clients may retain its address. DNS reversal is not immediate. Public subscriber GUIDs, enclosure URLs, and historical bytes must remain unchanged.
 
-## Legacy retirement
+## Legacy retirement - completed
 
-After the owner accepts the observation period, take and verify an independent final copy of the WordPress Compose/runtime configuration, database, uploads, and episode files. Record how to restore it. Stop the old workload only after that explicit retirement decision. Remove its obsolete routing and DNS overrides deliberately, without touching Headscale, MinIO, or unrelated home services. Keep the agreed recovery copy and historical migration evidence.
+The owner confirmed retirement of the old WordPress site and database and confirmed their backups on 2026-09-18. Preserve retained recovery material and historical migration evidence; no deletion is part of milestone closure. Headscale and MinIO remain intentionally home-hosted operations dependencies. The closure records owner confirmation without claiming an independent inspection of legacy autostart settings or a new legacy restore.

@@ -1,5 +1,7 @@
 # M2 - Canonical content and complete archive
 
+**Roadmap numbering update (2026-09-18):** this historical plan uses the original future milestone IDs. Drafts/scheduling is now M9; selected listening/feed enhancements and Safari 14.3 compatibility are now [M8](M08-listening-and-feed-enhancements.md). See [current status](../STATUS.md) for remaining work.
+
 Status: **Implemented and locally verified** on 2026-09-08. The original plan is retained below with completed steps; actual results and bounded implementation corrections are recorded in the completion evidence.
 
 Plan date: 2026-09-08. Roadmap: [M2](../../ROADMAP.md#m2---canonical-content-and-complete-archive). Prerequisites: [M0 audit](../migration/MIGRATION-AUDIT.md) and [M1 foundation](M01-foundation-and-verification.md). Project guidance: [BOOTSTRAP.md](../BOOTSTRAP.md).

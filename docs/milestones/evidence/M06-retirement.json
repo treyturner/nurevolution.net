@@ -1,0 +1,102 @@
+{
+  "schemaVersion": 1,
+  "recordedAt": "2026-09-18T07:37:37Z",
+  "milestone": "M6",
+  "status": "closed",
+  "authority": "Owner requested M6 closure after confirming retirement of the old site and database, confirming backups, accepting a four-hour recovery target, and separating Safari 14.3 fixes from M6.",
+  "recordPreparedFromCommit": "7daef2aaa0736c932caa0893b92d710cf4bc809f",
+  "legacyRetirement": {
+    "status": "owner-confirmed complete",
+    "services": ["legacy WordPress site", "legacy site database"],
+    "backups": "owner-confirmed",
+    "reportedOn": "2026-09-18",
+    "exactShutdownTime": null,
+    "limits": "Retirement and legacy backups were confirmed by the owner; this closure did not independently inspect stopped services, autostart settings, or perform a new legacy restore.",
+    "recoveryPosition": "Retained legacy backups are offline recovery material. WordPress is no longer assumed to be a running fallback. Normal compatible application rollback remains the first recovery path."
+  },
+  "observation": {
+    "status": "accepted and closed by owner",
+    "cutoverAt": "2026-09-12T21:49:00Z",
+    "closedOn": "2026-09-18",
+    "limits": "Closure does not manufacture a separate 24-hour observation record or claim an exactly seven-day window."
+  },
+  "productionCheck": {
+    "observedOn": "2026-09-18",
+    "sourceCommit": "c54adaef5b3f1cc75bf24c1b22cb6e194ea21742",
+    "command": "python3 deploy/uptime.py --check-only",
+    "exitCode": 0,
+    "healthy": true,
+    "failures": [],
+    "checks": [
+      "Website and application health",
+      "Canonical feed and sampled audio byte-range response",
+      "Website origin, audio, and Headscale certificates"
+    ],
+    "limits": "Read-only checks after retirement confirmation; no new deployment, full archive audit, certificate renewal, backup, or restore was triggered."
+  },
+  "acceptance": {
+    "R1-FEED": {
+      "status": "accepted with recorded limitations",
+      "evidence": "M06-cutover.json; FEED-VALIDATION.md; fresh production feed check; owner Podcast Addict load/seek report"
+    },
+    "R1-PLAYER": {
+      "status": "accepted with Safari follow-up",
+      "evidence": "M07 automated/owner release evidence and owner Podcast Addict load/seek coverage for all 55 episodes",
+      "limitation": "Safari 14.3 application initialization remains a separate fix; current physical Safari remains untested."
+    },
+    "R1-TRACKS": {
+      "status": "accepted",
+      "evidence": "Canonical archive validation and M4/M7 presentation evidence; missing legacy tracklists remain content work outside M6."
+    },
+    "R1-DOWNLOAD": {
+      "status": "accepted with recorded limitations",
+      "evidence": "M06 public media/full and resumed download evidence; fresh sampled range check",
+      "limitation": "No new podcast-client complete-download test is claimed."
+    },
+    "R1-SUBSCRIBE": {
+      "status": "accepted with recorded limitations",
+      "evidence": "Canonical feed identity validation and owner Podcast Addict coverage",
+      "limitation": "Pre-migration subscription refresh and directory observations remain unverified."
+    },
+    "bootPersistence": {
+      "status": "passed",
+      "evidence": "M06-unraid-reboot.json"
+    }
+  },
+  "recovery": {
+    "targetHours": 4,
+    "targetStatus": "owner-accepted",
+    "existingHostRestore": "previously demonstrated",
+    "replacementHostRecoveryTime": "unmeasured; operational rehearsal follow-up, not an M6 blocker",
+    "limits": "An accepted objective is not a measured recovery guarantee."
+  },
+  "followUpsOutsideM6": [
+    {
+      "item": "Safari 14.3 compatible startup and useful initialization fallback",
+      "status": "owner-requested separate follow-up; no implementation in this closure"
+    },
+    {
+      "item": "Assistive-technology checks",
+      "status": "owner-deferred future enhancement"
+    },
+    {
+      "item": "Current physical Safari, complete podcast-client downloads, old-subscription refresh, and directory observations",
+      "status": "unperformed; retained as non-blocking limitations at owner-authorized closure"
+    },
+    {
+      "item": "Replacement-host recovery rehearsal against the accepted four-hour objective",
+      "status": "operational follow-up"
+    },
+    {
+      "item": "Traffic, backup storage growth, and total operating-cost review",
+      "status": "routine operations; no new spending ceiling or purchases approved by this closure"
+    }
+  ],
+  "relatedEvidence": [
+    "M06-cutover.json",
+    "M06-unraid-reboot.json",
+    "../M06-cutover-and-retirement.md",
+    "../../operations/acceptance-2026-09-18.md"
+  ],
+  "changes": "Documentation only; no deployment, service retirement action, backup deletion, or notification performed by the agent."
+}
