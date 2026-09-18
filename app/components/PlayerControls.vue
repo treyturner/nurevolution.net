@@ -167,6 +167,7 @@ watch(
           </svg>
         </button>
         <button
+          class="previous-track"
           type="button"
           aria-label="Previous track"
           :title="
@@ -236,6 +237,7 @@ watch(
           </svg>
         </button>
         <button
+          class="next-track"
           type="button"
           aria-label="Next track"
           :title="
