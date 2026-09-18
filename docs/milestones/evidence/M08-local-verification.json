@@ -4,7 +4,7 @@
   "status": "Implementation verified locally; remaining PR/device/client acceptance is open. M8 is not closed.",
   "deployment": "None performed or authorized for M8. All observations are workspace/local unless stated otherwise.",
   "firstPlanCommit": "c762a0443f946c5059d0fd5d9618d49626b273b4",
-  "implementationCommit": "86c5ad81d0411b4e16e283a2fefc36ebdc5c4866",
+  "implementationCommit": "19e1babd7e1d18411395ba47a8a59eef13113f84",
   "gates": [
     {
       "slice": "safari",
@@ -122,13 +122,26 @@
       "delivery": "Exact runtime and Caddy proxy, byte ranges, resumed/browser downloads, restart and fixture isolation passed.",
       "localLog": "nurevolution.net-m8-feed-advertisement/.local/thumb-menu-verify.log",
       "logSha256": "11062d79802227bd2232b26bf28000b4d7db2a4d8f30cdba4d9e308cd1a17d9c"
+    },
+    {
+      "slice": "combined-timestamp-current-origin",
+      "commit": "19e1babd7e1d18411395ba47a8a59eef13113f84",
+      "scope": "Current-position and track timestamp links use the browser origin, with copied-link round trips through the dev delivery origin and an HTTPS preview proxy. Later edits only reconcile documentation.",
+      "command": "NUREVOLUTION_DOCKER_ADDRESS=172.18.0.2 NUREVOLUTION_TEST_PORT=3160 NUREVOLUTION_MEDIA_TEST_PORT=3161 NUREVOLUTION_DEV_TEST_PORT=3162 mise exec -- pnpm verify",
+      "result": "passed",
+      "unitAndIntegrationTests": 560,
+      "browserTests": 347,
+      "expectedBrowserSkips": 4,
+      "delivery": "Exact runtime and Caddy proxy, byte ranges, resumed/browser downloads, restart and fixture isolation passed.",
+      "localLog": "nurevolution.net-m8-feed-advertisement/.local/timestamp-origin-verify.log",
+      "logSha256": "098f69a963e8a2bd41d5b3a83dd274511321cc27c0694d786c37d64d25590b73"
     }
   ],
   "combinedCoveragePercent": {
-    "statements": 96.31,
-    "branches": 94.79,
+    "statements": 96.23,
+    "branches": 94.78,
     "functions": 96.17,
-    "lines": 97.08
+    "lines": 97.02
   },
   "firstPullRequest": {
     "number": 56,
@@ -149,7 +162,7 @@
     "chapterReferences": 34,
     "knownStarts": 626,
     "omittedUntimedOrEmptyEpisodes": 21,
-    "resourceSupportCommit": "f849b15eb00bb73b016eba594de2338197771c55",
+    "resourceSupportCommit": "649b772c117bd9ca63b8245a7ae730058fb4e90f",
     "checks": [
       "All advertised image mappings and chapter documents fetched from the built application.",
       "Chapter version hints match SHA-256 of served bytes.",
@@ -159,14 +172,15 @@
   },
   "workspacePreview": {
     "origin": "https://3000--main--dev--treyturner.coder.treyturner.info",
-    "commit": "86c5ad81d0411b4e16e283a2fefc36ebdc5c4866",
+    "commit": "19e1babd7e1d18411395ba47a8a59eef13113f84",
     "health": "healthy",
     "loaded": "Immutable production build containing all local M8 slices.",
     "visualWidthsPixels": [1280, 390, 320],
     "visualObservation": "No horizontal overflow; 44px track-copy targets preserved.",
     "mediaSessionObservation": "Headless Chromium exposed Troglodyte / Mat Zo / Trey Turner - Ruminate and playing state. This is not lock-screen/headset acceptance.",
     "downloadRangeObservation": "Ruminate and The Dark Prophet return exact 206 bytes for initial, middle, and suffix ranges, compared against canonical originals. The exposed port-3000 preview also returned bytes 0-1 for Ruminate with Content-Length 2 and Content-Range bytes 0-1/145672454.",
-    "playheadMenuObservation": "Chromium, Firefox and WebKit regressions verify thumb activation at the start, middle and end, exclusion of rail/time-label clicks, normal rail seeking, keyboard access and narrow viewport bounds. A Chromium touch-input check on real Ruminate at 390px confirms a rail hold does not open the menu, while a thumb hold copies the canonical t=8.25 URL and preserves paused position at 8.25 seconds. Screenshot: nurevolution.net/.local/m8-preview/thumb-menu-touch.png. Physical iPad gesture acceptance remains untested."
+    "playheadMenuObservation": "Chromium, Firefox and WebKit regressions verify thumb activation at the start, middle and end, exclusion of rail/time-label clicks, normal rail seeking, keyboard access and narrow viewport bounds. An earlier Chromium touch-input check on build 86c5ad8 on real Ruminate at 390px confirms a rail hold does not open the menu, while a thumb hold copies the canonical t=8.25 URL and preserves paused position at 8.25 seconds. Screenshot: nurevolution.net/.local/m8-preview/thumb-menu-touch.png. Physical iPad gesture acceptance remains untested.",
+    "timestampOriginObservation": "Chromium, Firefox, and WebKit verify both timestamp-copy actions and paused restoration on the dev delivery origin and an HTTPS preview proxy, preserving the visible scheme, hostname, and port. A real-audio Chromium check on the refreshed port-3000 preview copies and reopens Ruminate at 8.25 and track 2 at 174.49004535147392 seconds, paused. Log: nurevolution.net/.local/m8-preview/19e1bab/timestamp-origin-check.log."
   },
   "ownerIpadObservations": {
     "device": "Owner-reported iPad Pro on iPadOS 14.3; captured desktop-mode user agent identifies Safari 14.0.2.",
