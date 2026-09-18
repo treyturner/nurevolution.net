@@ -218,6 +218,49 @@ test('sample-based track starts select the clicked row after a fresh paused load
   ).toHaveText('02')
 })
 
+test('tabbed lists show the active tracklist when playback starts or resumes, but respect browsing while playing', async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 390, height: 844 })
+  await fixture(page, [0, 8.25, 32])
+  const audio = page.locator('audio')
+  const episodes = page.getByRole('tab', { name: 'Episodes', exact: true })
+  const tracks = page.getByRole('tab', { name: 'Tracklist', exact: true })
+  await audio.evaluate((element: HTMLAudioElement) => {
+    element.muted = true
+    element.loop = true
+  })
+  await expect(episodes).toHaveAttribute('aria-selected', 'true')
+  await page.getByRole('button', { name: 'Next track', exact: true }).click()
+  await at(page, 8.25)
+  await expect(episodes).toHaveAttribute('aria-selected', 'true')
+  const play = page.getByRole('button', { name: 'Play', exact: true })
+  await play.focus()
+  await play.press('Enter')
+  await expect(page.locator('.media-status')).toHaveText(/^Playing 2\/3:/)
+  await expect(tracks).toHaveAttribute('aria-selected', 'true')
+  await expect(page.locator('#tracks-panel')).toBeVisible()
+  await expect(page.locator('.track-list [aria-current]')).toContainText(
+    'Track 2',
+  )
+  await expect(
+    page.getByRole('button', { name: 'Pause', exact: true }),
+  ).toBeFocused()
+
+  await episodes.click()
+  await page.getByRole('button', { name: 'Next track', exact: true }).click()
+  await expect(page.locator('.media-status')).toHaveText(/^Playing 3\/3:/)
+  await expect(episodes).toHaveAttribute('aria-selected', 'true')
+  await page.getByRole('button', { name: 'Pause', exact: true }).click()
+  await expect(audio).toHaveJSProperty('paused', true)
+  await expect(episodes).toHaveAttribute('aria-selected', 'true')
+  await page.getByRole('button', { name: 'Play', exact: true }).click()
+  await expect(tracks).toHaveAttribute('aria-selected', 'true')
+  await expect(page.locator('.track-list [aria-current]')).toContainText(
+    'Track 3',
+  )
+})
+
 test('mobile keyboard track seeking preserves tabs and leaves uncertain gaps unhighlighted', async ({
   page,
 }) => {
