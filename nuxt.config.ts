@@ -1,5 +1,6 @@
 import { fileURLToPath } from 'node:url'
 import { browserCompatibility } from './shared/browser-compatibility'
+import episodeArtwork from './tools/content/episode-artwork-manifest.json'
 
 export default defineNuxtConfig({
   compatibilityDate: '2026-09-07',
@@ -34,6 +35,17 @@ export default defineNuxtConfig({
     },
   },
   typescript: { strict: true },
+  routeRules: Object.fromEntries(
+    episodeArtwork.images.map(({ path }) => [
+      path,
+      {
+        headers: {
+          'cache-control': 'public, max-age=31536000, immutable',
+          'x-content-type-options': 'nosniff',
+        },
+      },
+    ]),
+  ),
   nitro: {
     preset: 'node-server',
     serverAssets: [

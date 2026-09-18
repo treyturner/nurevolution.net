@@ -1,6 +1,6 @@
 # Editing the podcast archive
 
-The canonical archive is in `content/`. It contains 55 historical episodes, 832 tracks, and 626 known track starts across 34 episodes: 338 precise imported starts and 288 sample-derived timestamps across twelve episodes (Ruminate, View From A Vignette, Dancefloor Oriented, Radio Silenced, Carrier Detect, Is This Thing On?, Lost In Translation, Bass Face Space Race, Impulse, Off The Cuff, The Further Esoteric Adventures Of, and Plush Session). Original audio and artwork remain URL references. The repository includes only small generated artwork thumbnails for the episode list. M3 serves the complete replacement RSS at `/feed/podcast`. The released application serves episode pages and the shared M7 player from this archive. Of the remaining episodes, sixteen have untimed tracklists and five have no tracklist; see [current completeness](STATUS.md#archive-completeness).
+The canonical archive is in `content/`. It contains 55 historical episodes, 832 tracks, and 626 known track starts across 34 episodes: 338 precise imported starts and 288 sample-derived timestamps across twelve episodes (Ruminate, View From A Vignette, Dancefloor Oriented, Radio Silenced, Carrier Detect, Is This Thing On?, Lost In Translation, Bass Face Space Race, Impulse, Off The Cuff, The Further Esoteric Adventures Of, and Plush Session). Original audio and artwork remain URL references. The repository includes small generated artwork thumbnails for the episode list and M8 feed artwork derivatives; original media remains external. M3 serves the complete replacement RSS at `/feed/podcast`. The released application serves episode pages and the shared M7 player from this archive. Of the remaining episodes, sixteen have untimed tracklists and five have no tracklist; see [current completeness](STATUS.md#archive-completeness).
 
 ## Files you edit
 
@@ -142,3 +142,16 @@ pnpm check:thumbnails
 Generation uses pinned Sharp locally, verifies each original's byte length and SHA-256 against the catalog before producing any output, and writes only derivatives of currently public episode artwork to `public/artwork-thumbnails/`. It performs no network requests. Commit the generated WebP files with the content changes; original media and private source directories stay out of Git. When an artwork change leaves obsolete thumbnail files, review and remove those obsolete files explicitly.
 
 The `v1-<source-sha256>.webp` filename ties each derivative to its source and encoding recipe. If the crop or encoding recipe changes, increment the prefix in `shared/content/artwork.ts` and regenerate. Normal builds and CI need no original media or credentials: `check:thumbnails` rejects missing, obsolete, unexpected, oversized, malformed, non-WebP, non-square, or animated files, and fully decodes each committed 96px image. No image resizing or native Sharp dependency runs on the droplet.
+
+## M8 episode feed artwork and chapters
+
+The feed-resource slice adds 1400px square sRGB JPEGs in `public/episode-artwork/`, without changing original artwork or website thumbnails. The initial 55 files total 14,021,978 bytes. Generation verifies each original's canonical byte length and SHA-256, auto-orients it, preserves the entire image with dark padding, flattens alpha, strips metadata, and encodes JPEG quality 82. Outputs above 512 KiB fail generation. Smaller originals are upscaled to the required dimensions without claiming added detail.
+
+```sh
+pnpm generate:episode-artwork --uploads /path/to/verified/uploads
+pnpm check:episode-artwork
+```
+
+Commit the outputs and `tools/content/episode-artwork-manifest.json` together. The manifest records source/output hashes, dimensions, byte lengths, and whether an image is retained from earlier public use. The offline check requires exact published coverage and rejects unlisted files, mismatched hashes, invalid images, and unadvertised extras. Generation keeps prior paths and refuses different bytes at the same recipe/source-hash URL; a changed recipe requires a versioned path. Do not delete a previously advertised image or mark a private/unpublished-only image as retained. Builds run this check; normal builds and CI never fetch original artwork.
+
+`/chapters/<slug>.json` projects known starts from published tracks into Podcasting 2.0 JSON chapters, with titles `NN. Artist - Title`. Fractional seconds retain their canonical precision. Null starts stay absent; incomplete tracklists are not filled in. The same publication predicate protects this endpoint and the feed. This resource-support slice deliberately leaves RSS unchanged; the next slice adds references only after the resources have a compatible rollout/rollback path. See [feed validation](FEED-VALIDATION.md#m8-resource-support-and-rollout).

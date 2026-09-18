@@ -4,9 +4,9 @@ Status: **Implementation in progress; Safari compatibility is the first review s
 
 Roadmap: [M8](../../ROADMAP.md#m8---listening-and-feed-enhancements). Baseline: [current status](../STATUS.md), [player behavior](../PLAYER.md), [content](../CONTENT.md), and [feed validation](../FEED-VALIDATION.md). M0-M7 keep their numbers. Drafts and scheduled repository publishing are now M9. Older milestone documents retain their original numbering as historical evidence.
 
-The Safari slice is open as [PR #56](https://github.com/treyturner/nurevolution.net/pull/56). Timestamp sharing is implemented on the local forward branch `feat/m8-timestamp-sharing`, including route transactions, saved-position precedence, copy controls, and automated browser regressions. It is awaiting its own review slot and owner layout acceptance. Media Session progress is recorded below; feed resources and RSS advertisement remain to be implemented; this progress does not close any outstanding physical-device requirements.
+The Safari slice is open as [PR #56](https://github.com/treyturner/nurevolution.net/pull/56). Timestamp sharing is implemented on the local forward branch `feat/m8-timestamp-sharing`, including route transactions, saved-position precedence, copy controls, and automated browser regressions. It is awaiting its own review slot and owner layout acceptance. Media Session progress is recorded below; feed resources are implemented locally and RSS advertisement remains to be implemented; this progress does not close any outstanding physical-device requirements.
 
-The Media Session slice is implemented on local `feat/m8-media-session`, stacked after timestamp sharing. System actions use the existing controller, metadata and confirmed position state follow playback, and missing/unsupported APIs are isolated. Device media-control acceptance and the feed slices remain pending.
+The Media Session slice is implemented on local `feat/m8-media-session`, stacked after timestamp sharing. System actions use the existing controller, metadata and confirmed position state follow playback, and missing/unsupported APIs are isolated. Device media-control acceptance remains pending. The resource-support slice is implemented locally on `feat/m8-feed-resources`: 55 verified JPEG derivatives and public-only JSON chapter endpoints, with RSS unchanged. Its full local verification passed 523 unit/integration tests, 326 browser tests (four expected skips), and exact-runtime/proxy delivery checks on September 18. Separate review and real podcast-client acceptance remain pending.
 
 ## Outcome and scope boundary
 
@@ -145,7 +145,7 @@ Serve derivatives through the normal application image with `image/jpeg`, immuta
 
 ### Chapter document and endpoint
 
-Add a deterministic shared chapter projection/serializer and a server responder at `/chapters/<slug>.json` (`server/routes/chapters/[slug].json.ts`, backed by `server/chapters/`). Resolve the episode through `contentRepository.find(slug, asOf)` on each request, retaining the server's publication predicate. Only published episodes with at least one known track start return a document.
+Add a deterministic shared chapter projection/serializer and a server responder at `/chapters/<slug>.json` (`server/routes/chapters/[file].ts`, backed by `server/chapters/`). Resolve the episode through `contentRepository.find(slug, asOf)` on each request, retaining the server's publication predicate. Only published episodes with at least one known track start return a document.
 
 The [chapter document](https://github.com/Podcastindex-org/podcast-namespace/blob/main/docs/examples/chapters/jsonChapters.md) uses `version: "1.2.0"` and a `chapters` array of `{ startTime, title }`. Titles are `NN. Artist - Title`; starts preserve canonical numeric precision. Emit known tracks in order, skipping null starts. Do not insert zero, estimate missing cuts, interpolate unknown tracks, or require a complete list. A first known chapter can begin after zero. Partial timing represents known starts only and cannot identify every intervening track. No external track links, per-chapter image research, or embedded MP3 metadata is included.
 

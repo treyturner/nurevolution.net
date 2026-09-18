@@ -72,3 +72,17 @@ M6 closed by owner acceptance on 2026-09-18. Remaining client-download, old-subs
 ## Evidence record
 
 M3's local implementation results are recorded in its [completion evidence](milestones/M03-podcast-rss.md#completion-evidence). M5 rehearsal results are in its [live evidence](milestones/evidence/M05-live-rehearsal.json). The [M6 cutover evidence](milestones/evidence/M06-cutover.json) records canonical production delivery and feed validation; [M6 closure](milestones/evidence/M06-retirement.json) records retirement and accepted limitations. The owner subsequently completed Podcast Addict loading/seeking for every episode. Complete client downloads, old-subscription refresh, and directory checks remain unverified follow-ups outside M6. Record new observations with their actual scope and date.
+
+## M8 resource support and rollout
+
+The local resource-support slice implements `/chapters/<slug>.json` and `/episode-artwork/v1-<source-sha256>.jpg`. It does not yet advertise them in RSS. JSON chapters use version `1.2.0`, retain fractional starts, and omit unknown timestamps; untimed, unknown, draft, and future episodes return generic non-cacheable 404s. GET/HEAD share representation metadata, weak SHA-256 ETags support 304, and successful responses use `public, max-age=60, must-revalidate`, `nosniff`, and anonymous CORS. Read/serialization failures return a generic non-cacheable 503. Other methods return 405.
+
+Chapter `v` query values are refresh hints, never immutable snapshots: old, current, or missing hints all resolve the current eligible document and ETag. Resource URLs remain available after timing corrections. Generated JPEGs have exact-path immutable caching, JPEG media type, HEAD support, and `nosniff`; unknown image paths do not inherit immutable caching. Offline artifact checks validate every image, and built-browser/delivery checks exercise real routes. The Nitro route reads a complete filename and strips `.json` explicitly because its current router treats a suffix on a dynamic parameter as part of the parameter name.
+
+When deployment is separately authorized:
+
+1. Deploy and verify the **resource-support release**, including representative chapter GET/HEAD/304, one untimed 404, every artwork mapping, and unchanged RSS identities.
+2. Retain that exact verified release and its delivery bundle as the compatible fallback.
+3. Deploy the later **RSS-advertisement release** and verify item artwork and chapter references with actual podcast clients. Recheck Ruminate/Praxis fractional chapter seeks and an untimed guest episode without a chapter reference.
+
+After advertisement, rollback targets must continue serving chapter and previously advertised artwork paths. Do not revert to a pre-support release that would strand cached feed references. Existing GUID/enclosure protection remains mandatory. No step here authorizes deployment; M8 work currently remains undeployed. Earlier all-episode Podcast Addict load/seek acceptance does not establish support for these new chapter/artwork fields.

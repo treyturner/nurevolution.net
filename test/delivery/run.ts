@@ -11,6 +11,7 @@ import { renderSite, profileSchema } from '../../tools/deploy/render-config.ts'
 import { deliveryFixture } from './fixture.ts'
 import { archiveConfigDigest } from '../../tools/deploy/image-identity.ts'
 import { verifyVirtualProxy } from './virtual.ts'
+import { verifyFeedResources } from './feed-resources.ts'
 
 const root = resolve('.local/delivery'),
   artifacts = resolve(root, 'artifacts')
@@ -227,6 +228,7 @@ try {
     )
   const feed = await (await get(appOrigin + '/feed/podcast')).text()
   assert.equal((feed.match(/<item>/g) ?? []).length, 55)
+  await verifyFeedResources(appOrigin, get)
   for (const path of [
     '/player-test',
     '/media-test',
@@ -636,6 +638,7 @@ try {
     commit,
   )
   const proxiedFeed = await get(webOrigin + '/feed/podcast')
+  await verifyFeedResources(webOrigin, get)
   assert.equal((await proxiedFeed.text()).match(/<item>/g)!.length, 55)
   const feedTag = proxiedFeed.headers.get('etag')!
   assert.ok(feedTag)
