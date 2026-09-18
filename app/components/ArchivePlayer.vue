@@ -14,13 +14,11 @@ const props = defineProps<{
   episode: EpisodeDetail | null
   player: PodcastPlayer
   failedPath?: string | null
-  siteUrl?: string
 }>()
 const config = useRuntimeConfig()
 const canCopyTimestamp = computed(() =>
   Boolean(
     props.episode &&
-    props.siteUrl &&
     props.player.state.initialized &&
     !props.player.state.restoring &&
     !props.player.sequencing.busy &&
@@ -30,7 +28,7 @@ const canCopyTimestamp = computed(() =>
 function copyTimestamp(target: HTMLElement) {
   if (!canCopyTimestamp.value) return
   const url = timestampUrl(
-    props.siteUrl!,
+    window.location.origin,
     props.episode!.path,
     props.player.state.pendingSeek ?? props.player.state.currentTime,
   )

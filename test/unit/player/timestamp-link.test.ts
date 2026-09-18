@@ -8,6 +8,15 @@ import {
 
 const path = '/episodes/trey-turner-praxis'
 describe('timestamp links', () => {
+  it.each([
+    'https://nurevolution.net',
+    'https://3000--main--dev--treyturner.coder.treyturner.info',
+    'http://localhost:3000',
+  ])('preserves the supplied environment origin %s', (origin) => {
+    expect(timestampUrl(origin, path + '?old=1#old', 208.794)).toBe(
+      `${origin}${path}?t=208.794`,
+    )
+  })
   it('accepts only one bounded unsigned decimal and ignores non-episode URLs', () => {
     for (const value of [
       '0',

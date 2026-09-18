@@ -79,7 +79,7 @@ Primary targets: `nuxt.config.ts`, the fixture config, `app/services/track-navig
 
 ### URL and copy contract
 
-Use the canonical episode URL with a single `t` query parameter containing seconds: `/episodes/trey-turner-praxis?t=208.794`. Generated links use `show.siteUrl`, never the dev hostname or an audio/download URL. Canonical/OG episode identity remains the plain episode URL. Existing episode-copy controls continue copying that plain URL.
+Use the episode path under the current browser origin with a single `t` query parameter containing seconds: `/episodes/trey-turner-praxis?t=208.794`. Generate timestamp links at copy time using `window.location.origin`, preserving the current environment’s scheme, hostname, and port. Use the episode path, never an audio/download URL, and omit unrelated query/hash state. Canonical/OG episode identity remains the plain episode URL. Existing episode-copy controls continue copying that plain URL.
 
 Parse only a single nonempty decimal string matching digits with an optional fractional part, bounded to 64 characters, finite and nonnegative, and no greater than `Number.MAX_SAFE_INTEGER`. Allow leading zeros; reject signs, whitespace, exponents, hex, non-numeric suffixes, arrays/repeated `t`, and missing values. Serialize a finite time with round-trip numeric precision, expanding exponent notation if necessary rather than rounding it. Truncate only when formatting a lower-precision display. Timestamp intent is supported on canonical episode routes; `/` keeps its existing restoration behavior and ignores `t`.
 
@@ -105,7 +105,7 @@ Add a pure `app/services/timestamp-link.ts` parser/serializer. Extend `EpisodePa
 
 Wire intent through `app/middleware/episode.ts`, `app/plugins/episode-navigation.ts`, `useEpisodePlaybackNavigation.ts`, and `usePodcastPlayer.ts`. Consume it once during initialization or a successfully committed relevant route change; `createPlayer.select()` remains idempotent for unchanged sources, and same-source intents call pause/seek directly. Adjust `PlayerSelection`/seek feedback only as needed to distinguish shared from saved positions. Preserve current local-storage format/expiry and do not save the temporarily selected root episode during restoration.
 
-UI targets: `ArchivePlayer.vue`, `ArchiveLists.vue`, `EpisodeTracklist.vue`, `useCopyLink.ts`, existing icon/toast components, and `main.css`. Pass canonical episode/site data explicitly to the copy controls; do not assemble URLs from displayed rounded timestamps.
+UI targets: `ArchivePlayer.vue`, `ArchiveLists.vue`, `EpisodeTracklist.vue`, `useCopyLink.ts`, existing icon/toast components, and `main.css`. Pass the episode path and precise position explicitly to timestamp-copy controls and resolve the browser origin at activation; do not assemble URLs from displayed rounded timestamps.
 
 Acceptance: unit parser/serializer round trips (including sample-derived fractions and zero); explicit-vs-saved precedence; delayed metadata; out-of-range clamping; query-only transitions; aborted/failed navigation; rapid consecutive links; copy without seek; untimed controls; current-track toggle unchanged; Back/Forward; storage unavailable; hydration/no autoplay. Extend `test/unit/player`, `test/nuxt/playback-navigation.test.ts`, `playback-session.test.ts`, and browser episode-link/restoration/confirmation/track suites.
 

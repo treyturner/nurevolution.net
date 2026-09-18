@@ -4,7 +4,6 @@ import type { PodcastPlayer } from '../composables/usePodcastPlayer'
 import { formatTime } from '../services/episode-page'
 import { useCompactContainer } from '../composables/useCompactContainer'
 import TimestampCopyButton from './TimestampCopyButton.vue'
-import { timestampUrl } from '../services/timestamp-link'
 import { useCopyLink } from '../composables/useCopyLink'
 import CopyLinkToast from './CopyLinkToast.vue'
 const { toast, copyLink } = useCopyLink()
@@ -14,7 +13,6 @@ const props = defineProps<{
   durationSeconds?: number | null
   timeDisplay?: 'timestamp' | 'duration'
   player?: PodcastPlayer
-  siteUrl?: string
   episodePath?: string
 }>()
 function displayTime(index: number) {
@@ -74,7 +72,7 @@ function activate(position: number) {
     class="track-list"
     :class="{
       'compact-tracks': compact,
-      'has-track-links': siteUrl && episodePath,
+      'has-track-links': episodePath,
     }"
   >
     <li
@@ -141,8 +139,9 @@ function activate(position: number) {
         </span>
       </component>
       <TimestampCopyButton
-        v-if="siteUrl && episodePath && track.startTime !== null"
-        :url="timestampUrl(siteUrl, episodePath, track.startTime)"
+        v-if="episodePath && track.startTime !== null"
+        :episode-path="episodePath"
+        :seconds="track.startTime"
         :label="`Copy link to track ${track.position}: ${track.artist} - ${track.title}`"
         @copy="copyLink({ ...$event, message: 'Timestamp link copied' })"
       />

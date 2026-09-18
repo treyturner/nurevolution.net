@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import LinkIcon from './LinkIcon.vue'
+import { timestampSeconds, timestampUrl } from '../services/timestamp-link'
 const props = defineProps<{
-  url: string | null
+  episodePath: string
+  seconds: number
   label: string
   disabled?: boolean
 }>()
@@ -9,9 +11,15 @@ const emit = defineEmits<{
   copy: [request: { url: string; target: HTMLElement }]
 }>()
 function copy(event: MouseEvent) {
-  if (!props.url || props.disabled) return
+  if (props.disabled) return
+  const url = timestampUrl(
+    window.location.origin,
+    props.episodePath,
+    props.seconds,
+  )
+  if (!url) return
   emit('copy', {
-    url: props.url,
+    url,
     target: event.currentTarget as HTMLElement,
   })
 }
@@ -23,7 +31,7 @@ function copy(event: MouseEvent) {
     type="button"
     :aria-label="label"
     :title="label"
-    :disabled="disabled || !url"
+    :disabled="disabled || timestampSeconds(seconds) === null"
     @click="copy"
   >
     <LinkIcon />

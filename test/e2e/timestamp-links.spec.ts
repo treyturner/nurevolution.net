@@ -2,6 +2,11 @@ import { expect, test, type Page } from '@playwright/test'
 import { readFile } from 'node:fs/promises'
 import { fulfillAudio, hydrated, ready, stubArchiveMedia } from './media'
 import { resumeKey, visitKey } from '../../app/services/playback-storage'
+import {
+  devBaseURL,
+  devWebOrigin,
+  devMediaOrigin,
+} from '../../playwright.config'
 
 const praxis = '/episodes/trey-turner-praxis'
 const ruminate = '/episodes/trey-turner-ruminate'
@@ -184,7 +189,7 @@ test('cross-episode time links honor cancellation, then commit paused at the sha
   await expect(page.locator('html')).toHaveAttribute('data-loads', '2')
 })
 
-test('copying positions and timed tracks preserves playback and canonical fractional values', async ({
+test('copying positions and timed tracks preserves playback and uses the current origin with fractional values', async ({
   page,
 }) => {
   await page.goto(ruminate + '?t=8.25')
@@ -198,7 +203,7 @@ test('copying positions and timed tracks preserves playback and canonical fracti
     .click()
   await expect(page.locator('html')).toHaveAttribute(
     'data-copied',
-    'https://nurevolution.net' + ruminate + '?t=8.25',
+    new URL(page.url()).origin + ruminate + '?t=8.25',
   )
   await expect(page.locator('.copy-link-toast')).toHaveText(
     'Timestamp link copied',
@@ -206,7 +211,7 @@ test('copying positions and timed tracks preserves playback and canonical fracti
   await page.getByRole('button', { name: /^Copy link to track 2:/ }).click()
   await expect(page.locator('html')).toHaveAttribute(
     'data-copied',
-    'https://nurevolution.net' + ruminate + '?t=' + String(7695011 / 44100),
+    new URL(page.url()).origin + ruminate + '?t=' + String(7695011 / 44100),
   )
   await at(page, 8.25)
   expect(await page.locator('.track-row button').count()).toBe(0)
@@ -240,7 +245,7 @@ test('playhead menu supports keyboard access, dismissal and narrow screens witho
   await copy.press('Enter')
   await expect(page.locator('html')).toHaveAttribute(
     'data-copied',
-    'https://nurevolution.net' + ruminate + '?t=8.25',
+    new URL(page.url()).origin + ruminate + '?t=8.25',
   )
   await at(page, 8.25)
   await page.locator('audio').evaluate((audio: HTMLAudioElement) => {
@@ -306,6 +311,50 @@ test('only the thumb opens timestamp copying, while the rest of the bar still se
   await expect(menu).toHaveCount(0)
   await expect(page.locator('audio')).toHaveJSProperty('paused', true)
 })
+
+for (const environment of ['dev delivery', 'HTTPS preview'] as const) {
+  test(`timestamp copies round trip within the ${environment} origin`, async ({
+    page,
+    baseURL,
+  }) => {
+    const origin =
+      environment === 'dev delivery'
+        ? devBaseURL
+        : 'https://timestamp-preview.example.test'
+    if (environment === 'dev delivery') {
+      await stubArchiveMedia(page, { web: devWebOrigin, media: devMediaOrigin })
+      await page.route(devMediaOrigin + '/**', (route) =>
+        fulfillAudio(route, long, 'audio/wav'),
+      )
+    } else {
+      // Model an HTTPS proxy serving the same build from a differently named backend.
+      await page.route(origin + '/**', async (route) => {
+        const requested = new URL(route.request().url())
+        const response = await route.fetch({
+          url: new URL(requested.pathname + requested.search, baseURL).href,
+        })
+        await route.fulfill({ response })
+      })
+    }
+    await page.goto(origin + ruminate + '?t=8.25&source=test#tracks')
+    await at(page, 8.25)
+    await rightClickThumb(page)
+    await page.getByRole('menuitem', { name: 'Copy timestamp link' }).click()
+    const copied = await page.locator('html').getAttribute('data-copied')
+    expect(copied).toBe(origin + ruminate + '?t=8.25')
+    await page.goto(copied!)
+    await at(page, 8.25)
+    await page.getByRole('button', { name: /^Copy link to track 1:/ }).click()
+    const track = await page.locator('html').getAttribute('data-copied')
+    expect(track).toBe(origin + ruminate + '?t=0')
+    await page.goto(track!)
+    await at(page, 0)
+    await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
+      'href',
+      'https://nurevolution.net' + ruminate,
+    )
+  })
+}
 
 test('delayed metadata retains the newest link and honors a later Play request', async ({
   page,
@@ -391,7 +440,7 @@ test('track links omit unknown starts and reflow without nested controls or disp
   await page.keyboard.press('Enter')
   await expect(page.locator('html')).toHaveAttribute(
     'data-copied',
-    'https://nurevolution.net' + praxis + '?t=8.25',
+    new URL(page.url()).origin + praxis + '?t=8.25',
   )
   await at(page, 0)
 })

@@ -54,10 +54,10 @@ export function timestampSeconds(seconds: number): string | null {
   return expanded.length <= maximumLength ? expanded : null
 }
 
-export function timestampUrl(siteUrl: string, path: string, seconds: number) {
+export function timestampUrl(baseUrl: string, path: string, seconds: number) {
   const value = timestampSeconds(seconds)
   if (value === null) return null
-  const url = new URL(path, siteUrl)
+  const url = new URL(path, baseUrl)
   url.search = ''
   url.hash = ''
   url.searchParams.set('t', value)
