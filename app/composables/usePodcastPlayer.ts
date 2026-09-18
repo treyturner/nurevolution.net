@@ -171,6 +171,9 @@ export function usePodcastPlayer(
       },
     )
     state.attached = true
+    // The application is running even while a saved selection awaits its request.
+    state.initialized = true
+    document.dispatchEvent(new Event('nurevolution:player-ready'))
     storage = navigation
       ? createPlaybackStorage(() => window.localStorage)
       : undefined
@@ -194,8 +197,6 @@ export function usePodcastPlayer(
     }
     select(saved)
     bootstrapped = true
-    state.initialized = true
-    document.dispatchEvent(new Event('nurevolution:player-ready'))
     initialWrite = !state.restoreMessage
     savedId = state.restoreMessage ? state.sourceId : null
     capture(controller.snapshot())
