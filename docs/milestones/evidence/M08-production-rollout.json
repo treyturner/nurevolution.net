@@ -1,0 +1,76 @@
+{
+  "schemaVersion": 1,
+  "status": "both-phases-deployed-verified-and-backed-up",
+  "productionBefore": "c54adaef5b3f1cc75bf24c1b22cb6e194ea21742",
+  "support": {
+    "at": "2026-09-18T21:51:21.160583+00:00",
+    "phase": "support",
+    "release": "4d0100c4cc5a0ee7122ad896db2dc2840f48e57b",
+    "health": {
+      "healthy": true,
+      "release": "4d0100c4cc5a0ee7122ad896db2dc2840f48e57b"
+    },
+    "subscriberIdentitiesAndDatesPreserved": 55,
+    "legacyFeedAliases": 2,
+    "feedByteIdenticalToPreviousProduction": true,
+    "artworkBodiesAndHashesVerified": 55,
+    "timedChapterDocumentsVerified": 34,
+    "untimedChapter404sVerified": 21,
+    "knownStartsVerified": 626,
+    "fractionalChapterGETHEAD304": [
+      "trey-turner-ruminate",
+      "trey-turner-praxis"
+    ],
+    "itemArtworkReferences": 0,
+    "chapterReferences": 0,
+    "physicalPodcastClientAcceptance": "pending",
+    "verifyRunUrl": "https://github.com/treyturner/nurevolution.net/actions/runs/35397286533",
+    "deploymentRunUrl": "https://github.com/treyturner/nurevolution.net/actions/runs/35398621964",
+    "retainedBundleVerified": true
+  },
+  "advertisement": {
+    "at": "2026-09-18T21:54:11.205276+00:00",
+    "phase": "advertisement",
+    "release": "4ca5c3d676824348eefaab585a8144300d0a7858",
+    "health": {
+      "healthy": true,
+      "release": "4ca5c3d676824348eefaab585a8144300d0a7858"
+    },
+    "subscriberIdentitiesAndDatesPreserved": 55,
+    "legacyFeedAliases": 2,
+    "feedByteIdenticalToPreviousProduction": false,
+    "artworkBodiesAndHashesVerified": 55,
+    "timedChapterDocumentsVerified": 34,
+    "untimedChapter404sVerified": 21,
+    "knownStartsVerified": 626,
+    "fractionalChapterGETHEAD304": [
+      "trey-turner-ruminate",
+      "trey-turner-praxis"
+    ],
+    "itemArtworkReferences": 55,
+    "chapterReferences": 34,
+    "physicalPodcastClientAcceptance": "pending",
+    "verifyRunUrl": "https://github.com/treyturner/nurevolution.net/actions/runs/35394870918",
+    "deploymentRunUrl": "https://github.com/treyturner/nurevolution.net/actions/runs/35398872769",
+    "retainedBundleVerified": true
+  },
+  "rollbackTarget": "4d0100c4cc5a0ee7122ad896db2dc2840f48e57b",
+  "activeToolingMatchesProduction": true,
+  "pendingRecoveryJournal": false,
+  "backup": {
+    "at": "2026-09-18T21:54:29.275Z",
+    "snapshotId": "42c19efd169f29b1d4d2c57d1b6213f94bf314db593528f66d435dbc2e469f36",
+    "repositoryCheck": "passed",
+    "currentAndPreviousRecordsPresent": true,
+    "retainedReleaseBundlesPresent": [
+      "4ca5c3d676824348eefaab585a8144300d0a7858",
+      "4d0100c4cc5a0ee7122ad896db2dc2840f48e57b"
+    ],
+    "requiredFilesVerified": 18,
+    "verification": "repository check and snapshot file listing; not a new full-data restore"
+  },
+  "remainingAcceptance": [
+    "Physical podcast-client artwork and chapter navigation",
+    "Remaining device dialog, restoration, guest-episode, and media-control checks"
+  ]
+}

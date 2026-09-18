@@ -35,8 +35,19 @@ it('checks the real maintained content and produces an offline, stable full-arch
   })
   expect(first.xmlByteLength).toBeGreaterThan(30_000)
   expect(first.xmlSha256).toMatch(/^[a-f0-9]{64}$/)
-  expect(await checkFeed(['--output', root], print, at)).toBe(0)
+  expect(await checkFeed([])).toBe(0)
   expect(JSON.parse(print.mock.calls[1]![0])).toEqual(first)
+  expect(await checkFeed(['--output', root], print, at)).toBe(0)
+  const frozen = JSON.parse(print.mock.calls[2]![0])
+  // Maintained timestamps change chapters and feed bytes; the frozen import retains identity.
+  expect(frozen).toMatchObject({
+    valid: true,
+    items: 55,
+    newestId: first.newestId,
+    oldestId: first.oldestId,
+    historicalItemsCompared: 55,
+  })
+  expect(frozen.xmlSha256).not.toBe(first.xmlSha256)
   expect(await readFile(resolve(root, 'wordpress-import.json'), 'utf8')).toBe(
     candidate.files.get('wordpress-import.json'),
   )

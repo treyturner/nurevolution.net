@@ -321,7 +321,7 @@ Run `pnpm verify`. External validator/client results are provisional until repea
 
 ### M8 - Listening and feed enhancements
 
-**Implementation consolidated in PR #56.** The owner prioritized this milestone ahead of drafts/scheduling on 2026-09-18 and deferred palettes and track/artist/release links. See the [M8 implementation plan](docs/milestones/M08-listening-and-feed-enhancements.md) for contracts, evidence, exclusions, and commit boundaries. All five areas and subsequent UI refinements are included in the expanded PR at the owner's request. The earlier Safari-only head passed CI/automatic review and partial actual-iPad acceptance; the expanded PR passed its full local gate and awaits fresh remote CI/review; remaining device/client acceptance is still required. No M8 changes are deployed.
+**Implementation deployed; device/client acceptance remains open.** The owner prioritized this milestone ahead of drafts/scheduling on 2026-09-18 and deferred palettes and track/artist/release links. PR #56 merged all five areas and UI refinements after automatic review approval and green CI. The phased production rollout completed on September 18: support release `4d0100c` is retained as the fallback, and full M8 release `4ca5c3d` is live. HTTP resource/feed checks and the post-deployment backup passed. Remaining physical-device and podcast-client acceptance still gates milestone closure. See the [M8 implementation plan](docs/milestones/M08-listening-and-feed-enhancements.md) and [production evidence](docs/milestones/evidence/M08-production-rollout.json).
 
 **Outcome:** share precise listening positions, use supported device media controls, expose existing artwork/timed tracks in the feed, and restore ordinary playback on Safari 14.3.
 
@@ -335,7 +335,7 @@ Run `pnpm verify`. External validator/client results are provisional until repea
 
 **Acceptance/verification:** preserve canonical fractional seconds and [truncate earlier when lower precision is required](docs/CONTENT.md#episode-fields-and-new-episodes). Cover URL/restoration precedence, no autoplay, player races, unsupported device APIs, untimed/missing tracks, feed compatibility, and unpublished endpoint filtering. Run `pnpm verify`, actual Safari 14.3 playback/seek checks, supported device controls, and a chapter-capable podcast-client check. Existing missing metadata does not block chapter generation for timed episodes.
 
-**Delivery:** Safari, sharing, device controls, feed support, and RSS advertisement retain distinct commit boundaries within the consolidated PR. All five areas are required to close M8. The resource-support release must still be published, deployed, verified, and retained as a fallback before the RSS-advertisement release. No M8 deployment is authorized.
+**Delivery:** All five areas are deployed and required to close M8. The support-only release was independently published, deployed, verified, and retained before RSS advertisement. Future rollback targets must preserve advertised resource URLs. The [rollout record](docs/operations/m8-rollout.md) identifies both verified artifacts, successful production promotions, and backup evidence.
 
 ### M9 - Drafts and scheduled repository publishing
 
