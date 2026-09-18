@@ -124,7 +124,7 @@ for (const [width, scale] of [
   })
 }
 
-test('download wraps before the status text, with long statuses confined to the player', async ({
+test('download stays below changing phone statuses and beside short desktop statuses', async ({
   page,
 }) => {
   await stubArchiveMedia(page)
@@ -154,12 +154,27 @@ test('download wraps before the status text, with long statuses confined to the 
       document.querySelector('.media-status')!.textContent =
         'Playing 1/16: Sinic - One Makes One'
     }, noGap)
-    await page.setViewportSize({ width: 390, height: 900 })
+    await page.setViewportSize({ width: 412, height: 900 })
     const narrow = await measurements()
     expect(narrow.link.top).toBeGreaterThanOrEqual(narrow.feedback.bottom)
     expect(narrow.text.height).toBeLessThanOrEqual(narrow.lineHeight + 1)
     expect(narrow.overflow).toBe(false)
-    await page.setViewportSize({ width: 700, height: 900 })
+    for (const message of [
+      'Loading audio…',
+      'Press Play to listen.',
+      'Playing 1/16: Sinic - One Makes One',
+    ]) {
+      await page.locator('.media-status').evaluate((element, message) => {
+        element.textContent = message
+      }, message)
+      const current = await measurements()
+      expect(current.link.top).toBeGreaterThanOrEqual(current.feedback.bottom)
+      expect(current.link.top - current.feedback.top).toBeCloseTo(
+        narrow.link.top - narrow.feedback.top,
+        1,
+      )
+    }
+    await page.setViewportSize({ width: 1440, height: 900 })
     const wide = await measurements()
     expect(wide.link.top).toBeLessThan(wide.feedback.bottom)
     expect(wide.text.height).toBeLessThanOrEqual(wide.lineHeight + 1)

@@ -1119,6 +1119,9 @@ button.track-row:disabled + .track-content {
   .rss-label {
     display: none;
   }
+  .player-links {
+    flex-basis: 100%;
+  }
   .player {
     grid-template-columns: minmax(0, 1fr);
     gap: 1.5rem;
