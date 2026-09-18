@@ -135,7 +135,7 @@ watch(
         :disabled="!seekable"
         :title="
           canCopyTimestamp
-            ? 'Right-click or long-press to copy a timestamp link'
+            ? 'Right-click or long-press the playhead to copy a timestamp link'
             : undefined
         "
         :aria-haspopup="canCopyTimestamp ? 'menu' : undefined"

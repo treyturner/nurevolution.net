@@ -9,6 +9,23 @@ const long = await readFile(
   new URL('../fixtures/media-app/public/long.wav', import.meta.url),
 )
 
+async function rightClickThumb(page: Page) {
+  const slider = page.getByRole('slider', { name: 'Playback position' })
+  const position = await slider.evaluate((input: HTMLInputElement) => {
+    const box = input.getBoundingClientRect()
+    const size = Number.parseFloat(
+      getComputedStyle(input).getPropertyValue('--playhead-size'),
+    )
+    return {
+      x:
+        size / 2 +
+        ((box.width - size) * Number(input.value)) / Number(input.max),
+      y: box.height / 2,
+    }
+  })
+  await slider.click({ button: 'right', position })
+}
+
 async function routeTo(page: Page, url: string) {
   await page.evaluate((url) => {
     const root = document.getElementById('__nuxt') as HTMLElement & {
@@ -175,9 +192,7 @@ test('copying positions and timed tracks preserves playback and canonical fracti
   await expect(
     page.getByRole('menuitem', { name: 'Copy timestamp link' }),
   ).toHaveCount(0)
-  await page
-    .getByRole('slider', { name: 'Playback position' })
-    .click({ button: 'right' })
+  await rightClickThumb(page)
   await page
     .getByRole('menuitem', { name: 'Copy timestamp link', exact: true })
     .click()
@@ -233,7 +248,7 @@ test('playhead menu supports keyboard access, dismissal and narrow screens witho
   })
   await page.getByRole('button', { name: 'Play', exact: true }).click()
   await expect(page.locator('audio')).toHaveJSProperty('paused', false)
-  await slider.click({ button: 'right' })
+  await rightClickThumb(page)
   await expect(copy).toBeFocused()
   const box = (await menu.boundingBox())!
   expect(box.x).toBeGreaterThanOrEqual(8)
@@ -246,10 +261,50 @@ test('playhead menu supports keyboard access, dismissal and narrow screens witho
   expect(Number(new URL(copied!).searchParams.get('t'))).toBeGreaterThanOrEqual(
     8.25,
   )
-  await slider.click({ button: 'right' })
+  await rightClickThumb(page)
   await page.locator('h1').click()
   await expect(menu).toHaveCount(0)
   await expect(page.locator('audio')).toHaveJSProperty('paused', false)
+})
+
+test('only the thumb opens timestamp copying, while the rest of the bar still seeks normally', async ({
+  page,
+}) => {
+  await page.goto(ruminate + '?t=0')
+  await at(page, 0)
+  const slider = page.getByRole('slider', { name: 'Playback position' })
+  const menu = page.getByRole('menu', { name: 'Playback position actions' })
+  for (const seconds of [0, 20, 40]) {
+    await routeTo(page, ruminate + '?t=' + seconds)
+    await at(page, seconds)
+    const box = (await slider.boundingBox())!
+    await slider.click({
+      button: 'right',
+      position: {
+        x: box.width * (seconds < 20 ? 0.75 : 0.25),
+        y: box.height / 2,
+      },
+    })
+    await expect(menu).toHaveCount(0)
+    await page.locator('.player-time').first().click({ button: 'right' })
+    await expect(menu).toHaveCount(0)
+    await rightClickThumb(page)
+    await expect(menu).toBeVisible()
+    await page
+      .getByRole('menuitem', { name: 'Copy timestamp link' })
+      .press('Escape')
+    await at(page, seconds)
+  }
+  await slider.click()
+  await expect
+    .poll(() =>
+      page
+        .locator('audio')
+        .evaluate((audio: HTMLAudioElement) => audio.currentTime),
+    )
+    .toBeCloseTo(20, 0)
+  await expect(menu).toHaveCount(0)
+  await expect(page.locator('audio')).toHaveJSProperty('paused', true)
 })
 
 test('delayed metadata retains the newest link and honors a later Play request', async ({

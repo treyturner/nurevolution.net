@@ -485,8 +485,19 @@ audio.custom-audio {
   cursor: pointer;
 }
 .seek-row input {
+  --playhead-size: 16px;
   flex: 1;
   width: 100%;
+}
+.seek-row input::-webkit-slider-thumb {
+  box-sizing: border-box;
+  width: var(--playhead-size);
+  height: var(--playhead-size);
+}
+.seek-row input::-moz-range-thumb {
+  box-sizing: border-box;
+  width: var(--playhead-size);
+  height: var(--playhead-size);
 }
 .playhead-menu {
   position: fixed;

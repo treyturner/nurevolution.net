@@ -249,6 +249,9 @@ it('cancels a long-press scrub, copies without seeking, and permits the next ord
     const input = wrapper.get<HTMLInputElement>(
       '[aria-label="Playback position"]',
     )
+    vi.spyOn(input.element, 'getBoundingClientRect').mockReturnValue(
+      new DOMRect(-4, 28, 200, 44),
+    )
     await input.trigger('pointerdown', {
       pointerType: 'touch',
       isPrimary: true,

@@ -16,6 +16,34 @@ const position = ref<CSSProperties>({
 })
 let timer: ReturnType<typeof setTimeout> | undefined
 let touch: { x: number; y: number } | undefined
+let contextEligible: boolean | null = null
+
+function thumb() {
+  const input = row.value!.querySelector('input')!
+  const box = input.getBoundingClientRect()
+  const size =
+    Number.parseFloat(
+      getComputedStyle(input).getPropertyValue('--playhead-size'),
+    ) || 16
+  const min = Number(input.min)
+  const span = Number(input.max) - min
+  const fraction =
+    span > 0 ? Math.max(0, Math.min(1, (Number(input.value) - min) / span)) : 0
+  return {
+    input,
+    size,
+    x: box.left + size / 2 + Math.max(0, box.width - size) * fraction,
+    y: box.top + box.height / 2,
+  }
+}
+function onThumb(event: MouseEvent) {
+  const head = thumb()
+  return (
+    event.target === head.input &&
+    !head.input.disabled &&
+    Math.hypot(event.clientX - head.x, event.clientY - head.y) <= head.size / 2
+  )
+}
 
 function cancelHold() {
   clearTimeout(timer)
@@ -28,15 +56,18 @@ function close(restoreFocus = false) {
   if (restoreFocus)
     row.value?.querySelector('input')?.focus({ preventScroll: true })
 }
-async function open(x: number, y: number) {
+async function open() {
   if (!props.enabled) return
   cancelHold()
   suppressSeek.value = true
   emit('open')
-  position.value = { left: `${x}px`, top: `${y}px`, visibility: 'hidden' }
+  position.value = { left: '0px', top: '0px', visibility: 'hidden' }
   opened.value = true
   await nextTick()
   if (!opened.value) return
+  const head = thumb()
+  const x = head.x
+  const y = head.y + head.size / 2 + 6
   const box = menu.value!.getBoundingClientRect()
   position.value = {
     left: `${Math.max(8, Math.min(x, window.innerWidth - box.width - 8))}px`,
@@ -47,9 +78,13 @@ async function open(x: number, y: number) {
   if (opened.value) item.value!.focus({ preventScroll: true })
 }
 function context(event: MouseEvent) {
-  if (!props.enabled) return
+  // Check the start of the gesture: a touch elsewhere on the track may have
+  // moved the native slider thumb by the time its contextmenu event arrives.
+  const eligible = contextEligible ?? onThumb(event)
+  contextEligible = null
+  if (!props.enabled || !eligible) return
   event.preventDefault()
-  void open(event.clientX, event.clientY)
+  void open()
 }
 function triggerKey(event: KeyboardEvent) {
   if (
@@ -58,26 +93,30 @@ function triggerKey(event: KeyboardEvent) {
   )
     return
   event.preventDefault()
-  const input = row.value!.querySelector('input')!
-  const box = input.getBoundingClientRect()
-  const fraction =
-    Number(input.max) > 0 ? Number(input.value) / Number(input.max) : 0
-  void open(box.left + box.width * fraction, box.bottom)
+  void open()
 }
 function pointerDown(event: PointerEvent) {
   cancelHold()
   suppressSeek.value = false
-  if (!props.enabled || event.pointerType !== 'touch' || !event.isPrimary)
+  contextEligible = onThumb(event)
+  if (
+    !props.enabled ||
+    !contextEligible ||
+    event.pointerType !== 'touch' ||
+    !event.isPrimary
+  )
     return
   touch = { x: event.clientX, y: event.clientY }
-  timer = setTimeout(() => void open(event.clientX, event.clientY), 600)
+  timer = setTimeout(() => void open(), 600)
 }
 function pointerMove(event: PointerEvent) {
   if (
     touch &&
     Math.hypot(event.clientX - touch.x, event.clientY - touch.y) > 10
-  )
+  ) {
     cancelHold()
+    contextEligible = false
+  }
 }
 function copy() {
   if (props.enabled) emit('copy', row.value!.querySelector('input')!)
