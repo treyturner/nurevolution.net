@@ -122,7 +122,7 @@ describe('archive presentation and native media integration', () => {
         [episode.tracks[0]!, { ...episode.tracks[1]!, startTime: null }],
       ]) {
         await wrapper.setProps({ episode: { ...episode, tracks } })
-        expect(status.text()).toBe('Loading audio…')
+        expect(status.text()).toBe('Loading: Trey Turner - Praxis')
       }
       await wrapper.setProps({ episode })
       player.seek(0)
@@ -156,7 +156,7 @@ describe('archive presentation and native media integration', () => {
         [episode.tracks[0]!, { ...episode.tracks[1]!, startTime: null }],
       ]) {
         await wrapper.setProps({ episode: { ...episode, tracks } })
-        expect(status.text()).toBe('Playing')
+        expect(status.text()).toBe('Playing: Trey Turner - Praxis')
       }
     } finally {
       wrapper.unmount()

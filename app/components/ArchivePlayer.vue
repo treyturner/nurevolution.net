@@ -87,9 +87,10 @@ const statusMessage = computed(() => {
   if (props.episode && !props.player.state.initialized) return 'Loading player…'
   if (
     (status.value === 'playing' || status.value === 'loading') &&
-    props.player.state.sourceId === props.episode?.id
+    props.episode &&
+    props.player.state.sourceId === props.episode.id
   ) {
-    const tracks = props.episode?.tracks ?? []
+    const tracks = props.episode.tracks
     const position =
       status.value === 'loading'
         ? trackNavigation(
@@ -99,10 +100,10 @@ const statusMessage = computed(() => {
           ).current
         : props.player.tracks.current
     const current = tracks.find((track) => track.position === position)
-    if (current) {
-      const action = status.value === 'loading' ? 'Loading' : 'Playing'
+    const action = status.value === 'loading' ? 'Loading' : 'Playing'
+    if (current)
       return `${action} ${current.position}/${tracks.length}: ${current.artist} - ${current.title}`
-    }
+    return `${action}: ${props.episode.artist} - ${props.episode.title}`
   }
   return messages[status.value]
 })

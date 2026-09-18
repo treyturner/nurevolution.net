@@ -45,16 +45,20 @@ function copyEpisodeLink(episode: EpisodeSummary, event: MouseEvent) {
           decoding="async"
         />
         <span class="episode-list-info">
-          <span class="episode-list-title">{{ episode.title }}</span
-          ><span class="episode-list-artist"
-            >{{ episode.artist
-            }}<template v-if="episode.publishedAt"
-              ><span aria-hidden="true"> · </span
-              ><time :datetime="episode.publishedAt">{{
-                formatDate(episode.publishedAt)
-              }}</time></template
-            ></span
-          >
+          <span class="episode-list-title">{{ episode.title }}</span>
+          <span class="episode-list-artist">
+            <span class="episode-list-meta">
+              <span class="episode-list-artist-name">{{ episode.artist }}</span>
+              <time
+                v-if="episode.publishedAt"
+                class="episode-list-date"
+                :datetime="episode.publishedAt"
+              >
+                <span class="episode-date-separator" aria-hidden="true">·</span
+                >{{ formatDate(episode.publishedAt) }}
+              </time>
+            </span>
+          </span>
         </span>
       </NuxtLink>
       <button

@@ -832,9 +832,31 @@ audio.custom-audio {
   font-size: 0.72rem;
   color: var(--muted);
   margin-top: 0.2rem;
+  overflow: hidden;
   overflow-wrap: break-word;
   overflow-wrap: anywhere;
 }
+/* Whole artist/date items wrap first. Clip a hanging separator when the date
+   starts a new line; margins also work on Safari without flexbox gaps. */
+.episode-list-meta {
+  display: flex;
+  flex-wrap: wrap;
+  margin-left: -0.9em;
+}
+.episode-list-meta > * {
+  min-width: 0;
+  margin-left: 0.9em;
+}
+.episode-list-date {
+  position: relative;
+}
+.episode-date-separator {
+  position: absolute;
+  right: 100%;
+  width: 0.9em;
+  text-align: center;
+}
+
 .row-download,
 .row-copy-link {
   display: flex;
