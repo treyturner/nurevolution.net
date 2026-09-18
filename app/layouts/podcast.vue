@@ -75,6 +75,7 @@ useHead(() =>
       {{ announcement }}
     </p>
     <ArchivePlayer
+      :site-url="state.model.show.siteUrl"
       :episode="state.model.selected"
       :player="player"
       :failed-path="state.failedPath"

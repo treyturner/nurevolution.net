@@ -6,10 +6,16 @@ import { deliveryAssetUrl } from '../services/delivery-assets'
 import DownloadIcon from './DownloadIcon.vue'
 import ArtworkDialog from './ArtworkDialog.vue'
 import PlayerControls from './PlayerControls.vue'
+import TimestampCopyButton from './TimestampCopyButton.vue'
+import { timestampUrl } from '../services/timestamp-link'
+import { useCopyLink } from '../composables/useCopyLink'
+import CopyLinkToast from './CopyLinkToast.vue'
+const { toast, copyLink } = useCopyLink()
 const props = defineProps<{
   episode: EpisodeDetail | null
   player: PodcastPlayer
   failedPath?: string | null
+  siteUrl?: string
 }>()
 const config = useRuntimeConfig()
 useHead({
@@ -210,13 +216,34 @@ const feedback = computed(() => {
             </button>
           </span>
         </div>
-        <a
-          v-if="episode"
-          class="download-link"
-          :href="`/downloads/${episode.slug}`"
-          :download="episode.audio.downloadFilename"
-          >Download MP3 <DownloadIcon
-        /></a>
+        <div class="player-links">
+          <a
+            v-if="episode"
+            class="download-link"
+            :href="`/downloads/${episode.slug}`"
+            :download="episode.audio.downloadFilename"
+            >Download MP3 <DownloadIcon
+          /></a>
+          <TimestampCopyButton
+            v-if="episode && siteUrl"
+            :url="
+              timestampUrl(
+                siteUrl,
+                episode.path,
+                player.state.pendingSeek ?? player.state.currentTime,
+              )
+            "
+            label="Copy timestamp link"
+            text="Copy timestamp link"
+            :disabled="
+              !player.state.initialized ||
+              player.state.restoring ||
+              player.sequencing.busy ||
+              player.state.sourceId !== episode.id
+            "
+            @copy="copyLink({ ...$event, message: 'Timestamp link copied' })"
+          />
+        </div>
       </div>
       <!-- The server validates and sanitizes canonical descriptions before this projection. -->
       <!-- eslint-disable vue/no-v-html -->
@@ -228,6 +255,14 @@ const feedback = computed(() => {
       :src="artworkUrl"
       :alt="`${episode.artist} - ${episode.title} cover art`"
       @close="closeArtwork"
+    />
+    <span class="sr-only" role="status" aria-atomic="true">{{
+      toast?.message
+    }}</span>
+    <CopyLinkToast
+      v-if="toast"
+      :target="toast.target"
+      :message="toast.message"
     />
   </section>
 </template>

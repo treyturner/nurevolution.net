@@ -3,12 +3,19 @@ import type { EpisodeDetail } from '../../shared/content/public'
 import type { PodcastPlayer } from '../composables/usePodcastPlayer'
 import { formatTime } from '../services/episode-page'
 import { useCompactContainer } from '../composables/useCompactContainer'
+import TimestampCopyButton from './TimestampCopyButton.vue'
+import { timestampUrl } from '../services/timestamp-link'
+import { useCopyLink } from '../composables/useCopyLink'
+import CopyLinkToast from './CopyLinkToast.vue'
+const { toast, copyLink } = useCopyLink()
 const { container, compact } = useCompactContainer(24, true)
 const props = defineProps<{
   tracks: EpisodeDetail['tracks']
   durationSeconds?: number | null
   timeDisplay?: 'timestamp' | 'duration'
   player?: PodcastPlayer
+  siteUrl?: string
+  episodePath?: string
 }>()
 function displayTime(index: number) {
   const start = props.tracks[index]!.startTime
@@ -65,7 +72,10 @@ function activate(position: number) {
     v-if="tracks.length"
     ref="container"
     class="track-list"
-    :class="{ 'compact-tracks': compact }"
+    :class="{
+      'compact-tracks': compact,
+      'has-track-links': siteUrl && episodePath,
+    }"
   >
     <li
       v-for="(track, index) in tracks"
@@ -130,7 +140,17 @@ function activate(position: number) {
           >
         </span>
       </component>
+      <TimestampCopyButton
+        v-if="siteUrl && episodePath && track.startTime !== null"
+        :url="timestampUrl(siteUrl, episodePath, track.startTime)"
+        :label="`Copy link to track ${track.position}: ${track.artist} - ${track.title}`"
+        @copy="copyLink({ ...$event, message: 'Timestamp link copied' })"
+      />
     </li>
   </ol>
   <p v-else class="empty-tracks">No tracklist is available for this episode.</p>
+  <span class="sr-only" role="status" aria-atomic="true">{{
+    toast?.message
+  }}</span>
+  <CopyLinkToast v-if="toast" :target="toast.target" :message="toast.message" />
 </template>

@@ -152,6 +152,8 @@ function key(event: KeyboardEvent) {
         </div>
         <EpisodeTracklist
           v-if="selected"
+          :site-url="siteUrl"
+          :episode-path="selected.path"
           :tracks="selected.tracks"
           :duration-seconds="selected.durationSeconds"
           :time-display="trackTimeDisplay"

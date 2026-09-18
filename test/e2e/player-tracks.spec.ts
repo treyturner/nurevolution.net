@@ -80,7 +80,7 @@ test('the current track plays and pauses in place with mouse and keyboard', asyn
   })
   await at(page, 12.345)
   await expect(audio).toHaveJSProperty('seeking', false)
-  const current = page.locator('.track-list li[aria-current] button')
+  const current = page.locator('.track-list li[aria-current] button.track-row')
   await expect(current).toHaveAccessibleName(/^Play track 2:/)
   let seeks = 0
   await page.exposeFunction('recordTrackSeek', () => {
@@ -132,7 +132,7 @@ test('the final track offers a seek at the episode end instead of replaying the 
   })
   await at(page, 40)
   await expect(audio).toHaveJSProperty('seeking', false)
-  const final = page.locator('.track-list li[aria-current] button')
+  const final = page.locator('.track-list li[aria-current] button.track-row')
   await expect(final).toHaveAccessibleName(/^Seek to track 3:/)
   await final.click()
   await at(page, 32)
@@ -228,7 +228,7 @@ test('mobile keyboard track seeking preserves tabs and leaves uncertain gaps unh
   ).toBeDisabled()
   await page.getByRole('tab', { name: 'Tracklist' }).click()
   await expect(page.locator('.track-list li')).toHaveCount(5)
-  await expect(page.locator('.track-list button')).toHaveCount(3)
+  await expect(page.locator('.track-list button.track-row')).toHaveCount(3)
   const first = page.getByRole('button', { name: /^Seek to track 1:/ })
   await first.focus()
   await first.press('Enter')
