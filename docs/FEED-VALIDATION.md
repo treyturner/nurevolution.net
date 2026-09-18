@@ -88,6 +88,8 @@ The completed rollout followed this order:
 
 1. Deploy and verify the **resource-support release**, including representative chapter GET/HEAD/304, one untimed 404, every artwork mapping, and unchanged RSS identities.
 2. Retain that exact verified release and its delivery bundle as the compatible fallback.
-3. Deploy the later **RSS-advertisement release** and verify item artwork and chapter references with actual podcast clients. Recheck Ruminate/Praxis fractional chapter seeks and an untimed guest episode without a chapter reference.
+3. Deploy the later **RSS-advertisement release** and verify the advertised item artwork and chapter URLs over HTTP, including Ruminate/Praxis fractional chapter data and omission of chapter references for untimed episodes.
+
+Physical podcast-client acceptance remains pending: inspect episode artwork and chapter navigation, test Ruminate/Praxis fractional chapter seeks, and check an untimed guest episode without a chapter reference.
 
 After advertisement, rollback targets must continue serving chapter and previously advertised artwork paths. Do not revert to a pre-support release that would strand cached feed references. Existing GUID/enclosure protection remains mandatory. Both authorized deployment phases and their HTTP checks passed on 2026-09-18; physical podcast-client acceptance remains pending. Earlier all-episode Podcast Addict load/seek acceptance does not establish support for these new chapter/artwork fields.
