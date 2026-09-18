@@ -33,6 +33,20 @@ describe('element volume capabilities', () => {
     expect(active.audio.setVolume).not.toHaveBeenCalled()
     expect(active.audio.setMuted).not.toHaveBeenCalled()
   })
+  it('skips false-positive volume probes on hardware-owned platforms while retaining mute', () => {
+    const { audio, state } = setup()
+    const volume = createPlayerVolume({ ...audio, volumeWritable: false })
+    expect(volume.snapshot()).toMatchObject({
+      volumeSupported: false,
+      muteSupported: true,
+    })
+    volume.setVolume(0.3)
+    expect(audio.setVolume).not.toHaveBeenCalled()
+    volume.toggleMute()
+    expect(state.muted).toBe(true)
+    volume.toggleMute()
+    expect(state.muted).toBe(false)
+  })
   it('contains ignored writes and exceptions without conflating volume and mute', () => {
     const { audio } = setup()
     audio.setVolume.mockImplementation(() => {})

@@ -38,7 +38,10 @@ export type AudioPort = Pick<
   | 'removeEventListener'
 >
 
-export function createAudioAdapter(element: AudioPort) {
+export function createAudioAdapter(
+  element: AudioPort,
+  browser?: Pick<Navigator, 'userAgent' | 'platform' | 'maxTouchPoints'>,
+) {
   const subscriptions = new Set<() => void>()
   let disposed = false
 
@@ -47,6 +50,14 @@ export function createAudioAdapter(element: AudioPort) {
   }
 
   return {
+    // iOS can echo a volume assignment before reverting it, defeating a
+    // synchronous capability probe. Desktop-mode iPads identify as a touch Mac.
+    volumeWritable:
+      !browser ||
+      !(
+        /iPhone|iPad|iPod/.test(browser.userAgent) ||
+        (browser.platform === 'MacIntel' && browser.maxTouchPoints > 1)
+      ),
     snapshot() {
       assertActive()
       const duration = element.duration

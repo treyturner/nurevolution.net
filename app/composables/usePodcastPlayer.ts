@@ -195,7 +195,7 @@ export function usePodcastPlayer(
     )
     // Browser globals and storage are touched only by the mounted owner.
     controller = createPlayer(
-      createAudioAdapter(element!),
+      createAudioAdapter(element!, navigator),
       () => {},
       (snapshot, event) => {
         Object.assign(state, snapshot)
