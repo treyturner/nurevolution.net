@@ -172,4 +172,13 @@ test('mobile tabs keep both lists accessible, retain focus, and reflow with larg
   await expect(page.getByRole('tablist')).toHaveCount(0)
   await expect(page.locator('#episodes-panel')).toBeVisible()
   await expect(page.locator('#tracks-panel')).toBeVisible()
+  const episodeBox = (await page.locator('#episodes-panel').boundingBox())!
+  const trackBox = (await page.locator('#tracks-panel').boundingBox())!
+  expect(episodeBox.width).toBeCloseTo(trackBox.width, 1)
+  const actions = page.locator('.episode-row-actions').first()
+  const playBox = (await actions.locator('.row-play').boundingBox())!
+  const copyBox = (await actions.locator('.row-copy-link').boundingBox())!
+  expect(playBox.width).toBeGreaterThanOrEqual(44)
+  expect(playBox.height).toBeGreaterThanOrEqual(44)
+  expect(playBox.x + playBox.width).toBeCloseTo(copyBox.x, 1)
 })

@@ -33,19 +33,22 @@ export function createEpisodeSequencer(
   let continuing = false
   let disposed = false
   let failed = false
-  async function go(direction: EpisodeDirection, automatic: boolean) {
+  async function go(
+    target: EpisodeSummary | null,
+    mode: 'manual' | 'automatic' | 'play',
+  ) {
     if (disposed || moving || host.pending()) return
-    const target = host.neighbor(direction)
     if (!target) return
+    const automatic = mode === 'automatic'
     failed = false
     if (target.id === host.currentId()) {
       changed()
-      host.restart()
-      if (automatic) host.play()
+      if (mode !== 'play') host.restart()
+      if (mode !== 'manual') host.play()
       return
     }
     moving = true
-    continuing = automatic
+    continuing = mode !== 'manual'
     changed()
     try {
       const result = await host.navigate(target, automatic)
@@ -72,8 +75,10 @@ export function createEpisodeSequencer(
       continuing,
       available: host.neighbor('next') !== null,
     }),
-    manual: (direction: EpisodeDirection) => go(direction, false),
-    ended: () => go('next', true),
+    manual: (direction: EpisodeDirection) =>
+      go(host.neighbor(direction), 'manual'),
+    ended: () => go(host.neighbor('next'), 'automatic'),
+    play: (target: EpisodeSummary) => go(target, 'play'),
     selected() {
       failed = false
       changed()

@@ -778,7 +778,7 @@ audio.custom-audio {
 }
 .archive-grid {
   display: grid;
-  grid-template-columns: minmax(0, 21rem) minmax(0, 1fr);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: clamp(1.5rem, 5vw, 4rem);
   padding-top: 2rem;
   border-top: 1px solid var(--line);
@@ -794,6 +794,7 @@ audio.custom-audio {
 }
 .episode-list li {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   border-bottom: 1px solid #222832;
 }
@@ -807,7 +808,7 @@ audio.custom-audio {
   display: flex;
   align-items: center;
   flex: 1;
-  min-width: 0;
+  min-width: min(100%, calc(92px + 2rem));
   padding: 0.9rem 16px;
   text-decoration: none;
   color: #e1e6ee;
@@ -865,7 +866,17 @@ audio.custom-audio {
   text-align: center;
 }
 
+.episode-row-actions {
+  display: flex;
+  align-self: stretch;
+  margin-left: auto;
+}
+.row-play[aria-disabled='true'] {
+  opacity: 0.45;
+  cursor: default;
+}
 .row-download,
+.row-play,
 .row-copy-link {
   display: flex;
   flex-shrink: 0;
@@ -876,7 +887,8 @@ audio.custom-audio {
   min-height: 44px;
   text-decoration: none;
 }
-.row-copy-link {
+.row-copy-link,
+.row-play {
   padding: 0;
   border: 0;
   border-radius: 0;
@@ -884,15 +896,19 @@ audio.custom-audio {
   color: var(--focus-color);
 }
 .row-copy-link:hover,
+.row-play:hover,
 .row-download:hover {
   background: #1a2029;
 }
 .row-download svg,
+.row-play svg,
 .row-copy-link svg {
   opacity: 0.7;
 }
 .row-copy-link:hover svg,
-.row-copy-link:focus svg {
+.row-copy-link:focus svg,
+.row-play:hover svg,
+.row-play:focus svg {
   opacity: 1;
 }
 .copy-link-toast {

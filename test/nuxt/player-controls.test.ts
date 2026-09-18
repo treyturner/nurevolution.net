@@ -38,6 +38,7 @@ function fixture() {
     },
     previousEpisode: vi.fn(),
     nextEpisode: vi.fn(),
+    playEpisode: vi.fn(),
     sortOrder: 'newest-first',
     toggleSort: vi.fn(),
     bindAudio: vi.fn(),

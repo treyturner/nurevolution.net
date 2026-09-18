@@ -136,6 +136,7 @@ function key(event: KeyboardEvent) {
           </button>
         </div>
         <EpisodeList
+          :player="player"
           :episodes="episodes"
           :site-url="siteUrl"
           :selected-id="selected?.id"

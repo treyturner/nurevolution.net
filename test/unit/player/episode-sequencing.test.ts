@@ -139,3 +139,42 @@ it('restarts one episode without routing and does nothing for a missing selectio
   await f.sequence.ended()
   expect(f.host.restart).toHaveBeenCalledTimes(2)
 })
+
+it('explicit episode Play uses ordinary history and starts only after selection commits', async () => {
+  const f = fixture()
+  const completion = f.sequence.play(episodes[2]!)
+  expect(f.host.navigate).toHaveBeenCalledWith(episodes[2], false)
+  expect(f.host.play).not.toHaveBeenCalled()
+  await f.sequence.play(episodes[1]!)
+  expect(f.host.navigate).toHaveBeenCalledOnce()
+  f.select(episodes[2]!.id)
+  f.finish(true)
+  await completion
+  expect(f.host.play).toHaveBeenCalledOnce()
+  expect(f.host.restart).not.toHaveBeenCalled()
+})
+
+it('explicit Play on the current episode resumes without restarting or navigating', async () => {
+  const f = fixture()
+  await f.sequence.play(episodes[0]!)
+  expect(f.host.play).toHaveBeenCalledOnce()
+  expect(f.host.restart).not.toHaveBeenCalled()
+  expect(f.host.navigate).not.toHaveBeenCalled()
+})
+
+it.each(['pause', 'failure', 'cancelled', 'superseded', 'disposed'] as const)(
+  '%s prevents pending explicit episode Play from starting audio',
+  async (reason) => {
+    const f = fixture()
+    if (reason === 'cancelled')
+      f.host.navigate.mockResolvedValueOnce('cancelled')
+    const completion = f.sequence.play(episodes[2]!)
+    if (reason === 'pause') f.sequence.pause()
+    if (reason === 'disposed') f.sequence.dispose()
+    if (reason !== 'superseded') f.select(episodes[2]!.id)
+    if (reason !== 'cancelled') f.finish(reason !== 'failure')
+    await completion
+    expect(f.host.play).not.toHaveBeenCalled()
+    expect(f.sequence.snapshot().busy).toBe(false)
+  },
+)

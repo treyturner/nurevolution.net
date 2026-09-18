@@ -116,11 +116,11 @@ test('artist and date wrap as whole items and the separator disappears at a line
         document.documentElement.classList.toggle('no-flex-gap', value),
       noGap,
     )
-    await page.setViewportSize({ width: 390, height: 900 })
+    await page.setViewportSize({ width: 460, height: 900 })
     const wide = await measure()
     expect(wide.date.top).toBeCloseTo(wide.artist.top, 1)
     expect(wide.separator.left).toBeGreaterThanOrEqual(wide.artist.right)
-    await page.setViewportSize({ width: 320, height: 900 })
+    await page.setViewportSize({ width: 350, height: 900 })
     const narrow = await measure()
     expect(narrow.date.top).toBeGreaterThanOrEqual(narrow.artist.bottom - 1)
     expect(narrow.date.left).toBeCloseTo(narrow.left, 1)
@@ -129,6 +129,7 @@ test('artist and date wrap as whole items and the separator disappears at a line
     expect(narrow.artist.height).toBeLessThanOrEqual(narrow.lineHeight + 1)
     expect(narrow.date.height).toBeLessThanOrEqual(narrow.lineHeight + 1)
   }
+  await page.setViewportSize({ width: 320, height: 900 })
   await page.evaluate(() => {
     document.documentElement.style.fontSize = '200%'
   })

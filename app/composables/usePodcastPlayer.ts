@@ -376,6 +376,11 @@ export function usePodcastPlayer(
     },
     previousEpisode: () => sequence.manual('previous'),
     nextEpisode: () => sequence.manual('next'),
+    playEpisode(id: string) {
+      if (!navigation || !bootstrapped || state.restoring) return
+      const target = navigation.episodes.find((episode) => episode.id === id)
+      if (target) return sequence.play(target)
+    },
     get sortOrder() {
       return navigation?.sortOrder ?? 'newest-first'
     },

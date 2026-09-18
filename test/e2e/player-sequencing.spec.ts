@@ -374,3 +374,123 @@ test('a media failure during automatic detail loading cancels continuation on th
     held.release()
   }
 })
+
+function rowPlay(page: Page, episode: EpisodeSummary) {
+  return page.getByRole('button', {
+    name: `Play ${episode.artist} - ${episode.title}`,
+    exact: true,
+  })
+}
+
+test('episode row Play selects and starts audio, and resumes the current episode without seeking', async ({
+  page,
+}) => {
+  const episodes = await fixture(page)
+  await page.locator('audio').evaluate((audio: HTMLAudioElement) => {
+    audio.loop = true
+  })
+  const history = await page.evaluate(() => window.history.length)
+  await rowPlay(page, episodes[0]!).focus()
+  await rowPlay(page, episodes[0]!).press('Enter')
+  await expect(page).toHaveURL(new RegExp(episodes[0]!.path + '$'))
+  await expect(page.locator('audio')).toHaveJSProperty('paused', false)
+  await expect(page.locator('.media-status')).toHaveText(/^Playing\b/)
+  expect(await page.evaluate(() => window.history.length)).toBe(history + 1)
+  await pause(page)
+  await page.locator('audio').evaluate(async (audio: HTMLAudioElement) => {
+    await new Promise<void>((resolve) => {
+      audio.addEventListener('seeked', () => resolve(), { once: true })
+      audio.currentTime = 0.5
+    })
+    const descriptor = Object.getOwnPropertyDescriptor(
+      HTMLMediaElement.prototype,
+      'currentTime',
+    )!
+    Object.defineProperty(audio, 'currentTime', {
+      configurable: true,
+      get() {
+        return descriptor.get!.call(this)
+      },
+      set(value) {
+        document.documentElement.dataset.rowSeek = String(value)
+        descriptor.set!.call(this, value)
+      },
+    })
+  })
+  const loads = await page.locator('html').getAttribute('data-loads')
+  await rowPlay(page, episodes[0]!).click()
+  await expect(page.locator('audio')).toHaveJSProperty('paused', false)
+  expect(await page.locator('html').getAttribute('data-loads')).toBe(loads)
+  expect(await page.locator('html').getAttribute('data-row-seek')).toBeNull()
+  await expect(page.getByRole('dialog')).toHaveCount(0)
+  await expect(page.locator('audio')).toHaveCount(1)
+})
+
+test('episode row Play honors confirmation and switches the mobile view when playback starts', async ({
+  page,
+}) => {
+  const episodes = await fixture(page)
+  await page.locator('audio').evaluate((audio: HTMLAudioElement) => {
+    audio.loop = true
+  })
+  await play(page)
+  await page.setViewportSize({ width: 390, height: 900 })
+  await page.getByRole('tab', { name: 'Episodes', exact: true }).click()
+  await rowPlay(page, episodes[0]!).click()
+  await expect(page.getByRole('dialog')).toBeVisible()
+  await expect(page.locator('audio')).toHaveJSProperty('paused', false)
+  await page
+    .getByRole('button', { name: 'Keep listening', exact: true })
+    .click()
+  await expect(page).toHaveURL(new RegExp(episodes[1]!.path + '$'))
+  await expect(rowPlay(page, episodes[0]!)).toHaveAttribute(
+    'aria-disabled',
+    'false',
+  )
+  await rowPlay(page, episodes[0]!).click()
+  await page
+    .getByRole('button', { name: 'Change episode', exact: true })
+    .click()
+  await expect(page).toHaveURL(new RegExp(episodes[0]!.path + '$'))
+  await expect(page.locator('.media-status')).toHaveText(/^Playing\b/)
+  await expect(
+    page.getByRole('tab', { name: 'Tracklist', exact: true }),
+  ).toHaveAttribute('aria-selected', 'true')
+})
+
+test('Pause cancels episode row autoplay during a delayed selection, and failed selections stay paused', async ({
+  page,
+}) => {
+  const episodes = await fixture(page)
+  const held = await hold(page, episodes[0]!.slug)
+  try {
+    await rowPlay(page, episodes[0]!).click()
+    await held.request
+    await expect(rowPlay(page, episodes[2]!)).toHaveAttribute(
+      'aria-disabled',
+      'true',
+    )
+    await pause(page)
+    held.release()
+    await expect(page).toHaveURL(new RegExp(episodes[0]!.path + '$'))
+    await ready(page)
+    await expect(page.locator('audio')).toHaveJSProperty('paused', true)
+    expect(
+      await page.locator('html').getAttribute('data-play-calls'),
+    ).toBeNull()
+    await page.route(`**/api/episodes/${episodes[2]!.slug}`, (route) =>
+      route.fulfill({ status: 404, json: { statusCode: 404 } }),
+    )
+    await rowPlay(page, episodes[2]!).click()
+    await expect(page.locator('.media-status')).toHaveText(
+      'Episode could not be loaded.',
+    )
+    await expect(page).toHaveURL(new RegExp(episodes[0]!.path + '$'))
+    await expect(page.locator('audio')).toHaveJSProperty('paused', true)
+    expect(
+      await page.locator('html').getAttribute('data-play-calls'),
+    ).toBeNull()
+  } finally {
+    held.release()
+  }
+})
