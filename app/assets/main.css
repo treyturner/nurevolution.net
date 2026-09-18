@@ -504,7 +504,8 @@ audio.custom-audio {
   z-index: 30;
   width: max-content;
   max-width: calc(100vw - 16px);
-  padding: 0.25rem;
+  padding: 0;
+  overflow: hidden;
   border: 1px solid var(--line);
   border-radius: 0.35rem;
   background: #202630;
@@ -515,8 +516,9 @@ audio.custom-audio {
   align-items: center;
   width: 100%;
   min-height: 44px;
-  padding: 0.6rem 0.75rem;
+  padding: 0.35rem 0.5rem;
   border: 0;
+  border-radius: 0;
   font-size: 0.8rem;
   text-align: left;
   background: transparent;
@@ -532,7 +534,7 @@ audio.custom-audio {
   flex: none;
   width: 16px;
   height: 16px;
-  margin-right: 0.6rem;
+  margin-right: 0.4rem;
 }
 .playback-row {
   display: flex;
