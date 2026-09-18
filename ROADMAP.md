@@ -183,7 +183,7 @@ M0 and M1 can progress independently. M3 and M4 share M2's model. Infrastructure
 
 ### M1 - Foundation and verification
 
-**Completed locally on 2026-09-07.** After a clean frozen-lockfile install, `pnpm verify` passed: 14 application unit/runtime tests plus six M0 tooling unit tests, 100% statements/lines/functions/branches, both Node production builds, and 18 browser checks across Chromium, Firefox, and WebKit. The GitHub Actions workflow uses the same command; a remote run has not been triggered. See the [M1 completion record](docs/milestones/M01-foundation-and-verification.md#completion-evidence-and-handoff---2026-09-07) and [contributor instructions](README.md). M0 is complete, so both M2 prerequisites are available.
+**Completed locally on 2026-09-07.** After a clean frozen-lockfile install, `pnpm verify` passed: 14 application unit/runtime tests plus six M0 tooling unit tests, 100% statements/lines/functions/branches, both Node production builds, and 18 browser checks across Chromium, Firefox, and WebKit. The GitHub Actions workflow uses the same command; a remote run has not been triggered. See the [M1 completion record](docs/milestones/M01-foundation-and-verification.md#completion-evidence-and-handoff---2026-09-07) and [contributor instructions](docs/CONTRIBUTING.md). M0 is complete, so both M2 prerequisites are available.
 
 **Outcome:** a small, idiomatic Nuxt application whose meaningful changes can be checked consistently.
 
