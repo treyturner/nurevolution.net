@@ -148,14 +148,15 @@ export function createMediaSession(
       : null
     const key = JSON.stringify(data)
     if (metadataKey !== key) {
-      // Clear old identity even when this platform rejects the new metadata.
-      attempt(() => {
-        session.metadata = null
-      })
-      if (data && metadata)
+      try {
+        // Replace directly so the OS cannot display generic page metadata
+        // between tracks. Clear stale identity only if replacement fails.
+        session.metadata = data && metadata ? metadata(data) : null
+      } catch {
         attempt(() => {
-          session.metadata = metadata(data)
+          session.metadata = null
         })
+      }
       metadataKey = key
     }
     if (state.status === 'playing' && state.wantsPlay) established = true

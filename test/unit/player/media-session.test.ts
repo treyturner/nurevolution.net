@@ -176,6 +176,49 @@ it('uses current track or episode metadata and updates identity only when values
   expect(h.session.metadata!.title).toBe('Other episode')
 })
 
+it('replaces track metadata without briefly publishing a generic fallback', () => {
+  const h = harness()
+  let current = h.session.metadata
+  const writes: (string | null)[] = []
+  Object.defineProperty(h.session, 'metadata', {
+    get: () => current,
+    set: (value: MediaMetadata | null) => {
+      writes.push(value?.title ?? null)
+      current = value
+    },
+  })
+  h.state.track = 2
+  h.adapter.update()
+  h.state.currentTime++
+  h.adapter.update()
+  expect(writes).toEqual([h.state.episode!.tracks[1]!.title])
+})
+
+it('clears stale identity when constructing or assigning replacement metadata fails', () => {
+  for (const failure of ['constructor', 'assignment']) {
+    const h = harness()
+    if (failure === 'constructor')
+      h.metadata.mockImplementationOnce(() => {
+        throw Error('Unsupported metadata')
+      })
+    else {
+      let current = h.session.metadata
+      Object.defineProperty(h.session, 'metadata', {
+        get: () => current,
+        set: (value: MediaMetadata | null) => {
+          if (value !== null) throw Error('Unsupported metadata')
+          current = value
+        },
+      })
+    }
+    h.state.track = 2
+    expect(() => h.adapter.update()).not.toThrow()
+    expect(h.session.metadata).toBeNull()
+    h.handlers.get('play')!({ action: 'play' })
+    expect(h.host.play).toHaveBeenCalledOnce()
+  }
+})
+
 it('reports established playback through buffering and clears it on blocked playback, errors, pause, and source changes', () => {
   const h = harness()
   h.state.wantsPlay = true
