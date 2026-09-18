@@ -1,6 +1,6 @@
 # M8 - Listening and feed enhancements
 
-Status: **Scope agreed on 2026-09-18; implementation has not started.** The owner prioritized selected former M9 features ahead of drafts/scheduling and explicitly deferred palettes and track/artist/release links. This scope record bounds the next milestone; it is not an implementation or deployment authorization.
+Status: **Implementation plan prepared on 2026-09-18; feature implementation has not started.** After squash-merging PR #55, the owner requested a new feature branch with this plan as its first commit. The branch is `feat/m8-listening-and-feed-enhancements`, based on synchronized `main` at `6e9abc6e7dec60799953ba74eab771f8b429ffae`. This commit records the implementation decisions and acceptance requirements; it does not perform a release.
 
 Roadmap: [M8](../../ROADMAP.md#m8---listening-and-feed-enhancements). Baseline: [current status](../STATUS.md), [player behavior](../PLAYER.md), [content](../CONTENT.md), and [feed validation](../FEED-VALIDATION.md). M0-M7 keep their numbers. Drafts and scheduled repository publishing are now M9. Older milestone documents retain their original numbering as historical evidence.
 
@@ -29,14 +29,173 @@ All five areas are milestone completion requirements. They can ship as independe
 - Current inventory is 34 fully timed episodes / 626 timed tracks, 16 untimed tracklists / 206 tracks, and five missing lists. Chapter acceptance uses available timing data; researching missing data is not a dependency. Add boundary fixtures for partial timing rather than assuming every future list is complete.
 - Preserve keyboard operation, labels, focus, responsive layout, and reduced-motion behavior in changed controls. The separately deferred assistive-technology audit is not added to this milestone.
 
-## Reviewable implementation sequence
+## Entry evidence and implementation boundaries
 
-1. **Safari startup and playback:** establish the compatibility baseline and real iPad acceptance first, so subsequent enhancements build on working playback.
-2. **Timestamp sharing:** resolve the URL grammar, exact validation/precedence rules, and copy-control placement in the implementation plan, then deliver the feature and navigation regressions.
-3. **Media Session:** define the action/metadata transition table against the existing controller and verify supported device controls. The [Media Session specification](https://www.w3.org/TR/mediasession/) is the interface reference; platform UI availability is recorded rather than assumed.
-4. **Feed enhancements:** add item artwork and chapter documents/references, with feed/endpoint tests and Podcast Addict acceptance. Split artwork and chapters into separate PRs if the combined review becomes unwieldy.
+- The branch began clean, directly from PR #55's squash merge. M6 is closed; M7 and its refinements provide the shared player, restoration, confirmation, copying, feed, and delivery contracts used here. No root README edits are required.
+- Planning baseline: `mise exec -- pnpm test --project unit test/unit/player test/unit/rss test/unit/content` passed **305 tests across 18 files** on September 18. PR #55's final [Verify run](https://github.com/treyturner/nurevolution.net/actions/runs/35324217847) passed the full gate. The squash commit's [main run](https://github.com/treyturner/nurevolution.net/actions/runs/35326338520) was still running during the initial audit; do not treat the focused local run as a new full-gate result.
+- `nuxt.config.ts` has no browser target override. Installed Nuxt 4.5.2 enables `experimental.entryImportMap`; its Vite builder uses that option in production. The separate media fixture has its own Nuxt configuration and must receive the same compatibility settings.
+- `app/services/track-navigation.ts` uses `findLastIndex`. Both dialog components call `showModal()` without feature detection. `app/assets/main.css` uses `:has()`, `dvh`, `aspect-ratio`, flex gaps, and `:focus-visible`. Changing only the entry loader would leave additional compatibility work. `shared/content/public.ts` also uses `.at(-1)`; verify whether shared helpers enter the client bundle rather than assuming all shared code runs on the server.
+- `usePodcastPlayer` owns audio, saved-state initialization, sequencing, and disposal. `app/plugins/episode-navigation.ts`, `app/middleware/episode.ts`, and `app/services/episode-page.ts` currently stage navigation by pathname. Query-only timestamp changes need explicit transaction handling. `createPlayer.select()` intentionally ignores an already-selected source, so a same-episode time link must use pause/seek rather than relying on reselecting it.
+- `server/content/feed.ts` projects the published archive, `server/rss/serialize.ts` generates RSS, and `server/rss/http.ts` hashes the rendered XML for conditional responses. Current tests deliberately assert one show image, no chapters, and no feed change for track-only edits. Update these assertions deliberately when the advertised chapter representation changes.
+- The catalog has verified image hashes/types/lengths, but not a complete feed-artwork dimension/alpha audit. `tools/content/thumbnails.ts` already provides a source-verification and offline-generated-image pattern. Original audio/artwork bytes and canonical asset records remain unchanged.
 
-Before coding, expand these slices into an implementation-grade plan using the roadmap's planning checklist, with exact repository targets and behavior tests. Run the canonical `pnpm verify` gate for implementation and document manual device/client evidence. Keep one PR open at a time; later work may proceed on local forward branches. Reviews run automatically on pushes; do not post PR status commentary or request reviews. Release decisions remain separate from this documentation update.
+These are additive application/feed features. Keep the existing Node/mise toolchain, original MP3 downloads/enclosures, virtual MP4 indexes, publication predicate, and deployment identity guards. No database, background job, new hosted environment, or external catalog lookup is needed.
+
+## 1. Safari 14.3 startup, controls, and fallback
+
+### Build and runtime decisions
+
+Set `experimental.entryImportMap: false` and explicitly target Safari 14 / iOS 14.3 in the client JS and CSS build. Apply the same settings to `test/fixtures/media-app/nuxt.config.ts`, using a small shared configuration helper if needed to prevent drift. Retain the Node 24 server target. Check the actual production HTML and emitted entry imports, including lazy chunks; a successful development-server load is insufficient.
+
+Use the installed framework configuration and the [Nuxt configuration reference](https://nuxt.com/docs/4.x/api/nuxt-config#entryimportmap). [Vite's browser guidance](https://vite.dev/guide/build#browser-compatibility) distinguishes syntax transformation from runtime API support. Do not add an indiscriminate polyfill bundle or downgrade the application stack. Replace application-owned unsupported calls with equivalent supported operations; use a narrowly scoped compatibility dependency only if an unavoidable third-party call requires it, with its pin and client-entry loading covered by tests.
+
+Replace `findLastIndex` with a backwards loop, preserving the three-second rule, missing-timing behavior, and existing 10-microsecond highlight tolerance. Audit client-reachable framework/application dependencies for unsupported APIs and syntax. Keep browser globals inside mounted/client paths. Optional capabilities such as volume setters and clipboard access must fail gracefully without preventing player attachment.
+
+### Dialogs and CSS
+
+Introduce a shared dialog helper/component used by `ArtworkDialog.vue` and `EpisodeChangeDialog.vue`. Prefer native dialogs when supported; otherwise render a fixed modal overlay with the same content and actions. The fallback must supply initial focus, Tab/Shift-Tab containment, Escape/backdrop cancellation, background interaction blocking, scroll locking, and focus restoration. Do not depend on native `inert` or `:has()` for the fallback. Restore any background attributes/listeners when closing or unmounting, including a route change while a confirmation is open. Keep "Keep listening" as the initially focused confirmation action.
+
+Replace functional `:has()` selectors with explicit state classes; supply `vh` before `dvh`, a square-artwork fallback, and a visible `:focus` fallback. Preserve spacing on critical flex rows using margins or a measured flex-gap fallback; `@supports (gap: ...)` alone cannot distinguish grid-gap from flex-gap support. Do not change the chosen dark palette or transport layout. WebKit's [Safari 15.4 notes](https://webkit.org/blog/12445/new-webkit-features-in-safari-15-4/) confirm that native dialogs, `:has()`, dynamic viewport units, and `:focus-visible` arrived after the target device.
+
+### Initialization feedback
+
+For an SSR-selected episode, initially show `Loading player…` in the existing status position. Keep `Choose an episode to listen.` for an actual empty selection. Add a small same-origin ES5-compatible startup watchdog that runs independently of the Nuxt entry bundle. After 15 seconds without a completed player-initialization signal, show `Player could not start.` followed immediately by a normal reload link in that same status row. Keep the existing MP3 download link usable; do not add a second player or start audio from the watchdog.
+
+The mounted player signals successful initialization and removes the fallback if startup eventually completes. A no-JavaScript message occupies the same reserved status area. This is separate from the controller's existing audio-loading/retry deadlines and must not change them. Cover prerendering, empty archives, slow startup, failed module loads, and delayed recovery without false success or permanent warning text. No new telemetry or production debug endpoint is required.
+
+### Targets and acceptance
+
+Primary targets: `nuxt.config.ts`, the fixture config, `app/services/track-navigation.ts`, both dialog components, `app/assets/main.css`, `ArchivePlayer.vue`, `usePodcastPlayer.ts`, and a new startup watchdog plus shared modal helper. Extend `test/unit/player/track-navigation.test.ts`, dialog/confirmation Nuxt tests, and the browser startup/artwork/confirmation suites.
+
+- Automated: build and inspect production entry loading; block the entry bundle to exercise independent feedback; remove `findLastIndex` and native dialog support in isolated browser contexts; test cancellation, focus, late initialization, and handler cleanup. API removal tests are targeted regressions, not Safari emulation.
+- Current Chromium/Firefox/WebKit: existing player, dialogs, keyboard, narrow layout, copy, restoration, and virtual/original media paths still pass.
+- Actual iPadOS 14.3: use a production-build workspace preview over the authenticated Coder URL. Test fresh paused load, play/pause, scrub/±30s, timed track selection, episode confirmation accept/cancel, artwork modal, tabs/sort, and paused restoration after reload. Exercise Ruminate and an untimed guest episode. Record device/browser, build commit, observations, and any console error available to the owner. Physical acceptance is required to close this slice; lack of device access does not block independent local work on other slices.
+
+## 2. Timestamp sharing and navigation
+
+### URL and copy contract
+
+Use the canonical episode URL with a single `t` query parameter containing seconds: `/episodes/trey-turner-praxis?t=208.794`. Generated links use `show.siteUrl`, never the dev hostname or an audio/download URL. Canonical/OG episode identity remains the plain episode URL. Existing episode-copy controls continue copying that plain URL.
+
+Parse only a single nonempty decimal string matching digits with an optional fractional part, bounded to 64 characters, finite and nonnegative, and no greater than `Number.MAX_SAFE_INTEGER`. Allow leading zeros; reject signs, whitespace, exponents, hex, non-numeric suffixes, arrays/repeated `t`, and missing values. Serialize a finite time with round-trip numeric precision, expanding exponent notation if necessary rather than rounding it. Truncate only when formatting a lower-precision display. Timestamp intent is supported on canonical episode routes; `/` keeps its existing restoration behavior and ignores `t`.
+
+| Input / action                              | Required result                                                                                                                                                                        |
+| ------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Fresh episode URL without `t`               | Existing behavior: restore a valid matching saved position, otherwise start at zero, always paused. Root may restore the saved episode.                                                |
+| Valid `t`, including zero                   | Select that episode, suppress saved-position restoration, and seek once media metadata permits; remain paused.                                                                         |
+| Negative/malformed/duplicate/empty `t`      | Load the explicit episode paused at zero, suppress the saved position, and show `Invalid timestamp; starting at 0:00.` in the existing feedback row. No server error or redirect loop. |
+| Valid time beyond duration                  | Clamp to the measured finite duration through existing seek rules; remain paused. Do not fabricate a duration before metadata.                                                         |
+| Same-episode time link                      | Pause and apply the new seek to the current controller; do not reload the audio source.                                                                                                |
+| Different-episode time link during playback | Use the existing confirmation. Cancel preserves route/source/position/intent; acceptance selects the target paused at its explicit time.                                               |
+| Ordinary episode change without `t`         | Preserve the existing playback-intent and confirmation rules.                                                                                                                          |
+| Back/forward to an explicit time            | Apply the accepted time intent once, including when only the query differs. Unrelated query/hash changes do not seek or pause again.                                                   |
+| Ordinary playback after applying `t`        | Do not rewrite browser history or reapply the link on each time update. Reloading that explicit URL intentionally reapplies its time.                                                  |
+
+Pending seeks follow existing metadata/range handling and cancellation; a newer track seek, route, retry, or pause decision must not be undone by stale initialization. Apply the route's initial seek before honoring a later user Play action, without swallowing that new Play intent. A failed shared seek uses `Could not seek to the shared position. Try again.` in the existing feedback channel, not a saved-restoration error.
+
+Add `Copy timestamp link` next to the download action, using the existing link icon/toast and reserved status layout; sample the effective current position at click time (pending seek if present, otherwise current time). Disable it until an episode/controller is ready or while an episode switch/restoration makes the target ambiguous. In each timed track row add a separate sibling copy button, outside the row's seek/play button, with label `Copy link to track N: Artist - Title`. Untimed rows have no time-copy button. Copying never seeks, toggles playback, or navigates. Success text is `Timestamp link copied`; use the existing clipboard failure feedback, without navigating to the link on failure. Keep touch targets usable and the active strip/row columns aligned.
+
+### State and file boundaries
+
+Add a pure `app/services/timestamp-link.ts` parser/serializer. Extend `EpisodePageState` and the navigation service to stage an explicit start intent with the accepted route transaction. Keep pathname for data lookup/canonical identity, and use full-route identity plus a generation token to distinguish same-path query navigations and discard stale requests. Route parsing must agree on SSR and hydration.
+
+Wire intent through `app/middleware/episode.ts`, `app/plugins/episode-navigation.ts`, `useEpisodePlaybackNavigation.ts`, and `usePodcastPlayer.ts`. Consume it once during initialization or a successfully committed relevant route change; `createPlayer.select()` remains idempotent for unchanged sources, and same-source intents call pause/seek directly. Adjust `PlayerSelection`/seek feedback only as needed to distinguish shared from saved positions. Preserve current local-storage format/expiry and do not save the temporarily selected root episode during restoration.
+
+UI targets: `ArchivePlayer.vue`, `ArchiveLists.vue`, `EpisodeTracklist.vue`, `useCopyLink.ts`, existing icon/toast components, and `main.css`. Pass canonical episode/site data explicitly to the copy controls; do not assemble URLs from displayed rounded timestamps.
+
+Acceptance: unit parser/serializer round trips (including sample-derived fractions and zero); explicit-vs-saved precedence; delayed metadata; out-of-range clamping; query-only transitions; aborted/failed navigation; rapid consecutive links; copy without seek; untimed controls; current-track toggle unchanged; Back/Forward; storage unavailable; hydration/no autoplay. Extend `test/unit/player`, `test/nuxt/playback-navigation.test.ts`, `playback-session.test.ts`, and browser episode-link/restoration/confirmation/track suites.
+
+## 3. Media Session
+
+Create `app/services/media-session.ts` as an injected, independently testable adapter and a small mounted binding from `usePodcastPlayer.ts`. Use one session/controller; no direct writes to the audio element from system callbacks. Feature-detect `navigator.mediaSession`, `MediaMetadata`, `setPositionState`, and each action registration; catch unsupported-action/property failures independently. Follow the [Media Session interface](https://www.w3.org/TR/mediasession/) without assuming a platform exposes every supported action as a visible button.
+
+| Device action                 | Existing player operation / availability                                                                                                                                                  |
+| ----------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `play`, `pause`               | `player.play()` / `player.pause()`; retain blocked-play and late-promise behavior.                                                                                                        |
+| `seekbackward`, `seekforward` | `player.skip()` with a finite positive supplied `seekOffset`, otherwise 30 seconds.                                                                                                       |
+| `seekto`                      | `player.seek()` for a finite supplied time; use existing bounds and exact seeking, even if a fast-seek hint is present.                                                                   |
+| `previoustrack`, `nexttrack`  | Existing previous/next timed-track methods and three-second rule. Remove/disable unavailable actions at boundaries, while restoring, or without timing; never substitute episode changes. |
+| `stop`                        | Pause at the current position; retain the selected episode.                                                                                                                               |
+
+All seek/track actions preserve current play intent. Freeze actions that would affect the wrong source while selection is pending; pause must remain available. At confirmed source changes, callbacks read the latest player state rather than retaining old track arrays. On final disposal clear handlers, metadata, and position state; on BFCache suspension/resume preserve the existing paused lifecycle contract and rebuild session state as needed. Do not pause merely because the document becomes hidden: lock-screen playback requires it to continue.
+
+Metadata: when a current track is known, `title` is the track title, `artist` is the track artist, and `album` is `Episode artist - Episode title`. Otherwise use episode title/artist and the show title as album. Use the episode's artwork with existing development delivery-origin rewriting; do not invent dimensions. Refresh metadata only when these values change. Episode-relative duration/position remain the system timeline even when track metadata changes.
+
+Publish position only for finite positive duration and finite clamped current time, with playback rate 1; clear stale position when duration/source is unknown. Use confirmed time, not a pending uncompleted seek. Throttle ordinary position updates to at most once per second, but update immediately on source, seek completion, play, and pause changes. Report playing during established playback/buffering with active play intent, paused for a selected inactive source, and none without a source; errors/blocked playback must not remain reported as playing.
+
+Acceptance: a fake session verifies every mapping, unavailable/throwing APIs, changing track boundaries, unknown duration, stale-handler cleanup, and disposal. Nuxt integration verifies the real player wiring; a supported real browser/device verifies metadata, media keys or headset actions, and pause/resume while backgrounded. Record unsupported controls as platform limitations. Safari 14.3 must retain ordinary playback even if the entire API is absent.
+
+## 4. Feed resources and RSS integration
+
+### Episode artwork
+
+Generate one static 1400-by-1400 sRGB JPEG derivative per unique artwork hash referenced by published episodes, using verified original bytes. This meets the RSS size range in [Apple's episode-art requirements](https://podcasters.apple.com/support/5516-episode-art-template). The policy is deterministic: auto-orient, contain without cropping, flatten onto the existing dark background, remove alpha/metadata, JPEG quality 82, and fail generation above 512 KiB per image. Upscaling a small source is permitted to meet dimensions and does not claim new image detail. Missing/corrupt/hash-mismatched originals fail this slice's generation rather than silently substituting unrelated artwork.
+
+Add `tools/content/episode-artwork.ts`, a shared path/recipe helper beside `shared/content/artwork.ts`, and generated files under `public/episode-artwork/v1-<source-sha256>.jpg`. Bump the recipe prefix when output processing changes. Use a deterministic manifest of generated paths, source hashes, output hashes, dimensions, and lengths to make provenance and regeneration reviewable; store it outside the strict canonical `content/` collection, alongside the tooling. Do not rewrite original assets or replace website artwork/thumbnails.
+
+Generation is an explicit `generate:episode-artwork --uploads <verified-directory>` action. CI/build use offline `check:episode-artwork` validation of committed derivatives and manifest: complete published coverage, byte/hash/type/dimension/alpha limits, safe paths, and no accidentally committed draft-only output. Retain previously advertised public derivative paths when artwork is replaced; distinguish retained published assets from unadvertised extras in the manifest. No live image fetch is required for ordinary build/test execution.
+
+Serve derivatives through the normal application image with `image/jpeg`, immutable caching on the content-addressed recipe URL, HEAD support, and `nosniff`. Generate absolute RSS URLs from `show.siteUrl`. Add one item-level `itunes:image` per published episode, leaving the existing channel artwork and all audio/GUID/date fields untouched. Validate all image mappings and an actual client display; do not promise every client's artwork presentation is identical.
+
+### Chapter document and endpoint
+
+Add a deterministic shared chapter projection/serializer and a server responder at `/chapters/<slug>.json` (`server/routes/chapters/[slug].json.ts`, backed by `server/chapters/`). Resolve the episode through `contentRepository.find(slug, asOf)` on each request, retaining the server's publication predicate. Only published episodes with at least one known track start return a document.
+
+The [chapter document](https://github.com/Podcastindex-org/podcast-namespace/blob/main/docs/examples/chapters/jsonChapters.md) uses `version: "1.2.0"` and a `chapters` array of `{ startTime, title }`. Titles are `NN. Artist - Title`; starts preserve canonical numeric precision. Emit known tracks in order, skipping null starts. Do not insert zero, estimate missing cuts, interpolate unknown tracks, or require a complete list. A first known chapter can begin after zero. Partial timing represents known starts only and cannot identify every intervening track. No external track links, per-chapter image research, or embedded MP3 metadata is included.
+
+| Request                                         | Response                                                                                                                                                   |
+| ----------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| GET published timed episode                     | 200, deterministic JSON, `application/json+chapters; charset=utf-8`, `nosniff`, weak SHA-256 ETag over exact bytes, `public, max-age=60, must-revalidate`. |
+| HEAD                                            | Same status/headers as GET, empty body.                                                                                                                    |
+| Matching `If-None-Match`                        | 304 with validators/cache headers and no body; reuse the existing tested tag matcher.                                                                      |
+| Draft/future/unknown episode or no timed tracks | 404, no-store, generic response with no private metadata.                                                                                                  |
+| Catalog/read/serialization failure              | 503, no-store, generic error; server logging only.                                                                                                         |
+| Other method                                    | 405, `Allow: GET, HEAD`, no-store.                                                                                                                         |
+
+Allow anonymous cross-origin GET/HEAD consumption with `Access-Control-Allow-Origin: *` and expose ETag; no credentials are needed. Use the same eligibility for RSS chapter references and the endpoint. Add fake-clock fixtures for future/draft records even though authored future publication remains prohibited until M9.
+
+### Feed references and cache corrections
+
+Declare `xmlns:podcast="https://podcastindex.org/namespace/1.0"`. For each eligible episode emit one [podcast:chapters reference](https://github.com/Podcastindex-org/podcast-namespace/blob/main/docs/tags/chapters.md) with type `application/json+chapters` and an absolute URL `/chapters/<slug>.json?v=<chapter-body-sha256>`. Untimed/empty episodes omit the tag.
+
+The `v` value is a refresh hint, not an immutable snapshot: this endpoint always returns the current eligible document and its current ETag, even for an older hint or no hint. Keep the 60-second revalidation policy. A timing/title edit changes chapter bytes, its hint, and therefore the feed bytes/ETag, prompting clients to revisit the chapter resource. Old cached feed references continue resolving after a correction. Client polling still controls when a particular podcast app observes an update; HTTP freshness is not a delivery-time guarantee.
+
+Extend `server/content/feed.ts`, `server/rss/serialize.ts`, and `tools/content/feed/assert.ts` to produce and independently validate item images, the namespace, eligibility, and the exact chapter URLs. Share pure chapter generation between RSS hashing, endpoints, and tooling to prevent disagreement. Update the existing no-chapters/one-image/track-edit-invariance tests; preserve all protected legacy identities. Add chapter HTTP/projection tests, artwork-tool tests, and feed/browser/delivery assertions. Confirm canonical URLs remain production URLs in workspace previews, matching the existing feed contract.
+
+### Rollout and rollback constraint
+
+Split the feed slice into resource support and RSS advertisement. First make chapter endpoints and derivative artwork available without advertising them in RSS. Once production rollout is authorized, deploy/verify that support release and retain it as the compatible fallback before deploying the release that advertises the new fields. Otherwise a rollback could leave cached feed references pointing at absent resources. The implementation plan does not trigger either deployment.
+
+After advertisement, normal rollback targets must retain these resource paths. Keep earlier advertised artwork files; chapter endpoints continue serving the current catalog for old version hints. A feed-field regression can be rolled back to the support release while existing cached chapter/artwork URLs still work. Record this boundary in `docs/FEED-VALIDATION.md` and `docs/operations/rollback.md`; do not bypass GUID/enclosure compatibility guards or rebuild a release on the production host.
+
+## Commit and PR sequence
+
+| Slice | Commit / review boundary                                                                                                | Required evidence before completion                                                                                                     |
+| ----- | ----------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+| 0     | This implementation plan as the first branch commit; no feature code.                                                   | Clean synchronized base, documented choices, formatting/links, baseline evidence.                                                       |
+| 1     | Safari build/API fixes, then shared modal/CSS/startup feedback with focused regressions. One coherent compatibility PR. | Full verification plus actual iPad acceptance, with headless-vs-physical limits stated.                                                 |
+| 2     | Pure timestamp URL/intent rules, navigation/controller integration, then copy UI and browser cases.                     | Explicit-time precedence and race tests, paused entry, narrow-screen owner preview.                                                     |
+| 3     | Media Session adapter, lifecycle binding, then device evidence.                                                         | Unsupported-path tests and a supported physical device/browser observation.                                                             |
+| 4a    | Offline artwork tooling/derivatives and chapter endpoints; retain existing RSS serialization.                           | Artifact/provenance and endpoint tests, production resource-support readiness.                                                          |
+| 4b    | Advertise item artwork/chapters, revise validators and cache tests, update feed/content/rollback docs.                  | Full gate, protected identity comparison, actual client artwork/chapter test, compatible fallback recorded before production promotion. |
+
+Use the feature branch for the initial plan and first implementation slice. Later slices may use local forward branches rebased onto accepted earlier work. Keep at most one PR open. Reviews run automatically on pushes; do not request reviews or post status commentary. Address and resolve threads; only explain a finding in its thread if it is invalid before closing it. Merge/deployment permissions are separate from this plan request. Leave a tested workspace preview for owner acceptance rather than treating a passing CI run as visual/device approval.
+
+## Verification and completion record
+
+For each implementation slice, run focused tests during development, then `mise exec -- pnpm verify` on the finished candidate. The canonical gate includes preparation, formatting, lint/types, migration/operations tests, coverage, content/feed/artwork/playback checks, production builds, all three browser projects, and Docker delivery. Add the new offline artwork check to the build path when introduced. Retain current coverage thresholds and independent playback-index/image/Headscale CI checks.
+
+Before closing M8, record:
+
+1. Commits, PR/reviewer outcomes, local gate output, and remote Verify results for all five areas. Do not mark unperformed device checks as passed.
+2. Actual Safari 14.3 production-build playback/controls/restore evidence, plus current-browser automated regression results.
+3. Timestamp sharing at zero and a sample-derived boundary, same/different-episode navigation, and copy-feedback/layout acceptance.
+4. A supported device's lock-screen/headset/media-key behavior and any browser-specific unavailable actions.
+5. Feed validation against all 55 identities, all eligible chapter starts (currently 626 across 34 episodes), chapter GET/HEAD/304/error behavior, and every advertised artwork mapping. Guest untimed/missing lists remain omissions, not newly created data.
+6. Podcast Addict artwork/chapter inspection and seeks for representative fractional-timed episodes (Ruminate and Praxis), plus an untimed guest episode without a chapter tag. The earlier all-episode audio load/seek report does not establish this new feature's client support. If the installed client does not consume this format, record that result and resolve the acceptance scope with the owner before adding a second chapter format.
+7. Updated `docs/PLAYER.md`, `docs/CONTENT.md`, `docs/FEED-VALIDATION.md`, `docs/DEVELOPMENT.md`, rollback guidance, `docs/STATUS.md`, and the roadmap. Keep root README unchanged. Place new evidence under `docs/milestones/evidence/` and link it from this record.
+
+Required external inputs during implementation are limited to the owner's physical-device/client observations and access to verified original artwork if it is unavailable locally. There is no unanswered product-scope question preventing implementation planning. Continue independent local work while awaiting those observations; do not declare the affected acceptance complete. Production rollout, if requested later, uses the existing verified manual process and the feed-resource ordering above.
 
 ## Explicitly deferred
 
