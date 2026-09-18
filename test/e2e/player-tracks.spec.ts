@@ -98,10 +98,9 @@ test('the current track plays and pauses in place with mouse and keyboard', asyn
     'Playing 2/3: Test tone - Track 2',
   )
   await expect(current).toHaveAccessibleName(/^Pause track 2:/)
-  await expect(current.locator('.track-current')).toHaveCSS(
-    'transition-duration',
-    '1s',
-  )
+  await expect(
+    page.locator('.track-list li[aria-current] .track-current'),
+  ).toHaveCSS('transition-duration', '1s')
   await current.click()
   await expect(audio).toHaveJSProperty('paused', true)
   const pausedAt = await audio.evaluate((a: HTMLAudioElement) => a.currentTime)

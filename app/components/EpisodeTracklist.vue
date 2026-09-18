@@ -82,30 +82,34 @@ function activate(position: number) {
         player?.tracks.current === track.position ? 'true' : undefined
       "
     >
-      <component
-        :is="timed(track.position) ? 'button' : 'div'"
+      <button
+        v-if="timed(track.position)"
         class="track-row"
-        :type="timed(track.position) ? 'button' : undefined"
-        :aria-label="
-          timed(track.position)
-            ? `${action(track.position)} track ${track.position}: ${track.artist} - ${track.title}, ${formatTime(track.startTime)}`
-            : undefined
-        "
+        type="button"
+        :aria-label="`${action(track.position)} track ${track.position}: ${track.artist} - ${track.title}, ${formatTime(track.startTime)}`"
         :disabled="
-          timed(track.position)
-            ? !player?.state.attached ||
-              player.state.restoring ||
-              player.state.status === 'error'
-            : undefined
+          !player?.state.attached ||
+          player.state.restoring ||
+          player.state.status === 'error'
         "
         @click="activate(track.position)"
-      >
+      />
+      <div class="track-content">
         <span class="track-number" aria-hidden="true">{{
           String(track.position).padStart(2, '0')
         }}</span>
         <span>
-          <span class="track-artist">{{ track.artist }}</span
-          ><span class="track-title">{{ track.title }}</span>
+          <span class="track-artist">{{ track.artist }}</span>
+          <span class="track-title-line">
+            <span class="track-title">{{ track.title }}</span>
+            <TimestampCopyButton
+              v-if="episodePath && track.startTime !== null"
+              :episode-path="episodePath"
+              :seconds="track.startTime"
+              :label="`Copy link to track ${track.position}: ${track.artist} - ${track.title}`"
+              @copy="copyLink({ ...$event, message: 'Timestamp link copied' })"
+            />
+          </span>
         </span>
         <span v-if="track.startTime !== null" class="track-meta">
           <Transition name="track-current" appear>
@@ -137,14 +141,7 @@ function activate(position: number) {
             >{{ displayTime(index) }}</span
           >
         </span>
-      </component>
-      <TimestampCopyButton
-        v-if="episodePath && track.startTime !== null"
-        :episode-path="episodePath"
-        :seconds="track.startTime"
-        :label="`Copy link to track ${track.position}: ${track.artist} - ${track.title}`"
-        @copy="copyLink({ ...$event, message: 'Timestamp link copied' })"
-      />
+      </div>
     </li>
   </ol>
   <p v-else class="empty-tracks">No tracklist is available for this episode.</p>
