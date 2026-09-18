@@ -485,6 +485,26 @@ describe('persistent episode controller', () => {
     expect(changed).toHaveBeenLastCalledWith('buffering')
     player.dispose()
   })
+  it('recovers after pausing and resuming an established source without another playing event', () => {
+    const { media, changed, player } = setup()
+    player.select(a)
+    media.ready()
+    player.play()
+    media.emit('playing')
+    player.pause()
+    player.seek(32)
+    player.play()
+    media.readyState = 2
+    media.emit('waiting')
+    media.emit('timeupdate')
+    media.emit('timeupdate')
+    expect(changed).toHaveBeenLastCalledWith('buffering')
+    media.currentTime = 32.25
+    media.emit('timeupdate')
+    expect(changed).toHaveBeenLastCalledWith('playing')
+    expect(media.play).toHaveBeenCalledTimes(2)
+    player.dispose()
+  })
   it('does not mistake paused seeks, seeking updates, or insufficient data for resumed playback', () => {
     const { media, changed, player } = setup()
     player.select(a)

@@ -48,6 +48,7 @@ export function createPlayer(
   let generation = 0
   let disposed = false
   let endArmed = false
+  let playedSinceLoad = false
   let status: PlayerStatus = 'idle'
   let metadataTimer: ReturnType<typeof setTimeout> | undefined
   let durationTimer: ReturnType<typeof setTimeout> | undefined
@@ -286,7 +287,10 @@ export function createPlayer(
       wantsPlay = true
       playObservedSinceLoad = true
       gesturePrepared = true
-      if (event === 'playing' && snapshot.readyState >= 3) endArmed = true
+      if (event === 'playing' && snapshot.readyState >= 3) {
+        endArmed = true
+        playedSinceLoad = true
+      }
       set(
         event === 'playing' && snapshot.readyState >= 3
           ? 'playing'
@@ -315,16 +319,17 @@ export function createPlayer(
         Number.isFinite(snapshot.currentTime)
           ? snapshot.currentTime
           : null
-      // WebKit can resume its clock after a seek without another playing
-      // event. Require consecutive advancing updates from an already-playing
-      // source; a seek jump or an unchanged buffering clock is not playback.
+      // WebKit can resume its clock after a seek or pause without another
+      // playing event. Require consecutive advancing updates from a source
+      // that has played; a seek jump or an unchanged clock is not playback.
       if (
         status === 'buffering' &&
-        endArmed &&
+        playedSinceLoad &&
         previousTime !== null &&
         playbackTime !== null &&
         playbackTime > previousTime
       ) {
+        endArmed = true
         set('playing')
       }
     }
@@ -370,6 +375,7 @@ export function createPlayer(
     stopDurationTimer()
     playbackTime = null
     endArmed = false
+    playedSinceLoad = false
     generation++
     // Only unresolved requests from this source can guard its native events.
     pendingPlays.clear()
