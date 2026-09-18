@@ -797,7 +797,6 @@ audio.custom-audio {
 .episode-list li > a:first-child {
   display: flex;
   align-items: center;
-  gap: 12px;
   flex: 1;
   min-width: 0;
   padding: 0.9rem 16px;
@@ -809,6 +808,8 @@ audio.custom-audio {
 }
 .episode-list-artwork {
   flex-shrink: 0;
+  margin-right: 12px;
+  margin-inline-end: 12px;
   width: 48px;
   height: 48px;
   object-fit: cover;

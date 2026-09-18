@@ -52,4 +52,28 @@ test('scrolling the list requests thumbnails, and failed thumbnails never fall b
   await expect(
     page.locator('.episode-list a[aria-current="page"]'),
   ).toHaveAttribute('href', detail.path)
+  const spacing = () =>
+    page
+      .locator('.episode-list li')
+      .first()
+      .evaluate((row) => {
+        const image = row
+          .querySelector('.episode-list-artwork')!
+          .getBoundingClientRect()
+        const text = row
+          .querySelector('.episode-list-info')!
+          .getBoundingClientRect()
+        return text.left - image.right
+      })
+  for (const width of [390, 768, 1280]) {
+    await page.setViewportSize({ width, height: 900 })
+    const episodesTab = page.getByRole('tab', { name: 'Episodes', exact: true })
+    if (await episodesTab.isVisible()) await episodesTab.click()
+    await expect.poll(spacing).toBe(12)
+  }
+  // iPadOS 14.3 ignores flex gaps; spacing must not depend on that property.
+  await page.addStyleTag({
+    content: '.episode-list li > a:first-child { gap: 0 !important }',
+  })
+  await expect.poll(spacing).toBe(12)
 })
