@@ -66,6 +66,11 @@ button {
   outline: 3px solid var(--focus-color);
   outline-offset: 5px;
 }
+/* Safari can focus the content container after a tap. Keep focus rings on
+   interactive controls without outlining the whole page. */
+#main-content:focus {
+  outline: none;
+}
 @supports selector(:focus-visible) {
   :root :focus:not(:focus-visible) {
     outline: none;

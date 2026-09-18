@@ -3,6 +3,23 @@ import { ready, stubArchiveMedia } from './media'
 
 const path = '/episodes/trey-turner-ruminate'
 
+test('focusing the page container does not outline the site, while keyboard controls retain focus rings', async ({
+  page,
+}) => {
+  await stubArchiveMedia(page)
+  await page.goto(path)
+  await ready(page)
+  await page.keyboard.press('Tab')
+  const content = page.locator('#main-content')
+  await content.focus()
+  await expect(content).toBeFocused()
+  await expect(content).toHaveCSS('outline-style', 'none')
+  const play = page.getByRole('button', { name: 'Play', exact: true })
+  await play.focus()
+  await expect(play).toBeFocused()
+  await expect(play).toHaveCSS('outline-style', 'solid')
+})
+
 test('production entry works without import maps or newer optional APIs', async ({
   page,
   request,

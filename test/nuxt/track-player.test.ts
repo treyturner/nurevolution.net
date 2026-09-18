@@ -241,3 +241,70 @@ it('shares queued track actions with controls, but highlights only confirmed pos
   expect(wrapper.text()).toContain('No tracklist is available')
   wrapper.unmount()
 })
+
+it('keeps the confirmed track through Safari playback clock rollback after paused and playing seeks', async () => {
+  let player!: PodcastPlayer
+  const starts = [0, 357.514467, 558.371338, 826.145714]
+  const selected = {
+    ...episode,
+    tracks: starts.map((startTime, i) => ({
+      position: i + 1,
+      artist: 'Tone',
+      title: `Track ${i + 1}`,
+      startTime,
+    })),
+  }
+  const wrapper = await mountSuspended(
+    defineComponent({
+      setup() {
+        player = usePodcastPlayer(() => selected)
+        return () =>
+          h('div', [
+            h(ArchivePlayer, { player, episode: selected }),
+            h(EpisodeTracklist, { player, tracks: selected.tracks }),
+          ])
+      },
+    }),
+  )
+  try {
+    const audio = wrapper.get('audio')
+    Object.defineProperties(audio.element, {
+      currentTime: { configurable: true, writable: true, value: 0 },
+      duration: { configurable: true, value: 3600 },
+      readyState: { configurable: true, value: 4 },
+      paused: { configurable: true, writable: true, value: true },
+      seeking: { configurable: true, writable: true, value: false },
+    })
+    await audio.trigger('loadedmetadata')
+    for (const [index, rollback] of [
+      [1, 357.344128849],
+      [2, 558.153070849],
+      [3, 825.823665112],
+    ] as const) {
+      await wrapper.get('[aria-label="Next track"]').trigger('click')
+      await audio.trigger('seeked')
+      expect(player.tracks.current).toBe(index + 1)
+      Object.assign(audio.element, { paused: false })
+      await audio.trigger('play')
+      await audio.trigger('playing')
+      const indicator = wrapper.get('.track-current').element
+      Object.assign(audio.element, { currentTime: rollback })
+      await audio.trigger('timeupdate')
+      expect(player.state.currentTime).toBe(rollback)
+      expect(player.tracks.current).toBe(index + 1)
+      expect(player.tracks.next).toBe(starts[index + 1] ?? null)
+      expect(wrapper.get('.track-current').element).toBe(indicator)
+      expect(wrapper.get('li[aria-current]').text()).toContain(
+        `Track ${index + 1}`,
+      )
+      Object.assign(audio.element, { currentTime: starts[index]! + 0.1 })
+      await audio.trigger('timeupdate')
+      expect(wrapper.get('.track-current').element).toBe(indicator)
+    }
+    player.seek(starts[3]! - 0.2)
+    await audio.trigger('seeked')
+    expect(player.tracks.current).toBe(3)
+  } finally {
+    wrapper.unmount()
+  }
+})

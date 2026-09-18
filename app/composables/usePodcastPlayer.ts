@@ -1,6 +1,7 @@
 import { createEpisodeSequencer } from '../services/episode-sequencing'
 import type { ComponentPublicInstance } from 'vue'
 import { trackNavigation } from '../services/track-navigation'
+import { createTrackClock } from '../services/track-clock'
 import { createAudioAdapter, type AudioEvent } from '../services/audio'
 import { createPlayer, type PlayerSnapshot } from '../services/player'
 import {
@@ -56,6 +57,8 @@ export function usePodcastPlayer(
   let pendingResetPauses = 0
   let suppressPauseCapture = false
   let pendingPauseAt: number | null = null
+  const trackClock = createTrackClock()
+  const trackTime = ref(0)
   const cleanups: (() => void)[] = []
   const sequenceRevision = ref(0)
   const sequence = createEpisodeSequencer(
@@ -158,6 +161,7 @@ export function usePodcastPlayer(
       () => {},
       (snapshot, event) => {
         Object.assign(state, snapshot)
+        trackTime.value = trackClock(snapshot, event)
         if (snapshot.status === 'playing') playbackStarted = true
         if (
           sequence.snapshot().continuing &&
@@ -254,17 +258,14 @@ export function usePodcastPlayer(
   const tracks = computed(() =>
     trackNavigation(
       episode()?.tracks ?? [],
-      state.pendingSeek ?? state.currentTime,
+      state.pendingSeek ?? trackTime.value,
       state.duration,
     ),
   )
   const currentTrack = computed(
     () =>
-      trackNavigation(
-        episode()?.tracks ?? [],
-        state.currentTime,
-        state.duration,
-      ).current,
+      trackNavigation(episode()?.tracks ?? [], trackTime.value, state.duration)
+        .current,
   )
   return {
     state: readonly(state),
@@ -302,15 +303,22 @@ export function usePodcastPlayer(
       const target = episode()?.tracks.find(
         (track) => track.position === position,
       )
-      if (target?.startTime !== null && target?.startTime !== undefined)
+      if (target?.startTime !== null && target?.startTime !== undefined) {
+        trackClock.reset()
         controller?.seek(target.startTime)
+      }
     },
     previousTrack() {
-      if (tracks.value.previous !== null)
+      if (tracks.value.previous !== null) {
+        trackClock.reset()
         controller?.seek(tracks.value.previous)
+      }
     },
     nextTrack() {
-      if (tracks.value.next !== null) controller?.seek(tracks.value.next)
+      if (tracks.value.next !== null) {
+        trackClock.reset()
+        controller?.seek(tracks.value.next)
+      }
     },
     bindAudio(value: Element | ComponentPublicInstance | null) {
       element = value as HTMLAudioElement | null
@@ -344,8 +352,14 @@ export function usePodcastPlayer(
       // Save the command once; its queued native pause is not new activity.
       capture(controller.snapshot(), 'pause', true)
     },
-    seek: (seconds: number) => controller?.seek(seconds),
-    skip: (seconds: number) => controller?.skip(seconds),
+    seek(seconds: number) {
+      trackClock.reset()
+      controller?.seek(seconds)
+    },
+    skip(seconds: number) {
+      trackClock.reset()
+      controller?.skip(seconds)
+    },
     setVolume: (value: number) => controller?.setVolume(value),
     toggleMute: () => controller?.toggleMute(),
   }

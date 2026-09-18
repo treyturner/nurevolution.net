@@ -24,6 +24,14 @@ Diagnostic observations on September 18:
 
 Supporting Safari 14.3 would require an explicit older-browser target, compatible entry loading, an audit of runtime APIs and CSS, and a production-build test on the actual iPad. A clearer fallback for unsuccessful initialization is also worth addressing. Neither change is implemented by this documentation update. Current Safari on physical Apple hardware remains untested; the older-device result does not establish its behavior.
 
+## M8 workspace device retest
+
+On September 18, the owner tested the PR #56 workspace preview on the iPad and reported that playback was working. This was commit `18a025c`, not a production deployment. The owner also identified two remaining issues: a page-wide focus outline after tapping and a current-track highlight that moved back briefly after seeking, including after a paused seek followed by Play.
+
+Temporary development-only event capture on The Dark Prophet confirmed both causes. The focused element was `main-content`. Safari reported track 2's seek complete at `357.514467`, then reported `357.344128849` on the first advancing playback update. Similar rollbacks occurred at track 3 (`558.371338` to `558.153070849`) and track 4 (`826.145714` to `825.823665112`), before the clock advanced across each boundary again. This was not a change in authored timestamps. The browser identified itself as desktop-mode Safari 14.0.2; the device's iPadOS 14.3 version is owner-reported.
+
+PR #56 removes the outline from the non-interactive content container while retaining control focus rings, and adds a bounded track-identity guard for confirmed-seek clock rollback. Automated regressions use the captured clock values. Device confirmation of those corrections and the full remaining acceptance checklist are still pending; this observation does not establish dialog, restoration, untimed-episode, or current-Safari acceptance.
+
 ## Unraid reboot follow-up
 
 After the owner reported an Unraid reboot on September 18, external Headscale health/TLS, the existing droplet client, self-hosted relay/STUN checks, MinIO health, authenticated access to the four retained backup snapshots, and production uptime probes passed. The latest snapshot remains the verified September 17 backup; this check did not create another backup or repeat a restore. The droplet backup timer is active and enabled.
