@@ -65,10 +65,10 @@ test('scrolling the list requests thumbnails, and failed thumbnails never fall b
           .getBoundingClientRect()
         return text.left - image.right
       })
-  for (const width of [390, 768, 1280]) {
+  for (const width of [390, 600, 601, 768, 1280]) {
     await page.setViewportSize({ width, height: 900 })
     const episodesTab = page.getByRole('tab', { name: 'Episodes', exact: true })
-    if (width <= 700) await episodesTab.click()
+    if (width <= 600) await episodesTab.click()
     else await expect(episodesTab).toHaveCount(0)
     await expect.poll(spacing).toBe(12)
   }
@@ -116,11 +116,18 @@ test('artist and date wrap as whole items and the separator disappears at a line
         document.documentElement.classList.toggle('no-flex-gap', value),
       noGap,
     )
+    await metadata.evaluate((element) => {
+      element.style.maxWidth = ''
+    })
     await page.setViewportSize({ width: 460, height: 900 })
     const wide = await measure()
     expect(wide.date.top).toBeCloseTo(wide.artist.top, 1)
     expect(wide.separator.left).toBeGreaterThanOrEqual(wide.artist.right)
     await page.setViewportSize({ width: 350, height: 900 })
+    // Exercise metadata wrapping independently of the action row wrapping first.
+    await metadata.evaluate((element) => {
+      element.style.maxWidth = '8rem'
+    })
     const narrow = await measure()
     expect(narrow.date.top).toBeGreaterThanOrEqual(narrow.artist.bottom - 1)
     expect(narrow.date.left).toBeCloseTo(narrow.left, 1)
@@ -129,6 +136,9 @@ test('artist and date wrap as whole items and the separator disappears at a line
     expect(narrow.artist.height).toBeLessThanOrEqual(narrow.lineHeight + 1)
     expect(narrow.date.height).toBeLessThanOrEqual(narrow.lineHeight + 1)
   }
+  await metadata.evaluate((element) => {
+    element.style.maxWidth = ''
+  })
   await page.setViewportSize({ width: 320, height: 900 })
   await page.evaluate(() => {
     document.documentElement.style.fontSize = '200%'

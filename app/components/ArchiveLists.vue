@@ -41,7 +41,7 @@ const resize = () => {
   narrow.value = media!.matches
 }
 onMounted(() => {
-  media = window.matchMedia('(max-width: 700px)')
+  media = window.matchMedia('(max-width: 600px)')
   resize()
   media.addEventListener('change', resize)
 })
