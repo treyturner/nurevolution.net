@@ -387,6 +387,51 @@ describe('persistent episode controller', () => {
     expect(media.preload).toBe('metadata')
     player.dispose()
   })
+  it.each([false, true])(
+    'changes preload only with playback state when Play precedes metadata: %s',
+    (earlyPlay) => {
+      const { media, player } = setup()
+      let preload = media.preload
+      const writes = vi.fn((value: AudioPort['preload']) => {
+        preload = value
+      })
+      Object.defineProperty(media, 'preload', {
+        get: () => preload,
+        set: writes,
+      })
+      player.select(a)
+      if (earlyPlay) player.play()
+      media.ready()
+      if (!earlyPlay) {
+        expect(media.preload).toBe('metadata')
+        player.play()
+      }
+      expect(media.preload).toBe('auto')
+      writes.mockClear()
+      for (const event of ['playing', 'progress', 'waiting', 'canplay'])
+        media.emit(event)
+      for (let second = 1; second <= 60; second++) {
+        media.currentTime = second
+        media.emit('timeupdate')
+      }
+      expect(media.preload).toBe('auto')
+      expect(writes).not.toHaveBeenCalled()
+
+      player.pause()
+      media.emit('progress')
+      media.emit('timeupdate')
+      expect(writes.mock.calls).toEqual([['metadata']])
+      player.play()
+      player.select(b)
+      media.ready()
+      media.emit('playing')
+      expect(writes.mock.calls).toEqual([['metadata'], ['auto']])
+      media.ended = true
+      media.emit('ended')
+      expect(writes.mock.calls).toEqual([['metadata'], ['auto'], ['metadata']])
+      player.dispose()
+    },
+  )
   it('loads metadata before offering Play and reports actual buffering after playback is requested', async () => {
     const { media, changed, player } = setup()
     player.select(a)
@@ -402,7 +447,7 @@ describe('persistent episode controller', () => {
     media.ready()
     media.emit('playing')
     expect(changed).toHaveBeenLastCalledWith('playing')
-    expect(media.preload).toBe('metadata')
+    expect(media.preload).toBe('auto')
     player.retry()
     expect(media.readyState).toBe(0)
     expect(changed).toHaveBeenLastCalledWith('loading')
