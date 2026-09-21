@@ -240,7 +240,8 @@ export function createPlayer(
     if (hasMetadata(snapshot)) {
       stopMetadataTimer()
       stopDurationTimer()
-      audio.setPreload('metadata')
+      // Limit background loading only while stopped; preserve playback read-ahead.
+      audio.setPreload(snapshot.paused || snapshot.ended ? 'metadata' : 'auto')
       if (!reconciling) {
         reconciling = true
         seek.reconcile(snapshot, event)

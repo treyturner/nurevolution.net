@@ -106,7 +106,8 @@ export function createAudioAdapter(
     },
     setPreload(value: 'auto' | 'metadata') {
       assertActive()
-      element.preload = value
+      // Even a repeated assignment can update the browser's buffering policy.
+      if (element.preload !== value) element.preload = value
     },
     play(): Promise<void> {
       assertActive()

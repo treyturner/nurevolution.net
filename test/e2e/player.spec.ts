@@ -119,6 +119,49 @@ test('keeps loading until metadata arrives, with playback still paused', async (
   }
 })
 
+test('preserves automatic preloading during playback without repeated attribute writes', async ({
+  page,
+}) => {
+  await page.goto('/episodes/trey-turner-lost-in-translation')
+  await ready(page)
+  const audio = page.locator('audio')
+  await expect(audio).toHaveAttribute('preload', 'metadata')
+  await audio.evaluate((a: HTMLAudioElement) => {
+    a.muted = true
+    a.loop = true
+  })
+  await page.getByRole('button', { name: 'Play', exact: true }).click()
+  await expect(page.locator('.media-status')).toHaveText(/^Playing\b/)
+  await expect(audio).toHaveAttribute('preload', 'auto')
+  const changes = await audio.evaluate(
+    (a: HTMLAudioElement) =>
+      new Promise<number>((resolve) => {
+        let changes = 0
+        let updates = 0
+        const observer = new MutationObserver((records) => {
+          changes += records.length
+        })
+        observer.observe(a, {
+          attributes: true,
+          attributeFilter: ['preload'],
+        })
+        const tick = () => {
+          if (++updates < 4) return
+          a.removeEventListener('timeupdate', tick)
+          changes += observer.takeRecords().length
+          observer.disconnect()
+          resolve(changes)
+        }
+        a.addEventListener('timeupdate', tick)
+      }),
+  )
+  expect(changes).toBe(0)
+  await page.getByRole('button', { name: 'Pause', exact: true }).click()
+  await expect(audio).toHaveAttribute('preload', 'metadata')
+  await page.getByRole('button', { name: 'Play', exact: true }).click()
+  await expect(audio).toHaveAttribute('preload', 'auto')
+})
+
 for (const late of [false, true]) {
   test(`reconciles duration exposed ${late ? 'after all readiness events' : 'at loadeddata'}`, async ({
     page,
