@@ -787,7 +787,8 @@ audio.custom-audio {
 }
 .archive-grid {
   display: grid;
-  grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+  /* Keep 40/60 on wide screens, giving episodes a larger share as space shrinks. */
+  grid-template-columns: minmax(min(22rem, 45%), 2fr) minmax(0, 3fr);
   gap: clamp(1.5rem, 5vw, 4rem);
   padding-top: 2rem;
   border-top: 1px solid var(--line);
@@ -816,9 +817,11 @@ audio.custom-audio {
 .episode-list li > a:first-child {
   display: flex;
   align-items: center;
-  flex: 1;
-  min-width: min(100%, calc(92px + 2rem));
-  padding: 0.9rem 16px;
+  /* Leave three 44px actions inline; both groups fill their line after wrapping. */
+  flex: 1 1 calc(100% - 132px);
+  /* Reserve readable text beside the artwork before wrapping the action row. */
+  min-width: min(100%, calc(92px + 8rem));
+  padding: 0.625rem 16px;
   text-decoration: none;
   color: #e1e6ee;
 }
@@ -882,6 +885,7 @@ audio.custom-audio {
 
 .episode-row-actions {
   display: flex;
+  flex: 1 0 auto;
   align-self: stretch;
   margin-left: auto;
 }
@@ -893,7 +897,7 @@ audio.custom-audio {
 .row-play,
 .row-copy-link {
   display: flex;
-  flex-shrink: 0;
+  flex: 1 0 44px;
   align-self: stretch;
   align-items: center;
   justify-content: center;
@@ -1208,6 +1212,8 @@ button.track-row:disabled + .track-content {
     margin-right: auto;
     margin-inline: auto;
   }
+}
+@media (max-width: 600px) {
   .archive-grid {
     grid-template-columns: minmax(0, 1fr);
     gap: 2rem;
