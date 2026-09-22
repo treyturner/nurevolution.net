@@ -2,12 +2,8 @@ name: Verify
 
 on:
   pull_request:
-    paths-ignore:
-      - '**/*.md'
   push:
     branches: [main]
-    paths-ignore:
-      - '**/*.md'
 
 permissions:
   contents: read
@@ -17,7 +13,24 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  changes:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    outputs:
+      docs_only: ${{ steps.scope.outputs.docs_only }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+      - name: Test verification scope detection
+        run: python3 -m unittest discover -s .github/scripts -p 'test_*.py'
+      - name: Detect Markdown-only changes
+        id: scope
+        run: python3 .github/scripts/verification_scope.py
+
   playback-index:
+    needs: changes
+    if: needs.changes.outputs.docs_only != 'true'
     runs-on: ubuntu-24.04
     timeout-minutes: 5
     steps:
@@ -32,25 +45,40 @@ jobs:
           .local/playback-venv/bin/python -m unittest discover -s tools/playback -p 'test_*.py'
 
   verify:
+    needs: changes
+    if: ${{ !cancelled() }}
     runs-on: ubuntu-24.04
     timeout-minutes: 30
     steps:
+      - name: Require successful scope detection
+        if: needs.changes.result != 'success'
+        run: exit 1
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version-file: .node-version
       - name: Enable the declared pnpm version
         run: corepack enable
+      - name: Check documentation formatting
+        if: needs.changes.outputs.docs_only == 'true'
+        run: |
+          prettier_version=$(node -p 'require("./package.json").devDependencies.prettier')
+          pnpm dlx "prettier@$prettier_version" --check '**/*.md'
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        if: needs.changes.outputs.docs_only != 'true'
         with:
           python-version-file: .python-version
       - name: Install locked dependencies
+        if: needs.changes.outputs.docs_only != 'true'
         run: pnpm install --frozen-lockfile
       - name: Install browsers and system dependencies
+        if: needs.changes.outputs.docs_only != 'true'
         run: pnpm exec playwright install --with-deps chromium firefox webkit
       - name: Verify
+        if: needs.changes.outputs.docs_only != 'true'
         run: pnpm verify
       - name: Retain the exact verified runtime and delivery bundle
+        if: needs.changes.outputs.docs_only != 'true'
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: verified-runtime
@@ -59,7 +87,7 @@ jobs:
           if-no-files-found: error
           retention-days: 14
       - name: Retain verification reports
-        if: always()
+        if: always() && needs.changes.outputs.docs_only != 'true'
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: verification-reports
@@ -74,6 +102,8 @@ jobs:
           retention-days: 14
 
   image-identity:
+    needs: changes
+    if: needs.changes.outputs.docs_only != 'true'
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
@@ -103,6 +133,8 @@ jobs:
         run: pnpm test:image-identity
 
   headscale-runner:
+    needs: changes
+    if: needs.changes.outputs.docs_only != 'true'
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
@@ -113,6 +145,8 @@ jobs:
           python3 deploy/headscale/check-runner.py
 
   headscale-backup:
+    needs: changes
+    if: needs.changes.outputs.docs_only != 'true'
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
@@ -137,13 +171,14 @@ jobs:
   publish:
     needs:
       [
+        changes,
         verify,
         playback-index,
         image-identity,
         headscale-runner,
         headscale-backup,
       ]
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main' && github.repository == 'treyturner/nurevolution.net'
+    if: needs.changes.outputs.docs_only != 'true' && github.event_name == 'push' && github.ref == 'refs/heads/main' && github.repository == 'treyturner/nurevolution.net'
     runs-on: ubuntu-24.04
     timeout-minutes: 15
     permissions:
