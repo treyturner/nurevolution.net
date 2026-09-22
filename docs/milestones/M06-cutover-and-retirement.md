@@ -170,7 +170,7 @@ pnpm check:feed
 CI=1 pnpm verify
 ```
 
-The current workspace's separate Docker daemon requires `NUREVOLUTION_DOCKER_ADDRESS=172.18.0.2` for the full gate. Use the documented pinned toolchain; no production credentials are required for CI. Documentation-only planning is checked with targeted Prettier and `git diff --check`; it does not require repeating the complete runtime suite.
+Use the workspace's configured Docker socket and follow [Docker socket and test HTTP setup](../DEPLOYMENT.md#release-and-host-contracts) if published test ports require an address override. Resolve the current workspace's address instead of reusing an IP from historical evidence. Use the documented pinned toolchain; no production credentials are required for CI. Documentation-only planning is checked with targeted Prettier and `git diff --check`; it does not require repeating the complete runtime suite.
 
 For live checks, reuse `audit-http`/`check-assets` from the verified deployment bundle and the existing media, feed, rollback, and backup runbooks. Record successful main verification separately from live/device acceptance. Tests of a temporary resolver prove candidate delivery; public-DNS probes and real subscriptions prove cutover behavior. Both are needed.
 
