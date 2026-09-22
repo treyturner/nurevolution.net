@@ -2,6 +2,8 @@
 
 This Nuxt application imports the production audio adapter and exercises it in real browsers. It is built separately and never extends or adds routes to the production application.
 
+Docker delivery tests stage its `.output` with relative symlinks preserved. Nitro can emit version-specific dependencies under `server/node_modules/.nitro`; resolving those links to absolute workspace paths during the copy makes the image fail outside the build workspace. The staging regression test relocates a runtime and removes its source before loading a linked dependency.
+
 `public/sample.wav` is generated locally: two seconds of a 440 Hz sine wave, mono, 22,050 samples/second, signed 16-bit PCM, with peak amplitude 0.05. It contains no third-party recording and can be freely reused as project test data. `tools/generate-audio-fixture.mjs` reproduces the bytes without external dependencies.
 
 Pause/resume and disposal tests enable native looping on their own audio element so browser interaction delays cannot let the short clip finish first. The pause test waits for an actual loop boundary before clicking Pause. A separate test leaves looping disabled and checks natural completion. These controls use real browser media events; no playback or button actionability is mocked.

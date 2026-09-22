@@ -109,7 +109,7 @@ The browser report is `playwright-report/index.html`; failed tests retain screen
 
 ## Dependency choices and CI
 
-The pinned Nuxt 4.5.2, Vue 3.5.42, and Vue Router 5.3.1 set uses standard SSR and Nitro's Node server preset. TypeScript 6.0.3 is within the selected ESLint parser's supported range. Vitest 4.1.11 uses `@nuxt/test-utils` 4.3.2 and the matching V8 coverage provider. Direct versions and their rationale are recorded in the [M1 toolchain contract](milestones/M01-foundation-and-verification.md#toolchain-and-dependency-contract).
+The pinned Nuxt 4.5.2, Vue 3.5.43, and Vue Router 5.3.1 set uses standard SSR and Nitro's Node server preset. TypeScript 6.0.3 is within the selected ESLint parser's supported range. Vitest 4.1.11 uses `@nuxt/test-utils` 4.3.2 and the matching V8 coverage provider. Direct versions and their rationale are recorded in the [M1 toolchain contract](milestones/M01-foundation-and-verification.md#toolchain-and-dependency-contract).
 
 `pnpm-workspace.yaml` allows only the version-specific `esbuild@0.28.2` and `unrs-resolver@1.12.2` installation scripts to prepare their platform binaries. It supplies `cac@6.7.14` through `@nuxt/cli@3.37.0` to `@bomb.sh/tab@0.0.19`, whose optional peer requires `^6.7.14`; other tooling requires cac 7. This preserves the declared peer range without changing unrelated consumers or ignoring conflicts. Reassess this narrow extension when upgrading that package.
 

@@ -1,8 +1,13 @@
-import { readFile, mkdir, writeFile } from 'node:fs/promises'
+import { cp, readFile, mkdir, writeFile } from 'node:fs/promises'
 import { resolve } from 'node:path'
 import { readCatalog } from '../../server/content/repository.ts'
 import { fileReader } from '../../tools/content/files.ts'
 import { createManifest, sha256 } from '../../tools/deploy/manifest.ts'
+
+export async function copyFixtureRuntime(source: string, destination: string) {
+  // Nitro's relative dependency links must still resolve inside the Docker image.
+  await cp(source, destination, { recursive: true, verbatimSymlinks: true })
+}
 
 export async function deliveryFixture(directory: string, commit: string) {
   const { catalog } = await readCatalog(fileReader('content'))
