@@ -8,7 +8,7 @@ import { stageAssets } from '../../tools/deploy/stage-assets.ts'
 import { prepareBundle } from '../../tools/deploy/build.ts'
 import { serialize } from '../../tools/deploy/manifest.ts'
 import { renderSite, profileSchema } from '../../tools/deploy/render-config.ts'
-import { deliveryFixture } from './fixture.ts'
+import { copyFixtureRuntime, deliveryFixture } from './fixture.ts'
 import { archiveConfigDigest } from '../../tools/deploy/image-identity.ts'
 import { verifyVirtualProxy } from './virtual.ts'
 import { verifyFeedResources } from './feed-resources.ts'
@@ -270,9 +270,10 @@ try {
   })
   const context = resolve(local, 'fixture-context')
   await fs.mkdir(context, { recursive: true })
-  await fs.cp('test/fixtures/media-app/.output', resolve(context, '.output'), {
-    recursive: true,
-  })
+  await copyFixtureRuntime(
+    'test/fixtures/media-app/.output',
+    resolve(context, '.output'),
+  )
   await fs.copyFile('Dockerfile', resolve(context, 'Dockerfile'))
   await fs.copyFile('.dockerignore', resolve(context, '.dockerignore'))
   await docker([
