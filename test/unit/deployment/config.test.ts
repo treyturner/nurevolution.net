@@ -75,7 +75,10 @@ it('compares complete parsed hostnames when rejecting overlapping routes', () =>
         [field]: 'https://' + hostname,
       })
       expect(site.match[0]!.host).toContain(hostname)
-      expect(site.handle[0]!.routes[0]).toMatchObject({
+      expect(
+        site.handle.find((handler) => handler.handler === 'subroute')!
+          .routes![0],
+      ).toMatchObject({
         match: [{ host: ['www.nurevolution.net'] }],
         handle: [{ status_code: 301 }],
       })
@@ -104,3 +107,44 @@ it('replaces only the owned route while retaining other sites and TLS configurat
   }
   expect(() => replaceSite(broken, {})).toThrow('Duplicate')
 })
+
+it.each([{ protocols: undefined }, { protocols: ['h1', 'h2', 'h3'] }])(
+  'disables default or explicit HTTP/3 on the production listener while preserving other servers',
+  ({ protocols }) => {
+    const sentinel = { '@id': 'other-site', handle: [] }
+    const diagnostic = {
+      listen: [':38443'],
+      protocols: ['h1', 'h2', 'h3'],
+      routes: [{ '@id': 'quic-test', handle: [] }],
+    }
+    const https = {
+      ...initial.apps.http.servers.https,
+      protocols,
+      listen_protocols: [['h3']],
+      read_timeout: 30_000_000_000,
+      routes: [sentinel, { '@id': 'nurevolution', handle: ['old'] }],
+    }
+    const config = {
+      ...initial,
+      apps: {
+        ...initial.apps,
+        http: { servers: { https, diagnostic } },
+      },
+    }
+    const original = structuredClone(config)
+    const site = { '@id': 'nurevolution', handle: ['new'] }
+    const updated = replaceSite(config, site) as typeof config
+    expect(updated.apps.http.servers.https).toEqual({
+      ...https,
+      protocols: ['h1', 'h2'],
+      listen_protocols: undefined,
+      routes: [sentinel, site],
+    })
+    expect(updated.apps.http.servers.https).not.toHaveProperty(
+      'listen_protocols',
+    )
+    expect(updated.apps.http.servers.diagnostic).toEqual(diagnostic)
+    expect(updated.apps.tls).toEqual(initial.apps.tls)
+    expect(config).toEqual(original)
+  },
+)

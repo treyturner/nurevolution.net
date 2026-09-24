@@ -7,6 +7,7 @@
       "servers": {
         "https": {
           "listen": [":443"],
+          "protocols": ["h1", "h2"],
           "tls_connection_policies": [{}],
           "routes": []
         }

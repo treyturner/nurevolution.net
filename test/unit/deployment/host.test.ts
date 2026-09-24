@@ -182,9 +182,21 @@ it('runs bounded commands and waits through transient readiness failures', async
   ).rejects.toThrow('deadline')
 })
 
-it('validates/pulls the exact image and deploys only the owned app and site route', async () => {
+it('validates/pulls the exact image and deploys the owned app, route and HTTPS protocol policy', async () => {
   const f = await fixture()
+  const edgePath = resolve(f.paths.edgeDirectory, 'caddy.json')
+  const legacyEdge = structuredClone(edge)
+  Object.assign(legacyEdge.apps.http.servers.https, {
+    protocols: ['h1', 'h2', 'h3'],
+    listen_protocols: [['h3']],
+  })
+  await fs.writeFile(edgePath, serialize(legacyEdge))
   await deployOnHost(f.bundle, f.paths, f.run, f.request)
+  const deployedEdge = JSON.parse(await fs.readFile(edgePath, 'utf8'))
+  expect(deployedEdge.apps.http.servers.https.protocols).toEqual(['h1', 'h2'])
+  expect(deployedEdge.apps.http.servers.https).not.toHaveProperty(
+    'listen_protocols',
+  )
   for (const name of ['candidate.json', 'caddy.json'])
     expect(
       (await fs.stat(resolve(f.paths.edgeDirectory, name))).mode & 0o777,

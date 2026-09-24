@@ -161,17 +161,35 @@ export function renderSite(manifest: MediaManifest, profile: Profile) {
   return {
     '@id': 'nurevolution',
     match: [{ host: [...webHosts, ...mediaHosts, www] }],
-    handle: [{ handler: 'subroute', routes }],
+    handle: [
+      {
+        handler: 'headers',
+        response: { set: { 'Alt-Svc': ['clear'] }, deferred: true },
+      },
+      { handler: 'subroute', routes },
+    ],
     terminal: true,
   }
 }
 
-// Preserve every unrelated route and all operator-owned server/TLS settings.
+// Production uses TCP while the public-path QUIC incident is investigated.
+// Preserve unrelated routes and settings, except the https protocol policy.
 export function replaceSite(config: JsonObject, site: JsonObject): JsonObject {
   const value = structuredClone(config)
   const servers = (
     value.apps as
-      | { http?: { servers?: Record<string, { routes: JsonObject[] }> } }
+      | {
+          http?: {
+            servers?: Record<
+              string,
+              {
+                routes: JsonObject[]
+                protocols?: string[]
+                listen_protocols?: string[][]
+              }
+            >
+          }
+        }
       | undefined
   )?.http?.servers
   if (!servers?.https || !Array.isArray(servers.https.routes))
@@ -181,5 +199,8 @@ export function replaceSite(config: JsonObject, site: JsonObject): JsonObject {
   if (matches.length > 1) throw new Error('Duplicate owned proxy route')
   if (matches.length) routes.splice(routes.indexOf(matches[0]!), 1, site)
   else routes.unshift(site)
+  servers.https.protocols = ['h1', 'h2']
+  // Per-listener overrides take precedence over the server protocol list.
+  delete servers.https.listen_protocols
   return value
 }

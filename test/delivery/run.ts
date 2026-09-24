@@ -7,7 +7,11 @@ import { atomicWrite } from '../../tools/deploy/deploy.ts'
 import { stageAssets } from '../../tools/deploy/stage-assets.ts'
 import { prepareBundle } from '../../tools/deploy/build.ts'
 import { serialize } from '../../tools/deploy/manifest.ts'
-import { renderSite, profileSchema } from '../../tools/deploy/render-config.ts'
+import {
+  renderSite,
+  replaceSite,
+  profileSchema,
+} from '../../tools/deploy/render-config.ts'
 import { copyFixtureRuntime, deliveryFixture } from './fixture.ts'
 import { archiveConfigDigest } from '../../tools/deploy/image-identity.ts'
 import { verifyVirtualProxy } from './virtual.ts'
@@ -178,9 +182,48 @@ try {
         `/data/caddy/certificates/local/${host}/${host}.crt`,
       ])
   }, 30)
+  // The initial TLS listener must bind TCP/443 without opening QUIC UDP/443.
+  const sockets = (protocol: 'tcp' | 'udp') =>
+    docker([
+      'exec',
+      bootstrap,
+      'sh',
+      '-c',
+      `cat /proc/net/${protocol} /proc/net/${protocol}6`,
+    ])
+  const httpsSocket = /^\s*\d+:\s+[0-9A-F]+:01BB\s/im
+  assert.match(await sockets('tcp'), httpsSocket)
+  assert.doesNotMatch(await sockets('udp'), httpsSocket)
+  const legacyBootstrap = structuredClone(bootstrapConfig)
+  legacyBootstrap.apps.http.servers.https.protocols = ['h1', 'h2', 'h3']
+  legacyBootstrap.apps.http.servers.https.listen_protocols = [
+    ['h1', 'h2', 'h3'],
+  ]
+  const reloadBootstrap = (value: unknown) =>
+    docker([
+      'exec',
+      '-e',
+      'BOOTSTRAP_JSON=' + serialize(value),
+      bootstrap,
+      'sh',
+      '-c',
+      'printf %s "$BOOTSTRAP_JSON" > /tmp/bootstrap.json; exec caddy reload --config /tmp/bootstrap.json',
+    ])
+  await reloadBootstrap(legacyBootstrap)
+  assert.match(await sockets('udp'), httpsSocket)
+  await reloadBootstrap(
+    replaceSite(legacyBootstrap, {
+      '@id': 'nurevolution',
+      handle: [{ handler: 'static_response', body: 'transport ready' }],
+    }),
+  )
+  await waitReady(async () => {
+    assert.match(await sockets('tcp'), httpsSocket)
+    assert.doesNotMatch(await sockets('udp'), httpsSocket)
+  }, 10)
   await docker(['stop', bootstrap])
   console.log(
-    'Initial edge: account token format and issuance for all three canonical hosts before routes passed (offline local CA)',
+    'Initial edge: account token, canonical certificate issuance and removal of a live QUIC listener passed (offline local CA)',
   )
   await docker(['network', 'create', network])
   madeNetwork = true
@@ -488,6 +531,7 @@ try {
   await verifyVirtualProxy(mediaOrigin)
   const head = await get(mp3Url, { method: 'HEAD' })
   assert.equal(head.status, 200)
+  assert.equal(head.headers.get('alt-svc'), 'clear')
   assert.equal(head.headers.get('content-length'), String(fixture.mp3.length))
   assert.equal(head.headers.get('content-disposition'), null)
   for (const [range, startByte, endByte] of [
@@ -497,6 +541,7 @@ try {
   ] as const) {
     const response = await get(mp3Url, { headers: { Range: range } })
     assert.equal(response.status, 206)
+    assert.equal(response.headers.get('alt-svc'), 'clear')
     assert.equal(
       response.headers.get('content-range'),
       `bytes ${startByte}-${endByte}/${fixture.mp3.length}`,
@@ -615,12 +660,15 @@ try {
   ]) {
     const redirect = await get(webOrigin + path, { redirect: 'manual' })
     assert.equal(redirect.status, 301)
+    assert.equal(redirect.headers.get('alt-svc'), 'clear')
     assert.equal(
       redirect.headers.get('location'),
       'https://nurevolution.net' + path,
     )
   }
-  assert.equal(await (await get(webOrigin + '/sentinel')).text(), 'other site')
+  const sentinelResponse = await get(webOrigin + '/sentinel')
+  assert.equal(await sentinelResponse.text(), 'other site')
+  assert.equal(sentinelResponse.headers.get('alt-svc'), null)
   config.apps.http.servers.https.routes = [
     sentinel,
     localSite('localhost', canonicalSite),
@@ -639,6 +687,7 @@ try {
     commit,
   )
   const proxiedFeed = await get(webOrigin + '/feed/podcast')
+  assert.equal(proxiedFeed.headers.get('alt-svc'), 'clear')
   await verifyFeedResources(webOrigin, get)
   assert.equal((await proxiedFeed.text()).match(/<item>/g)!.length, 55)
   const feedTag = proxiedFeed.headers.get('etag')!
