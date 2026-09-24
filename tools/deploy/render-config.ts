@@ -161,13 +161,7 @@ export function renderSite(manifest: MediaManifest, profile: Profile) {
   return {
     '@id': 'nurevolution',
     match: [{ host: [...webHosts, ...mediaHosts, www] }],
-    handle: [
-      {
-        handler: 'headers',
-        response: { set: { 'Alt-Svc': ['clear'] }, deferred: true },
-      },
-      { handler: 'subroute', routes },
-    ],
+    handle: [{ handler: 'subroute', routes }],
     terminal: true,
   }
 }
@@ -197,8 +191,26 @@ export function replaceSite(config: JsonObject, site: JsonObject): JsonObject {
   const routes = servers.https.routes
   const matches = routes.filter((r) => r['@id'] === 'nurevolution')
   if (matches.length > 1) throw new Error('Duplicate owned proxy route')
-  if (matches.length) routes.splice(routes.indexOf(matches[0]!), 1, site)
-  else routes.unshift(site)
+  const transportId = 'nurevolution-transport'
+  const transport = routes.filter((r) => r['@id'] === transportId)
+  if (transport.length > 1) throw new Error('Duplicate transport policy route')
+  if (transport.length) routes.splice(routes.indexOf(transport[0]!), 1)
+  // Rollback runs the selected release's exact renderer. Older tools replace
+  // only @id=nurevolution, so keep cache clearing in a separate, nonterminal
+  // route immediately before the site. Repeated promotions refresh its scope.
+  const policy = {
+    '@id': transportId,
+    match: structuredClone(site.match),
+    handle: [
+      {
+        handler: 'headers',
+        response: { set: { 'Alt-Svc': ['clear'] }, deferred: true },
+      },
+    ],
+  }
+  if (matches.length)
+    routes.splice(routes.indexOf(matches[0]!), 1, policy, site)
+  else routes.unshift(policy, site)
   servers.https.protocols = ['h1', 'h2']
   // Per-listener overrides take precedence over the server protocol list.
   delete servers.https.listen_protocols

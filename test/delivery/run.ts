@@ -11,6 +11,7 @@ import {
   renderSite,
   replaceSite,
   profileSchema,
+  type JsonObject,
 } from '../../tools/deploy/render-config.ts'
 import { copyFixtureRuntime, deliveryFixture } from './fixture.ts'
 import { archiveConfigDigest } from '../../tools/deploy/image-identity.ts'
@@ -153,6 +154,8 @@ try {
   const bootstrap = await create(prefix + '-bootstrap', [
     '--network',
     'none',
+    '--add-host',
+    'nurevolution.net:127.0.0.1',
     '--read-only',
     '--tmpfs',
     '/tmp',
@@ -211,19 +214,57 @@ try {
     ])
   await reloadBootstrap(legacyBootstrap)
   assert.match(await sockets('udp'), httpsSocket)
-  await reloadBootstrap(
-    replaceSite(legacyBootstrap, {
-      '@id': 'nurevolution',
-      handle: [{ handler: 'static_response', body: 'transport ready' }],
-    }),
-  )
+  const promotedBootstrap = replaceSite(legacyBootstrap, {
+    '@id': 'nurevolution',
+    match: [{ host: ['nurevolution.net'] }],
+    handle: [{ handler: 'static_response', body: 'transport ready' }],
+    terminal: true,
+  }) as typeof legacyBootstrap
+  await reloadBootstrap(promotedBootstrap)
   await waitReady(async () => {
     assert.match(await sockets('tcp'), httpsSocket)
     assert.doesNotMatch(await sockets('udp'), httpsSocket)
   }, 10)
+  const bootstrapResponse = () =>
+    docker([
+      'exec',
+      bootstrap,
+      'sh',
+      '-c',
+      'wget -T 5 -S -O - --no-check-certificate https://nurevolution.net/ 2>&1',
+    ])
+  assert.match(await bootstrapResponse(), /\n\s*Alt-Svc: clear\r?\n/i)
+  // Reproduce rollback by the pre-mitigation tool: replace only the site's
+  // route, with no cache-clearing middleware, and leave the edge policy intact.
+  const rollbackBootstrap = structuredClone(promotedBootstrap)
+  const rollbackRoutes = rollbackBootstrap.apps.http.servers.https
+    .routes as JsonObject[]
+  rollbackRoutes.splice(
+    rollbackRoutes.findIndex((r) => r['@id'] === 'nurevolution'),
+    1,
+    {
+      '@id': 'nurevolution',
+      match: [{ host: ['nurevolution.net'] }],
+      handle: [
+        {
+          handler: 'static_response',
+          body: 'previous release',
+          headers: { 'Alt-Svc': ['h3=":443"; ma=86400'] },
+        },
+      ],
+      terminal: true,
+    },
+  )
+  await reloadBootstrap(rollbackBootstrap)
+  const rollbackResponse = await bootstrapResponse()
+  assert.match(rollbackResponse, /previous release/)
+  assert.match(rollbackResponse, /\n\s*Alt-Svc: clear\r?\n/i)
+  assert.doesNotMatch(rollbackResponse, /Alt-Svc:.*h3/i)
+  assert.match(await sockets('tcp'), httpsSocket)
+  assert.doesNotMatch(await sockets('udp'), httpsSocket)
   await docker(['stop', bootstrap])
   console.log(
-    'Initial edge: account token, canonical certificate issuance and removal of a live QUIC listener passed (offline local CA)',
+    'Initial edge: certificate issuance, QUIC listener removal and cache clearing after legacy rollback passed (offline local CA)',
   )
   await docker(['network', 'create', network])
   madeNetwork = true
@@ -388,12 +429,12 @@ try {
           media: {
             listen: [':8081'],
             automatic_https: { disable: true },
-            routes: [] as unknown[],
+            routes: [] as JsonObject[],
           },
           https: {
             listen: [':8080'],
             automatic_https: { disable: true },
-            routes: [] as unknown[],
+            routes: [] as JsonObject[],
           },
         },
       },
@@ -496,6 +537,14 @@ try {
     handle: [{ handler: 'static_response', body: 'other site' }],
     terminal: true,
   }
+  const productionConfig = replaceSite(config, site) as typeof config
+  const transportPolicy = productionConfig.apps.http.servers.https.routes.find(
+    (r) => r['@id'] === 'nurevolution-transport',
+  )!
+  // Each local listener represents one production host. Strip only its host
+  // matcher and global ID, just as localSite does for the versioned site route.
+  delete transportPolicy.match
+  delete transportPolicy['@id']
   function localSite(host: string, source = site) {
     const value = structuredClone(source) as {
       match?: unknown
@@ -511,8 +560,15 @@ try {
     for (const r of subroute.routes) delete r.match[0]!.host
     return value
   }
-  config.apps.http.servers.https.routes = [sentinel, localSite('localhost')]
-  config.apps.http.servers.media.routes = [localSite('127.0.0.1')]
+  config.apps.http.servers.https.routes = [
+    sentinel,
+    transportPolicy,
+    localSite('localhost'),
+  ]
+  config.apps.http.servers.media.routes = [
+    transportPolicy,
+    localSite('127.0.0.1'),
+  ]
   await stageEdgeConfig(config)
   await docker([
     'exec',
@@ -643,7 +699,7 @@ try {
   )
   // Preserve the existing www redirect without relying on WordPress or its TLS.
   const wwwSite = localSite('www.nurevolution.net', canonicalSite)
-  config.apps.http.servers.https.routes = [sentinel, wwwSite]
+  config.apps.http.servers.https.routes = [sentinel, transportPolicy, wwwSite]
   await stageEdgeConfig(config)
   await docker([
     'exec',
@@ -671,6 +727,7 @@ try {
   assert.equal(sentinelResponse.headers.get('alt-svc'), null)
   config.apps.http.servers.https.routes = [
     sentinel,
+    transportPolicy,
     localSite('localhost', canonicalSite),
   ]
   await stageEdgeConfig(config)
