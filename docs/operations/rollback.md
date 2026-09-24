@@ -16,7 +16,7 @@ When `profile.json` changes website or media hostnames within an environment, ca
 
 After a killed process or host interruption, the next deployment refuses an existing lock or journal. Confirm there is no active deployment, backup, or other edge change. Save the pending/current/previous records and current edge configuration. Inspect which image is actually running and whether the candidate route became active. Select the compatible known release, restore its exact app/route with the recorded profile, and repeat local/HTTPS/feed/media checks. Only then archive the interrupted journal, reconcile `tooling/active` to the recovered release, and remove stale bootstrap/site/edge lock directories and owned `.pending` or tooling `.next` files. The bootstrap lock is `/srv/nurevolution/tooling/deploy.lock`; do not remove it while a bootstrap operation is active. Do not remove a live lock or simply rerun through an unresolved journal.
 
-Every shared-edge editor must honor `/srv/edge/config/deploy.lock`. Deployments preserve the other routes/settings and reload gracefully; unrestricted concurrent manual edits are outside the locking contract. Record the app interruption interval and prove an unrelated sentinel endpoint plus media remain available during ordinary app replacement.
+Every shared-edge editor must honor `/srv/edge/config/deploy.lock`. Deployments preserve unrelated routes/settings, except for the explicit [production HTTPS protocol policy](http3.md), and reload gracefully; unrestricted concurrent manual edits are outside the locking contract. Record the app interruption interval and prove an unrelated sentinel endpoint plus media remain available during ordinary app replacement.
 
 ## M8 feed-resource compatibility
 

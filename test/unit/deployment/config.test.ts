@@ -5,6 +5,7 @@ import {
   profileSchema,
   renderSite,
   replaceSite,
+  type JsonObject,
 } from '../../../tools/deploy/render-config.ts'
 import { createManifest } from '../../../tools/deploy/manifest.ts'
 import { runnableCatalog } from '../content/fixtures.ts'
@@ -82,7 +83,7 @@ it('compares complete parsed hostnames when rejecting overlapping routes', () =>
     }
 })
 
-it('replaces only the owned route while retaining other sites and TLS configuration', () => {
+it('replaces owned routes while retaining other sites and TLS configuration', () => {
   const config = structuredClone(initial) as unknown as Parameters<
     typeof replaceSite
   >[0]
@@ -103,4 +104,131 @@ it('replaces only the owned route while retaining other sites and TLS configurat
     },
   }
   expect(() => replaceSite(broken, {})).toThrow('Duplicate')
+  broken.apps.http.servers.https.routes = [
+    { '@id': 'nurevolution-transport' },
+    { '@id': 'nurevolution-transport' },
+  ]
+  expect(() => replaceSite(broken, {})).toThrow('Duplicate transport')
 })
+
+it.each([{ protocols: undefined }, { protocols: ['h1', 'h2', 'h3'] }])(
+  'disables default or explicit HTTP/3 on the production listener while preserving other servers',
+  ({ protocols }) => {
+    const sentinel = { '@id': 'other-site', handle: [] }
+    const diagnostic = {
+      listen: [':38443'],
+      protocols: ['h1', 'h2', 'h3'],
+      routes: [{ '@id': 'quic-test', handle: [] }],
+    }
+    const https = {
+      ...initial.apps.http.servers.https,
+      protocols,
+      listen_protocols: [['h3']],
+      read_timeout: 30_000_000_000,
+      routes: [sentinel, { '@id': 'nurevolution', handle: ['old'] }],
+    }
+    const config = {
+      ...initial,
+      apps: {
+        ...initial.apps,
+        http: { servers: { https, diagnostic } },
+      },
+    }
+    const original = structuredClone(config)
+    const site = { '@id': 'nurevolution', handle: ['new'] }
+    const updated = replaceSite(config, site) as typeof config
+    expect(updated.apps.http.servers.https).toEqual({
+      ...https,
+      protocols: ['h1', 'h2'],
+      listen_protocols: undefined,
+      routes: [
+        {
+          '@id': 'nurevolution-transport',
+          handle: [
+            {
+              handler: 'headers',
+              response: { set: { 'Alt-Svc': ['clear'] }, deferred: true },
+            },
+          ],
+        },
+        sentinel,
+        site,
+      ],
+    })
+    expect(updated.apps.http.servers.https).not.toHaveProperty(
+      'listen_protocols',
+    )
+    expect(updated.apps.http.servers.diagnostic).toEqual(diagnostic)
+    expect(updated.apps.tls).toEqual(initial.apps.tls)
+    expect(config).toEqual(original)
+  },
+)
+
+it.each(['before', 'after'])(
+  'preserves listener-wide clearing when legacy rollback changes hosts and the policy was %s the site',
+  (position) => {
+    const sentinel = { '@id': 'other-site', handle: [] }
+    const previousSite = {
+      '@id': 'nurevolution',
+      match: [{ host: ['restored-web.example', 'restored-media.example'] }],
+      handle: [{ handler: 'static_response', body: 'previous release' }],
+      terminal: true,
+    }
+    const stalePolicy = {
+      '@id': 'nurevolution-transport',
+      match: [{ host: ['old.example'] }],
+      handle: [],
+    }
+    const config = {
+      apps: {
+        http: {
+          servers: {
+            https: {
+              protocols: ['h1', 'h2', 'h3'],
+              routes: [
+                sentinel,
+                ...(position === 'before'
+                  ? [stalePolicy, previousSite]
+                  : [previousSite, stalePolicy]),
+              ] as JsonObject[],
+            },
+          },
+        },
+      },
+    }
+    const candidate = {
+      ...previousSite,
+      match: [{ host: ['current-web.example', 'current-media.example'] }],
+      handle: [{ handler: 'static_response', body: 'candidate release' }],
+    }
+    const promoted = replaceSite(config, candidate) as typeof config
+    expect(replaceSite(promoted, candidate)).toEqual(promoted)
+    const rolledBack = structuredClone(promoted)
+    const server = rolledBack.apps.http.servers.https
+    // Pre-mitigation replaceSite replaces just this ID in place, preserving
+    // all other routes and listener settings. Its renderSite has no headers
+    // and uses the current profile, which may reintroduce alternate hosts.
+    server.routes.splice(
+      server.routes.findIndex((r) => r['@id'] === 'nurevolution'),
+      1,
+      previousSite,
+    )
+    expect(server.protocols).toEqual(['h1', 'h2'])
+    expect(server.routes).toEqual([
+      {
+        '@id': 'nurevolution-transport',
+        handle: [
+          {
+            handler: 'headers',
+            response: { set: { 'Alt-Svc': ['clear'] }, deferred: true },
+          },
+        ],
+      },
+      sentinel,
+      previousSite,
+    ])
+    expect(server.routes[0]).not.toHaveProperty('match')
+    expect(JSON.stringify(previousSite)).not.toContain('Alt-Svc')
+    expect(replaceSite(rolledBack, candidate)).toEqual(promoted)
+  },
+)

@@ -166,12 +166,24 @@ export function renderSite(manifest: MediaManifest, profile: Profile) {
   }
 }
 
-// Preserve every unrelated route and all operator-owned server/TLS settings.
+// Production uses TCP while the public-path QUIC incident is investigated.
+// Preserve unrelated routes and settings, except the https protocol policy.
 export function replaceSite(config: JsonObject, site: JsonObject): JsonObject {
   const value = structuredClone(config)
   const servers = (
     value.apps as
-      | { http?: { servers?: Record<string, { routes: JsonObject[] }> } }
+      | {
+          http?: {
+            servers?: Record<
+              string,
+              {
+                routes: JsonObject[]
+                protocols?: string[]
+                listen_protocols?: string[][]
+              }
+            >
+          }
+        }
       | undefined
   )?.http?.servers
   if (!servers?.https || !Array.isArray(servers.https.routes))
@@ -179,7 +191,28 @@ export function replaceSite(config: JsonObject, site: JsonObject): JsonObject {
   const routes = servers.https.routes
   const matches = routes.filter((r) => r['@id'] === 'nurevolution')
   if (matches.length > 1) throw new Error('Duplicate owned proxy route')
+  const transportId = 'nurevolution-transport'
+  const transport = routes.filter((r) => r['@id'] === transportId)
+  if (transport.length > 1) throw new Error('Duplicate transport policy route')
+  if (transport.length) routes.splice(routes.indexOf(transport[0]!), 1)
+  // Rollback runs the selected release's exact renderer. Older tools replace
+  // only @id=nurevolution and may use different profile hosts. Keep clearing
+  // independent of that route and its hosts: HTTP/3 is disabled server-wide,
+  // so every route on this server must retire cached alternatives too.
+  const policy = {
+    '@id': transportId,
+    handle: [
+      {
+        handler: 'headers',
+        response: { set: { 'Alt-Svc': ['clear'] }, deferred: true },
+      },
+    ],
+  }
   if (matches.length) routes.splice(routes.indexOf(matches[0]!), 1, site)
   else routes.unshift(site)
+  routes.unshift(policy)
+  servers.https.protocols = ['h1', 'h2']
+  // Per-listener overrides take precedence over the server protocol list.
+  delete servers.https.listen_protocols
   return value
 }
