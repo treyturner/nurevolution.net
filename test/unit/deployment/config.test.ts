@@ -142,7 +142,6 @@ it.each([{ protocols: undefined }, { protocols: ['h1', 'h2', 'h3'] }])(
       protocols: ['h1', 'h2'],
       listen_protocols: undefined,
       routes: [
-        sentinel,
         {
           '@id': 'nurevolution-transport',
           handle: [
@@ -152,6 +151,7 @@ it.each([{ protocols: undefined }, { protocols: ['h1', 'h2', 'h3'] }])(
             },
           ],
         },
+        sentinel,
         site,
       ],
     })
@@ -165,12 +165,12 @@ it.each([{ protocols: undefined }, { protocols: ['h1', 'h2', 'h3'] }])(
 )
 
 it.each(['before', 'after'])(
-  'preserves cache clearing through a pre-mitigation rollback with the policy initially %s the site',
+  'preserves listener-wide clearing when legacy rollback changes hosts and the policy was %s the site',
   (position) => {
     const sentinel = { '@id': 'other-site', handle: [] }
     const previousSite = {
       '@id': 'nurevolution',
-      match: [{ host: ['nurevolution.net', 'podcast.nurevolution.net'] }],
+      match: [{ host: ['restored-web.example', 'restored-media.example'] }],
       handle: [{ handler: 'static_response', body: 'previous release' }],
       terminal: true,
     }
@@ -198,6 +198,7 @@ it.each(['before', 'after'])(
     }
     const candidate = {
       ...previousSite,
+      match: [{ host: ['current-web.example', 'current-media.example'] }],
       handle: [{ handler: 'static_response', body: 'candidate release' }],
     }
     const promoted = replaceSite(config, candidate) as typeof config
@@ -205,7 +206,8 @@ it.each(['before', 'after'])(
     const rolledBack = structuredClone(promoted)
     const server = rolledBack.apps.http.servers.https
     // Pre-mitigation replaceSite replaces just this ID in place, preserving
-    // all other routes and listener settings. Its renderSite has no headers.
+    // all other routes and listener settings. Its renderSite has no headers
+    // and uses the current profile, which may reintroduce alternate hosts.
     server.routes.splice(
       server.routes.findIndex((r) => r['@id'] === 'nurevolution'),
       1,
@@ -213,10 +215,8 @@ it.each(['before', 'after'])(
     )
     expect(server.protocols).toEqual(['h1', 'h2'])
     expect(server.routes).toEqual([
-      sentinel,
       {
         '@id': 'nurevolution-transport',
-        match: previousSite.match,
         handle: [
           {
             handler: 'headers',
@@ -224,8 +224,10 @@ it.each(['before', 'after'])(
           },
         ],
       },
+      sentinel,
       previousSite,
     ])
+    expect(server.routes[0]).not.toHaveProperty('match')
     expect(JSON.stringify(previousSite)).not.toContain('Alt-Svc')
     expect(replaceSite(rolledBack, candidate)).toEqual(promoted)
   },

@@ -196,11 +196,11 @@ export function replaceSite(config: JsonObject, site: JsonObject): JsonObject {
   if (transport.length > 1) throw new Error('Duplicate transport policy route')
   if (transport.length) routes.splice(routes.indexOf(transport[0]!), 1)
   // Rollback runs the selected release's exact renderer. Older tools replace
-  // only @id=nurevolution, so keep cache clearing in a separate, nonterminal
-  // route immediately before the site. Repeated promotions refresh its scope.
+  // only @id=nurevolution and may use different profile hosts. Keep clearing
+  // independent of that route and its hosts: HTTP/3 is disabled server-wide,
+  // so every route on this server must retire cached alternatives too.
   const policy = {
     '@id': transportId,
-    match: structuredClone(site.match),
     handle: [
       {
         handler: 'headers',
@@ -208,9 +208,9 @@ export function replaceSite(config: JsonObject, site: JsonObject): JsonObject {
       },
     ],
   }
-  if (matches.length)
-    routes.splice(routes.indexOf(matches[0]!), 1, policy, site)
-  else routes.unshift(policy, site)
+  if (matches.length) routes.splice(routes.indexOf(matches[0]!), 1, site)
+  else routes.unshift(site)
+  routes.unshift(policy)
   servers.https.protocols = ['h1', 'h2']
   // Per-listener overrides take precedence over the server protocol list.
   delete servers.https.listen_protocols
