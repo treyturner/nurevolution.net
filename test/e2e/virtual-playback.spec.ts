@@ -3,6 +3,7 @@ import { gunzipSync } from 'node:zlib'
 import { createHash } from 'node:crypto'
 import { expect, test } from '@playwright/test'
 import { mediaBaseURL } from '../../playwright.config'
+import { correlateWaveform } from './helpers/waveform'
 import fixture from '../fixtures/playback/fixture.json' with { type: 'json' }
 
 const v = fixture.entry.virtual
@@ -90,112 +91,184 @@ test('serves the reference MP4 exactly, including ranges across its virtual boun
   ).toBe(416)
 })
 
+test('waveform comparison distinguishes identical loudness patterns and reports wrong positions', async ({
+  page,
+}) => {
+  await page.goto(mediaBaseURL + '/media-test')
+  await page.addScriptTag({
+    content: `window.correlateWaveform = ${correlateWaveform.toString()}`,
+  })
+  const matches = await page.evaluate(async () => {
+    const rate = 8000
+    // Each second has exactly the same RMS envelope but different PCM signs.
+    let seed = 12345
+    const reference = Float32Array.from({ length: rate * 4 }, (_, i) => {
+      seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0
+      const amplitude = 0.1 + 0.05 * Math.sin(Math.floor((i % rate) / 128))
+      return (seed & 0x80000000 ? 1 : -1) * amplitude
+    })
+    const matches = []
+    for (const start of [0, 12345, reference.length - rate]) {
+      const captured = reference
+        .slice(start, start + rate)
+        .map((value) => value * 0.7 + 0.02)
+      captured.fill(0, 0, 500)
+      matches.push({
+        expected: start / rate,
+        ...(await window.correlateWaveform(reference, captured, rate)),
+      })
+    }
+    return matches
+  })
+  for (const match of matches) {
+    expect(match.correlation).toBeGreaterThan(0.999)
+    expect(match.offset).toBeCloseTo(match.expected, 5)
+  }
+  // Matching never receives the requested position and must expose this error.
+  expect(Math.abs(matches[1]!.offset - 0.25)).toBeGreaterThan(0.1)
+})
+
 test('Chromium seeks to the actual audio content, not only the requested clock time', async ({
   page,
   browserName,
-}) => {
+}, testInfo) => {
   test.skip(
     browserName !== 'chromium',
     'Other engines deliberately use the MP3 fallback',
   )
   await page.goto(mediaBaseURL + '/media-test')
+  await page.addScriptTag({
+    content: `window.correlateWaveform = ${correlateWaveform.toString()}`,
+  })
   const result = await page.evaluate(
     async ({ path }) => {
       const context = new AudioContext({ sampleRate: 44100 })
-      const reference = await context.decodeAudioData(
-        await (await fetch('/virtual-source.mp3')).arrayBuffer(),
-      )
       const audio = new Audio(path)
-      await new Promise<void>((resolve, reject) => {
-        audio.onloadedmetadata = () => resolve()
-        audio.onerror = () => reject(Error('Virtual media failed to load'))
-      })
       const source = context.createMediaElementSource(audio)
-      const capture = context.createScriptProcessor(2048, 2, 2)
-      source.connect(capture)
-      capture.connect(context.destination)
-      await context.resume()
-      function envelope(input: Float32Array) {
-        const size = 128,
-          result = new Float64Array(Math.floor(input.length / size))
-        for (let i = 0; i < result.length; i++) {
-          let sum = 0
-          for (let k = 0; k < size; k++) sum += input[i * size + k]! ** 2
-          result[i] = Math.sqrt(sum / size)
-        }
-        return result
-      }
-      const ref = envelope(reference.getChannelData(0))
-      const errors: number[] = []
-      for (const target of [13.37, 3.28, 18.42, 3.28]) {
-        audio.currentTime = target
-        await new Promise<void>((resolve) =>
-          audio.addEventListener('seeked', () => resolve(), { once: true }),
+      try {
+        const reference = await context.decodeAudioData(
+          await (await fetch('/virtual-source.mp3')).arrayBuffer(),
         )
-        const chunks: Float32Array[] = []
-        let firstTime = 0
-        const done = new Promise<void>((resolve) => {
-          capture.onaudioprocess = (event) => {
-            const samples = event.inputBuffer.getChannelData(0)
-            if (
-              !chunks.length &&
-              !samples.some((value) => Math.abs(value) > 0.00001)
-            )
-              return
-            if (!chunks.length) firstTime = audio.currentTime
-            chunks.push(Float32Array.from(samples))
-            if (chunks.length === 20) {
-              capture.onaudioprocess = null
-              audio.pause()
-              resolve()
+        if (audio.readyState < 1)
+          await new Promise<void>((resolve, reject) => {
+            audio.onloadedmetadata = () => resolve()
+            audio.onerror = () => reject(Error('Virtual media failed to load'))
+          })
+        // Keep capture and its starting clock on the audio thread. A delayed
+        // main-thread callback must not drop samples or timestamp an old block.
+        const module = URL.createObjectURL(
+          new Blob(
+            [
+              `
+        class Capture extends AudioWorkletProcessor {
+          constructor() {
+            super()
+            this.samples = new Float32Array(40960)
+            this.used = 0
+            this.start = null
+          }
+          process(inputs) {
+            const input = inputs[0]?.[0]
+            if (!input || this.used === this.samples.length) return true
+            if (this.start === null) {
+              if (!input.some(value => Math.abs(value) > 0.00001)) return true
+              this.start = currentTime
             }
-          }
-        })
-        await audio.play()
-        await done
-        const samples = new Float32Array(chunks.length * 2048)
-        chunks.forEach((chunk, i) => samples.set(chunk, i * 2048))
-        const actual = envelope(samples),
-          skip = 87,
-          length = actual.length - skip
-        let score = -Infinity,
-          best = 0
-        let sy = 0,
-          sy2 = 0
-        for (let j = 0; j < length; j++) {
-          sy += actual[skip + j]!
-          sy2 += actual[skip + j]! ** 2
-        }
-        for (let i = 0; i < ref.length - length; i++) {
-          let sx = 0,
-            sx2 = 0,
-            sxy = 0
-          for (let j = 0; j < length; j++) {
-            const x = ref[i + j]!,
-              y = actual[skip + j]!
-            sx += x
-            sx2 += x * x
-            sxy += x * y
-          }
-          const candidate =
-            (length * sxy - sx * sy) /
-            Math.sqrt((length * sx2 - sx * sx) * (length * sy2 - sy * sy))
-          if (candidate > score) {
-            score = candidate
-            best = i
+            const count = Math.min(input.length, this.samples.length - this.used)
+            this.samples.set(input.subarray(0, count), this.used)
+            this.used += count
+            if (this.used === this.samples.length)
+              this.port.postMessage({ samples: this.samples, start: this.start })
+            return true
           }
         }
-        if (score < 0.8) throw Error(`Unreliable audio comparison: ${score}`)
-        errors.push(((best - skip) * 128) / 44100 - firstTime)
+        registerProcessor('seek-capture', Capture)
+      `,
+            ],
+            { type: 'text/javascript' },
+          ),
+        )
+        try {
+          await context.audioWorklet.addModule(module)
+        } finally {
+          URL.revokeObjectURL(module)
+        }
+        await context.resume()
+        const measurements = []
+        for (const target of [13.37, 3.28, 18.42, 3.28]) {
+          await new Promise<void>((resolve) => {
+            audio.addEventListener('seeked', () => resolve(), { once: true })
+            audio.currentTime = target
+          })
+          const capture = new AudioWorkletNode(context, 'seek-capture')
+          source.connect(capture).connect(context.destination)
+          try {
+            const done = new Promise<{
+              samples: Float32Array
+              firstTime: number
+            }>((resolve) => {
+              capture.port.onmessage = (
+                event: MessageEvent<{ samples: Float32Array; start: number }>,
+              ) => {
+                const firstTime =
+                  audio.currentTime - (context.currentTime - event.data.start)
+                audio.pause()
+                resolve({ samples: event.data.samples, firstTime })
+              }
+            })
+            await audio.play()
+            if (target === 18.42) {
+              // Delay the main thread longer than the entire capture. Samples
+              // and their starting timestamp must still come from the audio
+              // thread, rather than the eventual message-delivery time.
+              const until = performance.now() + 1200
+              while (performance.now() < until) {
+                // Intentionally simulate a busy CI browser.
+              }
+            }
+            const { samples, firstTime } = await done
+            const match = await window.correlateWaveform(
+              reference.getChannelData(0),
+              samples,
+              context.sampleRate,
+            )
+            measurements.push({
+              target,
+              firstTime,
+              ...match,
+              error: match.offset - firstTime,
+            })
+          } finally {
+            audio.pause()
+            source.disconnect(capture)
+            capture.disconnect()
+            capture.port.close()
+          }
+        }
+        return { measurements, duration: audio.duration }
+      } finally {
+        audio.pause()
+        source.disconnect()
+        await context.close()
+        audio.removeAttribute('src')
+        audio.load()
       }
-      audio.pause()
-      source.disconnect()
-      capture.disconnect()
-      await context.close()
-      return { errors, duration: audio.duration }
     },
     { path },
   )
+  await testInfo.attach('audible-seek-measurements', {
+    body: JSON.stringify(result, null, 2),
+    contentType: 'application/json',
+  })
   expect(result.duration).toBeCloseTo(v.samples / v.sampleRate, 5)
-  for (const error of result.errors) expect(Math.abs(error)).toBeLessThan(0.1)
+  for (const measurement of result.measurements) {
+    expect(
+      measurement.correlation,
+      JSON.stringify(measurement),
+    ).toBeGreaterThan(0.8)
+    expect(
+      Math.abs(measurement.error),
+      JSON.stringify(measurement),
+    ).toBeLessThan(0.1)
+  }
 })
