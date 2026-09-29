@@ -1,6 +1,10 @@
 name: Deploy verified release
 
 on:
+  workflow_run:
+    workflows: [Verify]
+    types: [completed]
+    branches: [main]
   workflow_dispatch:
     inputs:
       verify_run_id:
@@ -14,21 +18,57 @@ permissions:
   contents: read
   actions: read
 
-concurrency:
-  group: nurevolution-deploy
-  cancel-in-progress: false
-
 jobs:
+  release:
+    if: >-
+      github.repository == 'treyturner/nurevolution.net' &&
+      github.ref == 'refs/heads/main' &&
+      (github.event_name == 'workflow_dispatch' ||
+       (github.event.workflow_run.event == 'push' &&
+        github.event.workflow_run.conclusion == 'success' &&
+        github.event.workflow_run.head_branch == 'main' &&
+        github.event.workflow_run.head_repository.full_name == github.repository))
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    outputs:
+      ready: ${{ steps.source.outputs.ready }}
+      verify_run_id: ${{ steps.source.outputs.verify_run_id }}
+      source_commit: ${{ steps.source.outputs.source_commit }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.sha }}
+      - name: Select the published main release
+        id: source
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python3 .github/scripts/deployment_source.py
+
   deploy:
-    if: github.ref == 'refs/heads/main'
+    needs: release
+    if: needs.release.outputs.ready == 'true'
+    concurrency:
+      group: nurevolution-deploy
+      cancel-in-progress: false
+      queue: max
     runs-on: ubuntu-24.04
     timeout-minutes: 15
     environment: production
+    env:
+      RELEASE_COMMIT: ${{ needs.release.outputs.source_commit }}
+      VERIFY_RUN_ID: ${{ needs.release.outputs.verify_run_id }}
     steps:
-      - name: Validate promotion inputs and environment readiness
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.sha }}
+      - name: Recheck the release after waiting for deployment concurrency
+        id: source
         env:
-          RELEASE_COMMIT: ${{ inputs.source_commit }}
-          VERIFY_RUN_ID: ${{ inputs.verify_run_id }}
+          GH_TOKEN: ${{ github.token }}
+        run: python3 .github/scripts/deployment_source.py
+      - name: Validate promotion inputs and environment readiness
+        if: steps.source.outputs.ready == 'true'
+        env:
           TARGET_ENVIRONMENT: production
           DEPLOYMENT_ENABLED: ${{ vars.DEPLOYMENT_ENABLED }}
           CUTOVER_ENABLED: ${{ vars.CUTOVER_ENABLED }}
@@ -47,30 +87,24 @@ jobs:
           if address not in ipaddress.ip_network('100.64.0.0/10'):
               raise SystemExit('DEPLOY_HOST must be the verified Headscale IPv4 address')
           PY
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        if: steps.source.outputs.ready == 'true'
         with:
           node-version-file: .node-version
-      - name: Verify the source run before downloading executable artifacts
-        env:
-          GH_TOKEN: ${{ github.token }}
-          VERIFY_RUN_ID: ${{ inputs.verify_run_id }}
-          RELEASE_COMMIT: ${{ inputs.source_commit }}
-        run: |
-          gh api "repos/treyturner/nurevolution.net/actions/runs/$VERIFY_RUN_ID" > run.json
-          jq -e --arg sha "$RELEASE_COMMIT" '.event == "push" and .conclusion == "success" and .head_branch == "main" and .head_sha == $sha and .path == ".github/workflows/verify.yml" and .repository.full_name == "treyturner/nurevolution.net"' run.json
       - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        if: steps.source.outputs.ready == 'true'
         with:
-          name: release-${{ inputs.source_commit }}
+          name: release-${{ needs.release.outputs.source_commit }}
           path: release
-          run-id: ${{ inputs.verify_run_id }}
+          run-id: ${{ needs.release.outputs.verify_run_id }}
           github-token: ${{ github.token }}
       - name: Validate release hashes and source identity
+        if: steps.source.outputs.ready == 'true'
         env:
           GH_TOKEN: ${{ github.token }}
-          VERIFY_RUN_ID: ${{ inputs.verify_run_id }}
         run: node release/deploy.mjs verify-release --bundle release --run "$VERIFY_RUN_ID"
       - name: Prepare the temporary enrollment credential
+        if: steps.source.outputs.ready == 'true'
         env:
           HEADSCALE_AUTH_KEY: ${{ secrets.HEADSCALE_AUTH_KEY }}
         run: |
@@ -79,6 +113,7 @@ jobs:
           mkdir -p "$RUNNER_TEMP/headscale"
           printf '%s' "$HEADSCALE_AUTH_KEY" > "$RUNNER_TEMP/headscale/auth.key"
       - name: Join the private deployment network
+        if: steps.source.outputs.ready == 'true'
         id: headscale
         env:
           HEADSCALE_URL: ${{ vars.HEADSCALE_URL }}
@@ -88,10 +123,9 @@ jobs:
         if: always()
         run: rm -f "$RUNNER_TEMP/headscale/auth.key"
       - name: Promote with independently verified release tooling
+        if: steps.source.outputs.ready == 'true'
         env:
           GH_TOKEN: ${{ github.token }}
-          VERIFY_RUN_ID: ${{ inputs.verify_run_id }}
-          RELEASE_COMMIT: ${{ inputs.source_commit }}
           DEPLOY_HOST: ${{ vars.DEPLOY_HOST }}
           DEPLOY_USER: ${{ vars.DEPLOY_USER }}
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}

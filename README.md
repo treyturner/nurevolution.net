@@ -5,7 +5,7 @@ A podcast archive rebuilt from WordPress, with a custom audio player, interactiv
 **[Listen at nurevolution.net](https://nurevolution.net/)**
 
 [![Verify (main)](https://github.com/treyturner/nurevolution.net/actions/workflows/verify.yml/badge.svg?branch=main&event=push)](https://github.com/treyturner/nurevolution.net/actions/workflows/verify.yml?query=branch%3Amain)
-[![Deployment (main)](https://github.com/treyturner/nurevolution.net/actions/workflows/deploy.yml/badge.svg?branch=main&event=workflow_dispatch)](https://github.com/treyturner/nurevolution.net/actions/workflows/deploy.yml?query=branch%3Amain)
+[![Deployment (main)](https://github.com/treyturner/nurevolution.net/actions/workflows/deploy.yml/badge.svg?branch=main)](https://github.com/treyturner/nurevolution.net/actions/workflows/deploy.yml?query=branch%3Amain)
 
 ## Tech stack
 

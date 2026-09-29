@@ -38,6 +38,6 @@ The owner swapped unstarted M8/M9 on September 18. M0-M7 keep their IDs; older m
 
 ## Release status
 
-A passing main Verify run publishes verified artifacts. **Production deployment is a separate manual workflow.** Use the [deployment history](https://github.com/treyturner/nurevolution.net/actions/workflows/deploy.yml) and `/api/health` for the serving revision; the main Verify badge does not imply that revision has been deployed. [Production runbook](DEPLOYMENT.md).
+A successful full Verify run for a push to `main` publishes verified artifacts and automatically starts production deployment. Markdown-only runs skip publication and deployment; superseded automatic releases are skipped. Manual promotion remains available. Use the [deployment history](https://github.com/treyturner/nurevolution.net/actions/workflows/deploy.yml) and `/api/health` for the serving revision; the main Verify badge does not imply that revision has been deployed. [Production runbook](DEPLOYMENT.md).
 
 Dated milestone documents retain historical snapshots. This page and the current behavior/operations guides identify what remains actionable; an old pending item is not automatically a current blocker.

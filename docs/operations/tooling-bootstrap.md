@@ -29,7 +29,7 @@ The runtime configuration is root-owned alongside the bootstrap. Promotion, back
 
 ## Promotion, rollback, and recovery
 
-Dispatch **Deploy verified release** on `main` with a successful main Verify run ID and its full commit SHA. The workflow checks protocol version before transmitting the temporary token. Check the accepted deployment record and run the ordinary post-content backup when required by the release. No additional secret or per-release manual executable installation is needed.
+**Deploy verified release** starts automatically when a successful full Verify run for a push to `main` has published its release artifact. It uses the triggering run ID and full source SHA, skips docs-only runs, and rechecks that automatic releases still match current `main` after waiting for deployment concurrency. To deliberately promote a retained earlier release or retry deployment, dispatch the same workflow on `main` with a successful main Verify run ID and its full commit SHA. The workflow checks protocol version before transmitting the temporary token. Check the accepted deployment record and run the ordinary post-content backup when required by the release. No additional secret or per-release manual executable installation is needed.
 
 Use [the rollback runbook](rollback.md) for rollback and interrupted transactions. The command below requires no GitHub token or network access for tooling; existing image/media/HTTPS acceptance checks still apply:
 

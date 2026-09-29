@@ -8,7 +8,7 @@ Start with [current status and follow-ups](STATUS.md). The [roadmap](../ROADMAP.
 | [Content](CONTENT.md)                                                                               | Archive inventory, episode authoring, precise timestamps, artwork, and identity preservation.       |
 | [Player](PLAYER.md)                                                                                 | Current listening, navigation, restoration, controls, and media behavior.                           |
 | [Feed validation](FEED-VALIDATION.md)                                                               | RSS verification and observed podcast-client behavior.                                              |
-| [Deployment](DEPLOYMENT.md)                                                                         | Verified release publication, manual production promotion, and host contracts.                      |
+| [Deployment](DEPLOYMENT.md)                                                                         | Verified releases, automatic production promotion, manual fallback, and host contracts.             |
 | [Monitoring and maintenance](operations/incidents.md)                                               | Uptime checks, incident handling, and recurring operational reviews.                                |
 | [Backup and restore](operations/backup-restore.md)                                                  | Application/media backups to MinIO and recovery procedures.                                         |
 | [Headscale](operations/headscale.md) and [its backups](operations/headscale-backup.md)              | Private deployment access and independent Google Drive recovery.                                    |
