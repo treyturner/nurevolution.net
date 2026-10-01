@@ -7,6 +7,7 @@ export function playerEpisodes(origin: string): EpisodeDetail[] {
     slug,
     path: `/episodes/${slug}`,
     title: index ? 'Second fixture' : 'Praxis fixture',
+    explicit: false,
     artist: 'Test tone',
     publishedAt: praxis.publishedAt,
     durationSeconds: 2,
@@ -29,6 +30,7 @@ export function playerEpisodes(origin: string): EpisodeDetail[] {
       position: trackIndex + 1,
       artist: 'Test tone',
       title: `Track ${trackIndex + 1}`,
+      explicit: false,
       startTime,
     })),
   }))

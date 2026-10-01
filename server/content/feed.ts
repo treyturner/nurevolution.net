@@ -30,7 +30,7 @@ export function publicFeedArchive(catalog: Catalog, asOf: number) {
           link:
             links.get(episode.id) ??
             new URL(detail.path, catalog.show.siteUrl).href,
-          explicit: episode.explicit ?? rss.explicit,
+          explicit: detail.explicit,
           artworkUrl: new URL(episodeArtworkPath(artwork), catalog.show.siteUrl)
             .href,
           chaptersUrl: chapters

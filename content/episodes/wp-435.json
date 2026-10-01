@@ -9,6 +9,7 @@
   "descriptionHtml": "<p>Bass goes boom. 18 tracks in 45 minutes.</p>",
   "guid": "https://nurevolution.net/?post_type=one_page_portfolio&p=435",
   "guidIsPermalink": false,
+  "explicit": true,
   "audioAssetId": "asset-53645f107ecc3374",
   "artworkAssetId": "asset-7db05c016409aca7",
   "durationSeconds": 2715,
@@ -47,6 +48,7 @@
       "position": 6,
       "artist": "G Jones",
       "title": "Fuck What You Heard",
+      "explicit": true,
       "startTime": 784.5438095238095
     },
     {

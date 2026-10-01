@@ -168,6 +168,28 @@ dialog:not([open]) {
   white-space: nowrap;
   border: 0;
 }
+.explicit-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 0.875rem;
+  height: 0.875rem;
+  margin-left: 0.45rem;
+  border-radius: 0.15rem;
+  background: var(--muted);
+  color: #101216;
+  font:
+    700 0.5625rem / 1 system-ui,
+    sans-serif;
+  letter-spacing: 0;
+  vertical-align: 0.08em;
+  white-space: nowrap;
+}
+.episode-meta .explicit-badge {
+  margin-left: 0;
+  margin-right: 0.5rem;
+}
 /* Safari 14 supports grid gaps but not flex gaps. The client measures that
    distinction once; margins preserve spacing only where flex gaps are absent. */
 .no-flex-gap .site-header,
@@ -456,7 +478,7 @@ html.modal-open {
   font-size: 0.8rem;
   margin: 1rem 0 1.5rem;
 }
-.episode-meta > span {
+.episode-meta > span:not(.explicit-badge) {
   margin-left: 0.5rem;
   margin-right: 0.5rem;
   margin-inline: 0.5rem;

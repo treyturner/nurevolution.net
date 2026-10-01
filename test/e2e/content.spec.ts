@@ -68,6 +68,7 @@ test('serves the complete canonical archive with subscriber identities, track ti
         'slug',
         'path',
         'title',
+        'explicit',
         'artist',
         'publishedAt',
         'durationSeconds',
@@ -84,6 +85,9 @@ test('serves the complete canonical archive with subscriber identities, track ti
       slug: expected.slug,
       path: `/episodes/${expected.slug}`,
       title: expected.title,
+      explicit:
+        (expected.explicit ?? show.rss!.explicit) ||
+        expected.tracks.some((track) => track.explicit === true),
       artist: expected.artist,
       publishedAt: expected.publishedAt,
       durationSeconds: expected.durationSeconds,
@@ -98,7 +102,10 @@ test('serves the complete canonical archive with subscriber identities, track ti
         byteLength: audio.byteLength,
         downloadFilename: audio.relativePath.split('/').at(-1),
       },
-      tracks: expected.tracks,
+      tracks: expected.tracks.map((track) => ({
+        ...track,
+        explicit: track.explicit ?? false,
+      })),
     })
     const raw = inventory.episodes.find((e) => e.id === expected.id)!
     expect(detail.guid).toBe(raw.originalIdentity.feedGuid)
@@ -130,6 +137,7 @@ test('serves the complete canonical archive with subscriber identities, track ti
     for (const [index, source] of raw.tracklist.tracks.entries()) {
       expect(detail.tracks[index]).toEqual({
         ...source,
+        explicit: expected.tracks[index]!.explicit ?? false,
         title:
           raw.id === 'wp-281' && source.position === 4
             ? source.title.replace('\u0092', '’')

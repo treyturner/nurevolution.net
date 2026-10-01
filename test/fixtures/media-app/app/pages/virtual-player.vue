@@ -18,6 +18,7 @@ episode.tracks = [0, 3.28, 13.37].map((startTime, i) => ({
   position: i + 1,
   artist: 'Synthetic fixture',
   title: `Track ${i + 1}`,
+  explicit: false,
   startTime,
 }))
 </script>

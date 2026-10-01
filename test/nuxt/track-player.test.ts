@@ -22,6 +22,7 @@ it('toggles the current track without seeking, including a pending playback requ
       position: i + 1,
       artist: 'Tone',
       title: `Track ${i + 1}`,
+      explicit: false,
       startTime,
     })),
   }
@@ -112,6 +113,7 @@ it('keeps the same now-playing indicator through skips until the track changes o
       position: i + 1,
       artist: 'Tone',
       title: `Track ${i + 1}`,
+      explicit: false,
       startTime,
     })),
   }
@@ -178,6 +180,7 @@ it('shares queued track actions with controls, but highlights only confirmed pos
       position: i + 1,
       artist: 'Tone',
       title: `Track ${i + 1}`,
+      explicit: false,
       startTime,
     })),
   })
@@ -251,6 +254,7 @@ it('keeps the confirmed track through Safari playback clock rollback after pause
       position: i + 1,
       artist: 'Tone',
       title: `Track ${i + 1}`,
+      explicit: false,
       startTime,
     })),
   }

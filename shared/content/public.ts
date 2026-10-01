@@ -45,6 +45,9 @@ export function episodeSummary(catalog: Catalog, episode: Episode) {
     slug: episode.slug,
     path: `/episodes/${episode.slug}`,
     title: episode.title,
+    explicit:
+      (episode.explicit ?? catalog.show.rss?.explicit ?? false) ||
+      episode.tracks.some((track) => track.explicit === true),
     artist: episode.artist,
     publishedAt: episode.publishedAt,
     durationSeconds: episode.durationSeconds,
@@ -70,6 +73,7 @@ export function episodeDetail(catalog: Catalog, episode: Episode) {
       position: track.position,
       artist: track.artist,
       title: track.title,
+      explicit: track.explicit ?? false,
       startTime: track.startTime,
     })),
   }

@@ -9,6 +9,7 @@
   "descriptionHtml": "<p>A diverse mix meant to appeal to a wide audience as opposed to focusing on any particular genre.</p>",
   "guid": "https://nurevolution.net/?p=301",
   "guidIsPermalink": false,
+  "explicit": true,
   "audioAssetId": "asset-6b1ea0e20c5d1824",
   "artworkAssetId": "asset-cc24465084ed8fbc",
   "durationSeconds": 2763,
@@ -29,6 +30,7 @@
       "position": 3,
       "artist": "Mono/Poly",
       "title": "Beatles Bitch",
+      "explicit": true,
       "startTime": 422.473719
     },
     {

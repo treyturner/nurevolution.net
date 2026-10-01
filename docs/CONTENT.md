@@ -18,7 +18,25 @@ The strict contracts live in [schema.ts](../shared/content/schema.ts). Unexpecte
 
 `content/show.json` requires `rss` in every runnable archive: `language: "en-US"`, `category: "Music"`, nonblank `author`, and boolean `explicit`. These preserve the existing published settings. Optional `subtitle`, `copyright`, and `owner: { name, email }` preserve additional feed metadata. Omit an optional field entirely when unavailable; an owner requires both a name and valid email. The existing language/category are the supported values for this show; changing them requires updating and reviewing the corresponding schema. The public owner address is emitted in RSS and adds no website contact feature. Copyright is authored text, with no automatic year change.
 
-An episode may override the show rating using optional boolean `explicit`. An absent override inherits the show value; `false` explicitly overrides `true`. All 55 original episodes retain their existing clean label by inheriting the show's verified `false` setting. Text must contain valid XML 1.0 characters; invalid controls or isolated UTF-16 surrogates are errors, not silently repaired text.
+Episodes and tracks accept an optional boolean `explicit`. An absent episode override inherits the show value; `false` overrides the show’s `true` unless a track is marked explicit. Any track with `explicit: true` makes its episode explicit in both the website and RSS, even if the episode has `explicit: false`. An episode can also be marked explicit independently of its tracks, including when no tracklist is available. Tracks never inherit the episode or show rating; an absent track flag resolves to `false` in the public API. The show defaults to `false`.
+
+A review of track titles marks these seven episodes and their nine listed tracks `explicit: true`, including recognizable masked or stylized profanity:
+
+| Episode                  | ID       | Track titles prompting the rating |
+| ------------------------ | -------- | --------------------------------- |
+| Radio Silenced           | `wp-197` | Gangsta Shit; Star Trek Shit      |
+| Bizarre NYE 2013         | `wp-199` | Give A F_K                        |
+| Carpe Noctem 2010        | `wp-301` | Beatles Bitch                     |
+| Urban Breakbeat Uprising | `wp-324` | Big Groovy Fucker                 |
+| Off The Cuff             | `wp-435` | Fuck What You Heard               |
+| Lost In Translation      | `wp-444` | Witness The Fuxness               |
+| Ruminate                 | `wp-484` | Dat Buddah Shii; The Fuckin' Real |
+
+The other 48 episodes inherit `false`. Titles containing only “hell” or “balls” do not trigger an override in this review. Ratings are authored metadata; the application does not automatically classify titles or audio. Historical import and feed evidence retain the original ratings.
+
+To flag another track after listening, add `"explicit": true` to that track object in `content/episodes/<id>.json`, then run the content and feed checks below. No separate episode edit is needed: its effective rating updates automatically. Only the episode rating is emitted as `<itunes:explicit>`; chapter JSON does not export track ratings.
+
+Text must contain valid XML 1.0 characters; invalid controls or isolated UTF-16 surrogates are errors, not silently repaired text.
 
 The original M2 import deliberately omits these subsequently authored settings. Its candidate and provenance report remain unchanged. Generating a fresh import still succeeds, but add reviewed RSS settings before validating it as a runnable archive. On the maintained archive, `import:wordpress --check` now reports the expected `show.json` conflict (exit 2), while `check:content` passes. Preserve the report; do not reimport over authored settings.
 
@@ -44,7 +62,7 @@ Imported IDs use `wp-<original post ID>`. A new episode may use another stable l
 - `guid` is an opaque, stable identifier and `guidIsPermalink` is a JSON boolean. For a new non-permalink GUID, assign a unique permanent value; never derive or regenerate it from editable titles or URLs.
 - `audioAssetId` and `artworkAssetId` must resolve to assets of the appropriate kind. Every episode requires both. Two published episodes cannot share an enclosure URL.
 - `durationSeconds` is a positive finite number or `null`. Numeric seconds may retain fractional precision.
-- `tracks` contains ordered `position`, `artist`, `title`, and `startTime` fields. Positions start at 1 without gaps. Known starts are nonnegative and strictly increase even across untimed rows. They must precede a known episode duration. A start of `0` means the beginning of the recording. `null` means unknown. Partial timing is valid; do not sort, clamp, or discard rows to make validation pass.
+- `tracks` contains ordered `position`, `artist`, `title`, and `startTime` fields, plus optional boolean `explicit`. Positions start at 1 without gaps. Known starts are nonnegative and strictly increase even across untimed rows. They must precede a known episode duration. A start of `0` means the beginning of the recording. `null` means unknown. Partial timing is valid; do not sort, clamp, or discard rows to make validation pass.
 
 For every episode, preserve all supplied fractional seconds in canonical `startTime` values and seek targets. Where a display or output format supports less precision, truncate toward the earlier time; never round a track timestamp up. For example, `190.458` seconds displays as `3:10` at whole-second resolution, while seeking retains `190.458`. This rule also applies to future timestamp sharing and feed chapters; lower-precision output must not replace the canonical value.
 
@@ -124,7 +142,7 @@ The archive is packaged as Nitro server assets and loaded through one validated 
 | `GET /api/episodes`        | `{ "episodes": [...] }` with summaries in publication order; no tracklists or audio preload.                                               |
 | `GET /api/episodes/<slug>` | Full published detail, safe description, GUID, resolved audio metadata, and ordered tracks. Unknown and unpublished slugs return HTTP 404. |
 
-The feed calls `contentRepository.publicArchive(asOf)` from `server/utils/content.ts`; it returns full public records and the show using the same predicate as the list and detail APIs, plus `show.rss` settings and each episode's `rss.link` and `rss.explicit`. These RSS-only fields do not change the three JSON API response shapes. Page code should use the public DTO types from `shared/content/public.ts`. Do not create a second archive, sort order, or publication rule.
+Episode summaries and details expose a resolved boolean `explicit`; each detail track also exposes its own boolean `explicit`. The feed calls `contentRepository.publicArchive(asOf)` from `server/utils/content.ts`; it returns full public records and the show using the same predicate as the list and detail APIs, plus `show.rss` settings and each episode's `rss.link` and `rss.explicit`. The RSS episode rating uses the same resolved value as the website. Page code should use the public DTO types from `shared/content/public.ts`. Do not create a second archive, sort order, or publication rule.
 
 GET and HEAD `/feed/podcast` serve RSS with a stable weak ETag and a 60-second cache lifetime. `/feed/podcast/` and the exact root query `/?feed=podcast` redirect to it. Historical item links retain the exact legacy page URL; new episodes use `/episodes/<saved-slug>`. The serializer emits full safe descriptions and rounded positive integer duration seconds, preserving fractional canonical durations for playback. M4 owns episode pages, historical page redirects, and player controls; M5/M6 own media delivery and deployment.
 

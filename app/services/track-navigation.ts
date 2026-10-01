@@ -1,5 +1,5 @@
 import type { EpisodeDetail } from '../../shared/content/public'
-type Tracks = EpisodeDetail['tracks']
+type Tracks = Pick<EpisodeDetail['tracks'][number], 'position' | 'startTime'>[]
 
 // Chromium can confirm a seek a few microseconds below its requested time.
 // Keep this smaller than one 44,100 Hz sample, and never alter seek targets.

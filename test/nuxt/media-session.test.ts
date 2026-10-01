@@ -59,6 +59,7 @@ it.each([false, true])('wires media (shared: %s)', async (shared) => {
       startTime,
       artist: 'Artist',
       title: `Track ${i + 1}`,
+      explicit: false,
     })),
   })
   const pending = ref(false)

@@ -10,6 +10,7 @@ import { timestampUrl } from '../services/timestamp-link'
 import { trackNavigation } from '../services/track-navigation'
 import { useCopyLink } from '../composables/useCopyLink'
 import CopyLinkToast from './CopyLinkToast.vue'
+import ExplicitBadge from './ExplicitBadge.vue'
 const { toast, copyLink } = useCopyLink()
 const props = defineProps<{
   episode: EpisodeDetail | null
@@ -185,6 +186,7 @@ const feedback = computed(() => {
       <p v-if="episode" class="episode-artist">{{ episode.artist }}</p>
       <h1 id="episode-title">{{ episode?.title ?? 'Podcast archive' }}</h1>
       <p v-if="episode" class="episode-meta">
+        <ExplicitBadge v-if="episode.explicit" />
         <time :datetime="episode.publishedAt ?? undefined">{{
           formatDate(episode.publishedAt)
         }}</time
