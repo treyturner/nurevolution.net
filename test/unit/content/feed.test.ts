@@ -6,6 +6,12 @@ import {
   showSchema,
 } from '../../../shared/content/schema.ts'
 import { publicFeedArchive } from '../../../server/content/feed.ts'
+import {
+  episodeDetail,
+  episodeSummary,
+} from '../../../shared/content/public.ts'
+import { serializePodcastRss } from '../../../server/rss/serialize.ts'
+import { parseRss } from '../../../tools/content/feed/assert.ts'
 import { readCatalog } from '../../../server/content/repository.ts'
 import { validateCatalog } from '../../../server/content/validate.ts'
 import {
@@ -20,6 +26,73 @@ import {
 const at = Date.parse('2026-09-08')
 
 describe('RSS metadata and shared projection', () => {
+  it.each([
+    [false, undefined, undefined, false],
+    [true, undefined, undefined, true],
+    [true, false, undefined, false],
+    [false, true, undefined, true],
+    [false, undefined, true, true],
+    [false, false, true, true],
+    [true, false, false, false],
+    [false, true, false, true],
+  ] as const)(
+    'shares the effective episode rating across APIs and RSS: show=%s episode=%s track=%s',
+    (showRating, episodeRating, trackRating, expected) => {
+      const source = runnableCatalog()
+      const episode = source.episodes[0]!
+      source.show.rss!.explicit = showRating
+      episode.explicit = episodeRating
+      episode.tracks[0]!.explicit = trackRating
+      const before = structuredClone(source)
+      expect(episodeSummary(source, episode).explicit).toBe(expected)
+      const detail = episodeDetail(source, episode)
+      expect(detail.explicit).toBe(expected)
+      expect(detail.tracks[0]!.explicit).toBe(trackRating ?? false)
+      expect(detail.tracks.slice(1).every((track) => !track.explicit)).toBe(
+        true,
+      )
+      const archive = publicFeedArchive(source, at)
+      expect(
+        archive.episodes.find((item) => item.id === episode.id)!.rss.explicit,
+      ).toBe(expected)
+      const { items } = parseRss(serializePodcastRss(archive))
+      const item = items.find(
+        (item) =>
+          item.getElementsByTagName('guid')[0]!.textContent === episode.guid,
+      )!
+      expect(item.getElementsByTagName('itunes:explicit')[0]!.textContent).toBe(
+        String(expected),
+      )
+      expect(source).toEqual(before)
+    },
+  )
+
+  it('promotes untimed explicit tracks and supports episode-only ratings without a tracklist', () => {
+    const source = runnableCatalog()
+    const episode = source.episodes[0]!
+    episode.tracks = [
+      {
+        position: 1,
+        artist: 'Artist',
+        title: 'Ordinary title',
+        startTime: null,
+        explicit: true,
+      },
+    ]
+    expect(episodeSummary(source, episode).explicit).toBe(true)
+    const feed = publicFeedArchive(source, at).episodes.find(
+      (item) => item.id === episode.id,
+    )!
+    expect(feed.rss.explicit).toBe(true)
+    expect(feed.rss.chaptersUrl).toBeNull()
+    episode.tracks = []
+    episode.explicit = true
+    expect(episodeDetail(source, episode)).toMatchObject({
+      explicit: true,
+      tracks: [],
+    })
+  })
+
   it('keeps the historical candidate unchanged but requires settings in runnable catalogs', async () => {
     expect(showSchema.parse(candidate.catalog.show)).not.toHaveProperty('rss')
     expect(validateCatalog(documents(catalog()))).toEqual(candidate.catalog)

@@ -5,6 +5,7 @@ import {
   instantSchema,
   relativePathSchema,
   textSchema,
+  trackSchema,
   urlSchema,
 } from '../../../shared/content/schema.ts'
 import {
@@ -21,6 +22,17 @@ import { validateCatalog } from '../../../server/content/validate.ts'
 import { catalog, documents, sources } from './fixtures.ts'
 
 describe('authoring schemas and complete validation', () => {
+  it('accepts optional track ratings and rejects non-boolean ratings', () => {
+    const track = catalog().episodes[0]!.tracks[0]!
+    expect(trackSchema.parse(track)).not.toHaveProperty('explicit')
+    for (const explicit of [true, false]) {
+      expect(trackSchema.parse({ ...track, explicit }).explicit).toBe(explicit)
+    }
+    for (const explicit of ['true', 'false', 0, 1, null]) {
+      expect(trackSchema.safeParse({ ...track, explicit }).success).toBe(false)
+    }
+  })
+
   it('allows optional duration, empty or partially timed tracks and literal heart text', () => {
     const e = catalog().episodes[0]!
     e.durationSeconds = null

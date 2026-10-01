@@ -44,6 +44,7 @@ export const trackSchema = z.strictObject({
   position: z.int().positive(),
   artist: textSchema,
   title: textSchema,
+  explicit: z.boolean().optional(),
   startTime: z.number().nonnegative().nullable(),
 })
 export const episodeSchema = z

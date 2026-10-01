@@ -6,6 +6,7 @@ import { useCopyLink } from '../composables/useCopyLink'
 import DownloadIcon from './DownloadIcon.vue'
 import LinkIcon from './LinkIcon.vue'
 import CopyLinkToast from './CopyLinkToast.vue'
+import ExplicitBadge from './ExplicitBadge.vue'
 const props = defineProps<{
   player?: PodcastPlayer
   episodes: EpisodeSummary[]
@@ -54,7 +55,10 @@ function copyEpisodeLink(episode: EpisodeSummary, event: MouseEvent) {
           decoding="async"
         />
         <span class="episode-list-info">
-          <span class="episode-list-title">{{ episode.title }}</span>
+          <span class="episode-list-title"
+            ><span class="episode-list-title-text">{{ episode.title }}</span
+            ><ExplicitBadge v-if="episode.explicit"
+          /></span>
           <span class="episode-list-artist">
             <span class="episode-list-meta">
               <span class="episode-list-artist-name"

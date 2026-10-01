@@ -23,6 +23,7 @@ it('preserves exact known starts and original numbering without inventing missin
       position: i + 1,
       artist: 'Artist "quoted"',
       title: 'A & B <live>',
+      explicit: i === 1,
       startTime,
     }),
   )

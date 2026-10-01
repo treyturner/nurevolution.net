@@ -9,6 +9,7 @@
   "descriptionHtml": "<p>r u m i n a t e</p>",
   "guid": "https://nurevolution.net/?post_type=one_page_portfolio&p=484",
   "guidIsPermalink": false,
+  "explicit": true,
   "audioAssetId": "asset-5df28ae03c827b0f",
   "artworkAssetId": "asset-0aae6b03b5300a3f",
   "durationSeconds": 3610,
@@ -77,6 +78,7 @@
       "position": 11,
       "artist": "Balatron",
       "title": "Dat Buddah Shii",
+      "explicit": true,
       "startTime": 1561.602380952381
     },
     {
@@ -101,6 +103,7 @@
       "position": 15,
       "artist": "Mono/Poly",
       "title": "The Fuckin' Real",
+      "explicit": true,
       "startTime": 2465.2473015873015
     },
     {

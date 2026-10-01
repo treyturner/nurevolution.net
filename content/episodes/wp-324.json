@@ -9,6 +9,7 @@
   "descriptionHtml": "<p>Uptempo dancefloor breaks</p>",
   "guid": "https://nurevolution.net/?p=324",
   "guidIsPermalink": false,
+  "explicit": true,
   "audioAssetId": "asset-8ae53574f84681bc",
   "artworkAssetId": "asset-15c4a645aa42c211",
   "durationSeconds": 4628,
@@ -35,6 +36,7 @@
       "position": 4,
       "artist": "Plump DJs",
       "title": "Big Groovy Fucker",
+      "explicit": true,
       "startTime": 798.146667
     },
     {

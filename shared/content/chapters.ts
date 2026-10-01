@@ -1,8 +1,13 @@
 import type { EpisodeDetail } from './public.ts'
 
+export type ChapterTrack = Pick<
+  EpisodeDetail['tracks'][number],
+  'position' | 'artist' | 'title' | 'startTime'
+>
+
 /** Known chapter starts only; missing cuts are never estimated or interpolated. */
 export function serializeChapters(
-  tracks: EpisodeDetail['tracks'],
+  tracks: readonly ChapterTrack[],
 ): string | null {
   let previous = -1
   const chapters = tracks.flatMap((track) => {

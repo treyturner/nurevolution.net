@@ -9,6 +9,7 @@
   "descriptionHtml": "<p>50 tracks over two hours, with a focus on smooth tempo variations, 8-bit and hip-hop influence.  Special thanks to <a href=\"http://beeple-crap.com/\">Beeple</a> and Cate Mulherin for the artwork.</p>",
   "guid": "https://nurevolution.net/?p=197",
   "guidIsPermalink": false,
+  "explicit": true,
   "audioAssetId": "asset-766efa297d3c341c",
   "artworkAssetId": "asset-569dc869b9011485",
   "durationSeconds": 7054,
@@ -161,6 +162,7 @@
       "position": 25,
       "artist": "Depone",
       "title": "Gangsta Shit",
+      "explicit": true,
       "startTime": 3200.941723356009
     },
     {
@@ -209,6 +211,7 @@
       "position": 33,
       "artist": "Freddy Todd & Black Mic",
       "title": "Star Trek Shit",
+      "explicit": true,
       "startTime": 4495.012358276644
     },
     {

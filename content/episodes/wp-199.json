@@ -9,6 +9,7 @@
   "descriptionHtml": "<p>In lieu of the jetpacks and flying cars you were promised by 2013, EazyTom drops off an extended New Year’s Eve session with sounds you could definitely call ‘future’.</p>",
   "guid": "https://nurevolution.net/?p=199",
   "guidIsPermalink": false,
+  "explicit": true,
   "audioAssetId": "asset-5a017a042ed0d2fe",
   "artworkAssetId": "asset-38bc99302587f8b8",
   "durationSeconds": 8419,
@@ -125,6 +126,7 @@
       "position": 19,
       "artist": "Skope",
       "title": "Give A F_K",
+      "explicit": true,
       "startTime": null
     },
     {

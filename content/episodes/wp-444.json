@@ -9,6 +9,7 @@
   "descriptionHtml": "<p>It’s been too long! Here are some vibes I’ve been feeling this year.</p>",
   "guid": "https://nurevolution.net/?post_type=one_page_portfolio&p=444",
   "guidIsPermalink": false,
+  "explicit": true,
   "audioAssetId": "asset-486937c569bbbf76",
   "artworkAssetId": "asset-267a5855fb201d22",
   "durationSeconds": 3035,
@@ -131,6 +132,7 @@
       "position": 20,
       "artist": "Moody Good",
       "title": "Witness The Fuxness",
+      "explicit": true,
       "startTime": 2500.541814058957
     },
     {

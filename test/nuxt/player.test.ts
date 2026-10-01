@@ -31,6 +31,7 @@ describe('archive presentation and native media integration', () => {
         position: index + 1,
         artist: 'Artist',
         title: `Track ${index + 1}`,
+        explicit: false,
         startTime,
       })),
     }
@@ -73,6 +74,7 @@ describe('archive presentation and native media integration', () => {
       position: index + 1,
       artist: 'Artist',
       title: `Track ${index + 1}`,
+      explicit: false,
       startTime,
     }))
     const wrapper = await mountSuspended(EpisodeTracklist, {
@@ -103,6 +105,7 @@ describe('archive presentation and native media integration', () => {
         position: index + 1,
         artist: `Artist ${index + 1}`,
         title: `Song ${index + 1}`,
+        explicit: false,
         startTime,
       })),
     }
@@ -174,7 +177,7 @@ describe('archive presentation and native media integration', () => {
       props: { tracks: [] },
     })
     for (const episode of episodes) {
-      await wrapper.setProps({ tracks: episode.tracks })
+      await wrapper.setProps({ tracks: episodeDetail(catalog, episode).tracks })
       const rows = wrapper.findAll('li')
       expect(rows).toHaveLength(episode.tracks.length)
       for (let i = 0; i < rows.length; i++) {
