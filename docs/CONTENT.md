@@ -20,19 +20,26 @@ The strict contracts live in [schema.ts](../shared/content/schema.ts). Unexpecte
 
 Episodes and tracks accept an optional boolean `explicit`. An absent episode override inherits the show value; `false` overrides the show’s `true` unless a track is marked explicit. Any track with `explicit: true` makes its episode explicit in both the website and RSS, even if the episode has `explicit: false`. An episode can also be marked explicit independently of its tracks, including when no tracklist is available. Tracks never inherit the episode or show rating; an absent track flag resolves to `false` in the public API. The show defaults to `false`.
 
-A review of track titles marks these seven episodes and their nine listed tracks `explicit: true`, including recognizable masked or stylized profanity:
+Reviewed ratings currently mark 24 tracks across fourteen episodes explicit, including tracks identified by title and by listening:
 
-| Episode                  | ID       | Track titles prompting the rating |
-| ------------------------ | -------- | --------------------------------- |
-| Radio Silenced           | `wp-197` | Gangsta Shit; Star Trek Shit      |
-| Bizarre NYE 2013         | `wp-199` | Give A F_K                        |
-| Carpe Noctem 2010        | `wp-301` | Beatles Bitch                     |
-| Urban Breakbeat Uprising | `wp-324` | Big Groovy Fucker                 |
-| Off The Cuff             | `wp-435` | Fuck What You Heard               |
-| Lost In Translation      | `wp-444` | Witness The Fuxness               |
-| Ruminate                 | `wp-484` | Dat Buddah Shii; The Fuckin' Real |
+| Episode                  | ID       | Tracks marked explicit                                                                                       |
+| ------------------------ | -------- | ------------------------------------------------------------------------------------------------------------ |
+| Radio Silenced           | `wp-197` | Gangsta Shit; Star Trek Shit; Dopesauce ft. Fat Ray; Star 69; dragonFLY; Lazy Day ft. Kflay (Starting Teeth) |
+| Bizarre NYE 2013         | `wp-199` | Give A F_K                                                                                                   |
+| Carpe Noctem 2010        | `wp-301` | Beatles Bitch                                                                                                |
+| Urban Breakbeat Uprising | `wp-324` | Big Groovy Fucker                                                                                            |
+| Off The Cuff             | `wp-435` | Fuck What You Heard                                                                                          |
+| Ruminate                 | `wp-484` | The Fuckin' Real                                                                                             |
+| Bass Face Space Race     | `wp-454` | Stormtrooper                                                                                                 |
+| Is This Thing On?        | `wp-431` | Summertime ft. King T                                                                                        |
+| Carrier Detect           | `wp-421` | Alpha Dog                                                                                                    |
+| MMXIV                    | `wp-399` | Smurf ft. Brefontaine                                                                                        |
+| The Toad's Mistress      | `wp-293` | Fat Camp Feva; Perfect                                                                                       |
+| Plush Session            | `wp-306` | Splurt (Skream); ILL                                                                                         |
+| Better Late Than Never   | `wp-308` | Tried by 12 (Autechre); The Dark Side of the Sun ft. Puppetmastaz; Dead Disnee; Medic                        |
+| Broken                   | `wp-337` | The Sermon                                                                                                   |
 
-The other 48 episodes inherit `false`. Titles containing only “hell” or “balls” do not trigger an override in this review. Ratings are authored metadata; the application does not automatically classify titles or audio. Historical import and feed evidence retain the original ratings.
+The other 41 episodes resolve to `false`. “Dat Buddah Shii” and “Witness The Fuxness” were reviewed as non-explicit; Lost In Translation therefore has no episode override. Titles containing only “hell” or “balls” did not trigger an override in the initial title review. Ratings are authored metadata; the application does not automatically classify titles or audio. Historical import and feed evidence retain the original ratings.
 
 To flag another track after listening, add `"explicit": true` to that track object in `content/episodes/<id>.json`, then run the content and feed checks below. No separate episode edit is needed: its effective rating updates automatically. Only the episode rating is emitted as `<itunes:explicit>`; chapter JSON does not export track ratings.
 

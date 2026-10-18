@@ -60,6 +60,7 @@
       "position": 8,
       "artist": "Freddy Todd & Black Mic",
       "title": "Dopesauce ft. Fat Ray",
+      "explicit": true,
       "startTime": 1035.525396825397
     },
     {
@@ -96,12 +97,14 @@
       "position": 14,
       "artist": "Fatboy Slim",
       "title": "Star 69",
+      "explicit": true,
       "startTime": 1781.6492063492065
     },
     {
       "position": 15,
       "artist": "Freddy Todd & Black Mic",
       "title": "dragonFLY",
+      "explicit": true,
       "startTime": 1849.9259863945579
     },
     {
@@ -314,6 +317,7 @@
       "position": 50,
       "artist": "Mochipet",
       "title": "Lazy Day ft. Kflay (Starting Teeth)",
+      "explicit": true,
       "startTime": 6967.068344671202
     }
   ]
