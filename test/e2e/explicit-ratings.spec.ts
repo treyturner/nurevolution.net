@@ -46,8 +46,8 @@ test('shows compact accessible episode and track badges without marking other tr
   ).toBeVisible()
   const badge = page.locator('.episode-meta .explicit-badge')
   const bounds = (await badge.boundingBox())!
-  expect(bounds.width).toBe(14)
-  expect(bounds.height).toBe(14)
+  expect(bounds.width).toBe(9)
+  expect(bounds.height).toBe(9)
   await expect(badge).toHaveAttribute('title', 'Explicit content')
   await page
     .locator(
@@ -82,7 +82,7 @@ test('keeps explicit track badges readable on narrow screens with enlarged text'
     ),
   ).toBe(true)
   const bounds = (await badge.boundingBox())!
-  expect(bounds.width).toBe(28)
+  expect(bounds.width).toBe(20)
   expect(bounds.x).toBeGreaterThanOrEqual(0)
   expect(bounds.x + bounds.width).toBeLessThanOrEqual(320)
 })

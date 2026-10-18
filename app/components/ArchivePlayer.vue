@@ -186,12 +186,16 @@ const feedback = computed(() => {
       <p v-if="episode" class="episode-artist">{{ episode.artist }}</p>
       <h1 id="episode-title">{{ episode?.title ?? 'Podcast archive' }}</h1>
       <p v-if="episode" class="episode-meta">
-        <ExplicitBadge v-if="episode.explicit" />
         <time :datetime="episode.publishedAt ?? undefined">{{
           formatDate(episode.publishedAt)
         }}</time
-        ><span aria-hidden="true"> / </span
-        >{{ formatTime(episode.durationSeconds) }}
+        ><span class="episode-meta-separator" aria-hidden="true">/</span
+        ><span class="episode-duration"
+          >{{ formatTime(episode.durationSeconds)
+          }}<template v-if="episode.explicit"
+            ><span class="episode-meta-separator" aria-hidden="true">/</span
+            ><ExplicitBadge /></template
+        ></span>
       </p>
       <p v-else>No episodes are available yet.</p>
       <audio
