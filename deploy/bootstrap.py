@@ -261,8 +261,9 @@ def lock(root):
 
 
 def settled(root, edge):
-    require(not (root / 'state/deploy.lock').exists() and not (edge / 'deploy.lock').exists(),
-            'Deployment or backup is active or interrupted; inspect its locks')
+    for path in (root / 'state/deploy.lock', edge / 'deploy.lock'):
+        require(not path.exists(),
+                'Deployment or backup is active or interrupted; inspect its lock: ' + str(path))
     require(not list((root / 'state').glob('pending.json'))
             and not list((root / 'state').glob('*/pending.json')),
             'Unrecovered deployment journal; follow the recovery runbook')

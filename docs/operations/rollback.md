@@ -18,6 +18,18 @@ After a killed process or host interruption, the next deployment refuses an exis
 
 Every shared-edge editor must honor `/srv/edge/config/deploy.lock`. Deployments preserve unrelated routes/settings, except for the explicit [production HTTPS protocol policy](http3.md), and reload gracefully; unrestricted concurrent manual edits are outside the locking contract. Record the app interruption interval and prove an unrelated sentinel endpoint plus media remain available during ordinary app replacement.
 
+The lock is a **temporary directory**, acquired atomically with `mkdir` without `-p`. A writer must stop if acquisition fails, keep the directory throughout its edge operation, and remove only the directory it acquired after the operation completes. Using `flock`, `touch`, or shell redirection at this path implements a different protocol: a regular file left behind blocks the bootstrap and release tools even when no advisory lock is held. Other sites' deployment scripts and manual edge edits must use the same directory protocol.
+
+When investigating a blocked backup, inspect the service journal and the exact lock paths before changing MinIO or removing a marker:
+
+```sh
+journalctl -u nurevolution-backup.service -n 50 --no-pager
+stat /srv/nurevolution/tooling/deploy.lock /srv/nurevolution/state/deploy.lock /srv/edge/config/deploy.lock
+lsof -- /srv/edge/config/deploy.lock
+```
+
+Run these in the droplet's root shell for complete journal and process visibility. Missing paths are normal when their locks are not held. An empty `lsof` result alone does not prove a directory lock is stale: confirm there is no active deployment, backup, edge edit, or unresolved journal. Preserve the marker's metadata before quarantining a proven inactive incompatible file or clearing a stale directory. Investigate which writer created it and correct that writer's locking procedure to prevent recurrence. A failure at the bootstrap lock check occurs before restic contacts MinIO; MinIO health and backup destination capacity are separate checks.
+
 ## M8 feed-resource compatibility
 
 Before a release advertises episode artwork or Podcasting 2.0 chapters, deploy and verify the resource-support release and retain its exact artifact as the fallback. That release serves chapter endpoints and generated artwork while retaining the old RSS fields. Once clients have seen the new references, every rollback target must keep those endpoints and all previously advertised artwork files. Old chapter version hints resolve the current eligible chapter data; image paths are immutable and must not be overwritten or removed. The deployment tool's GUID/enclosure guards do not establish this resource compatibility by themselves. Verify it explicitly when choosing the fallback. See [the ordered rollout](../FEED-VALIDATION.md#m8-resource-support-and-rollout). The phased M8 rollout completed on 2026-09-18. Production release `4ca5c3d` retains verified support release `4d0100c` as its compatible fallback; both bundles passed the bootstrap check. See the [rollout record](m8-rollout.md) for full commit identifiers and results.
