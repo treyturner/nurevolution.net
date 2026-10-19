@@ -41,6 +41,8 @@ h1 {
   font-weight: 650;
   letter-spacing: -0.045em;
   line-height: 1.1;
+  /* Keep the fluid heading from shifting the lists by fractional pixels. */
+  line-height: round(nearest, 1.1em, 1px);
   overflow-wrap: break-word;
   overflow-wrap: anywhere;
 }
@@ -168,27 +170,22 @@ dialog:not([open]) {
   white-space: nowrap;
   border: 0;
 }
-.explicit-badge {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  width: 0.875rem;
-  height: 0.875rem;
-  margin-left: 0.45rem;
-  border-radius: 0.15rem;
-  background: var(--muted);
-  color: #101216;
-  font:
-    700 0.5625rem / 1 system-ui,
-    sans-serif;
-  letter-spacing: 0;
-  vertical-align: 0.08em;
+.explicit-title-ending {
   white-space: nowrap;
 }
-.episode-meta .explicit-badge {
-  margin-left: 0;
-  margin-right: 0.5rem;
+.explicit-badge {
+  display: inline-block;
+  flex-shrink: 0;
+  width: 0.625rem;
+  height: 0.625rem;
+  margin-left: 0.45rem;
+  color: var(--muted);
+  vertical-align: baseline;
+}
+.explicit-badge svg {
+  display: block;
+  width: 100%;
+  height: 100%;
 }
 /* Safari 14 supports grid gaps but not flex gaps. The client measures that
    distinction once; margins preserve spacing only where flex gaps are absent. */
@@ -478,10 +475,18 @@ html.modal-open {
   font-size: 0.8rem;
   margin: 1rem 0 1.5rem;
 }
-.episode-meta > span:not(.explicit-badge) {
+.episode-meta-separator {
   margin-left: 0.5rem;
   margin-right: 0.5rem;
   margin-inline: 0.5rem;
+}
+.episode-duration {
+  white-space: nowrap;
+}
+.episode-meta .explicit-badge {
+  width: 0.5625rem;
+  height: 0.5625rem;
+  margin-left: 0;
 }
 audio {
   width: 100%;
@@ -809,8 +814,7 @@ audio.custom-audio {
 }
 .archive-grid {
   display: grid;
-  /* Keep 40/60 on wide screens, giving episodes a larger share as space shrinks. */
-  grid-template-columns: minmax(min(22rem, 45%), 2fr) minmax(0, 3fr);
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: clamp(1.5rem, 5vw, 4rem);
   padding-top: 2rem;
   border-top: 1px solid var(--line);
@@ -839,8 +843,8 @@ audio.custom-audio {
 .episode-list li > a:first-child {
   display: flex;
   align-items: center;
-  /* Leave three 44px actions inline; both groups fill their line after wrapping. */
-  flex: 1 1 calc(100% - 132px);
+  /* Leave two 44px actions inline; both groups fill their line after wrapping. */
+  flex: 1 1 calc(100% - 88px);
   /* Reserve readable text beside the artwork before wrapping the action row. */
   min-width: min(100%, calc(92px + 8rem));
   padding: 0.625rem 16px;
@@ -916,8 +920,7 @@ audio.custom-audio {
   cursor: default;
 }
 .row-download,
-.row-play,
-.row-copy-link {
+.row-play {
   display: flex;
   flex: 1 0 44px;
   align-self: stretch;
@@ -927,7 +930,6 @@ audio.custom-audio {
   min-height: 44px;
   text-decoration: none;
 }
-.row-copy-link,
 .row-play {
   padding: 0;
   border: 0;
@@ -935,18 +937,14 @@ audio.custom-audio {
   background: transparent;
   color: var(--focus-color);
 }
-.row-copy-link:hover,
 .row-play:hover,
 .row-download:hover {
   background: #1a2029;
 }
 .row-download svg,
-.row-play svg,
-.row-copy-link svg {
+.row-play svg {
   opacity: 0.7;
 }
-.row-copy-link:hover svg,
-.row-copy-link:focus svg,
 .row-play:hover svg,
 .row-play:focus svg {
   opacity: 1;

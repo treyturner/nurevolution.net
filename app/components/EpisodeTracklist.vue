@@ -6,7 +6,7 @@ import { useCompactContainer } from '../composables/useCompactContainer'
 import TimestampCopyButton from './TimestampCopyButton.vue'
 import { useCopyLink } from '../composables/useCopyLink'
 import CopyLinkToast from './CopyLinkToast.vue'
-import ExplicitBadge from './ExplicitBadge.vue'
+import ExplicitTitle from './ExplicitTitle.vue'
 const { toast, copyLink } = useCopyLink()
 const { container, compact } = useCompactContainer(18, true)
 const props = defineProps<{
@@ -102,8 +102,9 @@ function activate(position: number) {
         <span>
           <span class="track-artist">{{ track.artist }}</span>
           <span class="track-title-line">
-            <span class="track-title">{{ track.title }}</span>
-            <ExplicitBadge v-if="track.explicit" />
+            <span class="track-title"
+              ><ExplicitTitle :title="track.title" :explicit="track.explicit"
+            /></span>
             <TimestampCopyButton
               v-if="episodePath && track.startTime !== null"
               :episode-path="episodePath"

@@ -6,7 +6,6 @@ import EpisodeTracklist from './EpisodeTracklist.vue'
 const props = defineProps<{
   player?: PodcastPlayer
   episodes: EpisodeSummary[]
-  siteUrl: string
   selected: EpisodeDetail | null
   pendingPath?: string | null
 }>()
@@ -138,7 +137,6 @@ function key(event: KeyboardEvent) {
         <EpisodeList
           :player="player"
           :episodes="episodes"
-          :site-url="siteUrl"
           :selected-id="selected?.id"
           :pending-path="pendingPath"
         />

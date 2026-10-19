@@ -36,7 +36,7 @@ describe('archive presentation and native media integration', () => {
       })),
     }
     const wrapper = await mountSuspended(ArchiveLists, {
-      props: { episodes: [], siteUrl: catalog.show.siteUrl, selected },
+      props: { episodes: [], selected },
     })
     try {
       const toggle = wrapper.get('.track-time-toggle')
@@ -305,7 +305,6 @@ describe('archive presentation and native media integration', () => {
       attachTo: document.body,
       props: {
         episodes: episodes.map((e) => episodeSummary(catalog, e)),
-        siteUrl: catalog.show.siteUrl,
         selected: detail('wp-417'),
         pendingPath: '/episodes/trey-turner-ruminate',
       },

@@ -26,7 +26,6 @@ test('Android copy actions avoid duplicate success popups and keep visible error
   await ready(page)
   for (const selector of [
     '.timestamp-copy',
-    '.row-copy-link',
     '.rss-link',
     '[role="menuitem"]',
   ]) {

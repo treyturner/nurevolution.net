@@ -28,10 +28,6 @@ function play() {
       <button type="button" @click="mounted = !mounted">Toggle player</button>
     </nav>
     <ArchivePlayer v-if="mounted" :episode="selected" />
-    <ArchiveLists
-      :episodes="episodes"
-      :selected="selected"
-      :site-url="siteUrl"
-    />
+    <ArchiveLists :episodes="episodes" :selected="selected" />
   </main>
 </template>

@@ -7,7 +7,7 @@
     "node": "24.21.0"
   },
   "scripts": {
-    "dev": "nuxt dev",
+    "dev": "node tools/dev.mjs",
     "prepare": "nuxt prepare",
     "build": "pnpm check:content && pnpm check:thumbnails && pnpm check:episode-artwork && pnpm check:feed && pnpm check:playback && nuxt build",
     "check:playback": "node tools/playback/check.ts",

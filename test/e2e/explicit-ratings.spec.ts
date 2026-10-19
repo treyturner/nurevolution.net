@@ -17,7 +17,7 @@ test('shows compact accessible episode and track badges without marking other tr
     })
     audio.dispatchEvent(new Event('durationchange'))
   })
-  await expect(page.locator('.episode-list .explicit-badge')).toHaveCount(7)
+  await expect(page.locator('.episode-list .explicit-badge')).toHaveCount(14)
   await expect(
     page
       .locator('.episode-meta')
@@ -26,7 +26,7 @@ test('shows compact accessible episode and track badges without marking other tr
   const tracks = page.locator('.track-list')
   await expect(
     tracks.getByRole('img', { name: 'Explicit content' }),
-  ).toHaveCount(2)
+  ).toHaveCount(1)
   await expect(
     tracks
       .locator('li')
@@ -36,7 +36,7 @@ test('shows compact accessible episode and track badges without marking other tr
   await expect(
     tracks
       .locator('li')
-      .filter({ hasText: 'Troglodyte' })
+      .filter({ hasText: 'Dat Buddah Shii' })
       .locator('.explicit-badge'),
   ).toHaveCount(0)
   await expect(
@@ -46,13 +46,15 @@ test('shows compact accessible episode and track badges without marking other tr
   ).toBeVisible()
   const badge = page.locator('.episode-meta .explicit-badge')
   const bounds = (await badge.boundingBox())!
-  expect(bounds.width).toBe(14)
-  expect(bounds.height).toBe(14)
+  expect(bounds.width).toBe(9)
+  expect(bounds.height).toBe(9)
   await expect(badge).toHaveAttribute('title', 'Explicit content')
   await page
-    .locator('.episode-list a[href="/episodes/trey-turner-praxis"]')
+    .locator(
+      '.episode-list a[href="/episodes/trey-turner-lost-in-translation"]',
+    )
     .click()
-  await expect(page.locator('h1')).toHaveText('Praxis')
+  await expect(page.locator('h1')).toHaveText('Lost In Translation')
   await expect(page.locator('.episode-meta .explicit-badge')).toHaveCount(0)
   await expect(page.locator('.track-list .explicit-badge')).toHaveCount(0)
 })
@@ -80,7 +82,7 @@ test('keeps explicit track badges readable on narrow screens with enlarged text'
     ),
   ).toBe(true)
   const bounds = (await badge.boundingBox())!
-  expect(bounds.width).toBe(28)
+  expect(bounds.width).toBe(20)
   expect(bounds.x).toBeGreaterThanOrEqual(0)
   expect(bounds.x + bounds.width).toBeLessThanOrEqual(320)
 })

@@ -29,6 +29,7 @@
       "position": 3,
       "artist": "East Flatbush Project",
       "title": "Tried by 12 (Autechre)",
+      "explicit": true,
       "startTime": 448.320839
     },
     {
@@ -95,6 +96,7 @@
       "position": 14,
       "artist": "Modeselektor",
       "title": "The Dark Side of the Sun ft. Puppetmastaz",
+      "explicit": true,
       "startTime": 2593.422561
     },
     {
@@ -119,12 +121,14 @@
       "position": 18,
       "artist": "El-P",
       "title": "Dead Disnee",
+      "explicit": true,
       "startTime": 3351.989432
     },
     {
       "position": 19,
       "artist": "Shadow Huntaz",
       "title": "Medic",
+      "explicit": true,
       "startTime": 3582.450679
     }
   ]
