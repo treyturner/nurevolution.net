@@ -35,8 +35,8 @@
     "generate:episode-artwork": "node tools/content/episode-artwork.ts --write"
   },
   "dependencies": {
-    "core-js": "3.50.0",
-    "nuxt": "4.6.1",
+    "core-js": "3.51.0",
+    "nuxt": "4.6.2",
     "sanitize-html": "2.18.1",
     "vue": "3.5.44",
     "vue-router": "5.4.0",
@@ -44,7 +44,7 @@
   },
   "devDependencies": {
     "@nuxt/eslint": "1.17.0",
-    "@nuxt/test-utils": "4.3.3",
+    "@nuxt/test-utils": "4.3.4",
     "@playwright/test": "1.64.1",
     "@types/node": "24.19.2",
     "@types/sanitize-html": "2.16.2",
@@ -52,7 +52,7 @@
     "@vue/test-utils": "2.5.1",
     "@xmldom/xmldom": "0.9.12",
     "esbuild": "0.28.2",
-    "eslint": "10.12.0",
+    "eslint": "10.13.0",
     "happy-dom": "20.14.5",
     "prettier": "3.9.10",
     "sharp": "0.35.5",
