@@ -148,6 +148,8 @@ test('download stays below changing phone statuses and beside short desktop stat
         overflow: document.documentElement.scrollWidth > innerWidth,
       }
     })
+  // Firefox may report adjacent DOMRect edges a few floating-point units apart.
+  const roundingTolerance = 0.001
   for (const noGap of [false, true]) {
     await page.evaluate((noGap) => {
       document.documentElement.classList.toggle('no-flex-gap', noGap)
@@ -156,7 +158,9 @@ test('download stays below changing phone statuses and beside short desktop stat
     }, noGap)
     await page.setViewportSize({ width: 412, height: 900 })
     const narrow = await measurements()
-    expect(narrow.link.top).toBeGreaterThanOrEqual(narrow.feedback.bottom)
+    expect(narrow.link.top).toBeGreaterThanOrEqual(
+      narrow.feedback.bottom - roundingTolerance,
+    )
     expect(narrow.text.height).toBeLessThanOrEqual(narrow.lineHeight + 1)
     expect(narrow.overflow).toBe(false)
     for (const message of [
@@ -168,7 +172,9 @@ test('download stays below changing phone statuses and beside short desktop stat
         element.textContent = message
       }, message)
       const current = await measurements()
-      expect(current.link.top).toBeGreaterThanOrEqual(current.feedback.bottom)
+      expect(current.link.top).toBeGreaterThanOrEqual(
+        current.feedback.bottom - roundingTolerance,
+      )
       expect(current.link.top - current.feedback.top).toBeCloseTo(
         narrow.link.top - narrow.feedback.top,
         1,
@@ -184,7 +190,9 @@ test('download stays below changing phone statuses and beside short desktop stat
         'Playing 1/16: An artist with a long name - A very long track title that must wrap even after the download link moves below'
     })
     const long = await measurements()
-    expect(long.link.top).toBeGreaterThanOrEqual(long.feedback.bottom)
+    expect(long.link.top).toBeGreaterThanOrEqual(
+      long.feedback.bottom - roundingTolerance,
+    )
     expect(long.overflow).toBe(false)
   }
 })
