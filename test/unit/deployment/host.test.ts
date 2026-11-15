@@ -19,6 +19,8 @@ import {
 import profile from '../../../deploy/profile.example.json'
 import edge from '../../../deploy/caddy/initial.example.json'
 import * as playbackAudit from '../../../tools/deploy/check-playback'
+import { prepareBundle } from '../../../tools/deploy/build.ts'
+import type { DeploymentRecord } from '../../../tools/deploy/release.ts'
 
 vi.mock('../../../tools/deploy/stage-assets.ts', () => ({
   checkAssets: vi.fn(async () => ({ files: 156 })),
@@ -29,18 +31,31 @@ afterEach(async () => {
     await fs.rm(directory, { recursive: true, force: true })
   vi.restoreAllMocks()
 })
-async function fixture() {
+async function fixture(publication = false) {
   const root = await fs.mkdtemp(resolve(tmpdir(), 'nurevolution-host-'))
   directories.push(root)
   const edgeDirectory = resolve(root, 'edge'),
     bundle = resolve(root, 'bundle')
   for (const dir of [edgeDirectory, bundle, resolve(root, 'tooling')])
     await fs.mkdir(dir)
-  const record = releaseFixture()
+  const record: DeploymentRecord = releaseFixture()
   const tooling = await fs.readFile(
     new URL('../../../tools/deploy/host.ts', import.meta.url),
   )
   record.configuration.toolingSha256 = sha256(tooling)
+  const snapshot = resolve(root, 'source-snapshot')
+  if (publication) {
+    await fs.writeFile(resolve(bundle, 'deploy.mjs'), tooling)
+    const prepared = await prepareBundle(
+      bundle,
+      record.release.sourceCommit,
+      '2026-11-15T00:00:00.000Z',
+      snapshot,
+    )
+    record.configuration = prepared.configuration
+    record.manifest = prepared.manifest
+    record.release.mediaManifestSha256 = sha256(serialize(record.manifest))
+  }
   record.release.configurationSha256 = sha256(serialize(record.configuration))
   await fs.writeFile(resolve(root, 'tooling/deploy.mjs'), tooling)
   for (const key of ['release', 'configuration', 'manifest'] as const)
@@ -63,6 +78,12 @@ async function fixture() {
   const run = vi.fn<Execute>(async (command, args) => {
     const output = archive(command, args)
     if (output !== undefined) return output
+    if (args[0] === 'create') return 'extract-container'
+    if (args[0] === 'cp') {
+      await fs.cp(snapshot, args[2]!, { recursive: true })
+      return ''
+    }
+    if (args[0] === 'run' && args[1] === '-d') return 'probe-container'
     if (args[0] === 'inspect') return record.release.caddyImageId
     if (args[0] === 'image')
       return JSON.stringify([
@@ -147,6 +168,84 @@ async function fixture() {
   const paths = { root, edgeDirectory, edgeContainer: 'shared-edge' }
   return { root, paths, bundle, run, request, respond, record }
 }
+
+it('extracts and verifies an image-bound snapshot, reuses it, and probes the reconciled fallback before stopping the app', async () => {
+  const f = await fixture(true)
+  await deployOnHost(f.bundle, f.paths, f.run, f.request)
+  const root = resolve(f.root, 'publications', f.record.release.sourceCommit)
+  expect(
+    await fs.readFile(resolve(root, 'content/show.json'), 'utf8'),
+  ).toContain('nurevolution')
+  f.run.mockClear()
+  await deployOnHost(f.bundle, f.paths, f.run, f.request)
+  expect(f.run.mock.calls.some(([, a]) => a[0] === 'cp')).toBe(false)
+  const probe = f.run.mock.calls.findIndex(
+    ([, a]) => a[0] === 'run' && a.includes('--network') && a.includes('none'),
+  )
+  const stop = f.run.mock.calls.findIndex(([, a]) => a.includes('stop'))
+  expect(probe).toBeGreaterThanOrEqual(0)
+  expect(probe).toBeLessThan(stop)
+  expect(
+    f.run.mock.calls.filter(
+      ([, a]) => a[0] === 'exec' && a.includes('--input-type=module'),
+    ),
+  ).toHaveLength(2)
+  expect(
+    f.run.mock.calls.some(
+      ([, a]) => a[0] === 'rm' && a.includes('probe-container'),
+    ),
+  ).toBe(true)
+  const saved = JSON.parse(
+    await fs.readFile(
+      resolve(f.root, 'state/production/previous.json'),
+      'utf8',
+    ),
+  )
+  expect(saved.publication.release).toEqual(f.record.release)
+})
+
+it('rejects a tampered cached snapshot before stopping the app', async () => {
+  const f = await fixture(true)
+  await deployOnHost(f.bundle, f.paths, f.run, f.request)
+  await fs.writeFile(
+    resolve(
+      f.root,
+      'publications',
+      f.record.release.sourceCommit,
+      'content/show.json',
+    ),
+    '{}',
+  )
+  f.run.mockClear()
+  await expect(
+    deployOnHost(f.bundle, f.paths, f.run, f.request),
+  ).rejects.toThrow('checksum')
+  expect(f.run.mock.calls.some(([, a]) => a.includes('stop'))).toBe(false)
+})
+
+it('cleans an unsuccessful fallback probe without interrupting the public app', async () => {
+  const f = await fixture(true)
+  await deployOnHost(f.bundle, f.paths, f.run, f.request)
+  const original = f.run.getMockImplementation()!
+  f.run.mockClear().mockImplementation(async (command, args, ...rest) => {
+    if (
+      args[0] === 'exec' &&
+      args[1] === 'probe-container' &&
+      args.includes('--input-type=module')
+    )
+      throw new Error('Fallback content mismatch')
+    return original(command, args, ...rest)
+  })
+  await expect(
+    deployOnHost(f.bundle, f.paths, f.run, f.request),
+  ).rejects.toThrow('Fallback content mismatch')
+  expect(f.run.mock.calls.some(([, a]) => a.includes('stop'))).toBe(false)
+  expect(
+    f.run.mock.calls.some(
+      ([, a]) => a[0] === 'rm' && a.includes('probe-container'),
+    ),
+  ).toBe(true)
+})
 
 it('runs bounded commands and waits through transient readiness failures', async () => {
   expect(memoryMiB('0.125GiB / 384MiB')).toBe(128)

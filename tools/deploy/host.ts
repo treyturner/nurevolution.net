@@ -21,7 +21,11 @@ import {
   readRelease,
   verifyTooling,
   type DeploymentRecord,
+  type PublicationRelease,
+  effectiveManifest,
+  publicationRelease,
 } from './release.ts'
+import { verifyPublication, publicationProbe } from './publication.ts'
 import {
   profileSchema,
   renderSite,
@@ -96,6 +100,7 @@ export async function deployOnHost(
   paths: HostPaths,
   run: Execute = execute,
   request: typeof fetch = fetch,
+  selectedPublication?: PublicationRelease,
 ) {
   if (!/^[a-zA-Z0-9][a-zA-Z0-9_.-]+$/.test(paths.edgeContainer))
     throw new Error('Invalid edge container')
@@ -177,16 +182,31 @@ export async function deployOnHost(
       const edgePath = resolve(paths.edgeDirectory, 'caddy.json')
       const edgeBytes = await fs.readFile(edgePath, 'utf8')
       const edge = JSON.parse(edgeBytes) as JsonObject
-      const rendered = replaceSite(edge, renderSite(manifest, profile))
       const candidate: DeploymentRecord = {
         release: record,
         manifest,
         configuration,
         profile,
         profileSha256: sha256(serialize(profile)),
-        edgeSha256: sha256(serialize(rendered)),
+        edgeSha256: '',
         deployedAt: new Date().toISOString(),
+        ...(selectedPublication ? { publication: selectedPublication } : {}),
       }
+      const deliveryManifest = effectiveManifest(candidate)
+      if (candidate.publication) {
+        readRelease(
+          candidate.publication.release,
+          serialize(candidate.publication.manifest),
+          serialize(candidate.publication.configuration),
+        )
+        if (
+          !configuration.publication ||
+          !candidate.publication.configuration.publication
+        )
+          throw new Error('Release lacks publication support')
+      }
+      const rendered = replaceSite(edge, renderSite(deliveryManifest, profile))
+      candidate.edgeSha256 = sha256(serialize(rendered))
       let previous: DeploymentRecord | undefined
       try {
         previous = JSON.parse(
@@ -227,6 +247,11 @@ export async function deployOnHost(
         MEDIA_ORIGIN: r.profile.mediaOrigin,
         VIRTUAL_PLAYBACK: String(r.profile.virtualPlayback ?? false),
         MEDIA_AUDIO_ROOT: resolve(paths.root, 'media/audio'),
+        PUBLICATION_ROOT: resolve(
+          paths.root,
+          'publications',
+          publicationRelease(r).release.sourceCommit,
+        ),
       })
       const compose = (
         r: DeploymentRecord,
@@ -281,7 +306,7 @@ export async function deployOnHost(
           const disk = await fs.statfs(paths.root)
           if (disk.bavail * disk.bsize < profile.minimumFreeDiskMiB * 1024 ** 2)
             throw new Error('Insufficient disk headroom')
-          await checkAssets(manifest, resolve(paths.root, 'media'))
+          await checkAssets(deliveryManifest, resolve(paths.root, 'media'))
           await fs.mkdir(resolve(paths.root, 'releases'), { recursive: true })
           const edgeId = await run('docker', [
             'inspect',
@@ -343,6 +368,51 @@ export async function deployOnHost(
               'inspect',
               expectedImages(previous.release).app,
             ])
+          if (configuration.publication) {
+            const publication = publicationRelease(candidate)
+            const destination = environment(candidate).PUBLICATION_ROOT
+            try {
+              await fs.access(destination)
+            } catch (error) {
+              if (!(
+                error instanceof Error &&
+                'code' in error &&
+                error.code === 'ENOENT'
+              ))
+                throw error
+              // Extract only from the verified image. Never trust an incoming archive.
+              if (publication.release.imageDigest !== record.imageDigest)
+                throw new Error('Retained publication snapshot missing', {
+                  cause: error,
+                })
+              const parent = resolve(paths.root, 'publications')
+              await fs.mkdir(parent, { recursive: true, mode: 0o755 })
+              const staging = await fs.mkdtemp(resolve(parent, '.extract-'))
+              let container = ''
+              try {
+                container = (
+                  await run('docker', ['create', expectedImages(record).app])
+                ).trim()
+                if (!container)
+                  throw new Error('Missing publication extraction container', {
+                    cause: error,
+                  })
+                await run('docker', [
+                  'cp',
+                  container + ':/app/.output/publication/.',
+                  staging,
+                ])
+                await verifyPublication(staging, publication)
+                await fs.chmod(staging, 0o755)
+                await fs.rename(staging, destination)
+                await syncDirectory(parent)
+              } finally {
+                if (container) await run('docker', ['rm', container])
+                await fs.rm(staging, { recursive: true, force: true })
+              }
+            }
+            await verifyPublication(destination, publication)
+          }
           await atomicWrite(candidateComposePath, configuration.compose)
           await compose(candidate, ['config', '--quiet'], candidateComposePath)
           await atomicWrite(
@@ -355,6 +425,94 @@ export async function deployOnHost(
             '--config',
             '/etc/caddy/candidate.json',
           ])
+        },
+        async prepareFallback(fallback) {
+          await verifyPublication(
+            environment(fallback).PUBLICATION_ROOT,
+            publicationRelease(fallback),
+          )
+          const available =
+            Number(
+              /MemAvailable:\s+(\d+)/.exec(
+                await fs.readFile('/proc/meminfo', 'utf8'),
+              )?.[1],
+            ) / 1024
+          if (
+            !(
+              available >=
+              fallback.profile.appMemoryMiB + fallback.profile.reserveMemoryMiB
+            )
+          )
+            throw new Error(
+              'Insufficient memory for isolated fallback verification',
+            )
+          const container = (
+            await run('docker', [
+              'run',
+              '-d',
+              '--network',
+              'none',
+              '--read-only',
+              '--init',
+              '--memory',
+              fallback.profile.appMemoryMiB + 'm',
+              '--memory-swap',
+              fallback.profile.appMemoryMiB + 'm',
+              '--pids-limit',
+              '64',
+              '--cap-drop',
+              'ALL',
+              '--security-opt',
+              'no-new-privileges:true',
+              '--tmpfs',
+              '/tmp:size=16m,mode=1777',
+              '--mount',
+              `type=bind,src=${environment(fallback).PUBLICATION_ROOT},dst=/publication,readonly`,
+              '--mount',
+              `type=bind,src=${environment(fallback).MEDIA_AUDIO_ROOT},dst=/media/audio,readonly`,
+              '-e',
+              'NUXT_PUBLICATION_ROOT=/publication',
+              '-e',
+              'NUXT_AUDIO_ROOT=/media/audio',
+              '-e',
+              'NUXT_VIRTUAL_PLAYBACK=' +
+                String(fallback.profile.virtualPlayback ?? false),
+              expectedImages(fallback.release).app,
+            ])
+          ).trim()
+          if (!container)
+            throw new Error('Missing fallback verification container')
+          try {
+            await waitReady(
+              () =>
+                run('docker', [
+                  'exec',
+                  container,
+                  'node',
+                  '-e',
+                  "fetch('http://127.0.0.1:3000/api/health').then(r=>{if(!r.ok)process.exit(1)})",
+                ]).then(() => {}),
+              fallback.profile.readinessSeconds,
+            )
+            await run('docker', [
+              'exec',
+              container,
+              'node',
+              '--input-type=module',
+              '-e',
+              publicationProbe(fallback),
+            ])
+          } finally {
+            await run('docker', ['rm', '-f', container])
+          }
+          fallback.edgeSha256 = sha256(
+            serialize(
+              replaceSite(
+                edge,
+                renderSite(effectiveManifest(fallback), fallback.profile),
+              ),
+            ),
+          )
         },
         async stop() {
           await compose(candidate, ['stop', 'app'], candidateComposePath)
@@ -376,6 +534,15 @@ export async function deployOnHost(
               `const r=await fetch('http://127.0.0.1:3000/api/health',{signal:AbortSignal.timeout(4000)});const b=await r.json();if(!r.ok||b.release!==${JSON.stringify(r.release.sourceCommit)})process.exit(1)`,
             ])
           }, r.profile.readinessSeconds)
+          if (r.configuration.publication)
+            await run('docker', [
+              'exec',
+              id,
+              'node',
+              '--input-type=module',
+              '-e',
+              publicationProbe(r),
+            ])
         },
         async activate() {
           await activate(serialize(rendered))
@@ -405,7 +572,8 @@ export async function deployOnHost(
                 throw new Error('HTTPS release identity mismatch')
             } else await response.arrayBuffer()
           }
-          const audio = r.manifest.assets.find(
+          const acceptedManifest = effectiveManifest(r)
+          const audio = acceptedManifest.assets.find(
             (entry) =>
               entry.public &&
               entry.asset.kind === 'audio' &&
@@ -420,16 +588,16 @@ export async function deployOnHost(
           )
           await checkMediaHttp(
             {
-              ...r.manifest,
+              ...acceptedManifest,
               assets: [
                 audio,
-                ...r.manifest.assets
+                ...acceptedManifest.assets
                   .filter(
                     (entry) => entry.public && entry.asset.kind === 'artwork',
                   )
                   .slice(0, 1),
               ],
-              episodes: r.manifest.episodes.filter((episode) =>
+              episodes: acceptedManifest.episodes.filter((episode) =>
                 slugs.has(episode.slug),
               ),
             },
@@ -438,8 +606,17 @@ export async function deployOnHost(
             request,
           )
         },
-        async restoreEdge() {
-          await activate(edgeBytes)
+        async restoreEdge(r) {
+          await activate(
+            r?.publication
+              ? serialize(
+                  replaceSite(
+                    edge,
+                    renderSite(effectiveManifest(r), r.profile),
+                  ),
+                )
+              : edgeBytes,
+          )
         },
       }
       return deployRelease(state, candidate, previous, driver)

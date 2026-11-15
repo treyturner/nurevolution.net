@@ -7,8 +7,10 @@ services:
       NUXT_PUBLIC_MEDIA_ORIGIN: ${MEDIA_ORIGIN:?media origin required}
       NUXT_AUDIO_ROOT: /media/audio
       NUXT_VIRTUAL_PLAYBACK: ${VIRTUAL_PLAYBACK:-false}
+      NUXT_PUBLICATION_ROOT: /publication
     volumes:
       - ${MEDIA_AUDIO_ROOT:-/srv/nurevolution/media/audio}:/media/audio:ro
+      - ${PUBLICATION_ROOT:-/srv/nurevolution/publication}:/publication:ro
     init: true
     read_only: true
     restart: unless-stopped
