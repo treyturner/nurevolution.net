@@ -47,6 +47,7 @@ const artworkUrl = computed(() =>
         props.episode.artworkUrl,
         'artwork',
         config.public.webOrigin,
+        import.meta.dev,
       )
     : '',
 )

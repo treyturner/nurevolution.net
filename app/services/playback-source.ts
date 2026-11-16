@@ -7,8 +7,17 @@ export function playerSource(
   userAgent: string,
   canPlayType: (type: string) => string,
   pageUrl?: string,
+  development = false,
 ) {
-  const url = deliveryAssetUrl(episode.audio.url, 'audio', mediaOrigin)
+  const delivered = deliveryAssetUrl(
+    episode.audio.url,
+    'audio',
+    mediaOrigin,
+    development,
+  )
+  // HTMLMediaElement.src/currentSrc are absolute, including for same-origin dev
+  // files. The controller uses these identities to accept metadata/time events.
+  const url = pageUrl ? new URL(delivered, pageUrl).href : delivered
   const virtual = episode.audio.playback
   // iOS Chrome/Edge use WebKit. Other engines retain MP3 until audible seek
   // validation qualifies them, even when they advertise container support.

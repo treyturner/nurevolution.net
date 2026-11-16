@@ -139,7 +139,7 @@ test('expired or removed saved selection falls back to the newest episode; inval
   await page.goto('/')
   await position(page, 0)
   await expect(page).toHaveURL(/\/$/)
-  await expect(page.locator('h1')).toHaveText('Ruminate')
+  await expect(page.locator('h1')).toHaveText('Loopback Pressure')
   const response = await page.goto('/episodes/missing')
   expect(response?.status()).toBe(404)
   await expect(page.locator('h1')).toHaveText('Episode not found')

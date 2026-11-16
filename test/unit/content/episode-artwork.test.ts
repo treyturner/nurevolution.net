@@ -400,7 +400,7 @@ it('checks committed artwork offline and requires an explicit valid CLI mode', a
   expect(await episodeArtworkCli(['--check'])).toBe(0)
   expect(JSON.parse(log.mock.calls[0]![0])).toMatchObject({
     valid: true,
-    images: 55,
+    images: 56,
   })
   for (const args of [
     [],

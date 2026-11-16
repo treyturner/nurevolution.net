@@ -49,7 +49,7 @@ async function fixture(publication = false) {
     const prepared = await prepareBundle(
       bundle,
       record.release.sourceCommit,
-      '2026-11-15T00:00:00.000Z',
+      new Date().toISOString(),
       snapshot,
     )
     record.configuration = prepared.configuration

@@ -2,6 +2,40 @@ import { expect, it, vi } from 'vitest'
 import { playerSource } from '../../../app/services/playback-source'
 import type { EpisodeDetail } from '../../../shared/content/public'
 
+it('normalizes worktree sources and virtual fallbacks to the browser media identity', () => {
+  const episode = {
+    id: 'local',
+    audio: { url: 'https://podcast.nurevolution.net/Mix%20One.mp3' },
+  } as EpisodeDetail
+  const page = 'http://localhost:3001/episodes/local'
+  const local = 'http://localhost:3001/__dev/assets/audio/Mix%20One.mp3'
+  expect(
+    playerSource(episode, '', 'Firefox/155', () => '', page, true),
+  ).toEqual({ id: 'local', url: local })
+  const virtual = {
+    ...episode,
+    audio: {
+      ...episode.audio,
+      playback: {
+        url: '/playback/local.m4a',
+        mediaType: 'audio/mp4' as const,
+        codecs: 'mp4a.6B' as const,
+      },
+    },
+  }
+  expect(
+    playerSource(virtual, '', 'Chrome/153', () => 'probably', page, true),
+  ).toEqual({
+    id: 'local',
+    url: 'http://localhost:3001/playback/local.m4a',
+    fallbackUrl: local,
+  })
+  expect(playerSource(episode, '', 'Firefox/155', () => '', page)).toEqual({
+    id: 'local',
+    url: episode.audio.url,
+  })
+})
+
 it('uses virtual playback only for qualified Chromium and a supported codec', () => {
   const episode = {
     id: 'test',

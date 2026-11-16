@@ -324,7 +324,7 @@ try {
       200,
     )
   const feed = await (await get(appOrigin + '/feed/podcast')).text()
-  assert.equal((feed.match(/<item>/g) ?? []).length, 55)
+  assert.equal((feed.match(/<item>/g) ?? []).length, 56)
   await verifyFeedResources(appOrigin, get)
   await verifyPublicationRuntime(
     appImage,
@@ -351,7 +351,7 @@ try {
   assert.equal(info[0]!.Config.User, 'node')
   assert.equal(info[0]!.HostConfig.ReadonlyRootfs, true)
   console.log(
-    'Exact runtime: all 55 episode URLs, feed, health, fixture isolation and memory limit passed',
+    'Exact runtime: all 56 episode URLs, feed, health, fixture isolation and memory limit passed',
   )
 
   const fixtureSources = resolve(local, 'source-files')
@@ -783,7 +783,7 @@ try {
   const proxiedFeed = await get(webOrigin + '/feed/podcast')
   assert.equal(proxiedFeed.headers.get('alt-svc'), 'clear')
   await verifyFeedResources(webOrigin, get)
-  assert.equal((await proxiedFeed.text()).match(/<item>/g)!.length, 55)
+  assert.equal((await proxiedFeed.text()).match(/<item>/g)!.length, 56)
   const feedTag = proxiedFeed.headers.get('etag')!
   assert.ok(feedTag)
   assert.equal(
@@ -861,7 +861,7 @@ try {
       imageId,
       caddyImageId,
       caddyBinarySha256,
-      episodePages: 55,
+      episodePages: 56,
       browserEngines: 3,
       memoryLimitMiB: 384,
       passedAt: new Date().toISOString(),

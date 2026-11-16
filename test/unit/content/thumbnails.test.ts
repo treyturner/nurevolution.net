@@ -160,7 +160,7 @@ it('checks the committed archive offline and requires explicit valid CLI modes',
   expect(await thumbnailCli(['--check'])).toBe(0)
   expect(JSON.parse(log.mock.calls[0]![0])).toMatchObject({
     valid: true,
-    images: 55,
+    images: 56,
   })
   for (const args of [
     [],

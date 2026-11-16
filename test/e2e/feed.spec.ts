@@ -22,8 +22,8 @@ test('serves the entire feed with canonical URLs and matching GET/HEAD headers',
   expect(headers).not.toHaveProperty('set-cookie')
   expect(headers).not.toHaveProperty('last-modified')
   expect(assertPodcastFeed(xml, archive)).toMatchObject({
-    items: 55,
-    newestId: 'wp-484',
+    items: 56,
+    newestId: 'loopback-pressure-2026',
     oldestId: 'wp-337',
   })
   expect(xml).not.toMatch(

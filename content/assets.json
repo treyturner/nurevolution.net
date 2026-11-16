@@ -1242,6 +1242,16 @@
       "relativePath": "2016_10_11-Trey_Turner-Is_This_Thing_On-320kbps.mp3"
     },
     {
+      "id": "asset-ca7dd714c5b5f656",
+      "kind": "audio",
+      "url": "https://podcast.nurevolution.net/2026_11_15-Trey_Turner-Loopback_Pressure-320kbps.mp3",
+      "mediaType": "audio/mpeg",
+      "byteLength": 170971116,
+      "sha256": "ca7dd714c5b5f656d7ec69ebdfae0478d1059d5104ee47c6619edeb9e57b6c15",
+      "sourceRoot": "audio",
+      "relativePath": "2026_11_15-Trey_Turner-Loopback_Pressure-320kbps.mp3"
+    },
+    {
       "id": "asset-caedae2863e8adae",
       "kind": "artwork",
       "url": "https://nurevolution.net/wp/wp-content/uploads/2013/03/2539327523_5dbecd4dd9.jpg",
@@ -1540,6 +1550,16 @@
       "sha256": "ff828361a03c660c09cee58bf4905f0468b2708c96297149277c21df1611b1f8",
       "sourceRoot": "uploads",
       "relativePath": "2013/06/trey_turner_and_joseph_noctum-the_new_sound-v0.png"
+    },
+    {
+      "id": "asset-f7c32c9fd8331bb6",
+      "kind": "artwork",
+      "url": "https://nurevolution.net/wp/wp-content/uploads/2026/11/2026_11_15-Trey_Turner-Loopback_Pressure.png",
+      "mediaType": "image/png",
+      "byteLength": 2672022,
+      "sha256": "f7c32c9fd8331bb67b98dfa2099f264e7d9f2b76b5b10673b82c48cdbdf93358",
+      "sourceRoot": "uploads",
+      "relativePath": "2026/11/2026_11_15-Trey_Turner-Loopback_Pressure.png"
     },
     {
       "id": "asset-f861b34eac38c3bb",

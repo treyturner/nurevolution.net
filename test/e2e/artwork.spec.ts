@@ -137,7 +137,7 @@ for (const native of [true, false]) {
         await page
           .getByRole('button', { name: 'Change episode', exact: true })
           .click()
-        await expect(page.locator('h1')).toHaveText('Ruminate')
+        await expect(page.locator('h1')).toHaveText('Loopback Pressure')
         await expect(page.getByRole('dialog')).toHaveCount(0)
         await ready(page)
         expect(

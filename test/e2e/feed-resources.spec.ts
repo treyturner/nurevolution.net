@@ -60,9 +60,9 @@ test('advertises canonical artwork for all episodes and resolvable chapters only
     chapterCount++
     trackCount += known.length
   }
-  expect(items.length).toBe(55)
-  expect(chapterCount).toBe(34)
-  expect(trackCount).toBe(626)
+  expect(items.length).toBe(56)
+  expect(chapterCount).toBe(35)
+  expect(trackCount).toBe(650)
 })
 
 test('serves exact current chapters for every timed episode and no document for untimed episodes', async ({
@@ -88,7 +88,7 @@ test('serves exact current chapters for every timed episode and no document for 
       'access-control-expose-headers': 'ETag',
     })
   }
-  expect(timed).toBe(34)
+  expect(timed).toBe(35)
 })
 
 test('chapter hints serve current data with GET/HEAD/304, including development origins', async ({

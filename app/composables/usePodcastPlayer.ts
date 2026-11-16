@@ -140,6 +140,7 @@ export function usePodcastPlayer(
           navigator.userAgent,
           (type) => element?.canPlayType(type) ?? '',
           window.location.href,
+          import.meta.dev,
         )
       : null
     const timestamp = navigation?.timestamp
@@ -281,6 +282,7 @@ export function usePodcastPlayer(
               episode()?.artworkUrl ?? '',
               'artwork',
               config.public.webOrigin,
+              import.meta.dev,
             ),
             busy:
               !state.initialized ||

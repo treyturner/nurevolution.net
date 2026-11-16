@@ -45,6 +45,9 @@ export async function deliveryFixture(directory: string, commit: string) {
     audioAssetId: audio[index]!.id,
     artworkAssetId: artwork.id,
     guid: slug,
+    // Synthetic publication must stay within the fixture manifest's fixed asOf,
+    // even when the first real episode is a newer release.
+    publishedAt: '2026-09-09T00:00:00.000Z',
   }))
   catalog.assets = [...audio, artwork]
   catalog.show.standardArtworkAssetId = artwork.id

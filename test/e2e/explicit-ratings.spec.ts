@@ -17,7 +17,7 @@ test('shows compact accessible episode and track badges without marking other tr
     })
     audio.dispatchEvent(new Event('durationchange'))
   })
-  await expect(page.locator('.episode-list .explicit-badge')).toHaveCount(14)
+  await expect(page.locator('.episode-list .explicit-badge')).toHaveCount(15)
   await expect(
     page
       .locator('.episode-meta')
