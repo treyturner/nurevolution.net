@@ -177,7 +177,9 @@ class Bootstrap(unittest.TestCase):
         package = json.loads((repo / 'package.json').read_text())
         self.assertEqual(mise['tools']['node'], self.version)
         self.assertEqual(package['engines']['node'], self.version)
-        self.assertIn('--target=node' + self.version.split('.')[0] + ' ', package['scripts']['build:deploy'])
+        self.assertEqual(package['scripts']['build:deploy'], 'node tools/deploy/bundle.ts')
+        bundle = (repo / 'tools/deploy/bundle.ts').read_text()
+        self.assertIn("target: 'node" + self.version.split('.')[0] + "'", bundle)
 
     def test_failed_upgrade_restores_tooling_and_attempt_retry_keeps_evidence(self):
         self.assertEqual(self.promote(self.failed), 12)
