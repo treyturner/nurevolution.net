@@ -3,7 +3,25 @@ import { createRequire } from 'node:module'
 import { tmpdir } from 'node:os'
 import { resolve } from 'node:path'
 import { expect, it } from 'vitest'
-import { copyFixtureRuntime } from '../../delivery/fixture.ts'
+import { copyFixtureRuntime, deliveryFixture } from '../../delivery/fixture.ts'
+
+it('creates the delivery fixture independently of the newest real publication date', async () => {
+  const directory = await fs.mkdtemp(
+    resolve(tmpdir(), 'nurevolution-delivery-fixture-'),
+  )
+  try {
+    const fixture = await deliveryFixture(directory, 'a'.repeat(40))
+    expect(fixture.manifest.episodes.map((episode) => episode.slug)).toEqual([
+      'first',
+      'second',
+      'third',
+    ])
+    expect(fixture.manifest.asOf).toBe('2026-09-09T00:00:00.000Z')
+    expect(fixture.manifest.assets).toHaveLength(4)
+  } finally {
+    await fs.rm(directory, { recursive: true, force: true })
+  }
+})
 
 it('loads a staged Nitro dependency after relocating the runtime and removing its source', async () => {
   const directory = await fs.mkdtemp(resolve(tmpdir(), 'nurevolution-runtime-'))
