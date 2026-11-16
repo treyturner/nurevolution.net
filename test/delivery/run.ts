@@ -356,6 +356,20 @@ try {
 
   const fixtureSources = resolve(local, 'source-files')
   const fixture = await deliveryFixture(fixtureSources, commit)
+  const fixtureManifest = resolve(local, 'fixture-manifest.json')
+  await fs.writeFile(fixtureManifest, serialize(fixture.manifest))
+  const bundledAudit = JSON.parse(
+    await execute(process.execPath, [
+      resolve(artifacts, 'deploy.mjs'),
+      'check-assets',
+      '--manifest',
+      fixtureManifest,
+      '--destination',
+      fixtureSources,
+    ]),
+  )
+  assert.equal(bundledAudit.files, fixture.manifest.assets.length)
+  console.log('Exact deployment bundle: standalone asset audit passed')
   const operatorUmask = process.umask(0o077)
   try {
     await stageAssets(
