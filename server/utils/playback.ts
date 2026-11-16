@@ -1,4 +1,5 @@
 import { contentRepository } from './content.ts'
+import { publicationFile, publicationRoot } from './publication.ts'
 import { createHeaderCache, matchPlayback } from '../playback/index.ts'
 import {
   playbackManifestSchema,
@@ -9,12 +10,18 @@ import {
 let manifest: ReturnType<typeof playbackManifestSchema.parse> | undefined
 export async function playbackManifest() {
   manifest ??= playbackManifestSchema.parse(
-    await useStorage('assets:playback').getItem('manifest.json'),
+    publicationRoot()
+      ? JSON.parse(
+          (await publicationFile('playback/manifest.json')).toString('utf8'),
+        )
+      : await useStorage('assets:playback').getItem('manifest.json'),
   )
   return manifest
 }
 export const playbackHeader = createHeaderCache(async (name) => {
-  const bytes = await useStorage('assets:playback').getItemRaw<Uint8Array>(name)
+  const bytes = publicationRoot()
+    ? await publicationFile('playback/' + name)
+    : await useStorage('assets:playback').getItemRaw<Uint8Array>(name)
   if (!bytes) throw new Error('Missing playback header')
   return bytes
 })

@@ -220,6 +220,10 @@ def for_record(root, saved):
     require(all(json.loads(regular(path / (name + '.json'))) == saved[name]
                 for name in ('release', 'configuration', 'manifest')),
             'Retained artifact differs from the saved deployment record')
+    publication = saved.get('publication')
+    if publication is not None:
+        require('publication' not in publication, 'Nested publication reference')
+        for_record(root, publication)
     return path
 
 

@@ -1,7 +1,11 @@
 import * as fs from 'node:fs/promises'
 import { dirname, resolve } from 'node:path'
 import { assertRollbackCompatible, serialize } from './manifest.ts'
-import type { DeploymentRecord } from './release.ts'
+import {
+  effectiveManifest,
+  publicationRelease,
+  type DeploymentRecord,
+} from './release.ts'
 
 export async function syncDirectory(path: string) {
   const directory = await fs.open(path, 'r')
@@ -60,12 +64,33 @@ export async function withLock<T>(path: string, operation: () => Promise<T>) {
 export interface DeploymentDriver {
   preflight(): Promise<void>
   prepare(): Promise<void>
+  prepareFallback?(record: DeploymentRecord): Promise<void>
   stop(): Promise<void>
   start(record: DeploymentRecord): Promise<void>
   ready(record: DeploymentRecord): Promise<void>
   activate(record: DeploymentRecord): Promise<void>
   accept(record: DeploymentRecord): Promise<void>
-  restoreEdge(): Promise<void>
+  restoreEdge(record?: DeploymentRecord): Promise<void>
+}
+
+export function reconcileFallback(
+  candidate: DeploymentRecord,
+  previous?: DeploymentRecord,
+) {
+  if (!previous) return undefined
+  assertRollbackCompatible(
+    effectiveManifest(previous),
+    effectiveManifest(candidate),
+  )
+  const fallback =
+    candidate.configuration.publication && previous.configuration.publication
+      ? { ...previous, publication: publicationRelease(candidate) }
+      : previous
+  assertRollbackCompatible(
+    effectiveManifest(candidate),
+    effectiveManifest(fallback),
+  )
+  return fallback
 }
 
 export async function deployRelease(
@@ -74,12 +99,15 @@ export async function deployRelease(
   previous: DeploymentRecord | undefined,
   driver: DeploymentDriver,
 ) {
-  if (previous) {
-    assertRollbackCompatible(previous.manifest, candidate.manifest)
-    assertRollbackCompatible(candidate.manifest, previous.manifest)
-  }
+  const fallback = reconcileFallback(candidate, previous)
   await driver.preflight()
   await driver.prepare()
+  if (fallback?.publication) {
+    if (!driver.prepareFallback)
+      throw new Error('Publication fallback must be verified before activation')
+    await driver.prepareFallback(fallback)
+  }
+  previous = fallback
   // Durable intent precedes every disruptive operation. A process crash leaves
   // the lock and this journal for explicit recovery, never a guessed success.
   await atomicWrite(
@@ -111,7 +139,7 @@ export async function deployRelease(
         await driver.start(previous)
         await driver.ready(previous)
       }
-      await driver.restoreEdge()
+      await driver.restoreEdge(previous)
       if (previous) {
         await driver.accept(previous)
         await atomicWrite(

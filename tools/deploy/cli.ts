@@ -6,7 +6,12 @@ import { validateManifest, serialize } from './manifest.ts'
 import { stageAssets, checkAssets } from './stage-assets.ts'
 import { scanSources, checkMediaHttp } from './check-media.ts'
 import { deployOnHost, execute } from './host.ts'
-import { readRelease, assertTrustedRun, verifyTooling } from './release.ts'
+import {
+  readRelease,
+  assertTrustedRun,
+  verifyTooling,
+  type PublicationRelease,
+} from './release.ts'
 import { publishImages } from './publish.ts'
 import { backup } from './backup.ts'
 import { profileSchema } from './render-config.ts'
@@ -79,7 +84,12 @@ export async function deploymentCli(
         resolve(root, 'state', profile.environment, 'previous.json'),
         'utf8',
       ),
-    ) as { release: unknown; manifest: unknown; configuration: unknown }
+    ) as {
+      release: unknown
+      manifest: unknown
+      configuration: unknown
+      publication?: PublicationRelease
+    }
     const bundle = await fs.mkdtemp(resolve(root, 'rollback-'))
     try {
       for (const key of ['release', 'manifest', 'configuration'] as const)
@@ -90,11 +100,17 @@ export async function deploymentCli(
         )
       print(
         serialize(
-          await deployOnHost(bundle, {
-            root,
-            edgeDirectory: get('edge-directory'),
-            edgeContainer: get('edge-container'),
-          }),
+          await deployOnHost(
+            bundle,
+            {
+              root,
+              edgeDirectory: get('edge-directory'),
+              edgeContainer: get('edge-container'),
+            },
+            undefined,
+            undefined,
+            previous.publication,
+          ),
         ),
       )
     } finally {

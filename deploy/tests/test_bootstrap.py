@@ -277,6 +277,18 @@ class Bootstrap(unittest.TestCase):
         self.assertEqual(self.promote(self.new), 0)
         self.assert_active(self.new)
 
+    def test_publication_reference_must_match_a_retained_verified_artifact(self):
+        self.promote(self.new)
+        saved = b.record(self.root, 'current')
+        saved['publication'] = b.record(self.root, 'previous')
+        self.assertEqual(b.for_record(self.root, saved).name, 'b' * 40)
+        saved['publication']['manifest']['sourceCommit'] = '0' * 40
+        with self.assertRaisesRegex(ValueError, 'differs from the saved'):
+            b.for_record(self.root, saved)
+        saved['publication']['publication'] = {}
+        with self.assertRaisesRegex(ValueError, 'Nested publication'):
+            b.for_record(self.root, saved)
+
 
 class ArtifactTrust(unittest.TestCase):
     def setUp(self):

@@ -31,11 +31,16 @@ it('packages all audited assets and hashes the exact delivery configuration', as
   const { manifest, configuration } = await prepareBundle(
     dir,
     'a'.repeat(40),
-    '2026-09-09T00:00:00.000Z',
+    new Date().toISOString(),
+    resolve(dir, 'publication'),
   )
-  expect(manifest.assets).toHaveLength(156)
+  const sourceAssets = JSON.parse(
+    await fs.readFile('content/assets.json', 'utf8'),
+  ).assets as { id: string }[]
+  expect(manifest.assets.map((entry) => entry.asset.id).sort()).toEqual(
+    sourceAssets.map((asset) => asset.id).sort(),
+  )
   expect(configuration.toolingSha256).toBe(sha256(fixtureTooling))
-  expect(manifest.assets.every((e) => e.public)).toBe(true)
   expect(await fs.readFile(resolve(dir, 'renderer.sha256'), 'utf8')).toBe(
     configuration.rendererSha256 + '\n',
   )

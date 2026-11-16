@@ -39,6 +39,23 @@ export const configurationSchema = z.strictObject({
   rendererSha256: hashSchema,
   toolingSha256: hashSchema,
   caddyDockerfileSha256: hashSchema,
+  publication: z
+    .strictObject({
+      version: z.literal(1),
+      files: z
+        .array(
+          z.strictObject({
+            path: z
+              .string()
+              .regex(
+                /^(?:content\/(?:episodes\/[a-z0-9-]+\.json|show\.json|assets\.json|legacy-urls\.json|wordpress-import\.json)|playback\/(?:manifest\.json|headers\/[a-f0-9]{64}\.gz)|public\/(?:episode-artwork\/v1-[a-f0-9]{64}\.jpg|artwork-thumbnails\/v1-[a-f0-9]{64}\.webp))$/,
+              ),
+            sha256: hashSchema,
+          }),
+        )
+        .min(1),
+    })
+    .optional(),
 })
 
 export async function verifyTooling(file: string, expected: string) {
@@ -108,4 +125,26 @@ export interface DeploymentRecord {
   profileSha256: string
   edgeSha256: string
   deployedAt: string
+  publication?: PublicationRelease
+}
+
+export type PublicationRelease = Pick<
+  DeploymentRecord,
+  'release' | 'manifest' | 'configuration'
+>
+
+export function publicationRelease(
+  record: DeploymentRecord,
+): PublicationRelease {
+  return (
+    record.publication ?? {
+      release: record.release,
+      manifest: record.manifest,
+      configuration: record.configuration,
+    }
+  )
+}
+
+export function effectiveManifest(record: DeploymentRecord) {
+  return publicationRelease(record).manifest
 }

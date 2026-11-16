@@ -17,6 +17,7 @@ import { copyFixtureRuntime, deliveryFixture } from './fixture.ts'
 import { archiveConfigDigest } from '../../tools/deploy/image-identity.ts'
 import { verifyVirtualProxy } from './virtual.ts'
 import { verifyFeedResources } from './feed-resources.ts'
+import { verifyPublicationRuntime } from './publication.ts'
 
 const root = resolve('.local/delivery'),
   artifacts = resolve(root, 'artifacts')
@@ -325,6 +326,17 @@ try {
   const feed = await (await get(appOrigin + '/feed/podcast')).text()
   assert.equal((feed.match(/<item>/g) ?? []).length, 55)
   await verifyFeedResources(appOrigin, get)
+  await verifyPublicationRuntime(
+    appImage,
+    prefix + '-publication',
+    volume,
+    local,
+    docker,
+    execute,
+  )
+  console.log(
+    'External publication: added episode, RSS, chapters, rating, artwork and private-file isolation passed without rebuilding the app',
+  )
   for (const path of [
     '/player-test',
     '/media-test',

@@ -40,6 +40,7 @@ export async function backup(
           resolve(root, 'media'),
           resolve(root, 'state'),
           resolve(root, 'releases'),
+          resolve(root, 'publications'),
           resolve(root, 'profile.json'),
           resolve(root, 'tooling'),
           edgeDirectory,

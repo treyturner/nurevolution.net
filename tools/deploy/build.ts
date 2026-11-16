@@ -4,11 +4,13 @@ import { readCatalog } from '../../server/content/repository.ts'
 import { fileReader } from '../content/files.ts'
 import { createCandidate, readSources } from '../content/source.ts'
 import { createManifest, serialize, sha256 } from './manifest.ts'
+import { preparePublication } from './publication.ts'
 
 export async function prepareBundle(
   output: string,
   commit: string,
   asOf: string,
+  publicationDirectory = '.output/publication',
 ) {
   const { catalog } = await readCatalog(fileReader('content'))
   const historical = createCandidate(await readSources()).catalog
@@ -23,6 +25,7 @@ export async function prepareBundle(
     rendererSha256: rendererHash,
     toolingSha256: sha256(await fs.readFile(resolve(output, 'deploy.mjs'))),
     caddyDockerfileSha256: sha256(await fs.readFile('deploy/Caddy.Dockerfile')),
+    publication: await preparePublication(publicationDirectory),
   }
   await fs.mkdir(output, { recursive: true })
   await fs.writeFile(resolve(output, 'manifest.json'), serialize(manifest))
