@@ -24,12 +24,51 @@ import dancefloorOrientedTimings from '../../docs/content/dancefloor-oriented-tr
 import vignetteTimings from '../../docs/content/view-from-a-vignette-track-timings.json' with { type: 'json' }
 import esotericTimings from '../../docs/content/the-further-esoteric-adventures-of-track-timings.json' with { type: 'json' }
 import plushSessionTimings from '../../docs/content/plush-session-track-timings.json' with { type: 'json' }
+import loopbackTimings from '../../docs/content/loopback-pressure-track-timings.json' with { type: 'json' }
 import { readCatalog } from '../../server/content/repository.ts'
 import { publicFeedArchive } from '../../server/content/feed.ts'
 import { fileReader } from '../../tools/content/files.ts'
 import { assertPodcastFeed } from '../../tools/content/feed/assert.ts'
 
 const episodeFiles = (await readdir('content/episodes')).sort()
+
+test('publishes Loopback Pressure with exact sample starts and its track-level explicit rating', async ({
+  request,
+}) => {
+  const response = await request.get(
+    '/api/episodes/trey-turner-loopback-pressure',
+  )
+  expect(response.status()).toBe(200)
+  const episode = await response.json()
+  expect(episode.explicit).toBe(true)
+  expect(episode.tracks).toHaveLength(24)
+  expect(episode.tracks[0]).toMatchObject({
+    artist: 'Tsuruda',
+    title: 'Lazer',
+    explicit: true,
+    startTime: 0,
+  })
+  expect(
+    episode.tracks
+      .slice(1)
+      .every((track: { explicit: boolean }) => !track.explicit),
+  ).toBe(true)
+  expect(episode.durationSeconds).toBe(185525389 / 44100)
+  for (const [index, source] of loopbackTimings.tracks.entries())
+    expect(episode.tracks[index].startTime).toBe(
+      source.startSample / loopbackTimings.sampleRate,
+    )
+  const chapters = await (
+    await request.get('/chapters/trey-turner-loopback-pressure.json')
+  ).json()
+  expect(
+    chapters.chapters.map(
+      (chapter: { startTime: number }) => chapter.startTime,
+    ),
+  ).toEqual(
+    episode.tracks.map((track: { startTime: number }) => track.startTime),
+  )
+})
 const canonical = await Promise.all(
   episodeFiles.map(async (path) =>
     episodeSchema.parse(
@@ -57,7 +96,7 @@ test('serves the complete canonical archive with subscriber identities, track ti
   expect(episodes.map((e: { id: string }) => e.id)).toEqual(
     ordered.map((e) => e.id),
   )
-  expect(episodes).toHaveLength(55)
+  expect(episodes).toHaveLength(56)
   let tracks = 0,
     starts = 0
   for (const expected of ordered) {
@@ -107,49 +146,51 @@ test('serves the complete canonical archive with subscriber identities, track ti
         explicit: track.explicit ?? false,
       })),
     })
-    const raw = inventory.episodes.find((e) => e.id === expected.id)!
-    expect(detail.guid).toBe(raw.originalIdentity.feedGuid)
-    expect(detail.guidIsPermalink).toBe(
-      raw.originalIdentity.feedGuidIsPermalink,
-    )
-    expect(detail.audio).toMatchObject({
-      url: raw.enclosure.url,
-      mediaType: raw.enclosure.type,
-      byteLength: raw.enclosure.byteLength,
-    })
-    expect(Date.parse(detail.publishedAt)).toBe(
-      Date.parse(raw.publication.feedRfc822),
-    )
-    const authoredTimings = [
-      ruminateTimings,
-      impulseTimings,
-      bassFaceSpaceRaceTimings,
-      lostInTranslationTimings,
-      offTheCuffTimings,
-      isThisThingOnTimings,
-      carrierDetectTimings,
-      radioSilencedTimings,
-      dancefloorOrientedTimings,
-      vignetteTimings,
-      esotericTimings,
-      plushSessionTimings,
-    ].find((e) => e.episodeId === raw.id)
-    for (const [index, source] of raw.tracklist.tracks.entries()) {
-      expect(detail.tracks[index]).toEqual({
-        ...source,
-        explicit: expected.tracks[index]!.explicit ?? false,
-        title:
-          raw.id === 'wp-281' && source.position === 4
-            ? source.title.replace('\u0092', '’')
-            : source.title,
-        startTime: authoredTimings
-          ? authoredTimings.tracks[index]!.startTime
-          : raw.id === 'wp-417'
-            ? timings.episodes.find((e) => e.episodeId === 'wp-417')!.tracks[
-                index
-              ]!.startTime
-            : source.startTime,
+    const raw = inventory.episodes.find((e) => e.id === expected.id)
+    if (raw) {
+      expect(detail.guid).toBe(raw.originalIdentity.feedGuid)
+      expect(detail.guidIsPermalink).toBe(
+        raw.originalIdentity.feedGuidIsPermalink,
+      )
+      expect(detail.audio).toMatchObject({
+        url: raw.enclosure.url,
+        mediaType: raw.enclosure.type,
+        byteLength: raw.enclosure.byteLength,
       })
+      expect(Date.parse(detail.publishedAt)).toBe(
+        Date.parse(raw.publication.feedRfc822),
+      )
+      const authoredTimings = [
+        ruminateTimings,
+        impulseTimings,
+        bassFaceSpaceRaceTimings,
+        lostInTranslationTimings,
+        offTheCuffTimings,
+        isThisThingOnTimings,
+        carrierDetectTimings,
+        radioSilencedTimings,
+        dancefloorOrientedTimings,
+        vignetteTimings,
+        esotericTimings,
+        plushSessionTimings,
+      ].find((e) => e.episodeId === raw.id)
+      for (const [index, source] of raw.tracklist.tracks.entries()) {
+        expect(detail.tracks[index]).toEqual({
+          ...source,
+          explicit: expected.tracks[index]!.explicit ?? false,
+          title:
+            raw.id === 'wp-281' && source.position === 4
+              ? source.title.replace('\u0092', '’')
+              : source.title,
+          startTime: authoredTimings
+            ? authoredTimings.tracks[index]!.startTime
+            : raw.id === 'wp-417'
+              ? timings.episodes.find((e) => e.episodeId === 'wp-417')!.tracks[
+                  index
+                ]!.startTime
+              : source.startTime,
+        })
+      }
     }
     tracks += detail.tracks.length
     starts += detail.tracks.filter(
@@ -159,7 +200,7 @@ test('serves the complete canonical archive with subscriber identities, track ti
       /sourceRoot|relativePath|sourceSnapshot|databaseGuid|sha256/,
     )
   }
-  expect({ tracks, starts }).toEqual({ tracks: 832, starts: 626 })
+  expect({ tracks, starts }).toEqual({ tracks: 856, starts: 650 })
   const showResponse = await request.get('/api/show')
   expect(showResponse.status()).toBe(200)
   expect(await showResponse.json()).toEqual({
@@ -257,7 +298,7 @@ test('loads server assets from a portable production output without a checkout',
     try {
       expect(
         (await (await request.get('/api/episodes')).json()).episodes,
-      ).toHaveLength(55)
+      ).toHaveLength(56)
       const detail = await request.get('/api/episodes/trey-turner-praxis')
       expect(detail.status()).toBe(200)
       expect((await detail.json()).tracks).toHaveLength(21)
@@ -269,7 +310,7 @@ test('loads server assets from a portable production output without a checkout',
           await feed.text(),
           publicFeedArchive(catalog, Date.now()),
         ).items,
-      ).toBe(55)
+      ).toBe(56)
       expect(await readdir(root)).toEqual(['.output'])
       const publicFiles = await readdir(resolve(root, '.output/public'), {
         recursive: true,

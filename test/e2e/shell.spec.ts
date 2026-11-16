@@ -16,7 +16,7 @@ test('serves meaningful HTML before JavaScript runs', async ({ request }) => {
   )
   expect(html).toMatch(/<meta[^>]*name="color-scheme"[^>]*content="dark"/)
   expect(html).toMatch(
-    /<main[^>]*>[\s\S]*<h1[^>]*>Ruminate<\/h1>[\s\S]*<\/main>/,
+    /<main[^>]*>[\s\S]*<h1[^>]*>Loopback Pressure<\/h1>[\s\S]*<\/main>/,
   )
 })
 
@@ -46,7 +46,9 @@ test('hydrates a dark shell with no application errors', async ({ page }) => {
       | null
     return root?.__vue_app__?.$nuxt?.isHydrating === false
   })
-  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Ruminate')
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText(
+    'Loopback Pressure',
+  )
   await expect(page.getByRole('main')).toHaveCount(1)
   await expect(page.locator('html')).toHaveAttribute('lang', 'en')
   await expect(page.locator('html')).toHaveCSS('color-scheme', 'dark')

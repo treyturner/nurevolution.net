@@ -23,8 +23,8 @@ test('serves every thumbnail from the portable app with small WebP bodies on nor
       expect(body.length).toBeLessThanOrEqual(12 * 1024)
       bytes += body.length
     }
-    expect(episodes).toHaveLength(55)
-    expect(bytes).toBeLessThan(55 * 12 * 1024)
+    expect(episodes).toHaveLength(56)
+    expect(bytes).toBeLessThan(56 * 12 * 1024)
   }
 })
 
@@ -44,8 +44,8 @@ test('scrolling the list requests thumbnails, and failed thumbnails never fall b
   await page.goto(detail.path)
   await hydrated(page)
   const thumbnails = page.locator('.episode-list-artwork')
-  await expect(thumbnails).toHaveCount(55)
-  for (let index = 0; index < 55; index += 5)
+  await expect(thumbnails).toHaveCount(56)
+  for (let index = 0; index < 56; index += 5)
     await thumbnails.nth(index).scrollIntoViewIfNeeded()
   await thumbnails.last().scrollIntoViewIfNeeded()
   expect([...originals]).toEqual([detail.artworkUrl])

@@ -28,8 +28,8 @@ it('checks the real maintained content and produces an offline, stable full-arch
   const first = JSON.parse(print.mock.calls[0]![0])
   expect(first).toMatchObject({
     valid: true,
-    items: 55,
-    newestId: 'wp-484',
+    items: 56,
+    newestId: 'loopback-pressure-2026',
     oldestId: 'wp-337',
     historicalItemsCompared: 55,
   })
@@ -43,7 +43,7 @@ it('checks the real maintained content and produces an offline, stable full-arch
   expect(frozen).toMatchObject({
     valid: true,
     items: 55,
-    newestId: first.newestId,
+    newestId: 'wp-484',
     oldestId: first.oldestId,
     historicalItemsCompared: 55,
   })

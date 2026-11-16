@@ -155,7 +155,7 @@ it('verifies exact snapshot bytes, coverage, catalog identity, and playback befo
   const bundle = await prepareBundle(
     root,
     'a'.repeat(40),
-    '2026-11-15T00:00:00.000Z',
+    new Date().toISOString(),
     snapshot,
   )
   const r = releaseFixture()

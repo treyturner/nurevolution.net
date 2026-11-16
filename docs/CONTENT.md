@@ -60,6 +60,8 @@ Checks are read-only and name the affected file and field. `pnpm build` runs con
 
 ## Episode fields and new episodes
 
+Loopback Pressure (`loopback-pressure-2026`) adds the first episode after the 55 historical imports, bringing the authored archive to 56 episodes, 856 tracks, and 650 known starts across 35 episodes. Its [timing evidence](content/loopback-pressure-track-timings.json) and [original tab-separated rows](content/loopback-pressure-track-timings.tsv) preserve 24 contiguous sample ranges at 44,100 Hz, ending at sample `185525389` (4206.92492063492 seconds). Track 1, Tsuruda – Lazer, is marked explicit based on the owner's listening review; the episode inherits that rating. The original MP3 is unchanged. Its embedded PNG supplies the artwork original, small list thumbnail, and feed JPEG. Publish only after the [snapshot support release](operations/rollback.md#publication-snapshots) is accepted; the episode PR preserves the owner's description as written, including its “68 minutes” wording.
+
 Imported IDs use `wp-<original post ID>`. A new episode may use another stable lowercase ASCII ID such as `new-mix-2026`. IDs and slugs contain only lowercase letters, digits, and single separating hyphens. They must be unique. Copy an existing episode as a starting point, then explicitly update all identifying fields, publication data, asset references, description, and tracks.
 
 - `schemaVersion` is `1`.

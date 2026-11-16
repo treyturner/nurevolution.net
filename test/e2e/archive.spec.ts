@@ -11,7 +11,7 @@ test('every canonical page renders its exact archive content and all historical 
   const { episodes } = (await (await request.get('/api/episodes')).json()) as {
     episodes: EpisodeSummary[]
   }
-  expect(episodes).toHaveLength(55)
+  expect(episodes).toHaveLength(56)
   let tracks = 0
   for (const summary of episodes) {
     const detail = (await (
@@ -74,7 +74,7 @@ test('every canonical page renders its exact archive content and all historical 
       expect(moved.headers().location).toBe(detail.path)
     }
   }
-  expect(tracks).toBe(832)
+  expect(tracks).toBe(856)
   for (const path of ['/episodes/unknown', '/podcast/unknown'])
     expect((await request.get(path)).status()).toBe(404)
 })
