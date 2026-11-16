@@ -24,6 +24,10 @@ The version marker in `.nuxtrc` records the completed Nuxt test-utils setup so v
 
 ## Development and commands
 
+In development, the player loads artwork and MP3s through same-origin `/__dev/assets/` URLs. The server searches the worktree for originals whose filename, byte length, and SHA-256 match the public catalog. Tracked files, untracked files, and ignored media under `.local/` are all eligible; there is no need to upload media or commit large originals before previewing an episode. The file index refreshes after one second, and changed files are reverified. Keep originals anywhere inside this worktree, preserving their original filenames. Symlinks, credentials, Git internals, dependencies, and build outputs are excluded.
+
+When an artwork original is absent, development uses its committed feed JPEG. Audio absent from the worktree redirects to its canonical media URL so the older archive remains playable without a complete local audio collection. Explicit `NUXT_PUBLIC_WEB_ORIGIN` and `NUXT_PUBLIC_MEDIA_ORIGIN` overrides still take precedence. The dev routes support HEAD and byte-range seeking and are disabled in production builds; canonical API metadata and RSS URLs remain unchanged. Browser assets in `public/` are served from the worktree as usual, including untracked files.
+
 ```sh
 mise exec -- pnpm dev
 ```

@@ -24,3 +24,21 @@ it('uses delivery hosts while preserving exact asset paths, escaping and canonic
   ])
     expect(deliveryAssetUrl(url, 'audio', 'https://dev.example')).toBe(url)
 })
+
+it('uses same-origin worktree media in development while retaining explicit delivery overrides', () => {
+  const audio = 'https://podcast.nurevolution.net/Mix%20One.mp3'
+  const artwork = 'https://nurevolution.net/wp/wp-content/uploads/cover.png'
+  expect(deliveryAssetUrl(audio, 'audio', '', true)).toBe(
+    '/__dev/assets/audio/Mix%20One.mp3',
+  )
+  expect(deliveryAssetUrl(artwork, 'artwork', '', true)).toBe(
+    '/__dev/assets/artwork/wp/wp-content/uploads/cover.png',
+  )
+  expect(
+    deliveryAssetUrl(audio, 'audio', 'https://preview.example', true),
+  ).toBe('https://preview.example/Mix%20One.mp3')
+  expect(deliveryAssetUrl(audio, 'audio', '')).toBe(audio)
+  expect(
+    deliveryAssetUrl('https://elsewhere.example/file.mp3', 'audio', '', true),
+  ).toBe('https://elsewhere.example/file.mp3')
+})

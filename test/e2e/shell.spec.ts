@@ -95,6 +95,8 @@ test('returns real 404s and keeps media fixtures out of production', async ({
     '/media/sample.wav',
     '/media/sample.mp3',
     '/cover.svg',
+    '/__dev/assets/audio/2026_11_15-Trey_Turner-Loopback_Pressure-320kbps.mp3',
+    '/__dev/assets/artwork/wp/wp-content/uploads/2026/11/2026_11_15-Trey_Turner-Loopback_Pressure.png',
   ]) {
     const response = await request.get(path)
     expect(response.status(), path).toBe(404)

@@ -1,6 +1,8 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { createAudioAdapter, type AudioPort } from '../../../app/services/audio'
 import { createPlayer } from '../../../app/services/player'
+import { playerSource } from '../../../app/services/playback-source'
+import type { EpisodeDetail } from '../../../shared/content/public'
 
 class Media extends EventTarget implements AudioPort {
   src = ''
@@ -61,6 +63,50 @@ describe('persistent episode controller', () => {
   afterEach(() => {
     vi.clearAllTimers()
     vi.useRealTimers()
+  })
+  it('accepts metadata, time updates, seeking, and play/pause for worktree audio', async () => {
+    const { media, player } = setup()
+    let nativeUrl = ''
+    // Browsers normalize a relative src assignment before exposing media events.
+    Object.defineProperty(media, 'src', {
+      get: () => nativeUrl,
+      set: (value: string) => {
+        nativeUrl = new URL(value, 'http://localhost:3001').href
+      },
+    })
+    const episode = {
+      id: 'local',
+      audio: { url: 'https://podcast.nurevolution.net/local.mp3' },
+    } as EpisodeDetail
+    player.select(
+      playerSource(
+        episode,
+        '',
+        '',
+        () => '',
+        'http://localhost:3001/episodes/local',
+        true,
+      ),
+    )
+    media.ready()
+    expect(player.snapshot()).toMatchObject({
+      sourceId: 'local',
+      status: 'paused',
+      duration: 120,
+    })
+    media.currentTime = 12.5
+    media.emit('timeupdate')
+    expect(player.snapshot().currentTime).toBe(12.5)
+    media.seekable = { length: 1, start: () => 0, end: () => 120 }
+    player.seek(30)
+    media.emit('seeked')
+    expect(player.snapshot().currentTime).toBe(30)
+    player.play()
+    media.emit('playing')
+    expect(player.snapshot().status).toBe('playing')
+    player.pause()
+    expect(player.snapshot().status).toBe('paused')
+    player.dispose()
   })
   it('retries a stalled metadata request once without starting playback, then loads the real duration', () => {
     const { media, changed, player } = setup()
