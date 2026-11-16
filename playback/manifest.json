@@ -731,6 +731,14 @@
       "frameCount": 113453
     },
     {
+      "assetId": "asset-ca7dd714c5b5f656",
+      "sourceSha256": "ca7dd714c5b5f656d7ec69ebdfae0478d1059d5104ee47c6619edeb9e57b6c15",
+      "sourceByteLength": 170971116,
+      "mode": "CBR",
+      "bitrates": [320],
+      "frameCount": 161048
+    },
+    {
       "assetId": "asset-cb30481ecf597f7d",
       "sourceSha256": "595b3a43fa94b9fb6e7bfb9e7e11e2d4e29675d55d2fe7651474ab9337978407",
       "sourceByteLength": 82757266,

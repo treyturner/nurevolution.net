@@ -1,0 +1,231 @@
+{
+  "formatVersion": 1,
+  "episodeId": "loopback-pressure-2026",
+  "date": "2026-11-15",
+  "source": {
+    "type": "owner-supplied tab-separated subclip sample boundaries",
+    "fileName": "loopback-pressure-track-timings.tsv",
+    "sha256": "2a148b601c86691221a5f6261f6d45c41b98a11389b1f72eda26b8b7b0a3e38d"
+  },
+  "sampleRate": 44100,
+  "method": "Preserve supplied integer start and duration samples. Calculate exclusive endSample as startSample + durationSamples and canonical startTime directly as startSample / sampleRate, without accumulating durations or rounding.",
+  "precision": "Integer samples at 44100 Hz are exact timing evidence. Preserve the full floating-point quotient in canonical seconds; truncate toward the earlier time in lower-precision outputs.",
+  "tracks": [
+    {
+      "position": 1,
+      "artist": "Tsuruda",
+      "title": "Lazer",
+      "startSample": 0,
+      "durationSamples": 7774917,
+      "endSample": 7774917,
+      "startTime": 0.0
+    },
+    {
+      "position": 2,
+      "artist": "Machinedrum",
+      "title": "HABITS",
+      "startSample": 7774917,
+      "durationSamples": 7004036,
+      "endSample": 14778953,
+      "startTime": 176.30197278911564
+    },
+    {
+      "position": 3,
+      "artist": "Ivy Lab",
+      "title": "N.V.T 01",
+      "startSample": 14778953,
+      "durationSamples": 10206849,
+      "endSample": 24985802,
+      "startTime": 335.12365079365077
+    },
+    {
+      "position": 4,
+      "artist": "Vier",
+      "title": "VAI PULANDO",
+      "startSample": 24985802,
+      "durationSamples": 5459842,
+      "endSample": 30445644,
+      "startTime": 566.5714739229024
+    },
+    {
+      "position": 5,
+      "artist": "Buunshin",
+      "title": "All About This (William Light Remix)",
+      "startSample": 30445644,
+      "durationSamples": 6121795,
+      "endSample": 36567439,
+      "startTime": 690.3774149659864
+    },
+    {
+      "position": 6,
+      "artist": "Rohaan",
+      "title": "Loca",
+      "startSample": 36567439,
+      "durationSamples": 7359799,
+      "endSample": 43927238,
+      "startTime": 829.1936281179138
+    },
+    {
+      "position": 7,
+      "artist": "Low Poly",
+      "title": "The Noise",
+      "startSample": 43927238,
+      "durationSamples": 5587224,
+      "endSample": 49514462,
+      "startTime": 996.0824943310657
+    },
+    {
+      "position": 8,
+      "artist": "Yunis",
+      "title": "Compulsion",
+      "startSample": 49514462,
+      "durationSamples": 5556959,
+      "endSample": 55071421,
+      "startTime": 1122.7769160997732
+    },
+    {
+      "position": 9,
+      "artist": "Moody Good",
+      "title": "Humid",
+      "startSample": 55071421,
+      "durationSamples": 10872274,
+      "endSample": 65943695,
+      "startTime": 1248.7850566893424
+    },
+    {
+      "position": 10,
+      "artist": "Ternion Sound & Kursa",
+      "title": "Specimen",
+      "startSample": 65943695,
+      "durationSamples": 6617344,
+      "endSample": 72561039,
+      "startTime": 1495.3218820861678
+    },
+    {
+      "position": 11,
+      "artist": "Cocktail Party Effect",
+      "title": "88",
+      "startSample": 72561039,
+      "durationSamples": 8279348,
+      "endSample": 80840387,
+      "startTime": 1645.3750340136055
+    },
+    {
+      "position": 12,
+      "artist": "Fellsius",
+      "title": "The Drum",
+      "startSample": 80840387,
+      "durationSamples": 5077514,
+      "endSample": 85917901,
+      "startTime": 1833.1153514739228
+    },
+    {
+      "position": 13,
+      "artist": "COIDO",
+      "title": "Whipped Cream",
+      "startSample": 85917901,
+      "durationSamples": 9710960,
+      "endSample": 95628861,
+      "startTime": 1948.251723356009
+    },
+    {
+      "position": 14,
+      "artist": "Hudson Mohawke & Nikki Nair",
+      "title": "Set the Roof (Thys Remix)",
+      "startSample": 95628861,
+      "durationSamples": 8239170,
+      "endSample": 103868031,
+      "startTime": 2168.4548979591837
+    },
+    {
+      "position": 15,
+      "artist": "IMANU & Jon Casey",
+      "title": "Kotaro",
+      "startSample": 103868031,
+      "durationSamples": 7237455,
+      "endSample": 111105486,
+      "startTime": 2355.284149659864
+    },
+    {
+      "position": 16,
+      "artist": "Mat Zo",
+      "title": "It Might Be a Sine",
+      "startSample": 111105486,
+      "durationSamples": 11849263,
+      "endSample": 122954749,
+      "startTime": 2519.398775510204
+    },
+    {
+      "position": 17,
+      "artist": "Rohaan",
+      "title": "Stay (Posij Remix)",
+      "startSample": 122954749,
+      "durationSamples": 8860826,
+      "endSample": 131815575,
+      "startTime": 2788.0895464852606
+    },
+    {
+      "position": 18,
+      "artist": "Waeys, Bensley, & Hoax",
+      "title": "Twerp",
+      "startSample": 131815575,
+      "durationSamples": 7137015,
+      "endSample": 138952590,
+      "startTime": 2989.015306122449
+    },
+    {
+      "position": 19,
+      "artist": "MUADEEP",
+      "title": "DLX-y",
+      "startSample": 138952590,
+      "durationSamples": 6894773,
+      "endSample": 145847363,
+      "startTime": 3150.852380952381
+    },
+    {
+      "position": 20,
+      "artist": "Phace",
+      "title": "KAPUTT",
+      "startSample": 145847363,
+      "durationSamples": 6259660,
+      "endSample": 152107023,
+      "startTime": 3307.196439909297
+    },
+    {
+      "position": 21,
+      "artist": "Waeys",
+      "title": "B.B.",
+      "startSample": 152107023,
+      "durationSamples": 9223357,
+      "endSample": 161330380,
+      "startTime": 3449.138843537415
+    },
+    {
+      "position": 22,
+      "artist": "Hoax",
+      "title": "Right Now",
+      "startSample": 161330380,
+      "durationSamples": 8227643,
+      "endSample": 169558023,
+      "startTime": 3658.285260770975
+    },
+    {
+      "position": 23,
+      "artist": "Billain & Vorso",
+      "title": "Transhumanist",
+      "startSample": 169558023,
+      "durationSamples": 10675574,
+      "endSample": 180233597,
+      "startTime": 3844.8531292517005
+    },
+    {
+      "position": 24,
+      "artist": "Nine Inch Nails",
+      "title": "No Going Back",
+      "startSample": 180233597,
+      "durationSamples": 5291792,
+      "endSample": 185525389,
+      "startTime": 4086.9296371882087
+    }
+  ]
+}

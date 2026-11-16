@@ -470,6 +470,15 @@
       "retained": false
     },
     {
+      "path": "/episode-artwork/v1-f7c32c9fd8331bb67b98dfa2099f264e7d9f2b76b5b10673b82c48cdbdf93358.jpg",
+      "sourceSha256": "f7c32c9fd8331bb67b98dfa2099f264e7d9f2b76b5b10673b82c48cdbdf93358",
+      "sha256": "83920b93e75bb6a273c5599abf595a6f85b9bc1e5bc94b850ade8d314be09529",
+      "width": 1400,
+      "height": 1400,
+      "byteLength": 373988,
+      "retained": false
+    },
+    {
       "path": "/episode-artwork/v1-fae9f0b4dca6bb481a0a44fa82e68a395bd53e7e1cc035ad25e0516a6bcdb17d.jpg",
       "sourceSha256": "fae9f0b4dca6bb481a0a44fa82e68a395bd53e7e1cc035ad25e0516a6bcdb17d",
       "sha256": "c4e7fc641bad96e21e3b102274814eaacc7b71ab53021d908789de07d6fd4ec5",
