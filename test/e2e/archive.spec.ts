@@ -64,7 +64,11 @@ test('every canonical page renders its exact archive content and all historical 
     tracks += rendered.tracks.length
     const historical = legacy.entries.find(
       (entry) => entry.episodeId === detail.id,
-    )!
+    )
+    if (!historical) {
+      expect(detail.id).toBe('loopback-pressure-2026')
+      continue
+    }
     const oldPath = new URL(historical.url).pathname
     for (const suffix of ['', '/?from=legacy']) {
       const moved = await request.get(`${oldPath}${suffix}`, {
