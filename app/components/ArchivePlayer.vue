@@ -189,8 +189,7 @@ const feedback = computed(() => {
       <p v-if="episode" class="episode-meta">
         <time :datetime="episode.publishedAt ?? undefined">{{
           formatDate(episode.publishedAt)
-        }}</time
-        ><span class="episode-meta-separator" aria-hidden="true">/</span
+        }}</time><span class="episode-meta-separator" aria-hidden="true">/</span
         ><span class="episode-duration"
           >{{ formatTime(episode.durationSeconds)
           }}<template v-if="episode.explicit"
